@@ -25,4 +25,4 @@ with the markdown rendering of GitHub.
 Reporting bugs
 ==============
 
-Please don't report bugs until the conversion is complete (see [Status]).
+Please don't report bugs until the conversion is complete (see [Status](#status)).
