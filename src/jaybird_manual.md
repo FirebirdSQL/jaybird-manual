@@ -1,28 +1,26 @@
-Jaybird 2.1 JDBC driver
+License {-}
+=======
 
-Java Programmer's Manual
-========================
+The contents of this Documentation are subject to the Public Documentation
+License Version 1.0 (the "License"); you may only use this Documentation if you
+comply with the terms of this License. A copy of the License is available at
+<http://www.firebirdsql.org/manual/licenses-pdl-text.html>.
 
-The contents of this Documentation are subject to the Public
-Documentation License Version 1.0 (the “License”); you may only use this
-Documentation if you comply with the terms of this License. A copy of
-the License is available at
-[**http://www.firebirdsql.org/manual/licenses-pdl-text.html**](http://www.firebirdsql.org/manual/licenses-pdl-text.html).
-
-The Original Documentation is \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_. The
-Initial Writer of the Original Documentation is Roman Rokytskyy,
-Copyright (C) 2004-2008. All Rights Reserved. (Initial Writer contact:
+The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer's Manual. 
+The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright 
+(C) 2004-2008. All Rights Reserved. (Initial Writer contact(s): 
 roman@rokytskyy.de).
 
-Contributor(s):
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+Contributor(s): Mark Rotteveel.
 
-Portions created by \_\_\_\_\_\_ are Copyright (C) \_\_\_\_\_\_\_\_\_
-*\[Insert year(s)\]*. All Rights Reserved. (Contributor contact(s):
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ *\[Insert hyperlink/alias\]*).
+Portions created by Mark Rotteveel are Copyright (C) 2014-2016. All Rights 
+Reserved. (Contributor contact(s): mrotteveel@users.sourceforge.net).
 
-<span id="anchor"></span>Introduction
--------------------------------------
+Portions created by ______ are Copyright (C)_________[Insert year(s)]. All 
+Rights Reserved. (Contributor contact(s):________________[Insert hyperlink/alias]).
+
+Introduction
+============
 
 Jaybird is a JCA/JDBC driver suite to connect to Firebird database
 server. When Borland released an open-source version of the InterBase
@@ -40,28 +38,32 @@ application server can cooperate with a driver so that the application
 server manages transactions, security, and resource pooling, and the
 driver supplies only the connection functionality.
 
-### <span id="anchor-1"></span>Jaybird architecture
+Jaybird architecture
+--------------------
 
 The Jaybird driver consists of three layers, each of which is
 responsible for its part of the functionality. The component diagram
 depicting the Jaybird internal structure contains two additional
-components: “pool” and “JMX manager”.
+components: "pool" and "JMX manager".
 
 -   The GDS layer represents a Java translation of the Firebird API. It
-    is represented by two classes from *org.firebirdsql.gds* package:
-    *GDS* interface and *GDSFactory*. GDS factory class is responsible
-    for instantiating an implementation of the *GDS* interface depending
-    of the type of driver used. Implementation of the *GDS* interface
+    is represented by two classes from `org.firebirdsql.gds` package:
+    `GDS` interface and `GDSFactory`. GDS factory class is responsible
+    for instantiating an implementation of the `GDS` interface depending
+    of the type of driver used. Implementation of the `GDS` interface
     determines the type of the driver that will be used.
 -   The JCA layer represents the heart of the driver. Here all
     connection and transaction management happens. Additionally this
     layer adapts the GDS API and proxies the calls to the
     GDS implementation.
+    
+      ![Jaybird internal structure](images/jaybird_internal_structure.png)
+    
 -   The JDBC layer is an implementation of the JDBC specification.
 -   The Pool component represents implementation of
-    *ConnectionPoolDataSource*, *DataSource* and *XADataSource*
+    `ConnectionPoolDataSource`, `DataSource` and `XADataSource`
     interfaces from the JDBC 2.0 Optional Package. The pool
-    implementation uses *ManagedConnectionFactory* to create physical
+    implementation uses `ManagedConnectionFactory` to create physical
     connections to the database.
 -   The Manager component represents a JMX 1.0 compatible implementation
     that uses The Services API to manage the database and the
@@ -70,7 +72,8 @@ components: “pool” and “JMX manager”.
     public: database backup/restore, user management, statistics
     gathering, etc.
 
-### <span id="anchor-2"></span>Supported Servers
+Supported Servers
+-----------------
 
 Jaybird 2.1 supports all current Firebird servers, however no support
 for the optimized wire protocol from the Firebird 2.1 is being
@@ -78,14 +81,44 @@ implemented. Jaybird versions 2.x in current distribution won't work
 with InterBase and Yaffil servers, however the compatibility might be
 restored in the future.
 
-### <span id="anchor-3"></span>Supported Specifications
+Supported Specifications
+------------------------
 
 Jaybird supports the following specifications:
 
-  ----------------------------------- -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ----------------------------------- -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++----------------------------+-----------------------------------------------------------------+
+| Specification              | Details                                                         |
++============================+=================================================================+
+| JDBC 3.0                   | Driver passes the complete JDBC compatibility test suite,       |
+|                            | though some features are not implemented. It is not officially  |
+|                            | JDBC compliant, because of the high certification costs.        |
++----------------------------+-----------------------------------------------------------------+
+| JDBC 2.0 Optional Package\ | Jaybird provides an implementation of following interfaces      |
+| (formerly Standard         | from `javax.sql.*` package:                                     |
+| Extension API)             |                                                                 |
+|                            | - The `ConnectionPoolDataSource` implementation provides        |
+|                            |   connection and prepared statement pooling.                    |
+|                            | - The `DataSource` implementation provides seamless integration |
+|                            |   with major web and application servers.                       |
+|                            | - The XADataSource implementation provides means to use driver  |
+|                            |   in distributed transactions.                                  |
++----------------------------+-----------------------------------------------------------------+
+| JCA 1.0                    | Jaybird provides an implementation of                           |
+|                            | `javax.resource.spi.ManagedConnectionFactory` and related       |
+|                            | interfaces. CCI interfaces are not supported.                   |
++----------------------------+-----------------------------------------------------------------+
+| JTA 1.0.1                  | The driver provides implementation of the                       |
+|                            | `javax.transaction.xa.XAResource` interface via the JCA         |
+|                            | framework and a `javax.sql.XADataSource` implementation.        |
++----------------------------+-----------------------------------------------------------------+
+| JAAS 1.0                   |                                                                 |
++----------------------------+-----------------------------------------------------------------+
+| JMX 1.2                    | Jaybird provides an MBean that allows creating and dropping     |
+|                            | databases via JMX agent.                                        |
++----------------------------+-----------------------------------------------------------------+
 
-### <span id="anchor-4"></span>Distribution package
+Distribution package
+--------------------
 
 Jaybird driver has compile-time and run-time dependencies to JCA 1.0,
 JTA 1.0.1, JAAS 1.0 and JDBC 2.0 Optional Package. Additionally, if
@@ -94,10 +127,23 @@ extensive logging inside the driver.
 
 Following file groups can be found in distribution package:
 
-  ------------------------ -------------------------------------------------------------------------------------------------------------------
-  ------------------------ -------------------------------------------------------------------------------------------------------------------
++------------------------+--------------------------------------------------------------------+
+| File name              | Description                                                        |
++========================+====================================================================+
+| jaybird-2.1.6.jar      | An archive containing the JDBC driver, the JCA connection manager, |
+|                        | the Services API and event management classes.                     |
++------------------------+--------------------------------------------------------------------+
+| jaybird-full-2.1.6.jar | Same as above but also the connection pooling classes.             |
++------------------------+--------------------------------------------------------------------+
+| jaybird21.dll          | Precompiled version of the JNI library for Type 2 and Embedded     |
+|                        | Server drivers for 32-bit Windows platform.                        |
++------------------------+--------------------------------------------------------------------+
+| libjaybird21.so        | Precompiled version of the JNI library for Type 2 and Embedded     |
+|                        | Server drivers for 32-bit Linux platforms.                         |
++------------------------+--------------------------------------------------------------------+
 
-### <span id="anchor-5"></span>Quality Assurance
+Quality Assurance
+-----------------
 
 The Jaybird team uses JUnit test cases to assure the quality of the
 released driver. Also during development unit tests are extensively
@@ -113,57 +159,89 @@ compatibility suite (CTS), which currently contains 1216 test cases.
 Unfortunately Firebird does not support all features used by the CTS, so
 some test cases from the original CTS suite were excluded from run.
 
-### <span id="anchor-6"></span>Useful resources
+Useful resources
+----------------
 
 JDBC
 
-For extensive JDBC documentation, see the “Documentation” section of
+For extensive JDBC documentation, see the "Documentation" section of
 Sun's website <http://java.sun.com/products/jdbc/>.
 
 Firebird
 
 General information about the Firebird database is available from the
 Firebird web site
-([http://www.firebirdsql.org](http://www.firebirdsql.org/)).
+(<http://www.firebirdsql.org/>).
 
-Information about using SQL in Firebird, see the “Language Reference”
-and “Developer's Guide” documents, that are available for download from
-the “Main Downloads” section of the IBPhoenix web site.
+Information about using SQL in Firebird, see the "Language Reference"
+and "Developer's Guide" documents, that are available for download from
+the "Main Downloads" section of the IBPhoenix web site.
 
 Jaybird Support
 
 A new resource JaybirdWiki has become available. It can be found at
-[http://jaybirdwiki.firebirdsql.org](http://jaybirdwiki.firebirdsql.org/).
-This is a place where the community shares information about different
-aspects of Jaybird usage, configuration examples for different
-applications/servers, tips and tricks, FAQ, etc.
+<http://jaybirdwiki.firebirdsql.org/>. This is a place where the community 
+shares information about different aspects of Jaybird usage, configuration 
+examples for different applications/servers, tips and tricks, FAQ, etc.
 
-<span id="anchor-7"></span>Obtaining a connection
--------------------------------------------------
+Obtaining a connection
+======================
 
 Jaybird is regular JDBC driver and supports two primary ways to obtain
-connection: via *java.sql.DriverManager* and via *javax.sql.DataSource*
+connection: via `java.sql.DriverManager` and via `javax.sql.DataSource`
 interface.
 
-### <span id="anchor-8"></span>Obtaining connection java.sql.DriverManager
+Obtaining connection java.sql.DriverManager
+-------------------------------------------
 
-*java.sql.DriverManager* historically was the first connection factory
+`java.sql.DriverManager` historically was the first connection factory
 in Java. It is based on the concept of the JDBC URL, a string that
 uniquely identifies JDBC driver to use and the database to which user
 wants to connect. Additionally there is possibility to specify
 additional connection parameters, like user name and password.
 
-JDBC URL consists of three parts that are presented on .
+JDBC URL consists of three parts:
+<!-- TODO: investigate if it is possible to reproduce presentation as in ODT -->
 
-First part, *"jdbc:firebirdsql:"* is always fixed and specifies the so
+    jdbc:firebirdsql://localhost:3050/c:/database/example.fdb
+    
+- `jdbc`\
+  JDBC protocol
+- `firebirdsql`\
+  JDBC subprotocol, identifies driver to use
+- `//localhost:3050/c:/database/example.fdb`\
+  RDBMS specific part, identifies the database to which the driver must connect,
+  in our case that is `//<host>:<port>/<path to database>`
+
+First part, "`jdbc:firebirdsql:`" is always fixed and specifies the so
 called protocol and subprotocol for the JDBC connection. In other words,
 the type of the connection that the application wants to obtain, in our
 case it is a connection to a Firebird database. Example of obtaining the
-connection is shown on .
+connection is shown below.
+
+~~~ {.java}
+package hello;
+
+import java.sql.*;
+
+public class HelloServer {
+
+  public static void main(String[] args) throws Exception {
+  
+    Class.forName("org.firebirdsql.jdbc.FBDriver");
+    
+    Connection connection = DriverManager.getConnection(
+      "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
+      "SYSDBA", "masterkey");
+      
+    // do something here
+  }
+}
+~~~
 
 The first line of this code is important – it tells JVM to load the
 Jaybird 2.1 JDBC driver. According to JDBC specification, at this point
-driver registers itself in *java.sql.DriverManager* and tells it for
+driver registers itself in `java.sql.DriverManager` and tells it for
 which protocol it is responsible for.
 
 There are two ways to register JDBC driver:
@@ -172,98 +250,184 @@ There are two ways to register JDBC driver:
     JDBC specification requires that during class initialization the
     driver performs the registration itself.
 
-Class.forName("org.firebirdsql.jdbc.FBDriver");
+        Class.forName("org.firebirdsql.jdbc.FBDriver");
 
--   **Possibility 2**. The JDBC driver is listed in a *jdbc.drivers*
-    system property. For example in your *\~/.hotjava/properties* file
+-   **Possibility 2**. The JDBC driver is listed in a `jdbc.drivers`
+    system property. For example in your `\~/.hotjava/properties` file
     you can specify following line:
 
-jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
+        jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
 
 Alternatively you can specify the value of this property during JVM
 startup:
 
-java\
-**-Djdbc.drivers=org.firebirdsql.jdbc.FBDriver**\
--classpath jaybird-full-2.1.6.jar;C:/myproject/classes\
-my.company.SomeJavaExample
+    java\
+      -Djdbc.drivers=org.firebirdsql.jdbc.FBDriver\
+      -classpath jaybird-full-2.1.6.jar;C:/myproject/classes\
+      my.company.SomeJavaExample
 
-The second statement of the example tells the *java.sql.DriverManager*
+The second statement of the example tells the `java.sql.DriverManager`
 to open database connection to the Firebird server running on the host
 where Java code is executed, and the path to the database is
-*c:/database/employee.fdb*.
+`c:/database/employee.fdb`.
 
 Database specification consists of the name of the server where the
 database server resides, optionally you can specify a port to which the
 driver will connect (by default port 3050 is used). The server name can
 be specified either using its IP address (for example 192.168.0.5) or
-using its DNS name (for example *fb-server.mycompany.com* or just
-*fb-server*).
+using its DNS name (for example `fb-server.mycompany.com` or just
+`fb-server`).
 
 After the server name and port, path to the database is specified. The
 format in which the path is specified depends on the platform where the
 Firebird server runs. On Windows it must include the drive letter and
-path, for example *"c:/database/employee.gdb"*, which points to the
+path, for example `"c:/database/employee.gdb"`, which points to the
 employee database that can be found in a root directory of drive C:.
-Java allows to use either *"/"* or *"\\\\"* as path separator on the
-Windows platform. On Unix and Linux platform, you can use only *"/"* as
+Java allows to use either `"/"` or `"\\"` as path separator on the
+Windows platform. On Unix and Linux platform, you can use only `"/"` as
 the path separator.
 
 If you are using Firebird 1.5 or higher, you can specify a database
 alias instead of the absolute database path. For more information about
 using aliases see the documentation of the Firebird server.
 
-Specifying extended properties
+### Specifying extended properties
 
 What if we want to specify additional connection parameters, a client
 encoding, for example? JDBC specification provides another method that
-allows to specify additional connection properties ().
+allows to specify additional connection properties:
+
+~~~ {.java}
+package hello;
+
+import java.sql.*;
+import java.util.*;
+
+public class HelloServerWithEncoding {
+
+  public static void main(String[] args) throws Exception {
+  
+    Class.forName("org.firebirdsql.jdbc.FBDriver");
+    
+    Properties props = new Properties();
+    
+    props.setProperty("user", "SYSDBA");
+    props.setProperty("password", "masterkey");
+    props.setProperty("encoding", "UNICODE_FSS");
+    
+    Connection connection = DriverManager.getConnection(
+      "jdbc:firebirdsql://localhost:3050/C:/employee.gdb",
+      props);
+      
+    // do something here
+  }
+}
+~~~
 
 Additional properties, for example SQL role for the connection can be
-added to the *props* map. The list of all available extended properties
-can be found in [Extended connection properties](#anchor-9).
+added to the `props` map. The list of all available extended properties
+can be found in [Extended connection properties].
 
 However, not in every place you can use the above described method.
 Jaybird provides a possibility to specify extended properties in the
-JDBC URL. shows the specification for specifying extended JDBC
+JDBC URL. The example below shows the specification for specifying extended JDBC
 properties in the URL.
+
+~~~
+jdbc:firebirdsql://host[:port]/<path to db>?<properties>
+<properties> ::= <property>[&<properties>]
+<property>   ::= <name>[=<value>]
+~~~
 
 In this case extended properties are passed together with the URL using
 the HTTP-like parameter passing scheme: first comes main part of the
-URL, then “?”, then name-value pairs separated with “&”. Code in is
+URL, then `"?"`, then name-value pairs separated with `"&"`. Code below is
 equivalent to the previous example.
 
-Obtaining a connection via javax.sql.DataSource
+~~~ {.java}
+import java.sql.*;
+
+...
+
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Connection connection = DriverManager.getConnection(
+    "jdbc:firebirdsql://localhost:3050//C:/employee.gdb" + 
+    "?encoding=UNICODE_FSS",
+    "SYSDBA",
+    "masterkey");
+~~~
+
+### Obtaining a connection via javax.sql.DataSource
 
 JDBC 2.0 specification introduced a new mechanism to obtain database
 connection without requiring the application to know any specifics of
 the underlying JDBC driver. The application is required to know a
 logical name under which application can find an instance of the
-*javax.sql.DataSource* interface using Java Naming and Directory
+`javax.sql.DataSource` interface using Java Naming and Directory
 Interface (JNDI). This is a common way to obtain connections in web and
 application servers.
 
-In order to obtain a connection via *DataSource* object, you can use
-code showed on . This code assumes that you have correctly configured
+In order to obtain a connection via `DataSource* object`, you can use
+code showed below. This code assumes that you have correctly configured
 JNDI properties. For more information about configuring JNDI please
 refer to the documentation provided with your web or application server.
 
-Usually binding between the *DataSource* object and its JNDI name
+~~~ {.java}
+package hello;
+
+import java.sql.*;
+import javax.sql.*;
+import javax.naming.*;
+
+public class HelloServerJNDI {
+
+  public static void main(String[] args) throws Exception {
+  
+    InitialContext ctx = new InitialContext();
+    DataSource ds = (DataSource)ctx.lookup("jdbc/SomeDB");
+    
+    Connection connection = ds.getConnection();
+    
+    try {
+      // do something here... 
+    } finally {
+      connection.close();
+    }
+  }
+}
+~~~
+
+Usually binding between the `DataSource` object and its JNDI name
 happens in the configuration of your web or application server. However
 under some circumstances (e.g. you are developing your own JNDI-enabled
 application server/framework) you have to do this yourself. You can use
-the code snippet for this purpose showed on .
+this code snippet for this purpose:
 
-*DataSource* implementation supports all connection properties available
-to the *DriverManager* interface, but also it supports additional
+~~~ {.java}
+import javax.naming.*;
+import org.firebirdsql.pool.*;
+...
+FBWrappingDataSource ds = new FBWrappingDataSource();
+
+ds.setDatabase("localhost/3050:C:/database/employee.gdb");
+ds.setUser("SYSDBA");
+ds.setPassword("masterkey");
+
+InitialContext ctx = new InitialContext();
+
+ctx.bind("jdbc/SomeDB", ds);
+~~~
+
+`DataSource` implementation supports all connection properties available
+to the `DriverManager` interface, but also it supports additional
 properties that control connection pooling. For more information on this
-topic please read the “[Connection
-Pooling](#1.4.7.Connection%20Pooling%7Coutline)” chapter.
+topic please read the [Connection Pooling] chapter.
 
-### <span id="anchor-10"></span>Driver types
+Driver types
+------------
 
-As it was mentioned in the Chapter [3. Jaybird
-Architecture](#1.3.JayBird Architecture|outline), Jaybird supports
+As it was mentioned in the section [Jaybird Architecture], Jaybird supports
 multiple implementations of the GDS interface. The original Jaybird
 distribution contains two main categories of the GDS implementation:
 pure Java implementation of the Firebird wire protocol and a JNI proxy
@@ -272,9 +436,9 @@ that can use a dynamically linked library with a compatible API.
 Below you find the list of existing types and their short configuration
 description with the corresponding JDBC URLs that should be used to
 obtain the connection of desired type. The type of the JDBC driver for
-the *javax.sql.DataSource* is configured via corresponding property.
+the `javax.sql.DataSource` is configured via corresponding property.
 
-PURE\_JAVA type
+### PURE\_JAVA type
 
 The PURE\_JAVA driver type uses pure Java implementation of the Firebird
 wire protocol. This type is recommended for connecting to a remote
@@ -285,13 +449,13 @@ best performance when connecting to the remote server.
 In order to obtain connection using the PURE\_JAVA driver type you have
 to use JDBC URL that was shown on :
 
-jdbc:firebirdsql:host\[/port\]:&lt;path to database&gt;
+    jdbc:firebirdsql://host[:port]/<path to database>
 
-When using *javax.sql.DataSource* implementation, you can specify either
-"PURE\_JAVA" or "TYPE4" driver type, however this type is used by
+When using `javax.sql.DataSource` implementation, you can specify either
+`"PURE_JAVA"` or `"TYPE4"` driver type, however this type is used by
 default.
 
-<span id="Type 2 Driver"></span>NATIVE and LOCAL types
+### NATIVE and LOCAL types
 
 The NATIVE and LOCAL driver types use a JNI proxy to access the Firebird
 client library and requires installation of the Firebird client. The
@@ -307,41 +471,41 @@ In order to instantiate a connection using the NATIVE JDBC driver to
 connect to a remote server you have to use the following JDBC URL with
 new subprotocol:
 
-jdbc:firebirdsql:native:host\[/port\]:&lt;path to database&gt;
+    jdbc:firebirdsql:native:host[/port]:<path to database>
 
 When connecting to a local database server using the LOCAL driver, you
 should use following:
 
-jdbc:firebirdsql:local:&lt;absolute path to database&gt;
+    jdbc:firebirdsql:local:<absolute path to database>
 
 Additionally to the Firebird client library installation, driver
 requires a JNI proxy to be available to the JVM. The JNI proxy is a
 platform-dependent dynamically linked library that translates GDS calls
 into Firebird API calls.
 
-Windows
+#### Windows
 
 On Windows, the JNI proxy is represented by a dynamically linked library
-(DLL) *jaybird21.dll*. You have to make this library available through
-*PATH* environment variable. Alternatively you can specify the directory
-containing this DLL in *java.library.path* system property.
+(DLL) `jaybird21.dll`. You have to make this library available through
+`PATH` environment variable. Alternatively you can specify the directory
+containing this DLL in `java.library.path` system property.
 
 For example, if you put library in the current directory you have to use
 the following command to start Java:
 
-java -Djava.library.path=. com.mycompany.MyClass
+    java -Djava.library.path=. com.mycompany.MyClass
 
-Linux
+#### Linux
 
-On Linux JNI proxy is represented by a shared library *libjaybird21.so*.
-It must be available through the *LD\_PATH* environment variable.
-Usually shared libraries are stored in the */usr/lib/* directory;
-however you will need root permissions to copy *libjaybird21.so* there.
+On Linux JNI proxy is represented by a shared library `libjaybird21.so`*.
+It must be available through the `LD_PATH` environment variable.
+Usually shared libraries are stored in the `/usr/lib/` directory;
+however you will need root permissions to copy `libjaybird21.so` there.
 Alternatively you can specify directory containing the proxy in
-*java.library.path* Java system property. See Windows example above for
+`java.library.path` Java system property. See Windows example above for
 more details.
 
-Limitations
+#### Limitations
 
 Firebird client library is not thread-safe when connecting to a local
 database server using IPC. Jaybird provides the necessary
@@ -352,11 +516,11 @@ the Jaybird classes.
 In order to guarantee correct synchronization , the Jaybird driver must
 be loaded by the top-most classloader. For example, when using the Type
 2 JDBC driver with a web or application server, you have to add the
-Jaybird classes to the main classpath (for example, to the *lib/*
+Jaybird classes to the main classpath (for example, to the `lib/`
 directory of your web or application server), but **not** to the web or
-J2EE application, e.g. the *WEB-INF/lib* directory.
+J2EE application, e.g. the `WEB-INF/lib` directory.
 
-<span id="Embedded Server"></span>EMBEDDED type
+### EMBEDDED type
 
 The Embedded server JDBC driver is the Type 2 JDBC driver that rather
 than using the Firebird client library, loads Firebird embedded server
@@ -367,18 +531,18 @@ directly.
 In order to obtain a connection via DriverManager you have to use
 following URL:
 
-jdbc:firebirdsql:embedded:&lt;path to database&gt;
+    jdbc:firebirdsql:embedded:<path to database>
 
-jdbc:firebirdsql:embedded:host\[/port\]:&lt;path to database&gt;
+    jdbc:firebirdsql:embedded:host[/port]:<path to database>
 
 When host and, optionally, port is specified, embedded server acts as
 client library (i.e. you get the same Type 2 behavior as you would get
-with using “native”).
+with using "native").
 
-Installation of the JNI proxy is same as described in the “[NATIVE and
-LOCAL types](#Type 2 Driver)” chapter.
+Installation of the JNI proxy is same as described in the "[NATIVE and LOCAL types]" 
+section.
 
-Limitations
+#### Limitations
 
 The Firebird embedded server for Linux is not thread safe. Jaybird
 provides the needed synchronization in Java code, similar to the one
@@ -391,7 +555,8 @@ Java virtual machine. *There is no exclusive mode on the POSIX platform.
 When the same database file is accessed by multiple JVM instances,
 database will be corrupted!*
 
-### <span id="anchor-11"></span>Connection Pooling
+Connection Pooling
+------------------
 
 Each time a connection is opened via DriverManager, a new physical
 connection to server is opened. It is closed when the connection is
@@ -399,11 +564,16 @@ closed. In order to avoid the overhead of creating connections, the
 DataSource implementation can maintain a cache of open physical
 connections that can be reused between user sessions.
 
-### <span id="anchor-12"></span>The javax.sql.ConnectionPoolDataSource implementation
+The javax.sql.ConnectionPoolDataSource implementation
+-----------------------------------------------------
+<!-- Information in this section is outdated/deprecated -->
 
-*FBConnectionPoolDataSource* is an implementation of the
-*javax.sql.ConnectionPoolDataSource* interface, which is used by an
-application to obtain *PooledConnection* objects. A *PooledConnection*
+> Warning: The code presented in this section is deprecated
+> and not correct/typical usage
+
+`FBConnectionPoolDataSource` is an implementation of the
+`javax.sql.ConnectionPoolDataSource` interface, which is used by an
+application to obtain `PooledConnection` objects. A `PooledConnection`
 instance represents a physical connection to a database and is a source
 of logical connection. Closing a logical connection returns the physical
 connection back into the pool. Additionally, the logical connection
@@ -414,134 +584,279 @@ Usually the connection pool is specified in web or application server
 configuration. However, you can instantiate it also inside the
 application.
 
-The code on we perform the following steps:
+~~~ {.java .numberLines}
+package hello;
 
-1.  Create a connection pool object. In this example we create instance
-    implementing the *javax.sql.ConnectionPoolDataSource* interface.
-2.  Now we specify the pooling properties: maximum of 5 physical
-    connections, with minimum of 2, and each connection will maintain a
-    cache of 10 prepared statements of the same type (i.e. with the
-    same SQL). Connections in the pool that are idle for more than half
-    an hour (30 \* 60 \* 60 seconds) are closed automatically.
-3.  After specifying the pooling properties we set the database
-    connection properties. In our case that is only database path, user
-    name and password, but also any other supported property can be
-    set here.
-4.  Having configured the data source, we obtain the physical connection
-    to the database. Our data source implementation will check the
-    internal connection pool and will open a new physical connection to
-    the database if the pool is empty. An instance of
-    *javax.sql.PooledConnection* represents a physical connection to
-    the database. Calling the *PooledConnection.close()* method will
-    close the physical connection to the database and will remove this
-    connection from the pool.
-5.  Now we obtain regular JDBC connection to the database and perform
-    the needed work.
-6.  At the end of processing we close the JDBC connection, but note that
-    we do not close the physical connection, but simply forget the
-    reference to it.
+import java.sql.*;
+import javax.sql.*;
+import org.firebirdsql.pool.*;
+
+public class HelloConnectionPool {
+
+  public static void main(String[] args) throws Exception {
+  
+    org.firebirdsql.pool.FBConnectionPoolDataSource pool = 
+      new org.firebirdsql.pool.FBConnectionPoolDataSource();
+      
+    pool.setMaxPoolSize(5);
+    pool.setMinPoolSize(2);
+    pool.setMaxStatements(10);
+    pool.setMaxIdleTime(30 * 60 * 60);
+    
+    pool.setDatabase("localhost/3050:C:/db/employee.fdb");
+    pool.setUser("SYSDBA");
+    pool.setPassword("masterkey");
+    
+    // obtain a physical connection to the database
+    PooledConnection pooledCon = pool.getPooledConnection();
+    
+    // obtain a wrapped connection    
+    Connection connection = pooledCon.getConnection();
+    try {
+      // do something here...
+    } finally {
+      // release the connection back to pool
+      connection.close();
+    }
+  }
+}
+~~~
+
+In the code above we perform the following steps:
+
+1. Lines 11-12: Create a connection pool object. In this example we create 
+   instance implementing the `javax.sql.ConnectionPoolDataSource` interface.
+2. Lines 14-17: Now we specify the pooling properties: maximum of 5 physical
+   connections, with minimum of 2, and each connection will maintain a cache of
+   10 prepared statements of the same type (i.e. with the same SQL). Connections
+   in the pool that are idle for more than half an hour (30 \* 60 \* 60 seconds)
+   are closed automatically.
+3. Lines 19-21: After specifying the pooling properties we set the database
+   connection properties. In our case that is only database path, user name and
+   password, but also any other supported property can be set here.
+4. Line 24: Having configured the data source, we obtain the physical connection
+   to the database. Our data source implementation will check the internal
+   connection pool and will open a new physical connection to the database if 
+   the pool is empty. An instance of `javax.sql.PooledConnection` represents a 
+   physical connection to the database. Calling the `PooledConnection.close()`
+   method will close the physical connection to the database and will remove 
+   this connection from the pool.
+5. Line 27: Now we obtain regular JDBC connection to the database and perform
+   the needed work.
+6. Line 32: At the end of processing we close the JDBC connection, but note that
+   we do not close the physical connection, but simply forget the reference to
+   it.
 
 Please pay especial attention to the steps 4, 5 and 6. They show the
 typical approach of using the JDBC connections in case of connection
 pooling. The step 4 is to some extent optional – if we use
-*javax.sql.DataSource* connection factory, it provides already wrapped
+`javax.sql.DataSource` connection factory, it provides already wrapped
 JDBC connections doing the step 4 implicitly.
 
-However it must be a rule for an application to use the *try/finally*
+However it must be a rule for an application to use the `try/finally`
 block to release the connection. In the XXX chapter we will discuss the
 transaction boundaries and how they can influence that connection
 handling, but for the code running in the J2EE environment the
-*try/finally* guarantees that connections are never leaked in the
+`try/finally` guarantees that connections are never leaked in the
 application code, the container will take care for the rest.
 
-List of all pool-related properties can be found in “[Pool
-Properties](#1.8.5.Pool Properties|outline)” and “[Runtime Pool
-Properties](#1.8.6.Runtime Pool Properties|outline)”.
+List of all pool-related properties can be found in "[Pool Properties]" and 
+"[Runtime Pool Properties]".
 
-### <span id="anchor-13"></span>Using FBConnectionPoolDataSource with JNDI
+Using FBConnectionPoolDataSource with JNDI
+------------------------------------------
+<!-- Information in this section is outdated/deprecated -->
 
-Connection pooling is tightly coupled with the Java Naming and Directory
-Interface, which provides a network-transparent hierarchical mapping of
-the symbolic references to objects. As it was showed in , pooled
-connections are obtained from JNDI using a symbolic reference, a JNDI
-name. When an application binds an object into JNDI, typically following
-happens:
+> Warning: The code presented in this section is deprecated
+> and not correct/typical usage
 
--   If object implements *java.io.Serializable* interface, object is
+Connection pooling is tightly coupled with the Java Naming and Directory 
+Interface, which provides a network-transparent hierarchical mapping of 
+the symbolic references to objects. As it was showed in 
+[Obtaining a connection via javax.sql.DataSource], pooled connections are 
+obtained from JNDI using a symbolic reference, a JNDI name. When an application
+binds an object into JNDI, typically following happens:
+
+-   If object implements `java.io.Serializable` interface, object is
     directly bound to the specified name. If application accesses the
     JNDI from the local JVM, a reference to the object bound in JNDI
     is returned. If application accesses the JNDI from remote JVM, a
     serialized copy of an object is sent over the wire to the remote
     node, where it is deserialized and returned to the application
--   If object implements *javax.naming.Referencable* interface, JNDI
+-   If object implements *`javax.naming.Referencable` interface, JNDI
     implementation binds the so-called reference instead of an object.
     Reference contains all necessary information to reconstruct the
     object regardless of the JVM in which this operation happens. This
     is performed with the help of so-called object factories. Object
-    factory knows how to convert instance of *javax.naming.Reference*
+    factory knows how to convert instance of `javax.naming.Reference`
     into an appropriate object.
 -   If object implements none of the above mentioned interfaces, the
     behavior is undefined. Usually JNDI provider allows to access bind
     objects in local JVM, but when access happens in remote JVM, an
     exception is thrown.
 
-*FBConnectionPoolDataSource* implements both *java.io.Serializable* and
-*javax.naming.Referencable* interfaces. shows how to create and bind the
-JNDI reference for a *FBConnectionPoolDataSource* class:
+`FBConnectionPoolDataSource` implements both `java.io.Serializable`* and
+`javax.naming.Referencable` interfaces. The code below shows how to create and
+bind the JNDI reference for a `FBConnectionPoolDataSource` class:
 
-1.  Create reference instance for the *FBConnectionPoolDataSource*.
+~~~ {.java .numberLines}
+package hello;
+
+import javax.naming.*;
+import org.firebirdsql.pool.*;
+
+public class HelloBindJndi {
+
+  public static void main(String[] args) throws Exception {
+  
+    Reference ref = new Reference(
+        "org.firebirdsql.pool.FBConnectionPoolDataSource");
+        
+    ref.add(new StringRefAddr("maxPoolSize", "5"));
+    ref.add(new StringRefAddr("minPoolSize", "2"));
+    ref.add(new StringRefAddr("maxStatements", "10"));
+    ref.add(new StringRefAddr("maxIdleTime", "108000"));
+    
+    ref.add(new StringRefAddr("database",
+        "localhost/3050:C:/db/employee.fdb));
+    ref.add(new StringRefAddr("user", "SYSDBA"));
+    ref.add(new StringRefAddr("password", "masterkey"));
+    
+    Context ctx = new InitialContext();
+    ctx.bind("jdbc/test", ref);
+  }
+}
+~~~
+
+1.  Lines 10-11: Create reference instance for the `FBConnectionPoolDataSource`.
     According to the JNDI specification we could specify another type
     here, however the identifier specified here is used later by the
     object factory to check whether it is responsible for materializing
     the specified reference. Our object factory accepts only references
-    with the ID equal to
-    *"org.firebirdsql.pool.FBConnectionPoolDataSource"*.
-2.  Fill the pooling properties as reference addresses.
-3.  Fill the database connection properties. Steps 2 and 3 look quite
-    strange from the programming point of view, especially compared to
-    the . However, this approach is very elegant if we consider reading
-    the configuration from the file. In this case we no longer have to
-    use Java reflection to set needed properties – object factory does
-    it for us.
-4.  Create JNDI initial context and bind the reference to the
+    with the ID equal to `"org.firebirdsql.pool.FBConnectionPoolDataSource"`.
+2.  Lines 13-16: Fill the pooling properties as reference addresses.
+3.  Lines 18-21: Fill the database connection properties. Steps 2 and 3 look 
+    quite strange from the programming point of view, especially compared to
+    the previous section. However, this approach is very elegant if we consider
+    reading the configuration from the file. In this case we no longer have to
+    use Java reflection to set needed properties – object factory does it for 
+    us.
+4.  Lines 23-24: Create JNDI initial context and bind the reference to the
     specified name.
 
- Shows how to access the FBConnectionDataSource bound in previous
-example:
+The next example shows how to access the FBConnectionDataSource bound in 
+previous example:
 
-1.  Create an environment for the JNDI initial context.
-2.  Specify the “ java.naming.factory.initial” property. Our example
+~~~ {.java .numberLines}
+package hello;
+
+import java.util.*;
+import javax.naming.*;
+import org.firebirdsql.pool.*;
+
+public class HelloLookupJndiFactory {
+
+  public static void main(String[] args) throws Exception {
+  
+    Hashtable props = new Hashtable();
+    
+    props.put(
+        "java.naming.factory.initial",
+        "com.sun.jndi.fscontext.RefFSContextFactory");
+        
+    props.put(
+        "java.naming.factory.object", 
+        "org.firebirdsql.pool.FBConnectionPoolDataSource");
+        
+    Context ctx = new InitialContext(props);
+    FBConnectionPoolDataSource pool = 
+      (FBConnectionPoolDataSource)ctx.lookup("jdbc/test");
+  }
+}
+~~~
+
+1.  Line 11: Create an environment for the JNDI initial context.
+2.  Line 13-15: Specify the "java.naming.factory.initial" property. Our example
     uses Sun file system JNDI provider. In J2EE environment this
     property should match the one used by J2EE container. Additionally
-    one has to specify the “java.naming.provider.url” when accessing
+    one has to specify the "java.naming.provider.url" when accessing
     remote JVM.
-3.  Specify the “ java.naming.factory.object” property. In our case it
-    contains only one object factory – our pool class itself. In J2EE
+3.  Lines 17-19: Specify the "java.naming.factory.object" property. In our case
+    it contains only one object factory – our pool class itself. In J2EE
     environment one has to configure the environment correctly.
-4.  Create JNDI context and perform the JNDI lookup.
+4.  Lines 21-23: Create JNDI context and perform the JNDI lookup.
 
-### <span id="anchor-14"></span>The javax.sql.DataSource implementation
+The javax.sql.DataSource implementation
+---------------------------------------
+<!-- Information in this section is outdated/deprecated -->
+
+> Warning: The code presented in this section is deprecated
+> and not correct/typical usage
 
 The example before showed how to work with the Jaybird 2.1 connection
-pool. However, the *javax.sql.ConnectionPoolDataSource* is usually not
+pool. However, the `javax.sql.ConnectionPoolDataSource` is usually not
 accessible to the application code, as it provides the ability to
 manipulate physical connections. In a J2EE environment application
-accesses the instance of *javax.sql.DataSource* interfaces instead. This
+accesses the instance of `javax.sql.DataSource` interfaces instead. This
 is usually done by wrapping the connection pool by a simple
 implementation of the latter interface. Jaybird 2.1 provides such
-implementation in *org.firebirdsql.pool.SimpleDataSource* class that
-takes *javax.sql.ConnectionPoolDataSource* as parameter in constructor.
+implementation in `org.firebirdsql.pool.SimpleDataSource` class that
+takes `javax.sql.ConnectionPoolDataSource` as parameter in constructor.
 
 Additionally Jaybird 2.1 provides a class that can be used in the same
-was as the *FBConnectionPoolDataSource*. shows how to instantiate
-*FBWrappingDataSource* implementation in a client application. This
-class is called “wrapping” because it wraps the connection pool and
-delegates all calls to the underlying implementation. As you can see,
-the code is very similar to the , only few places are different. Please
-note, that there is no longer Step 4, the wrapper does this
-automatically in *getConnection()* method used in Step 5.
+was as the `FBConnectionPoolDataSource`. The next example shows how to 
+instantiate `FBWrappingDataSource` implementation in a client application.
 
-### <span id="anchor-15"></span>The javax.sql.XADataSource implementation
+~~~ {.java .numberLines}
+package hello;
+
+import java.sql.*;
+import javax.sql.*;
+import org.firebirdsql.pool.*;
+
+public class HelloConnectionPool {
+
+  public static void main(String[] args) throws Exception {
+  
+    org.firebirdsql.pool.FBWrappingDataSource pool = 
+      new org.firebirdsql.pool.FBWrappingDataSource();
+      
+    pool.setMaxPoolSize(5);
+    pool.setMinPoolSize(2);
+    pool.setMaxStatements(10);
+    pool.setMaxIdleTime(30 * 60 * 60);
+    
+    pool.setDatabase("localhost/3050:C:/db/employee.gdb");
+    pool.setUser("SYSDBA");
+    pool.setPassword("masterkey");
+    
+    // no step 4 as in previous example
+    
+    // obtain a wrapped connection    
+    Connection connection = pool.getConnection();
+    try {
+      // do something here...
+    } finally {
+      // release the connection back to pool
+      connection.close();
+    }
+  }
+}
+~~~
+
+This class is called "wrapping" because it wraps the connection pool and
+delegates all calls to the underlying implementation. As you can see,
+the code is very similar to the example in 
+[The javax.sql.ConnectionPoolDataSource implementation], only few places are
+different. Please note, that there is no longer Step 4, the wrapper does this
+automatically in `getConnection()` method used in Step 5 (line 26).
+
+The javax.sql.XADataSource implementation
+-----------------------------------------
+<!-- Information in this section is outdated/deprecated -->
+
+> Warning: The code presented in this section is deprecated
+> and not correct/typical usage
 
 JDBC 2.0 specification introduced the javax.sql.XADataSource interface
 that should be used to access connections that can participate in
@@ -551,7 +866,8 @@ synchronize multiple resource managers.
 
 Jaybird 2.1 does not have separate class, but FBConnectionPoolDataSource
 also implements the javax.sql.XADataSource interface. For information
-how to instantiate this class please see .
+how to instantiate this class please see 
+[The javax.sql.ConnectionPoolDataSource implementation].
 
 Applications usually do not need to access the javax.sql.XADataSource
 directly, this is task for a J2EE container. Chapter XXX contains more
@@ -559,20 +875,21 @@ detailed description of distributed transactions and contains code to
 access and manipulate connections that participate in distributed
 transactions.
 
-<span id="anchor-16"></span><span id="Exceptions"></span><span id="anchor-16"></span>Handling exceptions
---------------------------------------------------------------------------------------------------------
+Handling exceptions
+===================
 
 An exception handling is probably the most important aspect that
 directly affects the stability of the application. Correct handling of
 the error cases guarantees correct functioning of the client code as
 well as the database server. Additionally, all methods of the interfaces
 defined in the JDBC specification throw instances of
-*java.sql.SQLException* to notify about all error conditions that happen
-during request processing. The *SQLException* is checked exception,
+`java.sql.SQLException` to notify about all error conditions that happen
+during request processing. The `SQLException` is checked exception,
 which forces Java programmer to either handle it with the try/catch
 clause or redeclare it in the method signature.
 
-### <span id="anchor-17"></span>Working with exceptions
+Working with exceptions
+-----------------------
 
 The exception handling becomes even more important if we consider that
 this topic is either ignored or presented in incorrect form in the most
@@ -589,7 +906,7 @@ handling are made and the new application must be thoroughly tested
 after the change.
 
 Another reason was already mentioned on the beginning of this chapter –
-instances of *java.sql.SQLException* is the only way for the RDBMS
+instances of `java.sql.SQLException` is the only way for the RDBMS
 server to notify about the error condition that happened during request
 processing. By checking the error code which is sent with the exception
 application can try to recover from the error.
@@ -633,8 +950,42 @@ The handling strategy then consists of
 The problem can be solved if resource allocation and deallocation
 happens in the same code block and is protected with try/finally block
 and the code to recover from error conditions should use try/catch
-blocks. Example of such error and resource handling code is presented on
-.
+blocks. Example of such error and resource handling code is presented below.
+
+~~~ {.java}
+PreparedStatement updateSales = null;
+
+String updateString = "update COFFEES " +
+    "set SALES = ? where COF_NAME like ?";
+    
+updateSales = con.prepareStatement(updateString);
+
+try {
+    int [] salesForWeek = {175, 150, 60, 155, 90};
+    String [] coffees = {"Colombian", "French_Roast",
+        "Espresso", "Colombian_Decaf",
+        "French_Roast_Decaf"};
+        
+    int len = coffees.length;
+    
+    for(int i = 0; i < len; i++) {
+    
+        updateSales.setInt(1, salesForWeek[i]);
+        updateSales.setString(2, coffees[i]);
+        
+        try {
+            updateSales.executeUpdate();
+        } catch(SQLException ex) {
+            if (ex.getErrorCode() == ...)
+                // do something
+            else
+                throw new BusinessDBException(ex);
+        }
+    }
+} finally {
+    updateSales.close();
+}
+~~~
 
 The nested try/catch block shows you an example of handling a deadlock
 error if it happens (first scenario according to our classification),
@@ -643,14 +994,14 @@ otherwise the exception is converted and passed to the upper layers
 third scenario.
 
 A possible bug in the JDBC driver could have generated runtime exception
-in the *PreparedStatement.executeUpdate()* method, which would lead to
+in the `PreparedStatement.executeUpdate()` method, which would lead to
 the statement handle leakage if no try/finally block is used to do the
-resource cleanup. As a rule of thumb, the “try” keyword should go right
-after the resource was allocated and the “finally” keyword should be
+resource cleanup. As a rule of thumb, the "try" keyword should go right
+after the resource was allocated and the "finally" keyword should be
 placed right before the resource is freed.
 
 Such coding practice might look weird, because on the first sight the
-whole purpose of using the *PreparedStatement* is neglected – statement
+whole purpose of using the `PreparedStatement` is neglected – statement
 is prepared, used only once and then deallocated. However, when this
 practice is combined with the connection and statement pooling, it
 brings enormous advantage to the application code. The code becomes much
@@ -662,21 +1013,33 @@ pooled prepared statements are currently in use. As a side effect,
 application will always use the minimum number of statements handles,
 which in turn reduces the used resources on the server side.
 
-### <span id="anchor-18"></span>Warnings
+Warnings
+--------
 
 Some errors returned by the Firebird server are treated as warnings.
-They are converted into instances of *java.sql.SQLWarning* class in the
+They are converted into instances of `java.sql.SQLWarning` class in the
 JDBC layer. These exceptions are not thrown from the driver methods, but
 added to a connection instance. Currently no warning is added to
-*Statement* or *ResultSet* objects.
+`Statement` or `ResultSet` objects.
 
 Each next warning is appended to the tail of the warning chain. In order
-to read the warning chain, use the code presented on .
+to read the warning chain, use the code presented below.
 
-In order to clear existing warning, call *Connection.clearWarnings()*
+~~~ {.java}
+import java.sql.*;
+....
+SQLWarning warning = connection.getWarnings();
+while (warning != null) {
+    .... // do something with the warning
+    warning = warning.getNextWarning();
+}
+~~~
+
+In order to clear existing warning, call `Connection.clearWarnings()`
 method.
 
-### <span id="anchor-19"></span>java.sql.SQLException in Jaybird
+java.sql.SQLException in Jaybird
+--------------------------------
 
 An SQLException is a special exception that is thrown by the JDBC
 connectivity component in case of an error. Each instance of this
@@ -685,17 +1048,17 @@ a SQL state according to the X/Open SQLstate or SQL 2003 specifications.
 
 When multiple SQL errors happened, they are joined into a chain. Usually
 the most recent exception is thrown to the application, the exceptions
-that happened before can be obtained via
-*SQLException.getNextException()* method.
+that happened before can be obtained via `SQLException.getNextException()`
+method.
 
 Unfortunately the JDBC specification does not provide a usable exception
 hierarchy that would allow application to react on the error situations
 using regular exception handling rather than checking the error code.
 Only two subclasses are defined in JDBC 3.0 specification:
 
--   *java.sql.DataTruncation* exception is thrown when data truncation
+-   `java.sql.DataTruncation` exception is thrown when data truncation
     error happens.
--   *java.sql.BatchUpdateException* exception is thrown when batch of
+-   `java.sql.BatchUpdateException` exception is thrown when batch of
     the statement did not execute successfully and contains the result
     of batch execution.
 
@@ -706,63 +1069,79 @@ versions of Jaybird.
 Each of three layers in Jaybird use exceptions most appropriate to the
 specific layer.
 
--   *org.firebirdsql.gds.GDSException* is an exception that directly
+-   `org.firebirdsql.gds.GDSException` is an exception that directly
     corresponding to the error returned by the database engine.
     Instances of this class are thrown by the GDS implementations. Upper
     layers either convert these exceptions into the ones appropriate to
     that layer or catch them if driver can handle the error condition.
--   Subclasses of *javax.resource.ResourceException* are thrown by the
+-   Subclasses of `javax.resource.ResourceException` are thrown by the
     JCA layer when an error happens in the JCA-related code. Upper layer
-    converts this exception into a subclass of *java.sql.SQLException*.
-    If the *ResourceException* was caused by the *GDSException*, latter
+    converts this exception into a subclass of `java.sql.SQLException`.
+    If the `ResourceException` was caused by the `GDSException`, latter
     is extracted during conversion preserving the error code. If
-    *ResourceException* was caused by an error condition not related to
+    `ResourceException` was caused by an error condition not related to
     an error returned by the database engine, error code of the
-    *SQLException* remains 0.
--   Subclasses of *javax.transaction.XAException* are thrown when an XA
+    `SQLException` remains 0.
+-   Subclasses of `javax.transaction.XAException` are thrown when an XA
     protocol error happens in JCA layer. Similar to the previous case,
-    *XAException* can wrap the *GDSException*, which are extracted
+    `XAException` can wrap the `GDSException`, which are extracted
     during exception conversion to preserve the error code.
--   Subclasses of *java.sql.SQLException* are thrown by the JDBC layer.
+-   Subclasses of `java.sql.SQLException` are thrown by the JDBC layer.
     Driver has also few subclasses that might be interesting to the
     application:
 
-    -   *org.firebirdsql.jdbc.FBDriverConsistencyCheckException* – this
+    -   `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` – this
         exception is thrown when driver detects an internal
         inconsistent state. SQL state is SQL\_STATE\_GENERAL\_ERROR.
-    -   *org.firebirdsql.jdbc.FBDriverNotCapableException* – this
+    -   `org.firebirdsql.jdbc.FBDriverNotCapableException` – this
         exception is thrown when an unsupported method is called. SQL
         state is SQL\_STATE\_DRIVER\_NOT\_CAPABLE.
-    -   *org.firebirdsql.jdbc.FBSQLParseException* – this exception is
+    -   `org.firebirdsql.jdbc.FBSQLParseException` – this exception is
         thrown when incorrect escaped syntax is detected. SQL state
         is SQL\_STATE\_INVALID\_ESCAPE\_SEQ.
-    -   *org.firebirdsql.jdbc.field.TypeConversionException* – this
+    -   `org.firebirdsql.jdbc.field.TypeConversionException` – this
         exception is thrown when the driver is asked to perform a type
         conversion that is not defined in the JDBC specification. For a
         table of allowed type conversions see [Data Type Conversion
-        Table](#anchor-20).
+        Table].
 
-### <span id="anchor-21"></span>SQL states
+SQL states
+----------
 
 Jaybird supports the SQL states from the X/Open standard, however only
 few states nicely map into the Firebird error codes. Below is the table
 containing the reported SQL states.
 
-  ------------------------------------------- -----------
-  ------------------------------------------- -----------
+Constant name                               Constant value
+------------------------------------------  --------------
+SQL_STATE_INVALID_CON_ATTR                  "01S00"
+SQL_STATE_NO_ROW_AVAIL                      "01S06"
+SQL_STATE_GENERAL_ERROR                     "HY00"
+SQL_STATE_DRIVER_NOT_CAPABLE                "HYC00"
+SQL_STATE_INVALID_COLUMN                    "HY02"
+SQL_STATE_INVALID_PARAM_TYPE                "HY105"
+SQL_STATE_INVALID_ARG_VALUE                 "HY009"
+SQL_STATE_WRONG_PARAM_NUM                   "07001"
+SQL_STATE_NO_RESULT_SET                     "07005"
+SQL_STATE_INVALID_CONVERSION                "07006"
+SQL_STATE_CONNECTION_CLOSED                 "08003"
+SQL_STATE_CONNECTION_FAILURE_IN_TX          "08007"
+SQL_STATE_COMM_LINK_FAILURE                 "08S01"
+SQL_STATE_INVALID_ESCAPE_SEQ                "22025"
 
 Application can use the SQL state codes in the error handling routines
 which should handle errors that are returned from different databases.
 But since there is little agreement between RDBMS vendors, this method
 can be used only for very coarse error distinction.
 
-### <span id="anchor-22"></span>Useful Firebird error codes
+Useful Firebird error codes
+---------------------------
 
 Contrary to the SQL states, the Firebird native error codes are
 extremely useful to determine the type of an error that happened.
 
 Here you can find a short list of error codes, symbolic names of a
-corresponding constant in a *org.firebirdsql.gds.ISCConstants* class,
+corresponding constant in a `org.firebirdsql.gds.ISCConstants` class,
 the error message and short explanation of an error.
 
 DDL Errors
@@ -1003,8 +1382,8 @@ Statement lifetime and DDL
 The step 2 in the previous chapter is probably the most important, and
 usually, most expensive part of the statement execution life cycle.
 
-As it was already told, when Firebird server receives the “prepare
-statement” call, it parses the SQL statement and converts it into the
+As it was already told, when Firebird server receives the "prepare
+statement" call, it parses the SQL statement and converts it into the
 executable form – BLR representation. BLR, a Binary Language
 Representation, contains low-level commands to traverse the database
 tables, conditions that are used to filter records, defines the order in
@@ -1014,7 +1393,7 @@ performance, etc.
 When a BLR is prepared, it holds the references to all database object
 definitions that are used during that statement execution. This
 mechanism preserves the database schema consistency, it saves the
-statement objects from the “surprises” like accessing the database table
+statement objects from the "surprises" like accessing the database table
 that is been accessed by some application.
 
 However, holding a reference on the database objects has one very
@@ -1023,8 +1402,8 @@ if there are active connections to the database with open statements
 referencing the objects being upgraded. In other words, if two
 application are running and one is trying to modify the table, view,
 procedure or trigger definition while another one is accessing those
-objects, the first application will receive an error 335544453 “object
-is in use”.
+objects, the first application will receive an error 335544453 "object
+is in use".
 
 Therefore it is strongly recommended to close the statement as soon as
 it is no longer needed. This invalidates the BLR and release all
@@ -1048,7 +1427,7 @@ needed to compile the SQL statement into the BLR form.
 The *PreparedStatement* interface addresses such inefficiency. An object
 that implements this interface represents a precompiled statement that
 can be executed multiple times. If we use the execution flow described
-in the “[Statement dynamics](#Statement dynamics)” chapter, it allows to
+in the "[Statement dynamics](#Statement dynamics)" chapter, it allows to
 go directly to the step 4 for the subsequent executions.
 
 However, executing the same statement with the same values makes little
@@ -1192,12 +1571,12 @@ switch the statement pooling off.
 The *restart()* method defined in the *FBConnectionPoolDataSource* and
 in the *FBWrappingDataSource* classes. This method closes all open
 connection residing in the pool. Connections that are currently used in
-the application are marked as “pending for close” and are deallocated as
+the application are marked as "pending for close" and are deallocated as
 soon as application returns them to the pool. This algorithm guarantees
 that eventually all connections will be closed and statements will be
 deallocated without closing the working applications. The only
 requirement for successful database schema upgrade is that the
-application does not “lock” the database objects before the upgrade
+application does not "lock" the database objects before the upgrade
 happens. Unfortunately there is no easy application design guidelines
 that would guarantee the hot schema upgrade.
 
@@ -1260,8 +1639,8 @@ Firebird stored procedures can be classified as follow:
     These procedures can be viewed as a functions that return
     multiple values. These procedures are executed by using the EXECUTE
     PROCEDURE statement.
--   Procedures that return result sets, also called “selectable
-    stored procedures”. These are stored procedures that contain the
+-   Procedures that return result sets, also called "selectable
+    stored procedures". These are stored procedures that contain the
     RETURNS keyword in their header and the SUSPEND keyword in their
     procedure body, usually within a loop. Selectable procedures are
     executed using the *"SELECT \* FROM myProcedure(...)"*
@@ -1320,7 +1699,7 @@ only after the statement is prepared. It seems that this part of the
 JDBC specification is modeled after the Oracle RDBMS and a workaround
 for this issue had to be delivered. Another side effect of this issue
 is, that it is allowed to intermix input and output parameters, for
-example in the “IN, OUT, IN, OUT, OUT, IN” order. Not that it makes much
+example in the "IN, OUT, IN, OUT, OUT, IN" order. Not that it makes much
 sense to do this, but it might help in some cases when porting
 applications from another database server.
 
@@ -1353,7 +1732,7 @@ computes a set of factorial of the numbers up to the specified number of
 rows.
 
 The SELECT SQL statement is the natural way of accessing the selectable
-procedures in Firebird. You “select” from such procedures using the
+procedures in Firebird. You "select" from such procedures using the
 *Statement* or *PreparedStatement* objects.
 
 With minor issues it is also possible to access selectable stored
@@ -1423,7 +1802,7 @@ The JDBC specification recommends to turn the auto-commit mode off to
 guarantee standard behavior for all databases. The specification
 explicitly states that behavior in auto-commit case is implementation
 defined. Jaybird executes a batch in a single transaction, i.e. the
-“all-or-nothing” principle. A new transaction is started before the
+"all-or-nothing" principle. A new transaction is started before the
 batch execution and is committed if there were no exception during batch
 execution, or is rolled back if at least one batch command generated an
 error.
@@ -1486,8 +1865,8 @@ Escaped syntax for the scalar function call is defined as
 {fn &lt;function-name&gt; (argument list)}
 
 For example *{fn concat('Firebird', 'Java')}* concatenates these two
-words into *'FirebirdJava'* literal. “[Supported JDBC Scalar
-Functions](#anchor-33)” provides a list of supported scalar functions.
+words into *'FirebirdJava'* literal. "[Supported JDBC Scalar
+Functions](#anchor-33)" provides a list of supported scalar functions.
 
 Date and Time Literals
 
@@ -1512,7 +1891,7 @@ omitted):
 Outer Joins
 
 Due to the various approaches to specify outer joins (for instance, the
-Oracle “(+)” syntax), the JDBC specification provides the following
+Oracle "(+)" syntax), the JDBC specification provides the following
 syntax:
 
 {oj &lt;outer join&gt;}
@@ -1569,7 +1948,7 @@ JDBC 3.0 specification defines three types of result sets
 -   *TYPE\_SCROLL\_SENSITIVE*, is not supported by Firebird and Jaybird.
     Driver allows application to ask for this type of result set,
     however according to the JDBC specification, the type is
-    “downgraded” to the previous type and corresponding warning is added
+    "downgraded" to the previous type and corresponding warning is added
     to the connection object.
 
 Due to a missing support of scrollable cursors in Firebird, their
@@ -1618,12 +1997,12 @@ commit. This property is available only in JDBC 3.0 specification.
 
 When application calls *Connection.commit()*, the Firebird server closes
 all open result sets. It is not possible to tell the server to keep
-result set open over commit unless “commit retaining” mode is used. This
+result set open over commit unless "commit retaining" mode is used. This
 mode is global for the complete connection and is not suitable for
 holdability control on the statement level. Also this mode is believed
 to have an undesired side-effect for read-write transactions as it
-inhibits garbage collection. Because of these two reasons “commit
-retaining” is not used in Jaybird during normal execution. Applications
+inhibits garbage collection. Because of these two reasons "commit
+retaining" is not used in Jaybird during normal execution. Applications
 are able to commit the transaction keeping the result sets open by
 executing a *"COMMIT RETAIN"* SQL statement.
 
@@ -1650,7 +2029,7 @@ Values of the result set are obtained by calling the corresponding
 getter method depending on the type of column. For example the
 *ResultSet.getInt(1)* method returns the value of the first column as an
 *int* value. If value of the column is not integer, driver tries to
-convert it according to the “Data Type Conversion Table” specified in
+convert it according to the "Data Type Conversion Table" specified in
 [Data Type Conversion Table](#anchor-20). If conversion is not possible,
 an exception is thrown.
 
@@ -1682,7 +2061,7 @@ The code example on shows how to update first row, insert new one and
 after that move two records backwards.
 
 Also an application can update the current row using so called
-“positioned updates” on named cursors. This technique can be used only
+"positioned updates" on named cursors. This technique can be used only
 with forward-only cursors, since application can update only the row to
 which the server-side cursor points to. In case of scrollable cursors
 the complete result set is fetched to the client and then the
@@ -1803,7 +2182,7 @@ created by the same connection object (step 1). When the UPDATE is
 executed in step 3, the result set produced by the SELECT statement must
 be closed before the execution. When Java application tries to fetch the
 next record by calling the *rs.next()* method, it will receive an
-*SQLException* with a message “Result set object is closed”.
+*SQLException* with a message "Result set object is closed".
 
 The only correct solution to this situation is to fix the application by
 either using explicit transaction control, or by using two connection
@@ -1894,7 +2273,7 @@ isolation levels:
     way: all transactions wait until the current modification is done.
     This mode can be considered as a traditional pessimistic locking
     scheme, but the lock is placed on the whole table. See Chapter
-    “[Table Reservation](#anchor-42)” on page [68](#anchor-42) for
+    "[Table Reservation](#anchor-42)" on page [68](#anchor-42) for
     more information.
 
 The mapping is specified in the isc\_tpb\_mapping.properties file that
@@ -1906,8 +2285,8 @@ connection properties
     level;
 -   via the direct specification of the JDBC transaction
     isolation level. contains an example of such operation, the values
-    in the mapping are described in Chapter “[Transaction Parameter
-    Buffer](#anchor-43)” on page [65](#anchor-43).
+    in the mapping are described in Chapter "[Transaction Parameter
+    Buffer](#anchor-43)" on page [65](#anchor-43).
 -   via the connection pool configuration.
 
 The overridden mapping is used for all transactions started within the
@@ -1972,7 +2351,7 @@ levels.
 
 In *consistency* and *concurrency* modes Firebird database engine loads
 the different versions of the same record from disk and checks the
-“timestamps” of each version and compares it with the “timestamp” of the
+"timestamps" of each version and compares it with the "timestamp" of the
 current transaction. The record version with the highest timestamp that
 is however lower or equal to the timestamp of the current transaction is
 returned to the application. This effectively returns the version of the
@@ -2013,10 +2392,10 @@ constants:
 -   *TransactionParameterBuffer.WRITE*
 
 When the read-write mode is specified, database engine stores the
-“timestamp” of new transaction in the database even no modification will
-be made in the transaction. The “timestamp” affects the garbage
+"timestamp" of new transaction in the database even no modification will
+be made in the transaction. The "timestamp" affects the garbage
 collection process, since the database engine cannot release records
-that were modified in the transactions with higher “timestamps” even
+that were modified in the transactions with higher "timestamps" even
 when these record versions are no longer needed (in other words, when
 there are already newer versions of the records). Thus, the long-running
 read-write transaction inhibits the garbage collection even when no
@@ -2030,17 +2409,17 @@ transaction when it is used for read operations.
 The RDBMS systems that use pessimistic locking for the concurrency
 control lock the records regardless of the operation type, read or
 write. When application tries to read a record from the database,
-database engine tries to obtain a “read lock” to that record. If the
+database engine tries to obtain a "read lock" to that record. If the
 operation succeeds and application later tries to update the record, the
-lock is upgraded to the “write lock”. And finally, if the resource is
+lock is upgraded to the "write lock". And finally, if the resource is
 already locked for write, concurrent transactions cannot lock it for
 reading, since the system cannot allow the transaction to make a
 decision based on data that might be rolled back later. This in approach
 significantly decreases concurrency. However, the databases systems that
 employ the record versioning mechanism do not have such restriction
-because each transaction “sees” its own version of the record – the only
+because each transaction "sees" its own version of the record – the only
 possible conflict happens when two concurrent transactions try to obtain
-“write lock” for the same database record.
+"write lock" for the same database record.
 
 Firebird belongs to the latter, and on *read\_committed* and
 *concurrency* isolation levels it behaves appropriately – there are no
@@ -2049,7 +2428,7 @@ for the same resource raise a lock conflict. However, on the
 *consistency* isolation level Firebird emulates the behavior of the
 systems with pessimistic locking – read operation will conflict with
 write. Even more, the locks are obtained for the whole tables (see
-“[Table Reservation](#anchor-42)” chapter for details).
+"[Table Reservation](#anchor-42)" chapter for details).
 
 The summarizes the above said in a table for Firebird 2.0. It shows that
 read-committed or repeatable read transactions conflict only when they
@@ -2077,7 +2456,7 @@ protected mode. The code does the following:
 
 1.  Create a new instance of *TransactionParameterBuffer* class.
 2.  Populate the TPB. The first three statements were described in the
-    chapter “[Transaction Parameter Buffer](#anchor-43)”. The fourth
+    chapter "[Transaction Parameter Buffer](#anchor-43)". The fourth
     call specifies that the application wants to obtain a lock on the
     table *TEST\_LOCK* for writing. The fifth call specifies the type of
     the lock to obtain, in our case the protected lock.
@@ -2118,7 +2497,7 @@ Additionally to the normal database connections Firebird features the
 server-wide connections. These are used to perform various
 administrative tasks in Firebird, e.g. database backup, maintenance,
 statistics. The set of API calls to perform such tasks are known under
-the name “Services API”. Additionally client application can use the
+the name "Services API". Additionally client application can use the
 Services API to get some limited information about the server
 environment and configuration.
 
@@ -2357,10 +2736,10 @@ Sweeping the database
 
 The in-limbo transactions are not the only kind of transactions that
 prevent garbage collection. Another type are transactions are those that
-were finished by “rollback” and the changes made in such transactions
+were finished by "rollback" and the changes made in such transactions
 were not automatically undone by using internal savepoint mechanism,
 e.g. when there were a lot of changes made in the transaction (e.g.
-10,000 records and more). Such transactions are marked as “rollback”
+10,000 records and more). Such transactions are marked as "rollback"
 transactions on Transaction Inventory Page and prevent advancing the
 so-called Oldest Interesting Transaction (OIT) – ID of the oldest
 transaction which created record versions that are relevant to any of
@@ -2643,7 +3022,7 @@ Syntax of the parameter is
 
 where *&lt;name&gt;* is the name of the DPB parameter, and
 *&lt;value&gt;* is its value. The two are separated by any combination
-of whitespace and either whitespace or “=” (equal sign) or “:” (colon)
+of whitespace and either whitespace or "=" (equal sign) or ":" (colon)
 characters. Considering the aliases described in [Extended connection
 properties](#anchor-9) For example following values are equivalent:
 
@@ -2688,9 +3067,9 @@ Firebird uses following algorithm when performing translations:
 
 -   If source and target character sets match, send the
     content unchanged.
--   If the target character set is “NONE”, send source
+-   If the target character set is "NONE", send source
     content unchanged.
--   If the source character set is “NONE”, send source
+-   If the source character set is "NONE", send source
     content unchanged.
 -   If there is a direct translation rule between source and target
     character sets, use that rule.
@@ -2788,8 +3167,8 @@ wrong sorting order or uppercasing on the server side).
 
 On Linux and other Unix platforms it might have more severe consequences
 as it is very common that regional settings are not configured and that
-the default “C” locale is used and the non-ASCII characters will be
-replaced with question marks (“?”).
+the default "C" locale is used and the non-ASCII characters will be
+replaced with question marks ("?").
 
 Therefore, application should use NONE character encoding as an encoding
 for a database and a connection only when at least one of the following
@@ -2837,7 +3216,7 @@ The JDBC API supports the escaped syntax for numeric, string, time,
 date, system and conversion functions. Jaybird will try to provide an
 equivalent of the JDBC function using the built-in capabilities of the
 Firebird database. When no equivalent is available, Jaybird will pass
-the function call “as is” to the database assuming that it contains all
+the function call "as is" to the database assuming that it contains all
 necessary UDF declarations .
 
 Not all functions described in the JDBC specification have corresponding
@@ -2849,7 +3228,7 @@ Jaybird will convert all JDBC function calls into the corresponding
 calls of the UDF functions.
 
 Below you will find the list of JDBC functions and whether they have a
-corresponding equivalent in the “built-in” and in the “UDF” modes.
+corresponding equivalent in the "built-in" and in the "UDF" modes.
 
 ### <span id="anchor-68"></span>Numeric Functions
 
@@ -2910,7 +3289,7 @@ Legend: m – not available in this mode; l – available in this mode.
 
 [^3]: Other cases, e.g. closing the statement object or the connection
     object will still ensure that the result set object is closed. If
-    you need result sets that can be “detached” from the statement
+    you need result sets that can be "detached" from the statement
     object that created them, please check the *javax.sql.RecordSet*
     implementations.
 
@@ -2951,7 +3330,7 @@ Legend: m – not available in this mode; l – available in this mode.
     do not consider them in this manual.
 
 [^12]: For more information please read article by Ann Harrison
-    “Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep”,
+    "Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep",
     available, for example, at
     [http://www.ibphoenix.com/main.nfs?page=ibp\_expert4](http://www.ibphoenix.com/main.nfs?a=ibphoenix&page=ibp_expert4)
 
