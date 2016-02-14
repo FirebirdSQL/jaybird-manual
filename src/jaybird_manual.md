@@ -4122,73 +4122,253 @@ current Firebird API has almost 70 DPB parameters, however only few of
 them are interesting for regular users. This chapter provides a list of
 most useful DPB parameters and short explanation to each of them.
 
-  ----------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ----------------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+DPB Parameter + alias(es)      Explanation
+------------------------------ -----------------------------------------------------------
+`isc_dpb_user_name`            Name of the user for the connection.
+`user_name`, `user`
+
+`isc_dpb_password`             Password corresponding to the specified user.
+`password`
+
+`isc_dpb_lc_ctype`             Character encoding for the connection. This property tells 
+`lc_ctype`, `encoding`         the database server the encoding in which it expects 
+                               character content. For list of the available encodings see 
+                               "[Available Encodings]".
+
+`CharSet`, `localEncoding`     Character set for the connection. Similar to the previous 
+                               property, however instead of Firebird-specific name allows 
+                               using standard Java encoding name.
+
+`isc_dpb_num_buffers`          Number of database pages that will be cached. Default 
+`num_buffers`                  values are 75 for ClassicServer and 2048 for SuperServer.
+
+`isc_dpb_sql_role_name`        Name of the SQL role for the specified connection.
+`sql_role_name`
+
+`isc_dpb_sql_dialect`          SQL dialect, by default 3, can be 1, 2 and 3.
+`sql_dialect`
+
+`isc_dpb_set_db_readonly`      Set the database into read-only state.
+`set_db_readonly`
+
+`isc_dpb_set_db_sql_dialect`   Set the SQL dialect of the database.
+`set_db_sql_dialect`
+
+`isc_dpb_set_db_charset`       Set the default character set of the database.
+`set_db_charset`
+
+`isc_dpb_socket_buffer_size`   Jaybird specific parameter. Tells Jaybird Type 4 driver 
+`socket_buffer_size`           the size of the socket buffer. Should be used on the 
+                               systems where default socket buffer provided by JVM is not 
+                               correct
+
+`isc_dpb_blob_buffer_size`     Jaybird specific parameter. Tells the driver the size of 
+`blob_buffer_size`             the buffer that is used to transfer BLOB content. It is 
+                               recommended to keep the value equal to `n * <database 
+                               page size>` (and preferably also socket buffer size).
+
+`isc_dpb_use_stream_blobs`     Jaybird specific parameter. Tells the driver to create 
+`use_stream_blobs`             stream BLOBs. By default segmented BLOBs are created.
+
+`isc_dpb_paranoia_mode`        Jaybird specific parameter. Tells the driver to throw 
+`paranoia_mode`                exception in the situation not covered by the 
+                               specification. For example, the JDBC specification does not
+                               say  whether it is allowed to call the close() method 
+                               twice. In “paranoia mode” Jaybird will throw an exception 
+                               while in normal mode it will simply ignore the second call. 
+
+`isc_dpb_use_standard_udf`     Jaybird specific parameter. Tells the JDBC driver to assume 
+`use_standard_udf`             that standard UDF library is registered in the database 
+                               when converting escaped function calls. See "[Supported JDBC
+                               Scalar Functions]" for more details.
+------------------------------------------------------------------------------------------
 
 Data Type Conversion Table
 ==========================
 
 Mapping between JDBC, Firebird and Java Types
+---------------------------------------------
 
 The below table describes a mapping of the JDBC data types defined in
-*java.sql.Types* class to the Firebird data types. Also, for each JDBC
-data type a class instance of which is returned by *ResultSet.getObject*
+`java.sql.Types` class to the Firebird data types. Also, for each JDBC
+data type a class instance of which is returned by `ResultSet.getObject`
 method is provided.
 
-  --------------- ----------------------- ----------------------
-  --------------- ----------------------- ----------------------
+|JDBC Type      |Firebird Type      | Java Object Type 
+|---------------|-------------------|----------------------
+|`CHAR`         |`CHAR`             |`String`
+|`VARCHAR`      |`VARCHAR`          |`String`
+|`LONGVARCHAR`  |`BLOB SUB_TYPE 1`  |`String`
+|`NUMERIC`      |`NUMERIC`          |`java.math.BigDecimal`
+|`DECIMAL`      |`DECIMAL`          |`java.math.BigDecimal`
+|`SMALLINT`     |`SMALLINT`         |`java.lang.Short`
+|`INTEGER`      |`INTEGER`          |`java.lang.Integer`
+|`BIGINT`       |`BIGINT`           |`java.lang.Long`
+|`REAL`         |`REAL`             |`java.lang.Float`
+|`FLOAT`        |`FLOAT`            |`java.lang.Double`
+|`DOUBLE`       |`DOUBLE PRECISION` |`java.lang.Double`
+|`LONGVARBINARY`|`BLOB SUB_TYPE 0`  |`byte[]`
+|`DATE`         |`DATE`             |`java.sql.Date`
+|`TIME`         |`TIME`             |`java.sql.Time`
+|`TIMESTAMP`    |`TIMESTAMP`        |`java.sql.Timestamp`
+|`BLOB`         |`BLOB SUB_TYPE < 0`|`java.sql.Blob`
+
 
 Data Type Conversions
+---------------------
 
 This table specifies the compatible conversions between the Firebird and
 Java types.
 
-  ------------------------- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-  ------------------------- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+|                      |`SMALLINT`|`INTEGER`|`BIGINT`|`REAL`|`FLOAT`|`DOUBLE`|`DECIMAL`|`NUMERIC`|`CHAR`|`VARCHAR`|`BLOB SUB_TYPE 1`|`BLOB SUB_TYPE 0`|`BLOB SUB_TYPE < 0`|`DATE`|`TIME`|`TIMESTAMP`
+|----------------------|----------|---------|--------|------|-------|--------|---------|---------|------|---------|-----------------|-----------------|-------------------|------|------|-----------
+|`String`              | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       | X               | X               | X                 | X    | X    | X     
+|`java.math.BigDecimal`| X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`Boolean`             | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`Integer`             | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`Long`                | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`Float`               | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`Double`              | X        | X       | X      | X    | X     | X      | X       | X       | X    | X       |                 |                 |                   |      |      |
+|`byte[]`              |          |         |        |      |       |        |         |         |      |         | X               | X               | X                 |      |      |
+|`Blob`                |          |         |        |      |       |        |         |         |      |         | X               | X               | X                 |      |      |
+|`Date`                |          |         |        |      |       |        |         |         |      |         |                 |                 |                   | X    |      | X
+|`Time`                |          |         |        |      |       |        |         |         |      |         |                 |                 |                   |      | X    |
+|`Timestamp`           |          |         |        |      |       |        |         |         |      |         |                 |                 |                   | X    |      | X
 
-C. Connection Pool Properties
-   ==========================
+Connection Pool Properties
+==========================
 
 This chapter contains the list of properties of the
-*ConnectionPoolDataSource*, *DataSource* and *XADataSource* interface
+`ConnectionPoolDataSource`, `DataSource` and `XADataSource` interface
 implementations.
 
-### <span id="anchor-60"></span>Standard JDBC Properties
+Standard JDBC Properties
+------------------------
 
 This group contains properties defined in the JDBC specification and
 should be standard to all connection pools.
 
-  ----------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ----------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+Property         Description
+---------------- -------------------------------------------------------------------------
+`maxIdleTime`    Maximum time in milliseconds after which an idle connection in the pool 
+                 is closed.
 
-### <span id="anchor-61"></span>Pool Properties
+`maxPoolSize`    Maximum number of open physical connections.
+
+`minPoolSize`    Minimum number of open physical connections. If value is greater than 0, 
+                 corresponding number of connections will be opened when first connection 
+                 is obtained.
+
+`maxStatements`  Maximum size of the prepared statement pool. If zero, statement pooling 
+                 is switched off. When the application requests more statements than can 
+                 be kept in the pool, Jaybird will allow creating those statements, 
+                 however closing them would not return them back to the pool, but rather 
+                 immediately release the resources.
+------------------------------------------------------------------------------------------
+
+Pool Properties
+---------------
 
 This group of properties are specific to the Jaybird implementation of
 the connection pooling classes.
 
-  ----------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ----------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++-----------------------------+----------------------------------------------------------+  
+| Property                    | Description                                              |  
++=============================+==========================================================+  
+| `blockingTimeout`           | Maximum time in milliseconds during which application can|  
+|                             | be blocked waiting for a connection from the pool. If no |  
+|                             | free connection can be obtained, an exception is thrown. |  
++-----------------------------+----------------------------------------------------------+  
+| `retryInterval`             | Period in which the pool will try to obtain a new        |  
+|                             | connection while blocking the application.               |  
++-----------------------------+----------------------------------------------------------+  
+| `pooling`                   | Allows to switch connection pooling off.                 |  
++-----------------------------+----------------------------------------------------------+  
+| `statementPooling`          | Allows to switch statement pooling off.                  |
++-----------------------------+----------------------------------------------------------+  
+| `pingStatement`             | Statement that will be used to "ping" the JDBC           |  
+|                             | connection, in other words, to check if it is still      |  
+|                             | alive. This statement must always succeed. The default   |  
+|                             | SQL statement for the Firebird database is `"SELECT      |  
+|                             | CAST(1 AS INTEGER) FROM rdb$database"`                   |  
++-----------------------------+----------------------------------------------------------+  
+| `pingInterval`              | Time during which connection is believed to be valid in  |  
+|                             | any case. The pool "pings" the connection before giving  |  
+|                             | it to the application only if more than specified amount |  
+|                             | of time passed since last "ping".                        |  
++-----------------------------+----------------------------------------------------------+  
+| `isolation`                 | Default transaction isolation level. All connections     |  
+|                             | returned from the pool will have this isolation level.   |  
+|                             | One of:                                                  |  
+|                             |                                                          |  
+|                             | -   `TRANSACTION_READ_COMMITTED`                         |  
+|                             | -   `TRANSACTION_REPEATABLE_READ`                        |  
+|                             | -   `TRANSACTION_SERIALIZABLE`                           |  
++-----------------------------+----------------------------------------------------------+  
+| `transactionIsolationLevel` | Integer value from `java.sql.Connection` interface       |  
+|                             | corresponding to the transaction isolation level         |  
+|                             | specified in isolation property.                         |  
++-----------------------------+----------------------------------------------------------+  
 
-### <span id="anchor-62"></span>Runtime Pool Properties
+Runtime Pool Properties
+-----------------------
 
 This group contains read-only properties that provide information about
 the state of the pool.
 
-  --------------- --------------------------------------------------------------------------------------------------------------------------------------
-  --------------- --------------------------------------------------------------------------------------------------------------------------------------
+|Property     |Description
+|-------------|------------
+|`freeSize`   | Tells how many free connections are in the pool. Value is between 0 and `totalSize`.
+|`workingSize`| Tells how many connections were taken from the pool and are currently used in the application.
+|`totalSize`  | Total size of open connection. At the pool creation – 0, after obtaining first connection – between `minPoolSize` and `maxPoolSize`.
 
-### <span id="anchor-63"></span>Firebird-specific Properties
+Firebird-specific Properties
+----------------------------
 
 This group contains properties that specify parameters of the
 connections that are obtained from this data source. Commonly used
 parameters have the corresponding getter and setter methods, rest of the
 Database Parameters Block parameters can be set using
-*setNonStandardProperty* setter method.
+`setNonStandardProperty` setter method.
 
-  -------------------- --------------------------------------------------------------------------------------------------------------------
-  -------------------- --------------------------------------------------------------------------------------------------------------------
++--------------------+-------------------------------------------------------------------+  
+| Property           | Description                                                       |  
++====================+===================================================================+  
+| `database`         | Path to the database in the format                                |  
+|                    | `[host/port:]/path/to/database.fdb`                               |  
++--------------------+-------------------------------------------------------------------+  
+| `type`             | Type of the driver to use. Possible values are:                   |  
+|                    |                                                                   |  
+|                    | -   `PURE_JAVA` or `TYPE4` for type 4 JDBC driver                 |  
+|                    | -   `NATIVE` or `TYPE2` for type 2 JDBC driver                    |  
+|                    | -   `EMBEDDED` for using embedded version of the Firebird         |  
+|                    | -   `ORACLE` for accessing Oracle-mode Firebird                   |  
++--------------------+-------------------------------------------------------------------+  
+| `blobBufferSize`   | Size of the buffer used to transfer BLOB content. Maximum value is|  
+|                    | 64k-1.                                                            |
++--------------------+-------------------------------------------------------------------+  
+| `socketBufferSize` | Size of the socket buffer. Needed on some Linux machines to fix   |  
+|                    | performance degradation.                                          |  
++--------------------+-------------------------------------------------------------------+  
+| `charSet`          | Character set for the connection. Similar to `encoding` property, |  
+|                    | but accepts Java names instead of Firebird ones.                  |  
++--------------------+-------------------------------------------------------------------+  
+| `encoding`         | Character encoding for the connection. See Firebird documentation |  
+|                    | for more information.                                             |  
++--------------------+-------------------------------------------------------------------+  
+| `userName`         | Name of the user that will be used by default.                    |  
++--------------------+-------------------------------------------------------------------+  
+| `password`         | Corresponding password.                                           |  
++--------------------+-------------------------------------------------------------------+  
+| `roleName`         | SQL role to use.                                                  |  
++--------------------+-------------------------------------------------------------------+  
+| `tpbMapping`       | TPB mapping for different transaction isolation modes.            |  
++--------------------+-------------------------------------------------------------------+  
 
-### <span id="anchor-64"></span>Non-standard parameters
+Non-standard parameters
+-----------------------
 
 Many of the above mentioned Firebird parameters have have a
 corresponding DPB entry. However, not every DPB entry has a
@@ -4201,19 +4381,19 @@ buffers on the server, etc. Creating a corresponding getter/setter for
 each of them simply does not make sense.
 
 For those Java applications that still need non-standard connectivity
-parameters, *DataSource* and *ConnectionPoolDataSource* implementations
+parameters, `DataSource` and `ConnectionPoolDataSource` implementations
 provides a getter and two setters:
 
--   *getNonStandardProperty(String name)* method returns a non-standard
-    property specified by *name* parameter. If this property was not
-    previously set, *null* is returned.
--   *setNonStandardProperty(String name, String value)* method sets the
+-   `getNonStandardProperty(String name)` method returns a non-standard
+    property specified by `name` parameter. If this property was not
+    previously set, `null` is returned.
+-   `setNonStandardProperty(String name, String value)` method sets the
     property specified by the first parameter to a value contained in
     the second parameter.
--   *setNonStandardProperty(String nameValuePair)* method provides a
+-   `setNonStandardProperty(String nameValuePair)` method provides a
     possibility to set a DPB parameter using following syntax:
 
-dataSource.setNonStandardProperty("isc\_dpb\_sql\_dialect=3");
+        dataSource.setNonStandardProperty("isc_dpb_sql_dialect=3");
 
 The parameter syntax of the last method is not very common in Java code,
 it would be much more natural to use two-parameter setter. However, it
@@ -4224,28 +4404,27 @@ the Java reflection API and consider only those setters that take one
 parameter. For instance, in the Tomcat server the configuration
 parameter would look like this:
 
- &lt;parameter&gt;\
- &lt;name&gt;**nonStandardProperty**&lt;/name&gt;\
- &lt;value&gt;**sql\_dialect=3**&lt;/value&gt;\
-&lt;/parameter&gt;
+~~~ {.xml}
+<parameter>
+    <name>nonStandardProperty</name>
+    <value>sql_dialect=3</value>
+</parameter>
+~~~
 
 Syntax of the parameter is
 
-&lt;name&gt;\[&lt;whitespace&gt;\]\[{=|:|&lt;whitespace&gt;}\[&lt;whitespace&gt;\]&lt;value&gt;\]
+    <name>[<whitespace>][{=|:|<whitespace>}[<whitespace>]<value>]
 
-where *&lt;name&gt;* is the name of the DPB parameter, and
-*&lt;value&gt;* is its value. The two are separated by any combination
+where `<name>` is the name of the DPB parameter, and
+`<value>` is its value. The two are separated by any combination
 of whitespace and either whitespace or "=" (equal sign) or ":" (colon)
 characters. Considering the aliases described in [Extended connection
-properties](#anchor-9) For example following values are equivalent:
+properties]. For example following values are equivalent:
 
- isc\_dpb\_sql\_dialect 3
-
- isc\_dpb\_sql\_dialect : 3
-
- sql\_dialect : 3
-
- sql\_dialect=3
+    isc_dpb_sql_dialect   3
+    isc_dpb_sql_dialect : 3
+    sql_dialect         : 3
+    sql_dialect=3
 
 Character Encodings
 ===================
@@ -4255,7 +4434,8 @@ is an important topic, that initially seems to be complex, but in fact
 can be formulated by just a few rules. This appendix provides
 information on this topic.
 
-### <span id="anchor-66"></span>Encodings Types
+Encodings Types
+---------------
 
 Firebird uses character encodings in two different areas:
 
@@ -4271,7 +4451,7 @@ Firebird uses character encodings in two different areas:
 The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the *fbintl* shared library[^14] located in the *intl/*
+are specified in the `fbintl` shared library[^14] located in the `intl/`
 directory of the Firebird installation. There is also a special
 character set NONE that tells RDBMS not to interpret the contents of the
 character field.
@@ -4292,7 +4472,8 @@ Firebird uses following algorithm when performing translations:
     use these two rules for translation.
 -   If no suitable translation rule can be found, throw an exception.
 
-### <span id="anchor-67"></span>Encodings in Java
+Encodings in Java
+-----------------
 
 Java programming language is based on the Unicode character set and uses
 the UTF-16 encoding, in which each character is represented by one or
@@ -4318,21 +4499,43 @@ and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version 2.1.0[^16].
 
-The UTF8 character set
+### The UTF8 character set
 
 Software developer must ensure two things to enable use of Unicode
 characters in the database and the application:
 
 -   the database objects must be defined with the UTF8 character set;
     this can be done by either creating database with default UTF8
-    character set or by adding *CHARACTER SET UTF8* clause to the column
+    character set or by adding `CHARACTER SET UTF8` clause to the column
     or domain definitions.
--   the *encoding* connection property in the JDBC driver has to be set
+-   the `encoding` connection property in the JDBC driver has to be set
     to UTF8; this can be done several ways: the he easiest one is to add
-    the appropriate parameter to the JDBC URL (). Another possibility is
-    to use appropriate method of the *DriverManager* class (). The
-    applications that use *DataSource* interface to obtain the database
-    connections also have access to the *encoding* property[^17].
+    the appropriate parameter to the JDBC URL (see the first example). 
+    Another possibility is to use appropriate method of the `DriverManager` 
+    class (see the second example). The applications that use `DataSource` 
+    interface to obtain the database connections also have access to the 
+    `encoding` property[^17].
+    
+~~~ {.java}
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Connection connection = DriverManager.getConnection(
+  "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
+  "SYSDBA", "masterkey");
+~~~
+
+~~~ {.java}
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Properties props = new Properties();
+
+props.setProperty("user", "SYSDBA"); 
+props.setProperty("password", "masterkey"); 
+props.setProperty("encoding", "UTF8");
+
+Connection connection = DriverManager.getConnection(
+    "jdbc:firebirdsql:localhost/3050:employee", props);
+~~~
 
 There are few limitations related to using the UTF8 character set:
 
@@ -4354,7 +4557,7 @@ characters are stored in the database, since each character would occupy
 two bytes of the network packet, which in turn might cause additional
 roudtrips to the server to fetch data.
 
-The NONE character set
+### The NONE character set
 
 Java introduces additional complexity when the NONE character set is
 used. The reason for this is that Java internally stores all strings in
@@ -4364,7 +4567,7 @@ the driver does not know how to interpret the received data. The only
 choice that is left to the driver is to construct a string using the
 default character set of the JVM, which usually matches the regional
 settings of the operating system and can be accessed from within the JVM
-through the *file.encoding* system property.
+through the `file.encoding` system property.
 
 It is clear that the conversion using default character set that happens
 inside the JVM can lead to errors when the same content is accessed from
@@ -4393,34 +4596,76 @@ is met:
     handle all characters stored in the database.
 
 As a partial workaround one can specify the encoding that should be used
-to interpret bytes coming from the server in the *charSet* connection
-property. The following rules are used when interpreting the *encoding*
-and *charSet* properties:
+to interpret bytes coming from the server in the `charSet` connection
+property. The following rules are used when interpreting the `encoding`
+and `charSet` properties:
 
--   When only *encoding* property specified, driver uses the default
-    mapping between server and Java encodings. When *encoding* property
-    is not set or set to NONE and *charSet* property is not set, the
+-   When only `encoding` property specified, driver uses the default
+    mapping between server and Java encodings. When `encoding` property
+    is not set or set to NONE and `charSet` property is not set, the
     default JVM encoding is used to interpret bytes coming from
     the server.
--   When only *charSet* property is specified, driver uses the reverse
+-   When only `charSet` property is specified, driver uses the reverse
     mapping to specify the connection encoding for the server and
     interprets byte stream according to the value of the property.
--   When both *encoding* and *charSet* property are specified, driver
+-   When both `encoding` and `charSet` property are specified, driver
     sets the connection encoding according to the value of the
-    *encoding* property, but interprets the byte stream according to the
-    *charSet* property.
+    `encoding` property, but interprets the byte stream according to the
+    `charSet` property.
 
 The last case is most powerful, but also is the most dangerous in use.
 When used properly, it can solve the problems with the legacy databases;
 when used incorrectly, one can easily trash the content of the database.
 
-### <span id="anchor-58"></span>Available Encodings
+Available Encodings
+-------------------
 
 The below table lists the available character encodings in the default
 Firebird distribution and their mapping to the Java ones:
 
-  -------------- ------------- --- ----------------------------------------------------------------------
-  -------------- ------------- --- ----------------------------------------------------------------------
+Firebird encoding (`encoding` property)|Java encoding (`charSet` property)|Size in bytes|Comments
+----------|----------|---|-----------------------------------------------------
+NONE |- | 1 |Raw bytes, no interpretation of the content is possible.
+ASCII |ASCII |1 |-
+BIG_5 |Big5 |2 |Traditional Chinese
+DOS437 |Cp437 |1 |MS-DOS: United States, Australia, New Zeland, South Africa
+DOS737 |Cp737 |1 |MS-DOS: Greek
+DOS775 |Cp775 |1 |MS-DOS: Baltic
+DOS850 |Cp850 |1 |MS-DOS: Latin-1
+DOS852 |Cp852 |1 |MS-DOS: Latin-2
+DOS857 |Cp857 |1 |IBM: Turkish
+DOS858 |Cp858 |1 |IBM: Latin-1 + Euro
+DOS860 |Cp860 |1 |MS-DOS: Portuguese
+DOS861 |Cp861 |1 |MS-DOS: Icelandic
+DOS862 |Cp862 |1 |IBM: Hebrew
+DOS863 |Cp863 |1 |MS-DOS: Canadian French
+DOS864 |Cp864 |1 |IBM: Arabic
+DOS865 |Cp865 |1 |MS-DOS: Nordic
+DOS866 |Cp866 |1 |IBM: Cyrillic
+DOS869 |Cp869 |1 |IBM: Modern Greek
+EUCJ_0208 |EUC_JP |2 |JIS X 0201, 0208, 0212, EUC encoding, Japanese
+GB_2312 |EUC_CN |2 |GB2312, EUC encoding, Simplified Chinese
+ISO8859_1 |ISO-8859-1 |1 |ISO 8859-1, Latin alphabet No. 1
+ISO8859_2 |ISO-8859-2 |1 |ISO 8859-2
+ISO8859_3 |ISO-8859-3 |1 |ISO 8859-3
+ISO8859_4 |ISO-8859-4 |1 |ISO 8859-4
+ISO8859_5 |ISO-8859-5 |1 |ISO 8859-5
+ISO8859_6 |ISO-8859-6 |1 |ISO 8859-6
+ISO8859_7 |ISO-8859-7 |1 |ISO 8859-7
+ISO8859_8 |ISO-8859-8 |1 |ISO 8859-8
+ISO8859_9 |ISO-8859-9 |1 |ISO 8859-9
+ISO8859_13 |ISO-8859-13 |1 |ISO 8859-13
+KSC_5601 |MS949 |2 |Windows Korean
+UNICODE_FSS |UTF-8 |3 |8-bit Unicode Transformation Format (deprecated since FB 2.0)
+UTF8 |UTF-8 |4 |8-bit Unicode Transformation Format (FB 2.0+)
+WIN1250 |Cp1250 |1 |Windows Eastern European
+WIN1251 |Cp1251 |1 |Windows Cyrillic
+WIN1252 |Cp1252 |1 |Windows Latin-1
+WIN1253 |Cp1253 |1 |Windows Greek
+WIN1254 |Cp1254 |1 |Windows Turkish
+WIN1255 |Cp1255 |1 |-
+WIN1256 |Cp1256 |1 |-
+WIN1257 |Cp1257 |1 |-
 
 Supported JDBC Scalar Functions
 ===============================
@@ -4430,12 +4675,12 @@ date, system and conversion functions. Jaybird will try to provide an
 equivalent of the JDBC function using the built-in capabilities of the
 Firebird database. When no equivalent is available, Jaybird will pass
 the function call "as is" to the database assuming that it contains all
-necessary UDF declarations .
+necessary UDF declarations.
 
 Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library *ib\_udf*[^18] shipped with Firebird. Jaybird provides a
-connection parameter *use\_standard\_udf* telling the driver to assume
+library `ib_udf`[^18] shipped with Firebird. Jaybird provides a
+connection parameter `use_standard_udf` telling the driver to assume
 that functions from that UDF are available in the database. In this case
 Jaybird will convert all JDBC function calls into the corresponding
 calls of the UDF functions.
@@ -4443,49 +4688,50 @@ calls of the UDF functions.
 Below you will find the list of JDBC functions and whether they have a
 corresponding equivalent in the "built-in" and in the "UDF" modes.
 
-### <span id="anchor-68"></span>Numeric Functions
+Numeric Functions
+-----------------
 
   ---------------------------- --- -------------- -------------------------------------------------
   ---------------------------- --- -------------- -------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-69"></span>String Functions
+String Functions
+----------------
 
   ------------------------------------------- --- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   ------------------------------------------- --- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-70"></span>String Functions (continued)
-
   -------------------------------------- --- --- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   -------------------------------------- --- --- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-71"></span>Time and Date Functions
+Time and Date Functions
+-----------------------
 
   -------------------- --- --- -----------------------------------------------------------------------------------------------------------------------
   -------------------- --- --- -----------------------------------------------------------------------------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-72"></span>Time and Date Functions (continued)
-
   --------------------------------------------------- --- --- ------------------------------------------------------------------------------------------------------
   --------------------------------------------------- --- --- ------------------------------------------------------------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-73"></span>System Functions
+System Functions
+----------------
 
   ----------------------------- --- --- --------------------------------------------------------------------------------
   ----------------------------- --- --- --------------------------------------------------------------------------------
 
 Legend: m – not available in this mode; l – available in this mode.
 
-### <span id="anchor-74"></span>Conversion Functions
+Conversion Functions
+--------------------
 
   ---------------------------- --- --- -----------------------------------------------------------------------------------------
   ---------------------------- --- --- -----------------------------------------------------------------------------------------
@@ -4503,7 +4749,7 @@ Legend: m – not available in this mode; l – available in this mode.
 [^3]: Other cases, e.g. closing the statement object or the connection
     object will still ensure that the result set object is closed. If
     you need result sets that can be "detached" from the statement
-    object that created them, please check the *javax.sql.RecordSet*
+    object that created them, please check the `javax.sql.RecordSet`
     implementations.
 
 [^4]: This approach follows the two-phase locking protocol, where all
@@ -4544,14 +4790,13 @@ Legend: m – not available in this mode; l – available in this mode.
 
 [^12]: For more information please read article by Ann Harrison
     "Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep",
-    available, for example, at
-    [http://www.ibphoenix.com/main.nfs?page=ibp\_expert4](http://www.ibphoenix.com/main.nfs?a=ibphoenix&page=ibp_expert4)
+    available, for example, at <http://www.ibphoenix.com/resources/documents/design/doc_21>
 
 [^13]: For example, the effective size for 100 applications subscribed
     for 100 different events is about 40k in memory.
 
-[^14]: On Windows this library is represented by *fbintl.dll*, on Linux
-    – *libfbintl.so*.
+[^14]: On Windows this library is represented by `fbintl.dll`, on Linux
+    – `libfbintl.so`.
 
 [^15]: The default character set simplifies the explanation, since we do
     not have to consider the cases when different columns with different
@@ -4566,8 +4811,8 @@ Legend: m – not available in this mode; l – available in this mode.
 [^17]: See <http://jaybirdwiki.firebirdsql.org/>... for configuration
     examples of the most popular application servers.
 
-[^18]: On Windows platform it is represented by the *ib\_udf.dll*, on
-    Linux it is represented by the *libib\_udf.so*.
+[^18]: On Windows platform it is represented by the `ib_udf.dll`, on
+    Linux it is represented by the `libib\_udf.so`.
 
 [^19]: Standard UDF library provides RAND() function taking no
     parameters. The random number generator is seeded by the current
