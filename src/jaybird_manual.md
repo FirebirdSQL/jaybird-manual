@@ -1248,20 +1248,67 @@ Error"`.
 |            |                             |                                                       |  
 |            |                             | Error happens either during parsing the specified SQL |  
 |            |                             | request or by handling the DDL command.               |  
-+------------+-----------------------------+-------------------------------------------------------+
++------------+-----------------------------+-------------------------------------------------------+  
 
-
-Other Errors
+### Other Errors
 
 This table contains other errors that might be interesting to the
 application developer, however they do not fall into any of the previous
 categories.
 
-  -------------- ----------------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  -------------- ----------------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544321L | `isc_arith_except`          | `"arithmetic exception, numeric overflow, or string   |  
+|            |                             | truncation"`                                          |  
+|            |                             |                                                       |  
+|            |                             | Happens at runtime when an arithmetic exception       |  
+|            |                             | happens, like division by zero or the numeric overflow|  
+|            |                             | (e.g. number does not fit the 64 bits limit).         |  
+|            |                             |                                                       |  
+|            |                             | Another source of these errors are all string         |  
+|            |                             | operations, like string concatenation producing too   |  
+|            |                             | long string, impossibility to transliterate characters|  
+|            |                             | between character sets, etc.                          |  
+|            |                             |                                                       |  
+|            |                             | Future versions of Firebird will provide a secondary  |  
+|            |                             | code to distinguish the exact reason of an error.     |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544348L | `isc_no_cur_rec`            | `"no current record for fetch operation"`             |  
+|            |                             |                                                       |  
+|            |                             | Happens when application asks Firebird to fetch a     |  
+|            |                             | record, but no record is available for fetching.      |  
+|            |                             |                                                       |  
+|            |                             | Java applications should never get this error, since  |  
+|            |                             | checks in the JDBC driver prevent application from    |  
+|            |                             | executing fetch operation on the server side.         |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544374L | `isc_stream_eof`            | `"attempt to fetch past the last record in a record   |  
+|            |                             | stream"`                                              |  
+|            |                             |                                                       |  
+|            |                             | Application tries to execute fetch operation after all|  
+|            |                             | records had been already fetched.                     |  
+|            |                             |                                                       |  
+|            |                             | Similar to the previous error, Java application should|  
+|            |                             | not get this error due to the checks that happen      |  
+|            |                             | before issuing the fetch request to the server.       |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544517L | `isc_except`                | `"exception {0}"`                                     |  
+|            |                             |                                                       |  
+|            |                             | An custom exception has been raised on the server.    |  
+|            |                             | Java application can examine the underlying           |  
+|            |                             | GDSException to extract the exception message.        |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544721L | `isc_network_error`         | `Unable to complete network request to host "{0}"`    |  
+|            |                             |                                                       |  
+|            |                             | This error is thrown when Java application cannot     |  
+|            |                             | establish connection to the database server due to a  |  
+|            |                             | network issues, e.g. host name is specified           |  
+|            |                             | incorrectly, Firebird had not been started on the     |  
+|            |                             | remote host, firewall configuration prevents client   |  
+|            |                             | from establishing the connection, etc.                |  
++------------+-----------------------------+-------------------------------------------------------+  
 
-<span id="anchor-24"></span><span id="Statements"></span><span id="anchor-24"></span>Executing statements
----------------------------------------------------------------------------------------------------------
+Executing statements
+====================
 
 After obtaining a connection, the next thing to do is to execute the SQL
 statement. JDBC specification distinguishes three kinds of statements –
