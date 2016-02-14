@@ -86,36 +86,36 @@ Supported Specifications
 
 Jaybird supports the following specifications:
 
-+----------------------------+-----------------------------------------------------------------+
-| Specification              | Details                                                         |
-+============================+=================================================================+
-| JDBC 3.0                   | Driver passes the complete JDBC compatibility test suite,       |
-|                            | though some features are not implemented. It is not officially  |
-|                            | JDBC compliant, because of the high certification costs.        |
-+----------------------------+-----------------------------------------------------------------+
-| JDBC 2.0 Optional Package\ | Jaybird provides an implementation of following interfaces      |
-| (formerly Standard         | from `javax.sql.*` package:                                     |
-| Extension API)             |                                                                 |
-|                            | - The `ConnectionPoolDataSource` implementation provides        |
-|                            |   connection and prepared statement pooling.                    |
-|                            | - The `DataSource` implementation provides seamless integration |
-|                            |   with major web and application servers.                       |
-|                            | - The XADataSource implementation provides means to use driver  |
-|                            |   in distributed transactions.                                  |
-+----------------------------+-----------------------------------------------------------------+
-| JCA 1.0                    | Jaybird provides an implementation of                           |
-|                            | `javax.resource.spi.ManagedConnectionFactory` and related       |
-|                            | interfaces. CCI interfaces are not supported.                   |
-+----------------------------+-----------------------------------------------------------------+
-| JTA 1.0.1                  | The driver provides implementation of the                       |
-|                            | `javax.transaction.xa.XAResource` interface via the JCA         |
-|                            | framework and a `javax.sql.XADataSource` implementation.        |
-+----------------------------+-----------------------------------------------------------------+
-| JAAS 1.0                   |                                                                 |
-+----------------------------+-----------------------------------------------------------------+
-| JMX 1.2                    | Jaybird provides an MBean that allows creating and dropping     |
-|                            | databases via JMX agent.                                        |
-+----------------------------+-----------------------------------------------------------------+
++----------------------------+-----------------------------------------------------------------+  
+| Specification              | Details                                                         |  
++============================+=================================================================+  
+| JDBC 3.0                   | Driver passes the complete JDBC compatibility test suite,       |  
+|                            | though some features are not implemented. It is not officially  |  
+|                            | JDBC compliant, because of the high certification costs.        |  
++----------------------------+-----------------------------------------------------------------+  
+| JDBC 2.0 Optional Package\ | Jaybird provides an implementation of following interfaces      |  
+| (formerly Standard         | from `javax.sql.*` package:                                     |  
+| Extension API)             |                                                                 |  
+|                            | - The `ConnectionPoolDataSource` implementation provides        |  
+|                            |   connection and prepared statement pooling.                    |  
+|                            | - The `DataSource` implementation provides seamless integration |  
+|                            |   with major web and application servers.                       |  
+|                            | - The XADataSource implementation provides means to use driver  |  
+|                            |   in distributed transactions.                                  |  
++----------------------------+-----------------------------------------------------------------+  
+| JCA 1.0                    | Jaybird provides an implementation of                           |  
+|                            | `javax.resource.spi.ManagedConnectionFactory` and related       |  
+|                            | interfaces. CCI interfaces are not supported.                   |  
++----------------------------+-----------------------------------------------------------------+  
+| JTA 1.0.1                  | The driver provides implementation of the                       |  
+|                            | `javax.transaction.xa.XAResource` interface via the JCA         |  
+|                            | framework and a `javax.sql.XADataSource` implementation.        |  
++----------------------------+-----------------------------------------------------------------+  
+| JAAS 1.0                   |                                                                 |  
++----------------------------+-----------------------------------------------------------------+  
+| JMX 1.2                    | Jaybird provides an MBean that allows creating and dropping     |  
+|                            | databases via JMX agent.                                        |  
++----------------------------+-----------------------------------------------------------------+  
 
 Distribution package
 --------------------
@@ -127,20 +127,20 @@ extensive logging inside the driver.
 
 Following file groups can be found in distribution package:
 
-+------------------------+--------------------------------------------------------------------+
-| File name              | Description                                                        |
-+========================+====================================================================+
-| jaybird-2.1.6.jar      | An archive containing the JDBC driver, the JCA connection manager, |
-|                        | the Services API and event management classes.                     |
-+------------------------+--------------------------------------------------------------------+
-| jaybird-full-2.1.6.jar | Same as above but also the connection pooling classes.             |
-+------------------------+--------------------------------------------------------------------+
-| jaybird21.dll          | Precompiled version of the JNI library for Type 2 and Embedded     |
-|                        | Server drivers for 32-bit Windows platform.                        |
-+------------------------+--------------------------------------------------------------------+
-| libjaybird21.so        | Precompiled version of the JNI library for Type 2 and Embedded     |
-|                        | Server drivers for 32-bit Linux platforms.                         |
-+------------------------+--------------------------------------------------------------------+
++------------------------+--------------------------------------------------------------------+  
+| File name              | Description                                                        |  
++========================+====================================================================+  
+| jaybird-2.1.6.jar      | An archive containing the JDBC driver, the JCA connection manager, |  
+|                        | the Services API and event management classes.                     |  
++------------------------+--------------------------------------------------------------------+  
+| jaybird-full-2.1.6.jar | Same as above but also the connection pooling classes.             |  
++------------------------+--------------------------------------------------------------------+  
+| jaybird21.dll          | Precompiled version of the JNI library for Type 2 and Embedded     |  
+|                        | Server drivers for 32-bit Windows platform.                        |  
++------------------------+--------------------------------------------------------------------+  
+| libjaybird21.so        | Precompiled version of the JNI library for Type 2 and Embedded     |  
+|                        | Server drivers for 32-bit Linux platforms.                         |  
++------------------------+--------------------------------------------------------------------+  
 
 Quality Assurance
 -----------------
@@ -1114,20 +1114,20 @@ containing the reported SQL states.
 
 Constant name                               Constant value
 ------------------------------------------  --------------
-SQL_STATE_INVALID_CON_ATTR                  "01S00"
-SQL_STATE_NO_ROW_AVAIL                      "01S06"
-SQL_STATE_GENERAL_ERROR                     "HY00"
-SQL_STATE_DRIVER_NOT_CAPABLE                "HYC00"
-SQL_STATE_INVALID_COLUMN                    "HY02"
-SQL_STATE_INVALID_PARAM_TYPE                "HY105"
-SQL_STATE_INVALID_ARG_VALUE                 "HY009"
-SQL_STATE_WRONG_PARAM_NUM                   "07001"
-SQL_STATE_NO_RESULT_SET                     "07005"
-SQL_STATE_INVALID_CONVERSION                "07006"
-SQL_STATE_CONNECTION_CLOSED                 "08003"
-SQL_STATE_CONNECTION_FAILURE_IN_TX          "08007"
-SQL_STATE_COMM_LINK_FAILURE                 "08S01"
-SQL_STATE_INVALID_ESCAPE_SEQ                "22025"
+`SQL_STATE_INVALID_CON_ATTR`                `01S00`
+`SQL_STATE_NO_ROW_AVAIL`                    `01S06`
+`SQL_STATE_GENERAL_ERROR`                   `HY000`
+`SQL_STATE_DRIVER_NOT_CAPABLE`              `HYC00`
+`SQL_STATE_INVALID_COLUMN`                  `HY002`
+`SQL_STATE_INVALID_PARAM_TYPE`              `HY105`
+`SQL_STATE_INVALID_ARG_VALUE`               `HY009`
+`SQL_STATE_WRONG_PARAM_NUM`                 `07001`
+`SQL_STATE_NO_RESULT_SET`                   `07005`
+`SQL_STATE_INVALID_CONVERSION`              `07006`
+`SQL_STATE_CONNECTION_CLOSED`               `08003`
+`SQL_STATE_CONNECTION_FAILURE_IN_TX`        `08007`
+`SQL_STATE_COMM_LINK_FAILURE`               `08S01`
+`SQL_STATE_INVALID_ESCAPE_SEQ`              `22025`
 
 Application can use the SQL state codes in the error handling routines
 which should handle errors that are returned from different databases.
@@ -1144,7 +1144,7 @@ Here you can find a short list of error codes, symbolic names of a
 corresponding constant in a `org.firebirdsql.gds.ISCConstants` class,
 the error message and short explanation of an error.
 
-DDL Errors
+### DDL Errors
 
 Happen during execution of the DDL requests and two primary error codes
 are used in Firebird while executing the DDL operations. There are few
@@ -1152,10 +1152,27 @@ other rare cases not mentioned here, but the corresponding error
 messages contain enough information to understand the reason of an
 error.
 
-  -------------- ------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  -------------- ------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544351L | `isc_no_meta_update`        | `"unsuccessful metadata update"`                      |  
+|            |                             |                                                       |  
+|            |                             | Error happens when the requested DDL  operation cannot|  
+|            |                             | be completed, for example application tries to define |  
+|            |                             | a primary key that will exceed the maximum allowed key|  
+|            |                             | size.                                                 |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544510L | `isc_lock_timeout`          | In combination with `isc_obj_in_use` (335544453L)     |  
+|            |                             | means that the DDL command tries to modify an object  |  
+|            |                             | that is used in some other place, usually in another  |  
+|            |                             | transaction. The complete error message will contain  |  
+|            |                             | the name of the locked object.                        |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544569L | `isc_dsql_error`            | If the third error code is either                     |  
+|            |                             | `isc_dsql_datatype_err` or `isc_dsql_command_err`,    |  
+|            |                             | then additional error codes and arguments specify the |  
+|            |                             | reason why the operation had failed.                  |  
++------------+-----------------------------+-------------------------------------------------------+  
 
-Lock Errors
+### Lock Errors
 
 Lock errors are reported by Firebird primarily when application tries to
 modify a record which is already modified by a concurrent transaction.
@@ -1163,30 +1180,76 @@ Depending on the transaction parameters such error can be reported
 either right after detecting it or after waiting some defined timeout
 hoping that concurrent transaction will either commit or rollback and
 eventually release the resource. More information on transaction locking
-modes can be found in Chapter [6](#anchor-23), [Using
-transactions](#anchor-23).
+modes can be found in section [Using transactions].
 
-  -------------- ----------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  -------------- ----------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544345L | `isc_lock_conflict`         | `"lock conflict on no wait transaction"`              |  
+|            |                             |                                                       |  
+|            |                             | This error happens when a "no wait" transaction needs |  
+|            |                             | to acquire a lock but finds another concurrent        |  
+|            |                             | transaction holding a lock.                           |  
+|            |                             |                                                       |  
+|            |                             | Instead of waiting the predefined timeout hoping that |  
+|            |                             | concurrent transaction will either commit or rollback,|  
+|            |                             | an error is returned to notify an application about   |  
+|            |                             | the situation.                                        |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544510L | `isc_lock_timeout`          | `"lock time-out on wait transaction"`                 |  
+|            |                             |                                                       |  
+|            |                             | Similar to the isc_deadlock, but is returned when the |  
+|            |                             | lock timeout that was specified for the current       |  
+|            |                             | transaction expired while waiting for a lock.         |  
+|            |                             |                                                       |  
+|            |                             | Another source of this error are DDL operations that  |  
+|            |                             | try to obtain a lock on a database object that is     |  
+|            |                             | currently used in some other place.                   |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544336L | `isc_deadlock`              | `"deadlock"`                                          |  
+|            |                             |                                                       |  
+|            |                             | Two transactions experience a deadlock when each of   |  
+|            |                             | them has a lock on a resource on which another one is |  
+|            |                             | trying to obtain a lock.                              |  
++------------+-----------------------------+-------------------------------------------------------+
 
-Referential Integrity Errors
+### Referential Integrity Errors
 
 Referential integrity constrains ensure that database remains in a
 consistent state after the DML operation and/or whole transaction is
 completed. Three primary error codes are returned when the defined
 constraints are violated. The error messages are self-explanatory.
 
-  -------------- ------------------------------- ----------------------------------------------------------------------
-  -------------- ------------------------------- ----------------------------------------------------------------------
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544665L | `isc_unique_key_violation`  | `violation of PRIMARY or UNIQUE KEY constraint "{0}"  |  
+|            |                             | on table "{1}"`                                       |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544558L | `isc_check_constraint`      | `Operation violates CHECK constraint {0} on view or   |  
+|            |                             | table {1}`                                            |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544466L | `isc_foreign_key`           | `violation of FOREIGN KEY constraint "{0}" on table   |  
+|            |                             | "{1}"`                                                |  
++------------+-----------------------------+-------------------------------------------------------+  
 
-DSQL Errors
+### DSQL Errors
 
 This group contains secondary codes for the primary error code
-*isc\_dsql\_error* (*335544569L*), that has a message *"Dynamic SQL
-Error"*.
+`isc_dsql_error` (`335544569L`), that has a message `"Dynamic SQL
+Error"`.
 
-  -------------- ---------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  -------------- ---------------------------- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544573L | `isc_dsql_datatype_err`     | `"Data type unknown"`                                 |  
+|            |                             |                                                       |  
+|            |                             | Usually this error is reported during DDL operation   |  
+|            |                             | when the specified data type is either unknown or     |  
+|            |                             | cannot be used in the specified statement. However it |  
+|            |                             | also can happen in DML operation, e.g. when an ORDER  |  
+|            |                             | BY clause contains unknown collation.                 |  
++------------+-----------------------------+-------------------------------------------------------+  
+| 335544570L | `isc_dsql_command_err`      | `"Invalid command"`                                   |  
+|            |                             |                                                       |  
+|            |                             | Error happens either during parsing the specified SQL |  
+|            |                             | request or by handling the DDL command.               |  
++------------+-----------------------------+-------------------------------------------------------+
+
 
 Other Errors
 
