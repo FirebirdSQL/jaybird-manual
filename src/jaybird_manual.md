@@ -162,12 +162,12 @@ some test cases from the original CTS suite were excluded from run.
 Useful resources
 ----------------
 
-JDBC
+**JDBC**
 
 For extensive JDBC documentation, see the "Documentation" section of
 Sun's website <http://java.sun.com/products/jdbc/>.
 
-Firebird
+**Firebird**
 
 General information about the Firebird database is available from the
 Firebird web site
@@ -177,7 +177,7 @@ Information about using SQL in Firebird, see the "Language Reference"
 and "Developer's Guide" documents, that are available for download from
 the "Main Downloads" section of the IBPhoenix web site.
 
-Jaybird Support
+**Jaybird Support**
 
 A new resource JaybirdWiki has become available. It can be found at
 <http://jaybirdwiki.firebirdsql.org/>. This is a place where the community 
@@ -253,7 +253,7 @@ There are two ways to register JDBC driver:
         Class.forName("org.firebirdsql.jdbc.FBDriver");
 
 -   **Possibility 2**. The JDBC driver is listed in a `jdbc.drivers`
-    system property. For example in your `\~/.hotjava/properties` file
+    system property. For example in your `~/.hotjava/properties` file
     you can specify following line:
 
         jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
@@ -368,7 +368,7 @@ logical name under which application can find an instance of the
 Interface (JNDI). This is a common way to obtain connections in web and
 application servers.
 
-In order to obtain a connection via `DataSource* object`, you can use
+In order to obtain a connection via `DataSource` object, you can use
 code showed below. This code assumes that you have correctly configured
 JNDI properties. For more information about configuring JNDI please
 refer to the documentation provided with your web or application server.
@@ -3161,7 +3161,7 @@ transactions and has the following properties:
 
 -   `LOCK_WRITE` mode always conflicts with another `LOCK_WRITE` mode
     regardless of the lock type and transaction isolation mode;
--   `LOCK\_WRITE` always conflicts with another `LOCK_READ` mode if
+-   `LOCK_WRITE` always conflicts with another `LOCK_READ` mode if
     both transactions have `consistency` isolation, but has no conflict
     with shared-read locks it if another transaction has either
     `concurrency` or `read_committed` isolation level;
@@ -4319,7 +4319,7 @@ This group contains read-only properties that provide information about
 the state of the pool.
 
 |Property     |Description
-|-------------|------------
+|-------------|---------------------------------------------------------------------------
 |`freeSize`   | Tells how many free connections are in the pool. Value is between 0 and `totalSize`.
 |`workingSize`| Tells how many connections were taken from the pool and are currently used in the application.
 |`totalSize`  | Total size of open connection. At the pool creation – 0, after obtaining first connection – between `minPoolSize` and `maxPoolSize`.
@@ -4516,6 +4516,8 @@ characters in the database and the application:
     interface to obtain the database connections also have access to the 
     `encoding` property[^17].
     
+Specifying the connection encoding in JDBC URL:
+
 ~~~ {.java}
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 
@@ -4523,6 +4525,8 @@ Connection connection = DriverManager.getConnection(
   "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
   "SYSDBA", "masterkey");
 ~~~
+
+Specifying connection encoding in the connection properties:
 
 ~~~ {.java}
 Class.forName("org.firebirdsql.jdbc.FBDriver");
@@ -4691,10 +4695,34 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.
 Numeric Functions
 -----------------
 
-  ---------------------------- --- -------------- -------------------------------------------------
-  ---------------------------- --- -------------- -------------------------------------------------
+ JDBC | built-in | UDF mode | Description
+---------|:-----:|:-----:|-----------------------------------------------------
+`ABS(number)`| | X |Absolute value of `number`
+`ACOS(float)`| | X |Arccosine, in radians, of `float`
+`ASIN(float)`| | X |Arcsine, in radians, of `float`
+`ATAN(float)`| | X |Arctangent, in radians, of `float`
+`ATAN2(float1, float2)`| | X |Arctangent, in radians, of `float2` / `float1`
+`CEILING(number)`| | X |Smallest integer >= `number`
+`COS(float)`| | X |Cosine of `float` radians
+`COT(float)`| | X |Cotangent of `float` radians
+`DEGREES(number)`| | |Degrees in `number` radians
+`EXP(float)`| | |Exponential function of `float`
+`FLOOR(number)`| | X |Largest integer <= `number`
+`LOG(float)`| | X |Base e logarithm of `float` 
+`LOG10(float)`| | X |Base 10 logarithm of `float`
+`MOD(integer1, integer2)`| | X |Remainder for `integer1` / `integer2`
+`PI()`| | X |The constant pi
+`POWER(number, power)`| | |`number` raised to (integer) `power`
+`RADIANS(number)`| | |Radians in `number` degrees
+`RAND(integer)`| | `RAND()`[^19] |Random floating point for seed `integer`
+`ROUND(number, places)`| | |`number` rounded to `places` places
+`SIGN(number)`| | |-1 to indicate `number` is < 0; 0 to indicate `number` is = 0; 1 to indicate `number` is > 0
+`SIN(float)`| | X |Sine of `float` radians
+`SQRT(float)`| | X |Square root of float
+`TAN(float)`| | X |Tangent of `float` radians
+`TRUNCATE(number, places)`| | |`number` truncated to `places` places
 
-Legend: m – not available in this mode; l – available in this mode.
+Legend: X – available in this mode.
 
 String Functions
 ----------------
@@ -4814,7 +4842,7 @@ Legend: m – not available in this mode; l – available in this mode.
 [^18]: On Windows platform it is represented by the `ib_udf.dll`, on
     Linux it is represented by the `libib\_udf.so`.
 
-[^19]: Standard UDF library provides RAND() function taking no
+[^19]: Standard UDF library provides `RAND()` function taking no
     parameters. The random number generator is seeded by the current
     time. There is no function where the seed can be specified.
 
