@@ -180,7 +180,7 @@ the "Main Downloads" section of the IBPhoenix web site.
 **Jaybird Support**
 
 A new resource JaybirdWiki has become available. It can be found at
-<http://jaybirdwiki.firebirdsql.org/>. This is a place where the community 
+<https://github.com/FirebirdSQL/jaybird/wiki>. This is a place where the community 
 shares information about different aspects of Jaybird usage, configuration 
 examples for different applications/servers, tips and tricks, FAQ, etc.
 
@@ -4727,44 +4727,90 @@ Legend: X – available in this mode.
 String Functions
 ----------------
 
-  ------------------------------------------- --- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  ------------------------------------------- --- --------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ JDBC | built-in | UDF mode | Description
+---------|:-----:|:-----:|-----------------------------------------------------
+`ASCII(string)`| | X |Integer representing the ASCII code value of the leftmost character in `string`
+`CHAR(code)`| | X |Character with ASCII code value `code`, where `code` is between 0 and 255
+`CONCAT(string1, string2)`| X | X |Character string formed by appending `string2` to `string1`; if a string is null, the result is DBMS-dependent
+`DIFFERENCE(string1, string2)`| | |Integer indicating the difference between the values returned by the function `SOUNDEX` for `string1` and `string2`
+`INSERT(string1, start, length, string2)`| | |A character string formed by deleting `length` characters from `string1` beginning at `start`, and inserting `string2` into `string1` at `start`
+`LCASE(string)`| | X |Converts all uppercase characters in `string` to lowercase
+`LEFT(string, count)`| X | X |The `count` leftmost characters from `string`
+`LENGTH(string)`| | X[^20] |Number of characters in `string`, excluding trailing blanks
+`LOCATE(string1, string2[, start])`| | |Position in `string2` of the first occurrence of `string1`, searching from the beginning of `string2`; if `start` is specified, the search begins from position `start`. 0 is returned if `string2` does not contain `string1`. Position 1 is the first character in `string2`
+`LTRIM(string)`| | X |Characters of `string` with leading blank spaces removed.
+`REPEAT(string, count)`| | |A character string formed by repeating `string` `count` times
+`REPLACE(string1, string2, string3)`| | |Replaces all occurrences of `string2` in `string1` with `string3`
+`RIGHT(string, count)`| | |The `count` rightmost characters in `string`
+`RTRIM(string)`| | X |The characters of `string` with no trailing blanks.
+`SOUNDEX(string)`| | |A character string, which is data source-dependent, representing the sound of the words in `string`; this could be a four-digit SOUNDEX code, a phonetic representation of each word, etc
+`SPACE(count)`| | |A character string consisting of `count` spaces.
+`SUBSTRING(string, start, length)`| X | X |A character string formed by extracting `length` characters from `string` beginning at `start`.
+`UCASE(string)`| X | X |Converts all lowercase characters in `string` to uppercase.
 
-Legend: m – not available in this mode; l – available in this mode.
-
-  -------------------------------------- --- --- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  -------------------------------------- --- --- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Legend: m – not available in this mode; l – available in this mode.
+Legend: X – available in this mode.
 
 Time and Date Functions
 -----------------------
 
-  -------------------- --- --- -----------------------------------------------------------------------------------------------------------------------
-  -------------------- --- --- -----------------------------------------------------------------------------------------------------------------------
+ JDBC | built-in | UDF mode | Description
+---------|:-----:|:-----:|-----------------------------------------------------
+`CURDATE()`| X | X |The current date as a date value
+`CURTIME()`| X | X |The current local time as a time value
+`DAYNAME(date)`| | |A character string representing the day component of `date`; the name for the day is specific to the data source
+`DAYOFMONTH(date)`| X | X |An integer from 1 to 31 representing the day of the month in `date`
+`DAYOFWEEK(date)`| | |An integer from 1 to 7 representing the day of the week in `date`; 1 represents Sunday
+`DAYOFYEAR(date)`| | |An integer from 1 to 366 representing the day of the year in `date`
+`HOUR(time)`| X | X |An integer from 0 to 23 representing the hour component of `time`
+`MINUTE(time)`| X | X |An integer from 0 to 59 representing the minute component of `time`
+`MONTH(date)`| X | X |An integer from 1 to 12 representing the month component of `date`
+`MONTHNAME(date)`| | |A character string representing the month component of `date`; the name for the month is specific to the data source
+`NOW()`| X | X |A timestamp value representing the current date and time
+`QUARTER(date)`| | |An integer from 1 to 4 representing the quarter in `date`; 1 represents January 1 through March 31
+`SECOND(time)`| X | X |An integer from 0 to 59 representing the second component of `time`
+`TIMESTAMPADD(interval, count, timestamp)`| | |A timestamp calculated by adding `count` number of `interval`(s) to `timestamp`
+`TIMESTAMPDIFF(interval, timestamp1, timestamp2)`| | |An integer representing the number of `interval` by which `timestamp2` is greater than `timestamp1`
+`WEEK(date)`| X | X |An integer from 1 to 53 representing the week of the year in `date`
+`YEAR(date)`| X | X |An integer representing the year component of `date`
 
-Legend: m – not available in this mode; l – available in this mode.
-
-  --------------------------------------------------- --- --- ------------------------------------------------------------------------------------------------------
-  --------------------------------------------------- --- --- ------------------------------------------------------------------------------------------------------
-
-Legend: m – not available in this mode; l – available in this mode.
+Legend: X – available in this mode.
 
 System Functions
 ----------------
 
-  ----------------------------- --- --- --------------------------------------------------------------------------------
-  ----------------------------- --- --- --------------------------------------------------------------------------------
+ JDBC | built-in | UDF mode | Description
+---------|:-----:|:-----:|-----------------------------------------------------
+`DATABASE(`| | |Name of the database
+`IFNULL(expression, value)`| X | X |`value` if `expression` is null; `expression` if `expression` is not null
+`USER()`| | |User name in the DBMS
 
-Legend: m – not available in this mode; l – available in this mode.
+Legend: X – available in this mode.
 
 Conversion Functions
 --------------------
 
-  ---------------------------- --- --- -----------------------------------------------------------------------------------------
-  ---------------------------- --- --- -----------------------------------------------------------------------------------------
++---------------+----------+----------+-----------------------------------------+
+|JDBC           | built-in | UDF mode |Description                              |
++===============+==========+==========+=========================================+
+|CONVERT(value, |    X     |    X     |`value` converted to `SQL type` where    |
+| SQL type)     |          |          |`SQL type` may be one of the following   |
+|               |          |          |SQL types:                               |
+|               |          |          |                                         |
+|               |          |          |- `BIGINT`                               |
+|               |          |          |- `CHAR`                                 |
+|               |          |          |- `DATE`                                 |
+|               |          |          |- `DECIMAL`                              |
+|               |          |          |- `OUBLE PRECISION`                      |
+|               |          |          |- `FLOAT`                                |
+|               |          |          |- `INTEGER`                              |
+|               |          |          |- `REAL`                                 |
+|               |          |          |- `SMALLINT`                             |
+|               |          |          |- `TIME`                                 |
+|               |          |          |- `TIMESTAMP`                            |
+|               |          |          |- `VARCHAR`                              |
++---------------+----------+----------+-----------------------------------------+
 
-Legend: m – not available in this mode; l – available in this mode.
+Legend: X – available in this mode.
 
 [^1]: DDL – Data Definition Language. This term is used to group all
     statements that are used to manipulate database schema, i.e.
@@ -4777,7 +4823,7 @@ Legend: m – not available in this mode; l – available in this mode.
 [^3]: Other cases, e.g. closing the statement object or the connection
     object will still ensure that the result set object is closed. If
     you need result sets that can be "detached" from the statement
-    object that created them, please check the `javax.sql.RecordSet`
+    object that created them, please check the `javax.sql.RowSet`
     implementations.
 
 [^4]: This approach follows the two-phase locking protocol, where all
@@ -4795,7 +4841,7 @@ Legend: m – not available in this mode; l – available in this mode.
     can't be switched off in ClassicServer architecture and in previous
     Firebird versions.
 
-[^7]: All versions of Firebird including 2.0 allow to define validity
+[^7]: All versions of Firebird upto 2.5 allow to define validity
     constraints despite the table(s) contain data that do not satisfy
     them. Only the new records will be validated, and it is
     responsibility of the database administrator to ensure the validity
@@ -4836,11 +4882,11 @@ Legend: m – not available in this mode; l – available in this mode.
     about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0
     was released almost a year before Firebird 2.0 was released.
 
-[^17]: See <http://jaybirdwiki.firebirdsql.org/>... for configuration
+[^17]: See <https://github.com/FirebirdSQL/jaybird/wiki>... for configuration
     examples of the most popular application servers.
 
 [^18]: On Windows platform it is represented by the `ib_udf.dll`, on
-    Linux it is represented by the `libib\_udf.so`.
+    Linux it is represented by the `libib_udf.so`.
 
 [^19]: Standard UDF library provides `RAND()` function taking no
     parameters. The random number generator is seeded by the current
