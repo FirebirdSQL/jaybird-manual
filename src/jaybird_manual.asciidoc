@@ -66,6 +66,7 @@ the type of the driver that will be used.
 and transaction management happens. Additionally this layer adapts the
 GDS API and proxies the calls to the GDS implementation.
 +
+.Jaybird internal structure
 image:jaybird_internal_structure.png[Jaybird internal structure]
 * The JDBC layer is an implementation of the JDBC specification.
 * The Pool component represents implementation of
@@ -91,62 +92,55 @@ restored in the future.
 
 Jaybird supports the following specifications:
 
-[width="100%",cols="31%,69%",options="header",]
+[width="100%",cols="1,3",options="header",]
 |=======================================================================
 |Specification |Details
-|JDBC 3.0 |Driver passes the complete JDBC compatibility test suite,
-though some features are not implemented. It is not officially JDBC
-compliant, because of the high certification costs.
+|JDBC 3.0 
+|Driver passes the complete JDBC compatibility test suite, though some features are not implemented. 
+It is not officially JDBC compliant, because of the high certification costs.
 
-|JDBC 2.0 Optional Package +
-(formerly Standard Extension API) a|
-Jaybird provides an implementation of following interfaces from
-`javax.sql.*` package:
+|JDBC 2.0 Optional Package (formerly Standard Extension API) 
+a|Jaybird provides an implementation of following interfaces from `javax.sql.*` package:
 
-* The `ConnectionPoolDataSource` implementation provides connection and
-prepared statement pooling.
-* The `DataSource` implementation provides seamless integration with
-major web and application servers.
-* The XADataSource implementation provides means to use driver in
-distributed transactions.
+* The `ConnectionPoolDataSource` implementation provides connection and prepared statement pooling.
+* The `DataSource` implementation provides seamless integration with major web and application servers.
+* The XADataSource implementation provides means to use driver in distributed transactions.
 
-|JCA 1.0 |Jaybird provides an implementation of
-`javax.resource.spi.ManagedConnectionFactory` and related interfaces.
+|JCA 1.0 
+|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related interfaces.
 CCI interfaces are not supported.
 
-|JTA 1.0.1 |The driver provides implementation of the
-`javax.transaction.xa.XAResource` interface via the JCA framework and a
-`javax.sql.XADataSource` implementation.
+|JTA 1.0.1 
+|The driver provides implementation of the `javax.transaction.xa.XAResource` interface via the JCA framework and a `javax.sql.XADataSource` implementation.
 
-|JAAS 1.0 |
+|JAAS 1.0 
+|
 
-|JMX 1.2 |Jaybird provides an MBean that allows creating and dropping
-databases via JMX agent.
+|JMX 1.2 
+|Jaybird provides an MBean that allows creating and dropping databases via JMX agent.
 |=======================================================================
 
 === Distribution package
 
-Jaybird driver has compile-time and run-time dependencies to JCA 1.0,
-JTA 1.0.1, JAAS 1.0 and JDBC 2.0 Optional Package. Additionally, if
-Log4J classes are found in the class path, it is possible to enable
-extensive logging inside the driver.
+Jaybird driver has compile-time and run-time dependencies to JCA 1.0, JTA 1.0.1, JAAS 1.0 and JDBC 2.0 Optional Package. 
+Additionally, if Log4J classes are found in the class path, it is possible to enable extensive logging inside the driver.
 
 Following file groups can be found in distribution package:
 
-[width="100%",cols="27%,73%",options="header",]
+[cols="1,3",options="header",]
 |=======================================================================
 |File name |Description
-|jaybird-2.1.6.jar |An archive containing the JDBC driver, the JCA
-connection manager, the Services API and event management classes.
+|`jaybird-2.1.6.jar` 
+|An archive containing the JDBC driver, the JCA connection manager, the Services API and event management classes.
 
-|jaybird-full-2.1.6.jar |Same as above but also the connection pooling
-classes.
+|`jaybird-full-2.1.6.jar` 
+|Same as above but also the connection pooling classes.
 
-|jaybird21.dll |Precompiled version of the JNI library for Type 2 and
-Embedded Server drivers for 32-bit Windows platform.
+|`jaybird21.dll` 
+|Precompiled version of the JNI library for Type 2 and Embedded Server drivers for 32-bit Windows platform.
 
-|libjaybird21.so |Precompiled version of the JNI library for Type 2 and
-Embedded Server drivers for 32-bit Linux platforms.
+|`libjaybird21.so` 
+|Precompiled version of the JNI library for Type 2 and Embedded Server drivers for 32-bit Linux platforms.
 |=======================================================================
 
 === Quality Assurance
@@ -169,24 +163,18 @@ some test cases from the original CTS suite were excluded from run.
 
 *JDBC*
 
-For extensive JDBC documentation, see the "Documentation" section of
-Sun's website http://java.sun.com/products/jdbc/.
+For extensive JDBC documentation, see the "Documentation" section of Oracle's website http://www.oracle.com/technetwork/java/javase/jdbc/index.html.
 
 *Firebird*
 
-General information about the Firebird database is available from the
-Firebird web site (http://www.firebirdsql.org/).
+General information about the Firebird database is available from the Firebird web site (http://www.firebirdsql.org/).
 
-Information about using SQL in Firebird, see the "Language Reference"
-and "Developer's Guide" documents, that are available for download from
-the "Main Downloads" section of the IBPhoenix web site.
+Information about using SQL in Firebird, see the http://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html["Language Reference"] and "Developer's Guide" documents, that are available for download from the http://www.firebirdsql.org/en/reference-manuals/["Reference Manuals"] section of the Firebird web site.
 
 *Jaybird Support*
 
-A new resource JaybirdWiki has become available. It can be found at
-https://github.com/FirebirdSQL/jaybird/wiki. This is a place where the
-community shares information about different aspects of Jaybird usage,
-configuration examples for different applications/servers, tips and
+The Jaybird wiki can be found at https://github.com/FirebirdSQL/jaybird/wiki. 
+This is a place where the community shares information about different aspects of Jaybird usage, configuration examples for different applications/servers, tips and
 tricks, FAQ, etc.
 
 == Obtaining a connection
@@ -217,13 +205,12 @@ JDBC subprotocol, identifies driver to use
 RDBMS specific part, identifies the database to which the driver must
 connect, in our case that is `//<host>:<port>/<path to database>`
 
-First part, `jdbc:firebirdsql:` is always fixed and specifies the so
-called protocol and subprotocol for the JDBC connection. In other words,
-the type of the connection that the application wants to obtain, in our
-case it is a connection to a Firebird database. Example of obtaining the
-connection is shown below.
+The first part, `jdbc:firebirdsql:` is always fixed and specifies the so called protocol and subprotocol for the JDBC connection. 
+In other words, the type of the connection that the application wants to obtain, in our case it is a connection to a Firebird database. 
+Example of obtaining the connection is shown below.
 
 [source,java]
+.Simple example shows how to obtain JDBC connection
 ----
 package hello;
 
@@ -266,8 +253,7 @@ can specify following line:
 jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
 ....
 
-Alternatively you can specify the value of this property during JVM
-startup:
+Alternatively you can specify the value of this property during JVM startup:
 
 ....
 java\
@@ -308,6 +294,7 @@ encoding, for example? JDBC specification provides another method that
 allows to specify additional connection properties:
 
 [source,java]
+.Obtaining JDBC connection with additional connection properties
 ----
 package hello;
 
@@ -344,6 +331,7 @@ Jaybird provides a possibility to specify extended properties in the
 JDBC URL. The example below shows the specification for specifying
 extended JDBC properties in the URL.
 
+.Extended JDBC URL format
 ....
 jdbc:firebirdsql://host[:port]/<path to db>?<properties>
 <properties> ::= <property>[&<properties>]
@@ -356,6 +344,7 @@ URL, then `"?"`, then name-value pairs separated with `"&"`. Code below
 is equivalent to the previous example.
 
 [source,java]
+.Example of specifying extended properties in JDBC URL
 ----
 import java.sql.*;
 
@@ -364,8 +353,7 @@ import java.sql.*;
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 
 Connection connection = DriverManager.getConnection(
-    "jdbc:firebirdsql://localhost:3050//C:/employee.gdb" + 
-    "?encoding=UNICODE_FSS",
+    "jdbc:firebirdsql://localhost:3050//C:/employee.gdb?encoding=UNICODE_FSS",
     "SYSDBA",
     "masterkey");
 ----
@@ -385,6 +373,7 @@ JNDI properties. For more information about configuring JNDI please
 refer to the documentation provided with your web or application server.
 
 [source,java]
+.Typical way to obtain JDBC connection via JNDI
 ----
 package hello;
 
@@ -417,6 +406,7 @@ application server/framework) you have to do this yourself. You can use
 this code snippet for this purpose:
 
 [source,java]
+.Programmatic way to instantiate javax.sql.DataSource implementation
 ----
 import javax.naming.*;
 import org.firebirdsql.pool.*;
@@ -727,6 +717,7 @@ create and bind the JNDI reference for a `FBConnectionPoolDataSource`
 class:
 
 [source,java]
+.Example of initializing and binding FBConnectionPoolDataSource reference
 ----
 package hello;
 
@@ -780,6 +771,7 @@ The next example shows how to access the FBConnectionDataSource bound in
 previous example:
 
 [source,java]
+.Example of accessing the FBConnectionPoolDataSource via reference
 ----
 package hello;
 
@@ -842,6 +834,7 @@ instantiate `FBWrappingDataSource` implementation in a client
 application.
 
 [source,java]
+.Example of instantiating and using the javax.sql.DataSource implementation
 ----
 package hello;
 
@@ -883,8 +876,8 @@ This class is called "wrapping" because it wraps the connection pool and
 delegates all calls to the underlying implementation. As you can see,
 the code is very similar to the example in
 <<The javax.sql.ConnectionPoolDataSource implementation>>, only few places are
-different. Please note, that there is no longer Step 4, the wrapper does
-this automatically in `getConnection()` method used in Step 5.
+different. Please note, that there is no longer a step 4, the wrapper does
+this automatically in `getConnection()` method used in step 5.
 
 === The javax.sql.XADataSource implementation
 
@@ -985,6 +978,7 @@ blocks. Example of such error and resource handling code is presented
 below.
 
 [source,java]
+.Typical resource allocation and error handling patterns
 ----
 PreparedStatement updateSales = null;
 
@@ -1058,6 +1052,7 @@ Each next warning is appended to the tail of the warning chain. In order
 to read the warning chain, use the code presented below.
 
 [source,java]
+.Example how to work with warnings
 ----
 import java.sql.*;
 ....
@@ -1068,8 +1063,7 @@ while (warning != null) {
 }
 ----
 
-In order to clear existing warning, call `Connection.clearWarnings()`
-method.
+In order to clear existing warning, call `Connection.clearWarnings()` method.
 
 === java.sql.SQLException in Jaybird
 
@@ -1182,7 +1176,7 @@ other rare cases not mentioned here, but the corresponding error
 messages contain enough information to understand the reason of an
 error.
 
-[width="100%",cols="14%,30%,56%",]
+[cols="1,2,3",]
 |=======================================================================
 |335544351L |`isc_no_meta_update` a|
 `"unsuccessful metadata update"`
@@ -1211,9 +1205,9 @@ hoping that concurrent transaction will either commit or rollback and
 eventually release the resource. More information on transaction locking
 modes can be found in section <<Using transactions>>.
 
-[width="100%",cols="14%,30%,56%",]
+[cols="1,2,3",]
 |=======================================================================
-|335544345L |`isc_lock_conflict` a|
+|335544345L |`isc_lock_conflict` |
 `"lock conflict on no wait transaction"`
 
 This error happens when a "no wait" transaction needs to acquire a lock
@@ -1223,7 +1217,7 @@ Instead of waiting the predefined timeout hoping that concurrent
 transaction will either commit or rollback, an error is returned to
 notify an application about the situation.
 
-|335544510L |`isc_lock_timeout` a|
+|335544510L |`isc_lock_timeout` |
 `"lock time-out on wait transaction"`
 
 Similar to the isc_deadlock, but is returned when the lock timeout that
@@ -1233,7 +1227,7 @@ lock.
 Another source of this error are DDL operations that try to obtain a
 lock on a database object that is currently used in some other place.
 
-|335544336L |`isc_deadlock` a|
+|335544336L |`isc_deadlock` |
 `"deadlock"`
 
 Two transactions experience a deadlock when each of them has a lock on a
@@ -1248,7 +1242,7 @@ consistent state after the DML operation and/or whole transaction is
 completed. Three primary error codes are returned when the defined
 constraints are violated. The error messages are self-explanatory.
 
-[width="100%",cols="14%,30%,56%",]
+[cols="1,2,3",]
 |=======================================================================
 |335544665L |`isc_unique_key_violation`
 |`violation of PRIMARY or UNIQUE KEY constraint "{0}" on table "{1}"`
@@ -1266,9 +1260,9 @@ This group contains secondary codes for the primary error code
 `isc_dsql_error` (`335544569L`), that has a message
 `"Dynamic SQL Error"`.
 
-[width="100%",cols="14%,30%,56%",]
+[cols="1,2,3",]
 |=======================================================================
-|335544573L |`isc_dsql_datatype_err` a|
+|335544573L |`isc_dsql_datatype_err` |
 `"Data type unknown"`
 
 Usually this error is reported during DDL operation when the specified
@@ -1276,7 +1270,7 @@ data type is either unknown or cannot be used in the specified
 statement. However it also can happen in DML operation, e.g. when an
 ORDER BY clause contains unknown collation.
 
-|335544570L |`isc_dsql_command_err` a|
+|335544570L |`isc_dsql_command_err` |
 `"Invalid command"`
 
 Error happens either during parsing the specified SQL request or by
@@ -1290,9 +1284,9 @@ This table contains other errors that might be interesting to the
 application developer, however they do not fall into any of the previous
 categories.
 
-[width="100%",cols="14%,30%,56%",]
+[cols="1,2,3",]
 |=======================================================================
-|335544321L |`isc_arith_except` a|
+|335544321L |`isc_arith_except` |
 `"arithmetic exception, numeric overflow, or string truncation"`
 
 Happens at runtime when an arithmetic exception happens, like division
@@ -1306,7 +1300,7 @@ characters between character sets, etc.
 Future versions of Firebird will provide a secondary code to distinguish
 the exact reason of an error.
 
-|335544348L |`isc_no_cur_rec` a|
+|335544348L |`isc_no_cur_rec` |
 `"no current record for fetch operation"`
 
 Happens when application asks Firebird to fetch a record, but no record
@@ -1316,7 +1310,7 @@ Java applications should never get this error, since checks in the JDBC
 driver prevent application from executing fetch operation on the server
 side.
 
-|335544374L |`isc_stream_eof` a|
+|335544374L |`isc_stream_eof` |
 `"attempt to fetch past the last record in a record stream"`
 
 Application tries to execute fetch operation after all records had been
@@ -1326,7 +1320,7 @@ Similar to the previous error, Java application should not get this
 error due to the checks that happen before issuing the fetch request to
 the server.
 
-|335544517L |`isc_except` a|
+|335544517L |`isc_except` |
 `"exception {0}"`
 
 An custom exception has been raised on the server. Java application can
@@ -1366,6 +1360,7 @@ Let's check one of the typical usages shown below. In general the usage
 pattern of the statement consists of three steps
 
 [source,java]
+.Typical way to execute query to get information about the user
 ----
 Statement stmt = connection.createStatement(); // <1>
 
@@ -1430,6 +1425,7 @@ which application first performs a select to find the ID of the user
 'Joe Doe', and if the record is found, it enables his account.
 
 [source,java]
+.Using the same statement object multiple times to enable user account
 ----
 Statement stmt = connection.createStatement();
 try {
@@ -1470,6 +1466,7 @@ modified records makes little sense. The next code shows an example of
 creating database tables using the above mentioned method.
 
 [source,java]
+.Example of creating database tables
 ----
 Statement stmt = connection.createStatement();
 try {
@@ -1665,6 +1662,7 @@ below. At the first glance the code became more complicated without any
 visible advantage.
 
 [source,java]
+.Example for user account update rewritten using prepared statements
 ----
 PreparedStatement stmt1 = connection.prepareStatement(
     "SELECT userId FROM users WHERE " + 
@@ -1735,6 +1733,7 @@ destabilizing the code. So, the refactoring on this example is not
 something we want to do.
 
 [source,java]
+.Rewritten example to let application manage prepared statements
 ----
 // prepared statement management
 PreparedStatement queryStmt = 
@@ -1918,6 +1917,7 @@ stored procedures across the database system. The main difference to
 `PreparedStatement` is that the procedure call is specified using the
 portable escaped syntax:
 
+.Unified escaped syntax for stored procedure execution
 ....
 procedure call ::= {[?=]call <params>}
 params ::= <param> [, <param> ...]
@@ -1969,6 +1969,7 @@ Consider the following stored procedure that returns factorial of the
 specified number.
 
 [source,sql]
+.Source code for the procedure that multiplies two integers
 ----
 CREATE PROCEDURE factorial(
     max_value INTEGER
@@ -1993,6 +1994,7 @@ END
 This procedure can be executed using the EXECUTE PROCEDURE call. When it
 is done in isql, the output looks as follow
 
+.Output of the EXECUTE PROCEDURE call in isql
 ....
 SQL> EXECUTE PROCEDURE factorial(5);
 
@@ -2001,10 +2003,10 @@ SQL> EXECUTE PROCEDURE factorial(5);
          120
 ....
 
-Now let's modify this procedure to return each intermediate result to
-the client.
+Now let's modify this procedure to return each intermediate result to the client.
 
 [source,sql]
+.Modified procedure that returns each intermediate result
 ----
 CREATE PROCEDURE factorial(
     max_value INTEGER
@@ -2034,6 +2036,7 @@ If you create this procedure using the isql command line tool and then
 issue the `"SELECT * FROM test_selectable(5)"` statement, the output
 will be like this:
 
+.Output of the modified procedure
 ....
 SQL> SELECT * FROM factorial(5);
 
@@ -2057,6 +2060,7 @@ previous section using the EXECUTE PROCEDURE statement and
 result set handling.
 
 [source,java]
+.Example of using the PreparedStatement to call executable procedure
 ----
 PreparedStatement stmt = connection.prepareStatement(
     "EXECUTE PROCEDURE factorial(?)");
@@ -2075,6 +2079,7 @@ escaped syntax, but native Firebird EXECUTE PROCEDURE syntax is also
 supported.
 
 [source,java]
+.Accessing the executable procedure via CallableStatement
 ----
 CallableStatement stmt = connection.prepareCall(
     "{call factorial(?,?)}");
@@ -2127,6 +2132,7 @@ Also the JDBC specification allows another syntax for the stored
 procedure calls:
 
 [source,java]
+.Calling stored procedure using different syntax
 ----
 CallableStatement stmt = connection.prepareCall(
     "{?= call factorial(?}");
@@ -2174,6 +2180,7 @@ access to the complete result set you have to either call the
 method.
 
 [source,java]
+.Example of using selectable stored procedure via escaped syntax
 ----
 import java.sql.*;
 import org.firebirdsql.jdbc.*;
@@ -2247,6 +2254,7 @@ arbitrary INSERT/UPDATE/DELETE or DDL statement to the batch group.
 Adding a statement that returns result set is an error.
 
 [source,java]
+.Example of batch updates using Statement object
 ----
 Statement stmt = connection.createStatement();
 
@@ -2298,6 +2306,7 @@ the java.sql.Statement approach. Main difference is that only one
 statement can be used.
 
 [source,java]
+.Example of batch updates with PreparedStatement
 ----
 PreparedStatement stmt = connection.prepareStatement(
     "INSERT INTO products(id, name) VALUES(?, ?)");
@@ -2314,6 +2323,7 @@ int[] updateCounts = stmt.executeBatch();
 ----
 
 [source,java]
+.Example of batch updates with CallableStatement
 ----
 CallableStatement stmt = connection.prepareCall(
     "{call add_product(?, ?)");
@@ -2526,12 +2536,14 @@ drivers of different vendors treat it differently._
 ****
 
 [source,java]
+.Using Statement.executeQuery(String) method
 ----
 Statement stmt = connection.createStatement();
 ResultSet rs = stmt.executeQuery("SELECT * FROM myTable");
 ----
 
 [source,java]
+.Using Statement.getResultSet() method
 ----
 Statement stmt = connection.createStatement();
 boolean hasResultSet = stmt.execute("SELECT * FROM myTable");
@@ -2543,9 +2555,7 @@ if (hasResultSet) {
 
 ==== Accessing the values in the result set
 
-Depending on the type of the result set it is possible to move the
-cursor either forward only (next example) or using absolute and relative
-positioning (second example below).
+Depending on the type of the result set it is possible to move the cursor either forward only (link:#using-forward-only[next example]) or using absolute and relative positioning (link:#using-scrollable-updatable[second example below]).
 
 Values of the result set are obtained by calling the corresponding
 getter method depending on the type of column. For example the
@@ -2572,13 +2582,30 @@ Getters that return object values (`getString`, `getDate`, `getObject`,
 etc.) will correctly report a `null` value for the columns containing
 NULL.
 
+[[using-forward-only]]
+[source,java]
+.Example of using forward-only result sets
+----
+Statement forwardStatement = connection.createStatement();
+ResultSet rs = forwardStatement.executeQuery(
+    "SELECT id, name, price FROM myTable");
+
+while(rs.next()) {
+    int id = rs.getInt(1);
+    String name = rs.getString("name");
+    double price = rs.getDouble(3);
+}
+----
+
 ==== Updating records in the result set
 
 Scrollable cursors are especially useful when result of some query is
 displayed by the application which also allows the user to directly edit
 the data and post the changes to the database.
 
+[[using-scrollable-updatable]]
 [source,java]
+.Example of using scrollable and updatable result sets
 ----
 Statement scrollStatement = connection.createStatement(
     ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -2609,13 +2636,14 @@ Also an application can update the current row using so called
 with forward-only cursors, since application can update only the row to
 which the server-side cursor points to. In case of scrollable cursors
 the complete result set is fetched to the client and then the
-server-side cursor is closed. The example below shows how to use
-positioned updates. First of all application has to specify the name of
+server-side cursor is closed. link:#using-positioned-updates[The example below] shows how to use positioned updates. First of all application has to specify the name of
 the cursor and the list of the columns that will be updated before the
 query is executed. This name is later used in the UPDATE statement as
 showed on the example.
 
+[[using-positioned-updates]]
 [source,java]
+.Example of using the positioned updates
 ----
 Statement selectStmt = connection.createStatement();
 selectStmt.setCursorName("someCursor");
@@ -2682,6 +2710,7 @@ tries to hide his own identity and if the operations succeed, he commits
 the transaction, otherwise he rolls the changes back.
 
 [source,java]
+.Example of explicit transaction control
 ----
 Connection connection = ...
 
@@ -2737,6 +2766,7 @@ transaction is ended when the statement is completed. The point when
 statement executions is considered complete is defined in the
 specification as:
 
+.Rules when the statement is completed in auto-commit mode
 * For insert, update, delete and DDL statements, the statement is
 complete as soon as it has finished executing.
 * For select statements, statement is complete when the associated
@@ -2791,7 +2821,7 @@ either using explicit transaction control, or by using two connection
 objects, one for SELECT statement and one for UPDATE statement.
 
 [source,java]
-.Non-compliant usage of nested statements in auto-commit mode.
+.Non-compliant usage of nested statements in auto-commit mode
 ----
 Statement selectStmt = connection.createStatement(); // <1>
 Statement updateStmt = connection.createStatement();
@@ -2857,7 +2887,8 @@ ANSI/ISO SQL standard defines four such levels, each next one weaker
 than the previous. These isolation levels were reflected in the JDBC
 specification:
 
-[width="100%",cols="<36%,<64%",options="header",]
+[cols="2,3",options="header",]
+.JDBC transaction isolation levels and their characteristics
 |=======================================================================
 |JDBC isolation level |Description
 |TRANSACTION_SERIALIZABLE |Transactions with this isolation level
@@ -2935,6 +2966,7 @@ the mapping are described in section "<<Transaction Parameter Buffer>>".
 * via the connection pool configuration.
 
 [source,java]
+.Overriding the default isolation level mapping
 ----
 Properties props = new Properties();
 props.setProperty("user", "SYSDBA");
@@ -2963,6 +2995,7 @@ preceding work.
 In order to set a savepoint, use following code:
 
 [source,java]
+.Example of using savepoints
 ----
 Statement stmt = connection.createStatement();
 
@@ -3015,6 +3048,7 @@ interfaces. For the cases where this is needed, Jaybird provides an
 extension of the JDBC standard.
 
 [source,java]
+.Example of specifying custom TPB
 ----
 FirebirdConnection fbConnection =
     (FirebirdConnection)connection;
@@ -3133,7 +3167,8 @@ e.g. as soon as a `consistency` transaction gets write access to a
 table, other read-write transactions are not allowed to make changes in
 that tables.
 
-[width="100%",cols="34%,18%,18%,15%,15%",]
+[cols="34%,18%,18%,15%,15%",]
+.Lock conflicts within one table depending on the isolation level
 |=======================================================================
 | |Read-commited, Concurrency read-write |Read-commited, Concurrency
 read-only |Consistency, read-write |Consistency, read-only
@@ -3261,26 +3296,34 @@ defined as the common superclasses providing setters and getters for
 common properties as well as some common routines. The following
 properties can be specified:
 
-[width="100%",cols="<13%,<26%,<61%",options="header",]
+[cols="1,2,4",options="header",]
 |=======================================================================
 |Name |Type |Description
-|host |java.lang.String |Name or the IP address of the host to which we
-make the Service API request. __Required__.
 
-|port |int |Port to which we make the request, 3050 by default.
+|`host` 
+|`java.lang.String` 
+|Name or the IP address of the host to which we make the Service API request. __Required__.
 
-|database |java.lang.String |Path to the database. The meaning of the
-property depends on the service being invoked and will be described in
-each of chapters below.
+|`port` 
+|`int` 
+|Port to which we make the request, 3050 by default.
 
-|user |java.lang.String |Name of the user on behalf of which which all
-Service API calls will be executed. __Required__.
+|`database` 
+|`java.lang.String` 
+|Path to the database. 
+The meaning of the property depends on the service being invoked and will be described in each of chapters below.
 
-|password |java.lang.String |Password corresponding to the specified
-user. _Required._
+|`user` 
+|`java.lang.String` 
+|Name of the user on behalf of which which all Service API calls will be executed. __Required__.
 
-|logger |java.io.OutputStream |Stream into which the output of the
-remote service will be written to. __Optional__.
+|`password` 
+|`java.lang.String` 
+|Password corresponding to the specified user. _Required._
+
+|`logger` 
+|`java.io.OutputStream` 
+|Stream into which the output of the remote service will be written to. __Optional__.
 |=======================================================================
 
 The last parameter requires some more information. The calls to all
@@ -3307,75 +3350,81 @@ Additionally to the setters and getters described in the previous
 section the following methods are used to specify the backup and restore
 paths and properties:
 
-[width="100%",cols="29%,11%,60%",options="header",]
+[cols="2,1,4",options="header",]
 |=======================================================================
 |Name |Type |Description
-|database |String a|
-For backup operation it specifies the path to the database to backup.
 
-For restore operation it specifies the path to the database into which
-the backup file will be restored. In case when multi-file database
-should be created, use `addRestorePath(String, int)` method instead.
+|`database` 
+|`String` 
+|For backup operation it specifies the path to the database to backup.
 
-|backupPath |String |Path to the backup file. For backup operation
-specifies the path and the file name of the newly created backup file.
-If multi-file backup files are to be created, use
-`addBackupPath(String, int)` method instead. For restore operations
-specifies path to the single backup file. If database should be restored
-from multi-file backup, please use the `addBackupPath(String)` method
-instead.
+For restore operation it specifies the path to the database into which the backup file will be restored. 
+In case when multi-file database should be created, use `addRestorePath(String, int)` method instead.
 
-|restorePageBufferCount |int |Number of pages that will be cached of
-this particular database. Should be used only for restore operation.
+|`backupPath` 
+|`String` 
+|Path to the backup file. 
+For backup operation specifies the path and the file name of the newly created backup file.
+If multi-file backup files are to be created, use `addBackupPath(String, int)` method instead. 
+For restore operations specifies path to the single backup file. 
+If database should be restored from multi-file backup, please use the `addBackupPath(String)` method instead.
 
-|restorePageSize |int |Size of the database page. Should be used only
-for restore operation. Valid values depend on the Firebird version, but
-should be one of the 1024, 2048, 4096 or 8192.
+|`restorePageBufferCount` 
+|`int` 
+|Number of pages that will be cached of this particular database. 
+Should be used only for restore operation.
 
-|restoreReadOnly |boolean |Set to `true` if the database should be
-restored in read-only mode.
+|`restorePageSize` 
+|`int` 
+|Size of the database page. 
+Should be used only for restore operation. 
+Valid values depend on the Firebird version, but should be one of the 1024, 2048, 4096 or 8192.
 
-|restoreReplace |boolean a|
-Set to `true` if restore should replace the existing database with the
-one from backup.
+|`restoreReadOnly` 
+|`boolean` 
+|Set to `true` if the database should be restored in read-only mode.
 
-*Warning!* It is easy to drop the only existing database if the backup
-can't be restored, as the existing database is first deleted and only
-after that the restore process starts. To avoid such situation it is
-recommended to restore database into some dummy file first and then use
-file system commands to replace the existing database with the newly
-created one.
+|`restoreReplace` 
+|`boolean` 
+| Set to `true` if restore should replace the existing database with the one from backup.
 
-|verbose |boolean |Be verbose when writing to the log. The service
-called on the server will produce lots of output that will be written to
-the output stream specified in logger property.
+*Warning!* It is easy to drop the only existing database if the backup can't be restored, as the existing database is first deleted and only after that the restore process starts. 
+To avoid such situation it is recommended to restore database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
+
+|`verbose` 
+|`boolean` 
+|Be verbose when writing to the log. 
+The service called on the server will produce lots of output that will be written to the output stream specified in logger property.
 |=======================================================================
 
 Additionally to the properties following methods are used to configure
 the paths to backup and database files when multi-file backup or restore
 operations are used.
 
-[width="100%",cols="36%,64%",]
+[cols="3,4",]
 |=======================================================================
 |Method |Description
 
-|`addBackupPath(String)` |Add a path to a backup file from a multi-file
-backup. Should be used for restore operation only.
+|`addBackupPath(String)` 
+|Add a path to a backup file from a multi-file backup. 
+Should be used for restore operation only.
 
-|`addBackupPath(String, int)` |Add a path to the multi-file backup. The
-second parameter specifies the maximum size of the particular file in
-bytes. Should be used for backup operation only.
+|`addBackupPath(String, int)` 
+|Add a path to the multi-file backup. 
+The second parameter specifies the maximum size of the particular file in bytes. 
+Should be used for backup operation only.
 
-|`addRestorePath(String, int)` |Add a path for the multi-file database.
-The second parameter specifies the maximum size of the database file in
-pages (in other words, the maximum size in bytes can be obtained by
-multiplying this value by `restorePageSize` parameter)
+|`addRestorePath(String, int)` 
+|Add a path for the multi-file database.
+The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by `restorePageSize` parameter)
 
-|`clearBackupPaths()` |Clear all the specified backup paths. This method
-also clears the path specified in `backupPath` property.
+|`clearBackupPaths()` 
+|Clear all the specified backup paths. 
+This method also clears the path specified in `backupPath` property.
 
-|`clearRestorePaths()` |Clear all the specified restore paths. This
-method also clears the path specified in the database property.
+|`clearRestorePaths()` 
+|Clear all the specified restore paths. 
+This method also clears the path specified in the database property.
 |=======================================================================
 
 ****
@@ -3398,6 +3447,7 @@ user to track the service progress it acts also as a signal of operation
 completion – in this case the Java code will receive an EOF marker.].
 
 [source,java]
+.Example of backup and restore process
 ----
 // backup the database
 BackupManager backupManager = new FBBackupManager();
@@ -3437,139 +3487,108 @@ possibility to specify additional backup and restore options that cannot
 be specified via the properties of this class. The parameter value is
 bitwise combination of the following constants:
 
-[width="100%",cols="33%,67%",options="header",]
+[cols="3,4",options="header",]
 |=======================================================================
 |Constant |Description
-|BACKUP_CONVERT a|
-Backup external files as tables.
+|BACKUP_CONVERT 
+|Backup external files as tables.
 
-By default external tables are not backed up, only references to the
-external files with data are stored in the backup file. When this option
-is used, the backup will store the external table as if they were
-regular tables. After restore the tables will remain regular tables.
+By default external tables are not backed up, only references to the external files with data are stored in the backup file. 
+When this option is used, the backup will store the external table as if they were regular tables. 
+After restore the tables will remain regular tables.
 
-|BACKUP_EXPAND a|
-No data compression.
+|BACKUP_EXPAND 
+|No data compression.
 
 The gbak utility uses RLE compression for the strings in backup file.
-Using this option tells it to write strings in their full length,
-possibly fully consisting of empty characters, etc.
+Using this option tells it to write strings in their full length, possibly fully consisting of empty characters, etc.
 
-|BACKUP_IGNORE_CHECKSUMS a|
-Ignore checksums.
+|BACKUP_IGNORE_CHECKSUMS 
+|Ignore checksums.
 
 The backup utility can't backup a database with page checksum errors.
-Such database is considered corrupted and the completeness and
-correctness of the backup cannot be guaranteed. However in some cases
-such errors can be ignored, e.g. when the index page is corrupted. In
-such case the data in the database are ok and the error disappears when
-the database is restored and index is recreated.
+Such database is considered corrupted and the completeness and correctness of the backup cannot be guaranteed.
+However in some cases such errors can be ignored, e.g. when the index page is corrupted.
+In such case the data in the database are ok and the error disappears when the database is restored and index is recreated.
 
-Use this option only when checksum errors are detected and can't be
-corrected without full backup/restore cycle. Ensure that the restored
-database contains correct data afterwards.
+Use this option only when checksum errors are detected and can't be corrected without full backup/restore cycle.
+Ensure that the restored database contains correct data afterwards.
 
-|BACKUP_IGNORE_LIMBO a|
-Ignore in-limbo transactions.
+|BACKUP_IGNORE_LIMBO 
+|Ignore in-limbo transactions.
 
 The backup utility can't backup database with in-limbo transactions.
-When such situation appears, backup has to wait until the decision about
-the outcome of the in-limbo transaction. After some timeout exception is
-thrown and backup is aborted. This option allows to workaround this
-situation – the gbak looks for the most recent committed version of the
-record and writes it into backup.
+When such situation appears, backup has to wait until the decision about the outcome of the in-limbo transaction.
+After some timeout exception is thrown and backup is aborted.
+This option allows to workaround this situation – the gbak looks for the most recent committed version of the record and writes it into backup.
 
-|BACKUP_METADATA_ONLY a|
-Backup metadata only.
+|BACKUP_METADATA_ONLY 
+|Backup metadata only.
 
-When this option is specified, the backup utility backups only the
-metadata information (e.g. table an/or view structure, stored
-procedures, etc.), but no data are backed up. This allows restoring a
-clean database from the backup.
+When this option is specified, the backup utility backups only the metadata information (e.g. table an/or view structure, stored procedures, etc.), but no data are backed up.
+This allows restoring a clean database from the backup.
 
-|BACKUP_NO_GARBAGE_COLLECT |
-Do not collect garbage during backup.
+|BACKUP_NO_GARBAGE_COLLECT 
+|Do not collect garbage during backup.
 
-The backup process reads all records in the tables one by one. When
-cooperative garbage collection is enabledfootnote:[Cooperative garbage
-collection can be switched off in Firebird 2.0 SuperServer architecture
-by corresponding configuration option. It can't be switched off in
-ClassicServer architecture and in previous Firebird versions.] the
-transaction that accesses the latest version of the record is also
-responsible for marking the previous versions as garbage. This process
-is time consuming and might be switched off when creating backup, where
+The backup process reads all records in the tables one by one.
+When cooperative garbage collection is enabledfootnote:[Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can't be switched off in ClassicServer architecture and in previous Firebird versions.] the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
+This process is time consuming and might be switched off when creating backup, where
 the most recent version will be read.
 
-Later operator can restore the database from the backup. In database
-with many backversions of the records the backup-restore cycle can be
+Later operator can restore the database from the backup. 
+In databases with many backversions of the records, the backup-restore cycle can be
 faster than traditional garbage collection.
 
-|BACKUP_NON_TRANSPORTABLE a|
-Use non-transportable backup format.
+|BACKUP_NON_TRANSPORTABLE 
+|Use non-transportable backup format.
 
-By default gbak creates so-called transportable backup where it does not
-make difference whether it is later restored on the platform with big or
-little endianess. By using this option a non-transportable format will
-be used which allows restoring the database only on the same
-architecture.
+By default gbak creates so-called transportable backup where it does not make difference whether it is later restored on the platform with big or little endianess.
+By using this option a non-transportable format will be used which allows restoring the database only on the same architecture.
 
-|BACKUP_OLD_DESCRIPTIONS a|
-Save old style metadata descriptions.
+|BACKUP_OLD_DESCRIPTIONS 
+|Save old style metadata descriptions.
 
-Actually no real information exist for this option, by default it is
-switched off.
+Actually no real information exist for this option, by default it is switched off.
 
-|RESTORE_DEACTIVATE_INDEX a|
-Deactivate indexes during restore.
+|RESTORE_DEACTIVATE_INDEX 
+|Deactivate indexes during restore.
 
-By default indexes are created at the beginning of the restore process
-and they are updated with each record being restored from the backup
-file. On a big tables it is more efficient first to store data in the
-database and to update the index afterwards. When this option is
-specified, the indexes will be restored in the inactive state.
-Application is however required to activate indexes afterwards, it won't
-happen automatically.
+By default indexes are created at the beginning of the restore process and they are updated with each record being restored from the backup file.
+On a big tables it is more efficient first to store data in the database and to update the index afterwards.
+When this option is specified, the indexes will be restored in the inactive state.
+Application is however required to activate indexes afterwards, it won't happen automatically.
 
-|RESTORE_NO_SHADOW a|
-Do not restore shadow database.
+|RESTORE_NO_SHADOW 
+|Do not restore shadow database.
 
-If the shadow database is configured, an absolute path to the shadow is
-stored in the backup file. If such backup file is restored on a
-different system where such path does not exist (e.g. moving database
-from Windows to Linux or otherwise), restore process will fail. Using
-this option allows to overcome such situation.
+If the shadow database is configured, an absolute path to the shadow is stored in the backup file.
+If such backup file is restored on a different system where such path does not exist (e.g. moving database from Windows to Linux or otherwise), restore process will fail.
+Using this option allows to overcome such situation.
 
-|RESTORE_NO_VALIDITY |
-Do not restore validity constraints.
+|RESTORE_NO_VALIDITY 
+|Do not restore validity constraints.
 
-This option is usually needed when the validity constraints (e.g. NOT
-NULL constraints) were added after the data were already in the database
-but the database contains records that do not satisfy such
-constraintsfootnote:[All versions of Firebird upto 2.5 allow to define
-validity constraints despite the table(s) contain data that do not
-satisfy them. Only the new records will be validated, and it is
-responsibility of the database administrator to ensure the validity of
-existing ones.].
+This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraintsfootnote:[All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.].
 
-When this option is specified, the validity constraints won't be
-restored. This allows to recover the data and perform cleanup tasks.
-Application and/or administrators are responsible for restoring the
-validity constrains afterwards.
+When this option is specified, the validity constraints won't be restored.
+This allows to recover the data and perform cleanup tasks.
+Application and/or administrators are responsible for restoring the validity constrains afterwards.
 
-|RESTORE_ONE_AT_A_TIME a|
-Commit after completing restore of each table.
+|RESTORE_ONE_AT_A_TIME 
+|Commit after completing restore of each table.
 
-By default all data are restored in one transaction. If for some reason
-the complete restore is not possible, using this option will allow to
-restore at least some of the data.
+By default all data are restored in one transaction.
+If for some reason the complete restore is not possible, using this option will allow to restore at least some of the data.
 
-|RESTORE_USE_ALL_SPACE |Do not reserve 20% on each page for the future
-versions, useful for read-only databases.
+|RESTORE_USE_ALL_SPACE
+|Do not reserve 20% on each page for the future versions, useful for read-only databases.
 |=======================================================================
 
 Example of using these options:
 
 [source,java]
+.Example of using extended options for restore
 ----
 BackupManager restoreManager = new FBBackupManager();
 
@@ -3606,47 +3625,66 @@ getters and setters. You can replace it with any other implementation of
 User interface.] class. The available properties of the `FBUser` class
 are:
 
-[width="100%",cols="<14%,<10%,<76%",options="header",]
+[cols="2,1,4",options="header",]
 |=======================================================================
 |Name |Type |Description
-|userName |String |Unique name of the user on the Firebird server.
-Required. Maximum length is 31 byte.
 
-|password |String |Corresponding password. Getter return value only if
-the password had been set
+|`userName` 
+|`String` 
+|Unique name of the user on the Firebird server. Required.
+Maximum length is 31 byte.
 
-|firstName |String |First name of the user. Optional.
+|`password` 
+|`String` 
+|Corresponding password. 
+Getter return value only if the password had been set
 
-|middleName |String |Middle name of the user. Optional.
+|`firstName` 
+|`String` 
+|First name of the user. Optional.
 
-|lastName |String |Last name of the user. Optional.
+|`middleName` 
+|`String` 
+|Middle name of the user. Optional.
 
-|userId |int |ID of the user on Unix. Optional.
+|`lastName` 
+|`String` 
+|Last name of the user. Optional.
 
-|groupId |int |ID of the group on Unix. Optional.
+|`userId` 
+|`int` 
+|ID of the user on Unix. Optional.
+
+|`groupId` 
+|`int` 
+|ID of the group on Unix. Optional.
 |=======================================================================
 
 The management class, `FBUserManager` has following methods to
 manipulate the user accounts on the server:
 
-[width="100%",cols="<23%,<77%",options="header",]
+[cols="3,4",options="header",]
 |=======================================================================
 |Method |Description
-|`getUsers():Map` |Method delivers a map containing user names as keys
-and instances of FBUser class as values containing all users that are
-registered on the server. The instances of FBUser class do not contain
-passwords, the corresponding property is null.
 
-|`addUser(User)` |Register the user account on the server.
+|`getUsers():Map` 
+|Method delivers a map containing user names as keys and instances of `FBUser` class as values containing all users that are registered on the server. 
+The instances of `FBUser` class do not contain passwords, the corresponding property is `null`.
 
-|`updateUser(User)` |Update the user account on the server.
+|`addUser(User)` 
+|Register the user account on the server.
 
-|`deleteUser(User)` |Delete the user account on the server.
+|`updateUser(User)` 
+|Update the user account on the server.
+
+|`deleteUser(User)` 
+|Delete the user account on the server.
 |=======================================================================
 
 An example of using the `FBUserManager` class:
 
 [source,java]
+.Example of FBUserManager class usage
 ----
 UserManager userManager = new FBUserManager();
 
@@ -3691,33 +3729,26 @@ allowed time for operation.
 
 There are three shutdown modes:
 
-[width="100%",cols="31%,69%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Shutdown mode |Description
-|`SHUTDOWN_ATTACH` a|
-The shutdown process is initiated and it is not possible to obtain a new
-connection to the database but the currently open connection are fully
-functional.
 
-When after the maximum allowed time for operation there are still open
-connections to the database, the shutdown process is aborted.
+|`SHUTDOWN_ATTACH` 
+|The shutdown process is initiated and it is not possible to obtain a new connection to the database but the currently open connections are fully functional.
 
-|`SHUTDOWN_TRANSACTIONAL` a|
-The shutdown process is started and it is not possible to start new
-transactions and open new connections to the database. The transactions
-that were running at the time of shutdown initiation are fully
-functional.
+When after the maximum allowed time for operation there are still open connections to the database, the shutdown process is aborted.
 
-When after the maximum allowed time for operation there are still
-running transactions, the shutdown process is aborted.
+|`SHUTDOWN_TRANSACTIONAL` 
+|The shutdown process is started and it is not possible to start new transactions or open new connections to the database.
+The transactions that were running at the time of shutdown initiation are fully functional.
 
-If no running transactions are found, the currently open connections are
-allowed to disconnect.
+When after the maximum allowed time for operation there are still running transactions, the shutdown process is aborted.
 
-|`SHUTDOWN_FORCE` a|
-The shutdown process is started and will be completed before or when the
-maximum allowed time for operation is reached. New connections and
-transactions are not prohibited during the wait.
+If no running transactions are found, the currently open connections are allowed to disconnect.
+
+|`SHUTDOWN_FORCE` 
+|The shutdown process is started and will be completed before or when the maximum allowed time for operation is reached.
+New connections and transactions are not prohibited during the wait.
 
 After that any running transaction won't be able to commit.
 
@@ -3785,26 +3816,24 @@ output of the routine is written to the output stream configured in the
 The `validateDatabase(int)` method can be used to customize the
 validation process:
 
-[width="100%",cols="33%,67%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Validation mode |Description
-|`VALIDATE_READ_ONLY` a|
-Perform read-only validation. In this case the database file won't be
-repaired, only the presence of the database file errors will be
-reported.
+
+|`VALIDATE_READ_ONLY` 
+|Perform read-only validation. 
+In this case the database file won't be repaired, only the presence of the database file errors will be reported.
 
 Can be used for periodical health-check of the database.
 
-|`VALIDATE_FULL` |Do a full check on record and pages structures,
-releasing unassigned record fragments.
+|`VALIDATE_FULL` 
+|Do a full check on record and pages structures, releasing unassigned record fragments.
 
-|`VALIDATE_IGNORE_CHECKSUM` a|
-Ignore checksums during repair operations.
+|`VALIDATE_IGNORE_CHECKSUM` 
+|Ignore checksums during repair operations.
 
-The checksum error means that the database page was overwritten in a
-random order and the data stored on it are corrupted. When this option
-is specified, the validation process will succeed even if checksum
-errors are present.
+The checksum error means that the database page was overwritten in a random order and the data stored on it are corrupted.
+When this option is specified, the validation process will succeed even if checksum errors are present.
 
 |=======================================================================
 
@@ -3842,21 +3871,20 @@ commit them or perform a rollback. For the cases when this is not
 possible `MaintenanceManager` provides following methods to perform this
 in interactive mode:
 
-[width="100%",cols="33%,67%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Method |Description
-|`listLimboTransactions()` a|
-Method lists all IDs of the in-limbo transactions to the output stream
-specified in logger property.
 
-Application has to either parse the output to commit or rollback the
-transactions in automated mode or it should present the output to the
-user and let him/her make a decision.
+|`listLimboTransactions()` 
+|Method lists all IDs of the in-limbo transactions to the output stream specified in logger property.
 
-|`commitTransaction(int)` |Commit the transaction with the specified ID.
+Application has to either parse the output to commit or rollback the transactions in automated mode or it should present the output to the user and let him/her make a decision.
 
-|`rollbackTransaction(int)` |Rollback the transaction with the specified
-ID.
+|`commitTransaction(int)` 
+|Commit the transaction with the specified ID.
+
+|`rollbackTransaction(int)` 
+|Rollback the transaction with the specified ID.
 |=======================================================================
 
 ==== Sweeping the database
@@ -3891,15 +3919,16 @@ the current difference between Next Transaction and OIT.
 The `MaintenanceManager` provides following methods to help with
 database sweeping:
 
-[width="100%",cols="<29%,<71%",options="header",]
+[cols="1,3",options="header",]
 |=======================================================================
 |Method |Description
-|`setSweepThreshold(int)` |Set the threshold between Next Transaction
-and OIT that will trigger the automatic sweep process. Default value is
-20,000.
 
-|`sweepDatabase()` |Perform the sweep regardless of the current
-difference between Next Transaction and OIT.
+|`setSweepThreshold(int)` 
+|Set the threshold between Next Transaction and OIT that will trigger the automatic sweep process.
+Default value is 20,000.
+
+|`sweepDatabase()` 
+|Perform the sweep regardless of the current difference between Next Transaction and OIT.
 |=======================================================================
 
 ==== Other database properties
@@ -3907,44 +3936,41 @@ difference between Next Transaction and OIT.
 There are few other properties of the database that can be set via
 `MaintenanceManager`:
 
-[width="100%",cols="35%,65%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Method |Description
-|`setDatabaseAccessMode(int)` a|
-Change the access mode of the database. Possible values are:
+|`setDatabaseAccessMode(int)` 
+a|Change the access mode of the database. 
+Possible values are:
 
 * `ACCESS_MODE_READ_ONLY` to make database read-only;
 * `ACCESS_MODE_READ_WRITE` to allow writes into the database.
 
-Please note, only read-only databases can be placed on read-only media,
-the read-write databases even if accessed within read-only transactions.
+Please note, only read-only databases can be placed on read-only media, the read-write databases even if accessed within read-only transactions.
 
-|`setDatabaseDialect(int)` |Change the database SQL dialect. The allowed
-values can be either 1 or 3.
+|`setDatabaseDialect(int)` 
+|Change the database SQL dialect.
+The allowed values can be either 1 or 3.
 
-|`setDefaultCacheBuffer(int)` |Change the number of database pages to
-cache. Default value is 2048.
+|`setDefaultCacheBuffer(int)` 
+|Change the number of database pages to cache. 
+Default value is 2048.
 
-|`setForcedWrites(boolean)` a|
-Change the forced writes setting for the database.
+|`setForcedWrites(boolean)` 
+|Change the forced writes setting for the database.
 
-When the forced writes are switched off, database engine does not
-enforce flushing pending changes to disk and they are kept in OS cache.
-When later the RDBMS changes the same page later, the write happens in
-memory, which in many cases increases the performance. However, in case
-of OS or hardware crash the database will be corrupted.
+When the forced writes are switched off, database engine does not enforce flushing pending changes to disk and they are kept in OS cache.
+When later the RDBMS changes the same page later, the write happens in memory, which in many cases increases the performance.
+However, in case of OS or hardware crash the database will be corrupted.
 
-|`setPageFill(int)` a|
-Set the page fill factor. Firebird leaves 20% of free space on each
-database page for the future record versions. It is possible to tell
-Firebird not to reserve the space, makes sense for read-only databases,
-since more data fit the page, which increases the performance. Possible
-values are:
+|`setPageFill(int)`
+a|Set the page fill factor.
+Firebird leaves 20% of free space on each database page for the future record versions.
+It is possible to tell Firebird not to reserve the space, makes sense for read-only databases, since more data fit the page, which increases the performance.
+Possible values are:
 
-* `PAGE_FILL_FULL` – do not reserve additional space for future
-versions;
-* `PAGE_FILL_RESERVE` – reserve the free space for future record
-versions.
+* `PAGE_FILL_FULL` – do not reserve additional space for future versions;
+* `PAGE_FILL_RESERVE` – reserve the free space for future record versions.
 
 |=======================================================================
 
@@ -3962,27 +3988,28 @@ output stream specified in the `logger` property. It is the
 responsibility of the application to correctly parse the text output if
 needed.
 
-[width="100%",cols="38%,62%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Method |Description
-|`getDatabaseStatistics()` |Get complete statistics about the database.
 
-|`getDatabaseStatistics(int)` a|
-Get the statistical information for the specified options. Possible
-values are (bit mask, can be combined together):
+|`getDatabaseStatistics()` 
+|Get complete statistics about the database.
+
+|`getDatabaseStatistics(int)`
+a|Get the statistical information for the specified options.
+Possible values are (bit mask, can be combined together):
 
 * `DATA_TABLE_STATISTICS`
 * `SYSTEM_TABLE_STATISTICS`
 * `INDEX_STATISTICS`
 * `RECORD_VERSION_STATISTICS`
 
-|`getHeaderPage()` |Get information from the header page (e.g. page
-size, OIT, OAT and Next transaction values, etc.)
+|`getHeaderPage()`
+|Get information from the header page (e.g. page size, OIT, OAT and Next transaction values, etc.)
 
-|`getTableStatistics(String[])` |Get statistic information for the
-specified tables. This method allows to limit the reported statistical
-information to a single or couple of the tables, not for the whole
-database.
+|`getTableStatistics(String[])`
+|Get statistic information for the specified tables.
+This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.
 |=======================================================================
 
 == Working with Events
@@ -4052,6 +4079,7 @@ using the `POST_EVENT` command. It is possible to create a stored
 procedure with a sole purpose of posting events:
 
 [source,sql]
+.Example of posting events from PSQL code
 ----
 CREATE PROCEDURE sp_post_event(event_name VARCHAR(72)) 
 AS BEGIN
@@ -4063,6 +4091,7 @@ Firebird 2.0 features new command `EXECUTE BLOCK` which allows to
 execute PSQL statements within the DSQL code:
 
 [source,sql]
+.Using EXECUTE BLOCK to post events
 ----
 Statement stmt = connection.createStatement();
 try {
@@ -4086,22 +4115,30 @@ event name and occurrence count.
 Applications have to configure following properties before starting
 using the implementation `EventManager` interface:
 
-[width="100%",cols="<12%,<20%,<68%",options="header",]
+[cols="1,2,4",options="header",]
 |=======================================================================
 |Name |Type |Description
-|host |java.lang.String |Name or the IP address of the host to which we
-subscribe for events. __Required__.
 
-|port |int |Port to which we connect to, 3050 by default.
+|`host`
+|`java.lang.String`
+|Name or the IP address of the host to which we subscribe for events. __Required__.
 
-|database |java.lang.String |Path to the database. The path is specified
-for the remote host but must be absolute. __Required__.
+|`port`
+|`int`
+|Port to which we connect to, 3050 by default.
 
-|user |java.lang.String |Name of the user on behalf of which we connect
-to the database. __Required__.
+|`database`
+|`java.lang.String`
+|Path to the database.
+The path is specified for the remote host but must be absolute. __Required__.
 
-|password |java.lang.String |Password corresponding to the specified
-user. __Required__.
+|`user`
+|`java.lang.String`
+|Name of the user on behalf of which we connect to the database. __Required__.
+
+|`password`
+|`java.lang.String`
+|Password corresponding to the specified user. __Required__.
 |=======================================================================
 
 After configuring these properties application has to invoke the
@@ -4127,6 +4164,7 @@ code below shows an example of using the asynchronous event
 notification.
 
 [source,java]
+.Example of registering an event listener for asynchronous event notification
 ----
 EventManager eventManager = new FBEventManager();
 
@@ -4158,6 +4196,7 @@ timeout specified in the second parameter occurs – the
 using the blocking methods.
 
 [source,java]
+.Example of blocking waiting for event with a specified timeout
 ----
 EventManager eventManager = new FBEventManager();
 
@@ -4183,68 +4222,84 @@ current Firebird API has almost 70 DPB parameters, however only few of
 them are interesting for regular users. This chapter provides a list of
 most useful DPB parameters and short explanation to each of them.
 
-[width="100%",cols="<35%,<65%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |DPB Parameter + alias(es) |Explanation
-|`isc_dpb_user_name` `user_name`, `user` |Name of the user for the
-connection.
 
-|`isc_dpb_password` `password` |Password corresponding to the specified
-user.
+a|`isc_dpb_user_name` +
+`user_name`, `user` 
+|Name of the user for the connection.
 
-|`isc_dpb_lc_ctype` `lc_ctype`, `encoding` |Character encoding for the
-connection. This property tells the database server the encoding in
-which it expects character content. For list of the available encodings
-see "<<Available Encodings>>".
+a|`isc_dpb_password` +
+`password` 
+|Password corresponding to the specified user.
 
-|`CharSet`, `localEncoding` |Character set for the connection. Similar
-to the previous property, however instead of Firebird-specific name
-allows using standard Java encoding name.
+a|`isc_dpb_lc_ctype` +
+`lc_ctype`, `encoding`
+|Character encoding for the connection.
+This property tells the database server the encoding in which it expects character content.
+For a list of the available encodings see <<Available Encodings>>.
 
-|`isc_dpb_num_buffers` `num_buffers` |Number of database pages that will
-be cached. Default values are 75 for ClassicServer and 2048 for
-SuperServer.
+a|`charSet` +
+`localEncoding`
+|Character set for the connection.
+Similar to the previous property, however instead of Firebird-specific name allows using standard Java encoding name.
 
-|`isc_dpb_sql_role_name` `sql_role_name` |Name of the SQL role for the
-specified connection.
+a|`isc_dpb_num_buffers` +
+`num_buffers`
+|Number of database pages that will be cached.
+Default values are 75 for ClassicServer and 2048 for SuperServer.
 
-|`isc_dpb_sql_dialect` `sql_dialect` |SQL dialect, by default 3, can be
-1, 2 and 3.
+a|`isc_dpb_sql_role_name` +
+`sql_role_name`
+|Name of the SQL role for the specified connection.
 
-|`isc_dpb_set_db_readonly` `set_db_readonly` |Set the database into
-read-only state.
+a|`isc_dpb_sql_dialect` +
+`sql_dialect`
+|SQL dialect, by default 3, can be 1, 2 and 3.
 
-|`isc_dpb_set_db_sql_dialect` `set_db_sql_dialect` |Set the SQL dialect
-of the database.
+a|`isc_dpb_set_db_readonly` +
+`set_db_readonly` 
+|Set the database into read-only state.
 
-|`isc_dpb_set_db_charset` `set_db_charset` |Set the default character
-set of the database.
+a|`isc_dpb_set_db_sql_dialect` +
+`set_db_sql_dialect` 
+|Set the SQL dialect of the database.
 
-|`isc_dpb_socket_buffer_size` `socket_buffer_size` |Jaybird specific
-parameter. Tells Jaybird Type 4 driver the size of the socket buffer.
-Should be used on the systems where default socket buffer provided by
-JVM is not correct
+a|`isc_dpb_set_db_charset` +
+`set_db_charset` 
+|Set the default character set of the database.
 
-|`isc_dpb_blob_buffer_size` `blob_buffer_size` |Jaybird specific
-parameter. Tells the driver the size of the buffer that is used to
-transfer BLOB content. It is recommended to keep the value equal to
-`n * <database page size>` (and preferably also socket buffer size).
+a|`isc_dpb_socket_buffer_size` +
+`socket_buffer_size` 
+|Jaybird specific parameter. 
+Tells Jaybird Type 4 driver the size of the socket buffer.
+Should be used on the systems where default socket buffer provided by JVM is not correct.
 
-|`isc_dpb_use_stream_blobs` `use_stream_blobs` |Jaybird specific
-parameter. Tells the driver to create stream BLOBs. By default segmented
-BLOBs are created.
+a|`isc_dpb_blob_buffer_size` +
+`blob_buffer_size` 
+|Jaybird specific parameter. 
+Tells the driver the size of the buffer that is used to transfer BLOB content.
+It is recommended to keep the value equal to `n * <database page size>` (and preferably also socket buffer size).
 
-|`isc_dpb_paranoia_mode` `paranoia_mode` |Jaybird specific parameter.
-Tells the driver to throw exception in the situation not covered by the
-specification. For example, the JDBC specification does not say whether
-it is allowed to call the close() method twice. In “paranoia mode”
-Jaybird will throw an exception while in normal mode it will simply
-ignore the second call.
+a|`isc_dpb_use_stream_blobs` +
+`use_stream_blobs` 
+|Jaybird specific parameter. 
+Tells the driver to create stream BLOBs. 
+By default segmented BLOBs are created.
 
-|`isc_dpb_use_standard_udf` `use_standard_udf` |Jaybird specific
-parameter. Tells the JDBC driver to assume that standard UDF library is
-registered in the database when converting escaped function calls. See
-"<<Supported JDBC Scalar Functions>>" for more details.
+a|`isc_dpb_paranoia_mode` +
+`paranoia_mode` 
+|Jaybird specific parameter.
+Tells the driver to throw exception in the situation not covered by the specification.
+For example, the JDBC specification does not say whether it is allowed to call the `close()` method twice.
+In "paranoia mode" Jaybird will throw an exception while in normal mode it will simply ignore the second call.
+
+a|`isc_dpb_use_standard_udf` +
+`use_standard_udf` 
+|Jaybird specific parameter. 
+Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
+See "<<Supported JDBC Scalar Functions>>" for more details.
 |=======================================================================
 
 [appendix]
@@ -4260,22 +4315,69 @@ method is provided.
 [cols=",,",options="header",]
 |================================================
 |JDBC Type |Firebird Type |Java Object Type
-|`CHAR` |`CHAR` |`String`
-|`VARCHAR` |`VARCHAR` |`String`
-|`LONGVARCHAR` |`BLOB SUB_TYPE 1` |`String`
-|`NUMERIC` |`NUMERIC` |`java.math.BigDecimal`
-|`DECIMAL` |`DECIMAL` |`java.math.BigDecimal`
-|`SMALLINT` |`SMALLINT` |`java.lang.Short`
-|`INTEGER` |`INTEGER` |`java.lang.Integer`
-|`BIGINT` |`BIGINT` |`java.lang.Long`
-|`REAL` |`REAL` |`java.lang.Float`
-|`FLOAT` |`FLOAT` |`java.lang.Double`
-|`DOUBLE` |`DOUBLE PRECISION` |`java.lang.Double`
-|`LONGVARBINARY` |`BLOB SUB_TYPE 0` |`byte[]`
-|`DATE` |`DATE` |`java.sql.Date`
-|`TIME` |`TIME` |`java.sql.Time`
-|`TIMESTAMP` |`TIMESTAMP` |`java.sql.Timestamp`
-|`BLOB` |`BLOB SUB_TYPE < 0` |`java.sql.Blob`
+|`CHAR` 
+|`CHAR` 
+|`String`
+
+|`VARCHAR` 
+|`VARCHAR` 
+|`String`
+
+|`LONGVARCHAR` 
+|`BLOB SUB_TYPE 1` 
+|`String`
+
+|`NUMERIC` 
+|`NUMERIC` 
+|`java.math.BigDecimal`
+
+|`DECIMAL` 
+|`DECIMAL` 
+|`java.math.BigDecimal`
+
+|`SMALLINT` 
+|`SMALLINT` 
+|`java.lang.Short`
+
+|`INTEGER` 
+|`INTEGER` 
+|`java.lang.Integer`
+
+|`BIGINT` 
+|`BIGINT` 
+|`java.lang.Long`
+
+|`REAL` 
+|`REAL` 
+|`java.lang.Float`
+
+|`FLOAT` 
+|`FLOAT` 
+|`java.lang.Double`
+
+|`DOUBLE` 
+|`DOUBLE PRECISION` 
+|`java.lang.Double`
+
+|`LONGVARBINARY` 
+|`BLOB SUB_TYPE 0` 
+|`byte[]`
+
+|`DATE` 
+|`DATE` 
+|`java.sql.Date`
+
+|`TIME` 
+|`TIME` 
+|`java.sql.Time`
+
+|`TIMESTAMP` 
+|`TIMESTAMP` 
+|`java.sql.Timestamp`
+
+|`BLOB` 
+|`BLOB SUB_TYPE < 0` 
+|`java.sql.Blob`
 |================================================
 
 === Data Type Conversions
@@ -4283,32 +4385,31 @@ method is provided.
 This table specifies the compatible conversions between the Firebird and
 Java types.
 
-[width="100%",cols="17%,5%,5%,4%,3%,4%,4%,5%,5%,3%,5%,9%,9%,10%,3%,3%,6%",options="header",]
+[cols="5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",options="header",]
 |=======================================================================
-| |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL`
-|`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0`
-|`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP`
+| |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL` |`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0` |`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP`
+
 |`String` |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X
 
-|`java.math.BigDecimal` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`java.math.BigDecimal` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`Boolean` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`Boolean` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`Integer` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`Integer` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`Long` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`Long` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`Float` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`Float` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`Double` |X |X |X |X |X |X |X |X |X |X | | | | |
+|`Double` |X |X |X |X |X |X |X |X |X |X | | | | | | 
 
-|`byte[]` | | | | | | | | | | |X |X |X | |
+|`byte[]` | | | | | | | | | | |X |X |X | | | 
 
-|`Blob` | | | | | | | | | | |X |X |X | |
+|`Blob` | | | | | | | | | | |X |X |X | | | 
 
-|`Date` | | | | | | | | | | | | | |X | |X
+|`Date` | | | | | | | | | | | | | |X | |X 
 
-|`Time` | | | | | | | | | | | | | | |X
+|`Time` | | | | | | | | | | | | | | |X | 
 
 |`Timestamp` | | | | | | | | | | | | | |X | |X
 |=======================================================================
@@ -4325,23 +4426,24 @@ implementations.
 This group contains properties defined in the JDBC specification and
 should be standard to all connection pools.
 
-[width="100%",cols="<19%,<81%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Property |Description
-|`maxIdleTime` |Maximum time in milliseconds after which an idle
-connection in the pool is closed.
 
-|`maxPoolSize` |Maximum number of open physical connections.
+|`maxIdleTime`
+|Maximum time in milliseconds after which an idle connection in the pool is closed.
 
-|`minPoolSize` |Minimum number of open physical connections. If value is
-greater than 0, corresponding number of connections will be opened when
-first connection is obtained.
+|`maxPoolSize` 
+|Maximum number of open physical connections.
 
-|`maxStatements` |Maximum size of the prepared statement pool. If zero,
-statement pooling is switched off. When the application requests more
-statements than can be kept in the pool, Jaybird will allow creating
-those statements, however closing them would not return them back to the
-pool, but rather immediately release the resources.
+|`minPoolSize` 
+|Minimum number of open physical connections.
+If value is greater than 0, corresponding number of connections will be opened when first connection is obtained.
+
+|`maxStatements` 
+|Maximum size of the prepared statement pool. 
+If zero, statement pooling is switched off. 
+When the application requests more statements than can be kept in the pool, Jaybird will allow creating those statements, however closing them would not return them back to the pool, but rather immediately release the resources.
 |=======================================================================
 
 === Pool Properties
@@ -4349,60 +4451,63 @@ pool, but rather immediately release the resources.
 This group of properties are specific to the Jaybird implementation of
 the connection pooling classes.
 
-[width="100%",cols="34%,66%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Property |Description
-|`blockingTimeout` |Maximum time in milliseconds during which
-application can be blocked waiting for a connection from the pool. If no
-free connection can be obtained, an exception is thrown.
 
-|`retryInterval` |Period in which the pool will try to obtain a new
-connection while blocking the application.
+|`blockingTimeout` 
+|Maximum time in milliseconds during which application can be blocked waiting for a connection from the pool.
+If no free connection can be obtained, an exception is thrown.
 
-|`pooling` |Allows to switch connection pooling off.
+|`retryInterval`
+|Period in which the pool will try to obtain a new connection while blocking the application.
 
-|`statementPooling` |Allows to switch statement pooling off.
+|`pooling` 
+|Allows to switch connection pooling off.
 
-|`pingStatement` |Statement that will be used to "ping" the JDBC
-connection, in other words, to check if it is still alive. This
-statement must always succeed. The default SQL statement for the
-Firebird database is `"SELECT CAST(1 AS INTEGER) FROM rdb$database"`
+|`statementPooling` 
+|Allows to switch statement pooling off.
 
-|`pingInterval` |Time during which connection is believed to be valid in
-any case. The pool "pings" the connection before giving it to the
-application only if more than specified amount of time passed since last
-"ping".
+|`pingStatement` 
+|Statement that will be used to "ping" the JDBC connection, in other words, to check if it is still alive.
+This statement must always succeed. 
+he default SQL statement for the Firebird database is `"SELECT CAST(1 AS INTEGER) FROM rdb$database"`.
 
-|`isolation` a|
-Default transaction isolation level. All connections returned from the
-pool will have this isolation level. One of:
+|`pingInterval` 
+|Time during which connection is believed to be valid in any case.
+The pool "pings" the connection before giving it to the application only if more than specified amount of time passed since last "ping".
+
+|`isolation` 
+a|Default transaction isolation level. 
+All connections returned from the pool will have this isolation level. 
+One of:
 
 * `TRANSACTION_READ_COMMITTED`
 * `TRANSACTION_REPEATABLE_READ`
 * `TRANSACTION_SERIALIZABLE`
 
-|`transactionIsolationLevel` |Integer value from `java.sql.Connection`
-interface corresponding to the transaction isolation level specified in
-isolation property.
+|`transactionIsolationLevel` 
+|Integer value from `java.sql.Connection` interface corresponding to the transaction isolation level specified in isolation property.
 |=======================================================================
 
 === Runtime Pool Properties
 
-This group contains read-only properties that provide information about
-the state of the pool.
+This group contains read-only properties that provide information about the state of the pool.
 
-[width="100%",cols="16%,84%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Property |Description
-|`freeSize` |Tells how many free connections are in the pool. Value is
-between 0 and `totalSize`.
 
-|`workingSize` |Tells how many connections were taken from the pool and
-are currently used in the application.
+|`freeSize` 
+|Tells how many free connections are in the pool. 
+Value is between 0 and `totalSize`.
 
-|`totalSize` |Total size of open connection. At the pool creation – 0,
-after obtaining first connection – between `minPoolSize` and
-`maxPoolSize`.
+|`workingSize` 
+|Tells how many connections were taken from the pool and are currently used in the application.
+
+|`totalSize` 
+|Total size of open connection. 
+At the pool creation – 0, after obtaining first connection – between `minPoolSize` and `maxPoolSize`.
 |=======================================================================
 
 === Firebird-specific Properties
@@ -4413,39 +4518,48 @@ parameters have the corresponding getter and setter methods, rest of the
 Database Parameters Block parameters can be set using
 `setNonStandardProperty` setter method.
 
-[width="100%",cols="24%,76%",options="header",]
+[cols="1,2",options="header",]
 |=======================================================================
 |Property |Description
-|`database` |Path to the database in the format
-`[host/port:]/path/to/database.fdb`
 
-|`type` a|
-Type of the driver to use. Possible values are:
+|`database` 
+|Path to the database in the format `[host/port:]/path/to/database.fdb`
+
+|`type` 
+a|Type of the driver to use. Possible values are:
 
 * `PURE_JAVA` or `TYPE4` for type 4 JDBC driver
 * `NATIVE` or `TYPE2` for type 2 JDBC driver
 * `EMBEDDED` for using embedded version of the Firebird
 * `ORACLE` for accessing Oracle-mode Firebird
 
-|`blobBufferSize` |Size of the buffer used to transfer BLOB content.
+|`blobBufferSize` 
+|Size of the buffer used to transfer BLOB content.
 Maximum value is 64k-1.
 
-|`socketBufferSize` |Size of the socket buffer. Needed on some Linux
-machines to fix performance degradation.
+|`socketBufferSize` 
+|Size of the socket buffer. 
+Needed on some Linux machines to fix performance degradation.
 
-|`charSet` |Character set for the connection. Similar to `encoding`
-property, but accepts Java names instead of Firebird ones.
+|`charSet` 
+|Character set for the connection. 
+Similar to `encoding` property, but accepts Java names instead of Firebird ones.
 
-|`encoding` |Character encoding for the connection. See Firebird
-documentation for more information.
+|`encoding` 
+|Character encoding for the connection. 
+See Firebird documentation for more information.
 
-|`userName` |Name of the user that will be used by default.
+|`userName`
+|Name of the user that will be used by default.
 
-|`password` |Corresponding password.
+|`password` 
+|Corresponding password.
 
-|`roleName` |SQL role to use.
+|`roleName` 
+|SQL role to use.
 
-|`tpbMapping` |TPB mapping for different transaction isolation modes.
+|`tpbMapping` 
+|TPB mapping for different transaction isolation modes.
 |=======================================================================
 
 === Non-standard parameters
@@ -4524,9 +4638,9 @@ information on this topic.
 
 Firebird uses character encodings in two different areas:
 
-* The database encoding defines a character set in which all CHAR,
-VARCHAR and BLOB SUB_TYPE 1 fields are physically stored on the disk.
-There is default database encoding that is specified during database
+* The database encoding defines a character set in which all `CHAR`,
+`VARCHAR` and `BLOB SUB_TYPE 1` fields are physically stored on the disk.
+There is a default database encoding that is specified during database
 creation. It is also possible to specify character sets on per column
 basis.
 * The client connection encoding defines a character set in which client
@@ -4606,9 +4720,8 @@ possibility is to use appropriate method of the `DriverManager` class
 interface to obtain the database connections also have access to the
 `encoding` propertyfootnote:[See https://github.com/FirebirdSQL/jaybird/wiki for configuration examples of the most popular application servers.].
 
-Specifying the connection encoding in JDBC URL:
-
 [source,java]
+.Specifying the connection encoding in JDBC URL
 ----
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 
@@ -4617,9 +4730,8 @@ Connection connection = DriverManager.getConnection(
   "SYSDBA", "masterkey");
 ----
 
-Specifying connection encoding in the connection properties:
-
 [source,java]
+.Specifying connection encoding in the connection properties
 ----
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 
@@ -4637,7 +4749,7 @@ There are few limitations related to using the UTF8 character set:
 
 * it is not possible to create Unicode columns longer than 8191 Unicode
 characters; this limitation is caused by the fact that the longest
-possible VARCHAR column can occupy 32765 bytes (32767 for CHAR columns)
+possible `VARCHAR` column can occupy 32765 bytes (32767 for `CHAR` columns)
 and single UTF8 character can occupy maximum four bytes.
 * it is not possible to index Unicode columns longer than 1023
 characters; this limitation is caused by the fact that the longest index
@@ -4716,10 +4828,10 @@ when used incorrectly, one can easily trash the content of the database.
 The below table lists the available character encodings in the default
 Firebird distribution and their mapping to the Java ones:
 
-[width="100%",cols="15%,13%,5%,67%",options="header",]
+[cols="2,2,1,5",options="header",]
 |=======================================================================
-|Firebird encoding (`encoding` property) |Java encoding (`charSet`
-property) |Size in bytes |Comments
+|Firebird encoding (`encoding` property) |Java encoding (`charSet` property) |Size in bytes |Comments
+
 |NONE |- |1 |Raw bytes, no interpretation of the content is possible.
 
 |ASCII |ASCII |1 |-
@@ -4829,9 +4941,10 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.
 
 === Numeric Functions
 
-[width="100%",cols="13%,^10%,^10%,67%",options="header",]
+[cols="2,1,1,4",options="header",]
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
+
 |`ABS(number)` | |X |Absolute value of `number`
 
 |`ACOS(float)` | |X |Arccosine, in radians, of `float`
@@ -4890,9 +5003,10 @@ Legend: X – available in this mode.
 
 === String Functions
 
-[width="100%",cols="13%,^10%,^10%,67%",options="header",]
+[cols="2,1,1,4",options="header",]
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
+
 |`ASCII(string)` | |X |Integer representing the ASCII code value of the
 leftmost character in `string`
 
@@ -4959,9 +5073,10 @@ Legend: X – available in this mode.
 
 === Time and Date Functions
 
-[width="100%",cols="13%,^10%,^10%,67%",options="header",]
+[cols="2,1,1,4",options="header",]
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
+
 |`CURDATE()` |X |X |The current date as a date value
 
 |`CURTIME()` |X |X |The current local time as a time value
@@ -4999,10 +5114,10 @@ source
 |`SECOND(time)` |X |X |An integer from 0 to 59 representing the second
 component of `time`
 
-|`TIMESTAMPADD(interval, count, timestamp)` | | |A timestamp calculated
+|`TIMESTAMPADD( interval, count, timestamp)` | | |A timestamp calculated
 by adding `count` number of `interval`(s) to `timestamp`
 
-|`TIMESTAMPDIFF(interval, timestamp1, timestamp2)` | | |An integer
+|`TIMESTAMPDIFF( interval, timestamp1, timestamp2)` | | |An integer
 representing the number of `interval` by which `timestamp2` is greater
 than `timestamp1`
 
@@ -5017,10 +5132,11 @@ Legend: X – available in this mode.
 
 === System Functions
 
-[width="100%",cols="13%,^10%,^10%,67%",options="header",]
+[cols="2,1,1,4",options="header",]
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
-|`DATABASE(` | | |Name of the database
+
+|`DATABASE()` | | |Name of the database
 
 |`IFNULL(expression, value)` |X |X |`value` if `expression` is null;
 `expression` if `expression` is not null
@@ -5032,9 +5148,10 @@ Legend: X – available in this mode.
 
 === Conversion Functions
 
-[width="100%",cols="22%,13%,13%,52%",options="header",]
+[cols="2,1,1,4",options="header",]
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
+
 |CONVERT(value, SQL type) |X |X a|
 `value` converted to `SQL type` where `SQL type` may be one of the
 following SQL types:
