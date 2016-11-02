@@ -1,5 +1,6 @@
 * text=auto
 
+*.gradle        text
 *.css           text
 *.df            text
 *.htm           text
@@ -21,3 +22,5 @@
 *.png           binary
 *.so            binary
 *.odt           binary
+
+/gradlew        text    eol=lf
