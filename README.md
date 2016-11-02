@@ -11,6 +11,11 @@ The latest published version of this manual is [Jaybird 2.1 JDBC driver Java Pro
 This version was created from the old ODT version; its rendering doesn't match
 the rendering of the current asciidoc version.
 
+Style
+=====
+
+Line breaking convention: max 100 characters on a line, except where this would be weird (eg long URLs) or syntactically incorrect.
+
 How to build
 ============
 

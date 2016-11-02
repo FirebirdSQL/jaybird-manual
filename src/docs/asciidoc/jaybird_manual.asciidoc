@@ -1,4 +1,4 @@
-= Jaybird 2.1 JDBC driver Java Programmer's Manual
+= Jaybird 3.0 JDBC driver Java Programmer's Manual
 Roman Rokytskyy;Mark Rotteveel
 :doctype: book
 :keywords: jaybird, firebird, jdbc, sql, database, java
@@ -51,6 +51,8 @@ driver supplies only the connection functionality.
 
 === Jaybird Architecture
 
+**TODO** Rewrite section to address changes in Jaybird 3.
+
 The Jaybird driver consists of three layers, each of which is
 responsible for its part of the functionality. The component diagram
 depicting the Jaybird internal structure contains two additional
@@ -69,11 +71,8 @@ GDS API and proxies the calls to the GDS implementation.
 .Jaybird internal structure
 image:jaybird_internal_structure.png[Jaybird internal structure]
 * The JDBC layer is an implementation of the JDBC specification.
-* The Pool component represents implementation of
-`ConnectionPoolDataSource`, `DataSource` and `XADataSource` interfaces
-from the JDBC 2.0 Optional Package. The pool implementation uses
-`ManagedConnectionFactory` to create physical connections to the
-database.
+* The Pool component represents third party connection pool libraries using 
+either JDBC or JCA interfaces.
 * The Manager component represents a JMX 1.0 compatible implementation
 that uses The Services API to manage the database and the server itself.
 Currently only calls to create and drop database are available, but in
@@ -82,11 +81,7 @@ backup/restore, user management, statistics gathering, etc.
 
 === Supported Servers
 
-Jaybird 2.1 supports all current Firebird servers, however no support
-for the optimized wire protocol from the Firebird 2.1 is being
-implemented. Jaybird versions 2.x in current distribution won't work
-with InterBase and Yaffil servers, however the compatibility might be
-restored in the future.
+Jaybird 3.0 supports Firebird 2.0 and higher.
 
 === Supported Specifications
 
@@ -95,26 +90,20 @@ Jaybird supports the following specifications:
 [width="100%",cols="1,3",options="header",]
 |=======================================================================
 |Specification |Details
-|JDBC 3.0 
-|Driver passes the complete JDBC compatibility test suite, though some features are not implemented. 
-It is not officially JDBC compliant, because of the high certification costs.
+|JDBC 4.2 
+|Jaybird supports most of JDBC 4.2, inasfar the features are required or supported by Firebird. 
+It is not officially JDBC compliant, because we currently don't have access to the TCK.
 
-|JDBC 2.0 Optional Package (formerly Standard Extension API) 
-a|Jaybird provides an implementation of following interfaces from `javax.sql.*` package:
-
-* The `ConnectionPoolDataSource` implementation provides connection and prepared statement pooling.
-* The `DataSource` implementation provides seamless integration with major web and application servers.
-* The XADataSource implementation provides means to use driver in distributed transactions.
-
-|JCA 1.0 
-|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related interfaces.
-CCI interfaces are not supported.
+|JCA 1.5 
+|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related 
+interfaces. CCI interfaces are not supported.
 
 |JTA 1.0.1 
-|The driver provides implementation of the `javax.transaction.xa.XAResource` interface via the JCA framework and a `javax.sql.XADataSource` implementation.
+|The driver provides implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
+framework and a `javax.sql.XADataSource` implementation.
 
 |JAAS 1.0 
-|
+|**TODO** Is it?
 
 |JMX 1.2 
 |Jaybird provides an MBean that allows creating and dropping databases via JMX agent.
@@ -122,76 +111,75 @@ CCI interfaces are not supported.
 
 === Distribution package
 
-Jaybird driver has compile-time and run-time dependencies to JCA 1.0, JTA 1.0.1, JAAS 1.0 and JDBC 2.0 Optional Package. 
-Additionally, if Log4J classes are found in the class path, it is possible to enable extensive logging inside the driver.
+Jaybird driver has compile-time and run-time dependencies to JCA 1.5, JTA 1.0.1, JAAS 1.0. 
+Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
+generated key retrieval.
 
 Following file groups can be found in distribution package:
 
 [cols="1,3",options="header",]
 |=======================================================================
 |File name |Description
-|`jaybird-2.1.6.jar` 
-|An archive containing the JDBC driver, the JCA connection manager, the Services API and event management classes.
+|`jaybird-3.0.0.jar` 
+|An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
+management classes.
 
-|`jaybird-full-2.1.6.jar` 
-|Same as above but also the connection pooling classes.
+|`jaybird-full-3.0.0.jar` 
+|Same as above, but including the JCA 1.5 dependency.
 
-|`jaybird21.dll` 
-|Precompiled version of the JNI library for Type 2 and Embedded Server drivers for 32-bit Windows platform.
-
-|`libjaybird21.so` 
-|Precompiled version of the JNI library for Type 2 and Embedded Server drivers for 32-bit Linux platforms.
 |=======================================================================
 
 === Quality Assurance
 
-The Jaybird team uses JUnit test cases to assure the quality of the
-released driver. Also during development unit tests are extensively
-used. It is not allowed to commit a code to the CVS until it passes all
-existing unit tests. Also each reproducible bug usually gets its own
-test case. This guarantees that a clean check out from the CVS can be
-compiled and will not contain any previously discovered and fixed bug.
-Currently there are more than 450 test cases covering most of the driver
-code.
-
-Additionally, before the driver is released, is is required to pass JDBC
-compatibility suite (CTS), which currently contains 1216 test cases.
-Unfortunately Firebird does not support all features used by the CTS, so
-some test cases from the original CTS suite were excluded from run.
+The Jaybird team uses JUnit test cases to assure the quality of the released 
+driver. Also during development unit tests are extensively used. It is not 
+allowed to commit a code to the source control until it passes all existing unit
+tests. Also each reproducible bug usually gets its own test case. This guarantees
+that a clean check out can be compiled and will not contain any previously 
+discovered and fixed bug. Currently there are more than 3700 test cases covering 
+most of the driver code.
 
 === Useful resources
 
-*JDBC*
+==== JDBC
 
 For extensive JDBC documentation, see the "Documentation" section of Oracle's website http://www.oracle.com/technetwork/java/javase/jdbc/index.html.
 
-*Firebird*
+==== Firebird
 
 General information about the Firebird database is available from the Firebird web site (http://www.firebirdsql.org/).
 
-Information about using SQL in Firebird, see the http://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html["Language Reference"] and "Developer's Guide" documents, that are available for download from the http://www.firebirdsql.org/en/reference-manuals/["Reference Manuals"] section of the Firebird web site.
+Information about using SQL in Firebird, see the http://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html[Firebird 2.5 Language Reference] 
+and other documents, that are available for download from the http://www.firebirdsql.org/en/reference-manuals/[Reference Manuals] section 
+of the Firebird web site.
 
-*Jaybird Support*
+==== Jaybird Support
 
-The Jaybird wiki can be found at https://github.com/FirebirdSQL/jaybird/wiki. 
-This is a place where the community shares information about different aspects of Jaybird usage, configuration examples for different applications/servers, tips and
-tricks, FAQ, etc.
+* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki].
++
+This is a place where the community shares information about different aspects of Jaybird usage,
+configuration examples for different applications/servers, tips and tricks, FAQ, etc.
+* On http://stackoverflow.com/[Stack Overflow], please tag your questions with 
+*jaybird* and *firebird*
+* The http://groups.yahoo.com/group/Firebird-Java[Firebird-Java group] and corresponding mailing 
+list firebird-java@yahoogroups.com
++
+You can subscribe to the mailing list by sending an email to firebird-java-subscribe@yahoogroups.com
 
 == Obtaining a connection
 
-Jaybird is regular JDBC driver and supports two primary ways to obtain
-connection: via `java.sql.DriverManager` and via `javax.sql.DataSource`
-interface.
+Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via
+`java.sql.DriverManager` and via an implementation of the `javax.sql.DataSource` interface.
 
 === Obtaining connection java.sql.DriverManager
 
-`java.sql.DriverManager` historically was the first connection factory
-in Java. It is based on the concept of the JDBC URL, a string that
-uniquely identifies JDBC driver to use and the database to which user
-wants to connect. Additionally there is possibility to specify
-additional connection parameters, like user name and password.
+`java.sql.DriverManager` was the first connection factory in Java. It is based on the concept of the
+JDBC URL, a string that uniquely identifies the database to which user wants to connect. The driver
+manager then checks which driver(s) - if any - can establish a connection.
 
-JDBC URL consists of three parts:
+There is also support to specify additional connection parameters, like user name and password.
+
+A JDBC URL consists of three parts:
 
 ....
 jdbc:firebirdsql://localhost:3050/c:/database/example.fdb
@@ -201,16 +189,21 @@ jdbc:firebirdsql://localhost:3050/c:/database/example.fdb
 JDBC protocol
 * `firebirdsql` +
 JDBC subprotocol, identifies driver to use
-* `//localhost:3050/c:/database/example.fdb` +
-RDBMS specific part, identifies the database to which the driver must
-connect, in our case that is `//<host>:<port>/<path to database>`
+* `//localhost:3050/c:/database/example.fdb` 
++
+RDBMS specific part, identifies the database to which the driver must connect, in our case that is
+`//<host>:<port>/<path to database>`
 
-The first part, `jdbc:firebirdsql:` is always fixed and specifies the so called protocol and subprotocol for the JDBC connection. 
-In other words, the type of the connection that the application wants to obtain, in our case it is a connection to a Firebird database. 
-Example of obtaining the connection is shown below.
+The first part, `jdbc:firebirdsql:` is required by JDBC and specifies the so called protocol and 
+subprotocol for the JDBC connection.
+
+In other words, the type of the connection that the application wants to obtain, in our case it is a
+connection to a Firebird database. 
+
+An example of obtaining the connection is shown below.
 
 [source,java]
-.Simple example shows how to obtain JDBC connection
+.Simple example to obtain a JDBC connection
 ----
 package hello;
 
@@ -231,34 +224,41 @@ public class HelloServer {
 }
 ----
 
-The first line of this code is important – it tells JVM to load the
-Jaybird 2.1 JDBC driver. According to JDBC specification, at this point
-driver registers itself in `java.sql.DriverManager` and tells it for
-which protocol it is responsible for.
+The first line of this code is important – it tells JVM to load the Jaybird JDBC driver. According to
+the JDBC specification, at this point driver registers itself in `java.sql.DriverManager`.
 
-There are two ways to register JDBC driver:
+Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.firebirdsql.jdbc.FBDriver")`
+is no longer necessary, except when the driver is not on the system class path. Examples where it
+may be necessary to explicitly load the driver are web applications that include the driver in the
+deployment. There the driver is not on the system classpath and needs to be loaded explicitly.
 
-* **Possibility 1**. The application loads the driver's class. The JDBC
-specification requires that during class initialization the driver
-performs the registration itself.
+There are several ways to register JDBC driver:
+
+1. The JVM loads the driver from the system class path. This happens automatically.
+
+2. The application explicitly loads the driver's class. This is only necessary if the automatic
+loading (see previous item) is not available. This can be necessary because the driver `jar` is 
+loaded dynamically, through a different classloader, etc).
++
+The JDBC specification requires that during class initialization the driver registers itself with
+`DriverManager`.
 +
 ....
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 ....
-* **Possibility 2**. The JDBC driver is listed in a `jdbc.drivers`
-system property. For example in your `~/.hotjava/properties` file you
-can specify following line:
+3. The JDBC driver is listed in a `jdbc.drivers` system property. For example in your 
+`~/.hotjava/properties` file you can specify following line:
 +
 ....
 jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
 ....
-
++
 Alternatively you can specify the value of this property during JVM startup:
-
++
 ....
 java\
   -Djdbc.drivers=org.firebirdsql.jdbc.FBDriver\
-  -classpath jaybird-full-2.1.6.jar;C:/myproject/classes\
+  -classpath jaybird-full-3.0.0.jar;C:/myproject/classes\
   my.company.SomeJavaExample
 ....
 
@@ -267,25 +267,30 @@ to open database connection to the Firebird server running on the host
 where Java code is executed, and the path to the database is
 `c:/database/employee.fdb`.
 
-Database specification consists of the name of the server where the
-database server resides, optionally you can specify a port to which the
-driver will connect (by default port 3050 is used). The server name can
-be specified either using its IP address (for example 192.168.0.5) or
-using its DNS name (for example `fb-server.mycompany.com` or just
-`fb-server`).
+Database specification consists of the name of the server where the database server resides, 
+optionally you can specify a port to which the driver will connect (by default port 3050 is used).
+The server name can be specified using either its DNS name (for example  `fb-server.mycompany.com` or
+just `fb-server`), or its IP address (for example 192.168.0.5,  or [1080::8:800:200C:417A] for 
+an IPv6 address).
 
-After the server name and port, path to the database is specified. The
-format in which the path is specified depends on the platform where the
-Firebird server runs. On Windows it must include the drive letter and
-path, for example `"c:/database/employee.gdb"`, which points to the
-employee database that can be found in a root directory of drive C:.
-Java allows to use either `"/"` or `"\\"` as path separator on the
-Windows platform. On Unix and Linux platform, you can use only `"/"` as
-the path separator.
+After the server name and port, the alias or path to the database is specified. We suggest to specify
+a database alias instead of the absolute database path. For more information about using aliases see
+the documentation of Firebird server.
 
-If you are using Firebird 1.5 or higher, you can specify a database
-alias instead of the absolute database path. For more information about
-using aliases see the documentation of the Firebird server.
+The format in which the path is specified depends on the platform where the Firebird server runs. 
+
+On Windows it must include the drive letter and path, for example `c:/database/employee.fdb`, which
+points to the employee database that can be found in a root directory of drive C:. Java (and 
+Firebird) allows you to use either `/` or `\\` as path separator on the Windows platform. On Unix
+and Linux platform, you can use only `/` as the path separator.
+
+On Unix platforms the path must include the root, as the path is otherwise interpreted relative to
+a server dependent folder. Having to include the root has the effect that a database in
+`/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the 
+connection string: `jdbc:firebirdsql://localhost//var/firebird/employee.fdb`
+
+It is possible to specify a relative path, but as this is highly dependent on the server
+configuration, we suggest you not to use this, and instead use an alias.
 
 ==== Specifying extended properties
 
@@ -304,17 +309,14 @@ import java.util.*;
 public class HelloServerWithEncoding {
 
   public static void main(String[] args) throws Exception {
-  
-    Class.forName("org.firebirdsql.jdbc.FBDriver");
-    
     Properties props = new Properties();
     
     props.setProperty("user", "SYSDBA");
     props.setProperty("password", "masterkey");
-    props.setProperty("encoding", "UNICODE_FSS");
+    props.setProperty("encoding", "UTF8");
     
     Connection connection = DriverManager.getConnection(
-      "jdbc:firebirdsql://localhost:3050/C:/employee.gdb",
+      "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb",
       props);
       
     // do something here
@@ -350,27 +352,23 @@ import java.sql.*;
 
 ...
 
-Class.forName("org.firebirdsql.jdbc.FBDriver");
-
 Connection connection = DriverManager.getConnection(
-    "jdbc:firebirdsql://localhost:3050//C:/employee.gdb?encoding=UNICODE_FSS",
+    "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb?encoding=UTF8",
     "SYSDBA",
     "masterkey");
 ----
 
 ==== Obtaining a connection via javax.sql.DataSource
 
-JDBC 2.0 specification introduced a new mechanism to obtain database
-connection without requiring the application to know any specifics of
-the underlying JDBC driver. The application is required to know a
-logical name under which application can find an instance of the
-`javax.sql.DataSource` interface using Java Naming and Directory
-Interface (JNDI). This is a common way to obtain connections in web and
-application servers.
+The JDBC 2.0 specification introduced a new mechanism to obtain database connections without
+requiring the application to know any specifics of the underlying JDBC driver. The application is
+only required to know the logical name to find an instance of the `javax.sql.DataSource` interface
+using Java Naming and Directory Interface (JNDI). This is a common way to obtain connections in web
+and application servers.
 
-In order to obtain a connection via `DataSource` object, you can usecode showed below. This code assumes that you have correctly configured
-JNDI properties. For more information about configuring JNDI please
-refer to the documentation provided with your web or application server.
+In order to obtain a connection via `DataSource` object, you can use the code shown below. This code
+assumes that you have correctly configured the JNDI properties. For more information about 
+configuring JNDI please refer to the documentation provided with your web or application server.
 
 [source,java]
 .Typical way to obtain JDBC connection via JNDI
@@ -409,11 +407,11 @@ this code snippet for this purpose:
 .Programmatic way to instantiate javax.sql.DataSource implementation
 ----
 import javax.naming.*;
-import org.firebirdsql.pool.*;
+import org.firebirdsql.ds.*;
 ...
-FBWrappingDataSource ds = new FBWrappingDataSource();
+FBSimpleDataSource ds = new FBSimpleDataSource();
 
-ds.setDatabase("localhost/3050:C:/database/employee.gdb");
+ds.setDatabase("//localhost:3050/C:/database/employee.fdb");
 ds.setUser("SYSDBA");
 ds.setPassword("masterkey");
 
@@ -422,10 +420,12 @@ InitialContext ctx = new InitialContext();
 ctx.bind("jdbc/SomeDB", ds);
 ----
 
-`DataSource` implementation supports all connection properties available
-to the `DriverManager` interface, but also it supports additional
-properties that control connection pooling. For more information on this
-topic please read the <<Connection Pooling>> chapter.
+The `DataSource` implementation supports all connection properties available
+to the `DriverManager` interface.
+
+Note that Jaybird no longer provides a connection pool. If you need a `javax.sql.DataSource`
+implementation that provides a connection pool. consider using https://brettwooldridge.github.io/HikariCP/[HikariCP], 
+http://commons.apache.org/proper/commons-dbcp/[DBCP], or http://www.mchange.com/projects/c3p0/[c3p0].
 
 === Driver types
 
