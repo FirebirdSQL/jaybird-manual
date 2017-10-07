@@ -1,14 +1,8 @@
 [[introduction]]
 == Introduction
 
-Jaybird is a JCA/JDBC driver suite to connect to Firebird database
-server. When Borland released an open-source version of the InterBase
-RDBMS, it included sources for a type 3 JDBC driver called InterClient.
-However due to some inherent limitations of the InterBase (and later
-Firebird) client library, it was decided that the type 3 driver was a
-dead end, and the Firebird team developed a pure Java implementation of
-the wire protocol. This implementation became the basis for Jaybird, a
-pure Java driver for Firebird relational database.
+Jaybird is a JCA/JDBC driver suite to connect to the Firebird database
+server.
 
 This driver is based on both the new JCA standard for application server
 connections to enterprise information systems and the well known JDBC
@@ -17,8 +11,20 @@ application server can cooperate with a driver so that the application
 server manages transactions, security, and resource pooling, and the
 driver supplies only the connection functionality.
 
+Jaybird is driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
+
 This manual covers Jaybird {jaybird-version} and uses Java 8 specific features, but most 
 examples and information also applies to previous versions.
+
+=== History
+
+When Borland released an open-source version of the InterBase
+RDBMS, it included sources for a type 3 JDBC driver called InterClient.
+However due to some inherent limitations of the InterBase (and later
+Firebird) client library, it was decided that the type 3 driver was a
+dead end, and the Firebird team developed a pure Java implementation of
+the wire protocol. This implementation became the basis for Jaybird, a
+pure Java driver for Firebird relational database.
 
 === Jaybird Architecture
 
@@ -37,7 +43,7 @@ GDS API and proxies the calls to the GDS implementation.
 * The JDBC layer is an implementation of the JDBC specification.
 
 In addition, the Services API allows you to manage the database and the server 
-itself. The Manager component represents a JMX 1.0 compatible implementation
+itself. The Manager component represents a JMX compatible implementation
 that utilizes the Services API. Currently only calls to create and drop database 
 are available in the Manager component, but in the future a full range of 
 services will be made public: database backup/restore, user management, 
@@ -69,8 +75,6 @@ framework and a `javax.sql.XADataSource` implementation.
 |JAAS 1.0 
 |**TODO** Is it?
 
-|JMX 1.2 
-|Jaybird provides an MBean that allows creating and dropping databases via a JMX agent.
 |=======================================================================
 
 === Distribution
@@ -94,13 +98,13 @@ management classes.
 |`jaybird-full-{jaybird-full-version}.jar` 
 |Same as above, but including the JCA 1.5 dependency.
 
-| `lib/antlr-runtime-4.6.jar`
+| `lib/antlr-runtime-{antlr-version}.jar`
 | Optional dependency, required if you want to use `getGeneratedKeys` support
 
 | `lib/connector-api-1.5.jar`
 | Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
 
-| `lib/jna-4.2.2.jar`
+| `lib/jna-{jna-version}.jar`
 | Optional dependency, required if you want to use Type 2 native, local or embedded protocols
 
 |=======================================================================
@@ -153,14 +157,14 @@ dependency:
 ----
 
 If you want to use Type 2 support (native, local or embedded), you need to 
-explicitly include JNA 4.2.2 as a dependency:
+explicitly include JNA {jna-version} as a dependency:
 
-[source,xml]
+[source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
     <groupId>net.java.dev.jna</groupId>
     <artifactId>jna</artifactId>
-    <version>4.2.2</version>
+    <version>{jna-version}</version>
 </dependency>
 ----
 
@@ -199,6 +203,9 @@ This is a place where the community shares information about different aspects o
 configuration examples for different applications/servers, tips and tricks, FAQ, etc.
 * On http://stackoverflow.com/[Stack Overflow], please tag your questions with 
 *jaybird* and *firebird*
++
+Please make sure to familiarize yourself with the rules and expectations of Stack Overflow before asking, 
+see https://stackoverflow.com/tour[Stack Overflow Tour] and https://stackoverflow.com/help/asking[Help Center: Asking]
 * The http://groups.yahoo.com/group/Firebird-Java[Firebird-Java group] and corresponding mailing 
 list firebird-java@yahoogroups.com
 +

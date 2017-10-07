@@ -7,7 +7,9 @@ Roman Rokytskyy;Mark Rotteveel
 :toc: left
 :imagesdir: images
 :jaybird-version: 3.0
-:jaybird-full-version: 3.0.0-beta-3
+:jaybird-full-version: 3.0.2
+:jna-version: 4.4.0
+:antlr-version: 4.7
 
 include::license.adoc[]
 
