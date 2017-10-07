@@ -5,6 +5,8 @@ Roman Rokytskyy;Mark Rotteveel
 :source-highlighter: prettify
 :toc: left
 :imagesdir: images
+:jaybird-version: 3.0
+:jaybird-full-version: 3.0.0-beta-3
 
 == License
 
@@ -49,35 +51,31 @@ application server can cooperate with a driver so that the application
 server manages transactions, security, and resource pooling, and the
 driver supplies only the connection functionality.
 
+This manual covers Jaybird {jaybird-version} and uses Java 8 specific features, but most 
+examples and information also applies to previous versions.
+
 === Jaybird Architecture
 
-**TODO** Rewrite section to address changes in Jaybird 3.
-
 The Jaybird driver consists of three layers, each of which is
-responsible for its part of the functionality. The component diagram
-depicting the Jaybird internal structure contains two additional
-components: "pool" and "JMX manager".
+responsible for its part of the functionality.
 
 * The GDS layer represents a Java translation of the Firebird API. It is
-represented by two classes from `org.firebirdsql.gds` package: `GDS`
-interface and `GDSFactory`. GDS factory class is responsible for
-instantiating an implementation of the `GDS` interface depending of the
-type of driver used. Implementation of the `GDS` interface determines
-the type of the driver that will be used.
+represented by a number of interfaces and classes from the 
+`org.firebirdsql.gds` package (and sub-packages).
++
+This API is implemented by a number of plugins that provide the pure java, native,
+local and embedded implementations of the driver.
 * The JCA layer represents the heart of the driver. Here all connection
 and transaction management happens. Additionally this layer adapts the
 GDS API and proxies the calls to the GDS implementation.
-+
-.Jaybird internal structure
-image:jaybird_internal_structure.png[Jaybird internal structure]
 * The JDBC layer is an implementation of the JDBC specification.
-* The Pool component represents third party connection pool libraries using 
-either JDBC or JCA interfaces.
-* The Manager component represents a JMX 1.0 compatible implementation
-that uses The Services API to manage the database and the server itself.
-Currently only calls to create and drop database are available, but in
-the future a full range of services will be made public: database
-backup/restore, user management, statistics gathering, etc.
+
+In addition, the Services API allows you to manage the database and the server 
+itself. The Manager component represents a JMX 1.0 compatible implementation
+that utilizes the Services API. Currently only calls to create and drop database 
+are available in the Manager component, but in the future a full range of 
+services will be made public: database backup/restore, user management, 
+statistics gathering, etc.
 
 === Supported Servers
 
@@ -90,44 +88,118 @@ Jaybird supports the following specifications:
 [width="100%",cols="1,3",options="header",]
 |=======================================================================
 |Specification |Details
-|JDBC 4.2 
-|Jaybird supports most of JDBC 4.2, inasfar the features are required or supported by Firebird. 
+|JDBC 4.3 
+|Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird. 
 It is not officially JDBC compliant, because we currently don't have access to the TCK.
 
 |JCA 1.5 
 |Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related 
 interfaces. CCI interfaces are not supported.
 
-|JTA 1.0.1 
-|The driver provides implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
+|JTA
+|The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
 framework and a `javax.sql.XADataSource` implementation.
 
 |JAAS 1.0 
 |**TODO** Is it?
 
 |JMX 1.2 
-|Jaybird provides an MBean that allows creating and dropping databases via JMX agent.
+|Jaybird provides an MBean that allows creating and dropping databases via a JMX agent.
 |=======================================================================
 
-=== Distribution package
+=== Distribution
 
-Jaybird driver has compile-time and run-time dependencies to JCA 1.5, JTA 1.0.1, JAAS 1.0. 
-Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
+The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
 generated key retrieval.
 
-Following file groups can be found in distribution package:
+==== Distribution package
 
-[cols="1,3",options="header",]
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
+
+The following files can be found in the distribution package:
+
+[cols="2,5",options="header",]
 |=======================================================================
 |File name |Description
-|`jaybird-3.0.0.jar` 
+|`jaybird-{jaybird-full-version}.jar` 
 |An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
 management classes.
 
-|`jaybird-full-3.0.0.jar` 
+|`jaybird-full-{jaybird-full-version}.jar` 
 |Same as above, but including the JCA 1.5 dependency.
 
+| `lib/antlr-runtime-4.6.jar`
+| Optional dependency, required if you want to use `getGeneratedKeys` support
+
+| `lib/connector-api-1.5.jar`
+| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
+
+| `lib/jna-4.2.2.jar`
+| Optional dependency, required if you want to use Type 2 native, local or embedded protocols
+
 |=======================================================================
+
+==== Maven
+
+Alternatively, you can use maven to automatically download Jaybird and its 
+dependencies.
+
+Jaybird {jaybird-version} is available from Maven central:
+
+Groupid: `org.firebirdsql.jdbc`, +
+Artifactid: `jaybird-jdkXX` (where `XX` is `17` or `18`). +
+Version: `{jaybird-full-version}`
+
+For example:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>org.firebirdsql.jdbc</groupId>
+    <artifactId>jaybird-jdk18</artifactId>
+    <version>{jaybird-full-version}</version>
+</dependency>
+----
+
+If your application is deployed to a Java EE application server, you will need to
+exclude the `javax.resource:connector-api` dependency, and add it as a provided 
+dependency:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>org.firebirdsql.jdbc</groupId>
+    <artifactId>jaybird-jdk18</artifactId>
+    <version>{jaybird-full-version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector-api</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>javax.resource</groupId>
+    <artifactId>connector-api</artifactId>
+    <version>1.5</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+If you want to use Type 2 support (native, local or embedded), you need to 
+explicitly include JNA 4.2.2 as a dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.java.dev.jna</groupId>
+    <artifactId>jna</artifactId>
+    <version>4.2.2</version>
+</dependency>
+----
+
+We plan to make native and embedded support a separate library in future 
+releases, and provide Firebird client libraries as Maven dependencies as well.
 
 === Quality Assurance
 
@@ -136,7 +208,7 @@ driver. Also during development unit tests are extensively used. It is not
 allowed to commit a code to the source control until it passes all existing unit
 tests. Also each reproducible bug usually gets its own test case. This guarantees
 that a clean check out can be compiled and will not contain any previously 
-discovered and fixed bug. Currently there are more than 3700 test cases covering 
+discovered and fixed bug. Currently there are more than 3800 test cases covering 
 most of the driver code.
 
 === Useful resources
@@ -195,10 +267,8 @@ RDBMS specific part, identifies the database to which the driver must connect, i
 `//<host>:<port>/<path to database>`
 
 The first part, `jdbc:firebirdsql:` is required by JDBC and specifies the so called protocol and 
-subprotocol for the JDBC connection.
-
-In other words, the type of the connection that the application wants to obtain, in our case it is a
-connection to a Firebird database. 
+subprotocol for the JDBC connection. In other words, the type of the connection that the application
+wants to obtain, in our case it is a connection to a Firebird database. 
 
 An example of obtaining the connection is shown below.
 
@@ -213,11 +283,11 @@ public class HelloServer {
 
   public static void main(String[] args) throws Exception {
   
-    Class.forName("org.firebirdsql.jdbc.FBDriver");
+    Class.forName("org.firebirdsql.jdbc.FBDriver"); // <1>
     
-    Connection connection = DriverManager.getConnection(
+    Connection connection = DriverManager.getConnection( 
       "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
-      "SYSDBA", "masterkey");
+      "SYSDBA", "masterkey"); // <2>
       
     // do something here
   }
@@ -232,6 +302,11 @@ is no longer necessary, except when the driver is not on the system class path. 
 may be necessary to explicitly load the driver are web applications that include the driver in the
 deployment. There the driver is not on the system classpath and needs to be loaded explicitly.
 
+We will leave out usages of `Class.forName` in future examples.
+
+.Registering the JDBC driver
+[NOTE]
+====
 There are several ways to register JDBC driver:
 
 1. The JVM loads the driver from the system class path. This happens automatically.
@@ -258,19 +333,20 @@ Alternatively you can specify the value of this property during JVM startup:
 ....
 java\
   -Djdbc.drivers=org.firebirdsql.jdbc.FBDriver\
-  -classpath jaybird-full-3.0.0.jar;C:/myproject/classes\
+  -classpath jaybird-full-{jaybird-full-version}.jar;C:/myproject/classes\
   my.company.SomeJavaExample
 ....
+====
 
 The second statement of the example tells the `java.sql.DriverManager`
 to open database connection to the Firebird server running on the host
-where Java code is executed, and the path to the database is
+where the Java code is executed, and the path to the database is
 `c:/database/employee.fdb`.
 
-Database specification consists of the name of the server where the database server resides, 
+The database specification consists of the name of the server where the database server resides, 
 optionally you can specify a port to which the driver will connect (by default port 3050 is used).
-The server name can be specified using either its DNS name (for example  `fb-server.mycompany.com` or
-just `fb-server`), or its IP address (for example 192.168.0.5,  or [1080::8:800:200C:417A] for 
+The server name can be specified using either its DNS name (for example `fb-server.mycompany.com` or
+just `fb-server`), or its IP address (for example `192.168.0.5`, or `[1080::8:800:200C:417A]` for 
 an IPv6 address).
 
 After the server name and port, the alias or path to the database is specified. We suggest to specify
@@ -285,7 +361,7 @@ Firebird) allows you to use either `/` or `\\` as path separator on the Windows 
 and Linux platform, you can use only `/` as the path separator.
 
 On Unix platforms the path must include the root, as the path is otherwise interpreted relative to
-a server dependent folder. Having to include the root has the effect that a database in
+a server-dependent folder. Having to include the root has the effect that a database in
 `/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the 
 connection string: `jdbc:firebirdsql://localhost//var/firebird/employee.fdb`
 
@@ -295,7 +371,7 @@ configuration, we suggest you not to use this, and instead use an alias.
 ==== Specifying extended properties
 
 What if we want to specify additional connection parameters, a client
-encoding, for example? JDBC specification provides another method that
+encoding, for example? JDBC specification provides a method that
 allows to specify additional connection properties:
 
 [source,java]
@@ -328,25 +404,25 @@ Additional properties, for example SQL role for the connection can be
 added to the `props` map. The list of all available extended properties
 can be found in <<Extended connection properties>>.
 
-However, not in every place you can use the above described method.
-Jaybird provides a possibility to specify extended properties in the
+However, it is not always possible to use the above described method.
+Jaybird also provides a possibility to specify extended properties in the
 JDBC URL. The example below shows the specification for specifying
 extended JDBC properties in the URL.
 
 .Extended JDBC URL format
 ....
 jdbc:firebirdsql://host[:port]/<path to db>?<properties>
-<properties> ::= <property>[&<properties>]
+<properties> ::= <property>[{& | ;}<properties>]
 <property>   ::= <name>[=<value>]
 ....
 
 In this case extended properties are passed together with the URL using
-the HTTP-like parameter passing scheme: first comes main part of the
-URL, then `"?"`, then name-value pairs separated with `"&"`. Code below
+the HTTP-like parameter passing scheme: first comes the main part of the
+URL, then `"?"`, then name-value pairs separated with `&` or `;`. The code below
 is equivalent to the previous example.
 
 [source,java]
-.Example of specifying extended properties in JDBC URL
+.Specifying extended properties in the JDBC URL
 ----
 import java.sql.*;
 
@@ -360,7 +436,7 @@ Connection connection = DriverManager.getConnection(
 
 ==== Obtaining a connection via javax.sql.DataSource
 
-The JDBC 2.0 specification introduced a new mechanism to obtain database connections without
+The JDBC 2.0 specification introduced a mechanism to obtain database connections without
 requiring the application to know any specifics of the underlying JDBC driver. The application is
 only required to know the logical name to find an instance of the `javax.sql.DataSource` interface
 using Java Naming and Directory Interface (JNDI). This is a common way to obtain connections in web
@@ -385,19 +461,15 @@ public class HelloServerJNDI {
   
     InitialContext ctx = new InitialContext();
     DataSource ds = (DataSource)ctx.lookup("jdbc/SomeDB");
-    
-    Connection connection = ds.getConnection();
-    
-    try {
+
+    try (Connection connection = ds.getConnection()) {
       // do something here... 
-    } finally {
-      connection.close();
     }
   }
 }
 ----
 
-Usually binding between the `DataSource` object and its JNDI name
+Usually, the binding between the `DataSource` object and its JNDI name
 happens in the configuration of your web or application server. However
 under some circumstances (e.g. you are developing your own JNDI-enabled
 application server/framework) you have to do this yourself. You can use
@@ -423,17 +495,16 @@ ctx.bind("jdbc/SomeDB", ds);
 The `DataSource` implementation supports all connection properties available
 to the `DriverManager` interface.
 
-Note that Jaybird no longer provides a connection pool. If you need a `javax.sql.DataSource`
-implementation that provides a connection pool. consider using https://brettwooldridge.github.io/HikariCP/[HikariCP], 
+Note that since version 3.0, Jaybird no longer provides a connection pool. If you need
+a `javax.sql.DataSource` implementation that provides a connection pool. consider using https://brettwooldridge.github.io/HikariCP/[HikariCP], 
 http://commons.apache.org/proper/commons-dbcp/[DBCP], or http://www.mchange.com/projects/c3p0/[c3p0].
 
 === Driver types
 
-As it was mentioned in the section <<Jaybird Architecture>>, Jaybird supports multiple implementations of the GDS
-interface. The original Jaybird distribution contains two main
-categories of the GDS implementation: pure Java implementation of the
-Firebird wire protocol and a JNI proxy that can use a dynamically linked
-library with a compatible API.
+As was mentioned in the section <<Jaybird Architecture>>, Jaybird supports multiple 
+implementations of the GDS API. The default Jaybird distribution contains two main
+categories of the implementations: the pure Java implementation of the
+Firebird wire protocol, and a JNA proxy that can use a Firebird `fbclient` library.
 
 Below you find the list of existing types and their short configuration
 description with the corresponding JDBC URLs that should be used to
@@ -442,14 +513,14 @@ the `javax.sql.DataSource` is configured via corresponding property.
 
 ==== PURE_JAVA type
 
-The PURE_JAVA driver type uses pure Java implementation of the Firebird
+The PURE_JAVA driver type uses a pure Java implementation of the Firebird
 wire protocol. This type is recommended for connecting to a remote
 database server using TCP/IP sockets. No installation is required except
 adding the JDBC driver to the class path. This type of driver provides
 best performance when connecting to the remote server.
 
 In order to obtain connection using the PURE_JAVA driver type you have
-to use JDBC URL that was shown on :
+to use JDBC URL that was shown in <<Obtaining connection java.sql.DriverManager>>:
 
 ....
 jdbc:firebirdsql://host[:port]/<path to database>
@@ -461,7 +532,7 @@ default.
 
 ==== NATIVE and LOCAL types
 
-The NATIVE and LOCAL driver types use a JNI proxy to access the Firebird
+The NATIVE and LOCAL driver types use a JNA proxy to access the Firebird
 client library and requires installation of the Firebird client. The
 NATIVE driver type is used to access the remote database server, the
 LOCAL type accesses the database server running on the same host by
@@ -486,36 +557,36 @@ should use following:
 jdbc:firebirdsql:local:<absolute path to database>
 ....
 
-Additionally to the Firebird client library installation, driver
-requires a JNI proxy to be available to the JVM. The JNI proxy is a
-platform-dependent dynamically linked library that translates GDS calls
-into Firebird API calls.
+In addition to Jaybird, this requires a native Firebird client library.
 
 ===== Windows
 
-On Windows, the JNI proxy is represented by a dynamically linked library
-(DLL) `jaybird21.dll`. You have to make this library available through
+On Windows, you need to make sure that `fbclient.dll` is located on the
 `PATH` environment variable. Alternatively you can specify the directory
-containing this DLL in `java.library.path` system property.
+containing this DLL in the `jna.library.path` system property.
 
-For example, if you put library in the current directory you have to use
+For example, if you put a copy of `fbclient.dll` in the current directory you have to use
 the following command to start Java:
 
 ....
-java -Djava.library.path=. com.mycompany.MyClass
+java -Djna.library.path=. com.mycompany.MyClass
 ....
 
 ===== Linux
 
-On Linux JNI proxy is represented by a shared library
-`libjaybird21.so`*. It must be available through the `LD_PATH`
-environment variable. Usually shared libraries are stored in the
-`/usr/lib/` directory; however you will need root permissions to copy
-`libjaybird21.so` there. Alternatively you can specify directory
-containing the proxy in `java.library.path` Java system property. See
-Windows example above for more details.
+On Linux, you need to make sure that `libfbclient.so` is available through 
+the `LD_PATH` environment variable.
+
+Usually shared libraries are stored in the `/usr/lib/` directory; however you will need 
+root permissions to install the library there. Note that some distributions will only have,
+for example, `libfbclient.so.2.5`. In that case you will need to add a symlink.
+
+Alternatively you can specify directory containing the library in the `jna.library.path` 
+Java system property. See the Windows example above for more details.
 
 ===== Limitations
+
+*TODO* Section might be outdated
 
 Firebird client library is not thread-safe when connecting to a local
 database server using IPC. Jaybird provides the necessary
@@ -532,8 +603,8 @@ J2EE application, e.g. the `WEB-INF/lib` directory.
 
 ==== EMBEDDED type
 
-The Embedded server JDBC driver is the Type 2 JDBC driver that rather
-than using the Firebird client library, loads Firebird embedded server
+The Embedded server JDBC driver is the Type 2 JDBC driver that, rather
+than using the Firebird client library, loads the Firebird embedded server
 library instead. This is the highest performance type of JDBC driver for
 accessing local databases, as the Java code accesses the database file
 directly.
@@ -551,10 +622,18 @@ When host and, optionally, port is specified, embedded server acts as
 client library (i.e. you get the same Type 2 behavior as you would get
 with using "native").
 
-Installation of the JNI proxy is same as described in the
-"<<NATIVE and LOCAL types>>" section.
+This driver tries to load `fbembed.dll/libfbembed.so` and `fbclient.dll/libfbclient.so`,
+the last - of course - only works if that fbclient provides Firebird embedded.
+
+See also the <<NATIVE and LOCAL types>> section.
+
+When using Firebird 3 embedded, you will need to make sure the necessary plugins like
+`engine12.dll/libengine12.so` are accessible to the client library, consult the 
+Firebird 3 documentation for more information. *TODO* Extend documentation
 
 ===== Limitations
+
+*TODO* Section might be outdated
 
 The Firebird embedded server for Linux is not thread safe. Jaybird
 provides the needed synchronization in Java code, similar to the one
@@ -569,10 +648,10 @@ database will be corrupted!_
 
 === Connection Pooling
 
-Each time a connection is opened via DriverManager, a new physical
+Each time a connection is opened via `DriverManager`, a new physical
 connection to server is opened. It is closed when the connection is
-closed. In order to avoid the overhead of creating connections, the
-DataSource implementation can maintain a cache of open physical
+closed. In order to avoid the overhead of creating connections, you should use 
+a connection pool implementation can maintain a cache of open physical
 connections that can be reused between user sessions.
 
 === The javax.sql.ConnectionPoolDataSource implementation
@@ -700,7 +779,7 @@ from the local JVM, a reference to the object bound in JNDI is returned.
 If application accesses the JNDI from remote JVM, a serialized copy of
 an object is sent over the wire to the remote node, where it is
 deserialized and returned to the application
-* If object implements *`javax.naming.Referencable` interface, JNDI
+* If object implements `javax.naming.Referencable` interface, JNDI
 implementation binds the so-called reference instead of an object.
 Reference contains all necessary information to reconstruct the object
 regardless of the JVM in which this operation happens. This is performed
@@ -903,7 +982,7 @@ transactions.
 
 == Handling exceptions
 
-An exception handling is probably the most important aspect that
+Exception handling is probably the most important aspect that
 directly affects the stability of the application. Correct handling of
 the error cases guarantees correct functioning of the client code as
 well as the database server. Additionally, all methods of the interfaces
@@ -915,22 +994,22 @@ clause or redeclare it in the method signature.
 
 === Working with exceptions
 
-The exception handling becomes even more important if we consider that
-this topic is either ignored or presented in incorrect form in the most
-JDBC tutorials. The official JDBC tutorial from Sun Microsystems briefly
-mentions that exceptions should be handled by using try/catch blocks
+Exception handling becomes even more important if we consider that
+this topic is either ignored or presented in incorrect form in most
+JDBC tutorials. The https://docs.oracle.com/javase/tutorial/jdbc/index.html[official JDBC tutorial from Oracle] 
+briefly mentions that exceptions should be handled by using try/catch blocks
 only at the end of the course, but neither reasons of doing this nor the
 best practices are presented.
 
-There are few reasons to think about exception handling in your
+There are a few reasons to think about exception handling in your
 applications before you start coding. First of all, it is very hard to
 change the exception handling pattern in the existing code. The changes
 will affect all layers above the place where the changes in exception
 handling are made and the new application must be thoroughly tested
 after the change.
 
-Another reason was already mentioned on the beginning of this chapter –
-instances of `java.sql.SQLException` is the only way for the RDBMS
+Another reason was already mentioned on the beginning of this chapter:
+instances of `java.sql.SQLException` are the only way for the RDBMS
 server to notify about the error condition that happened during request
 processing. By checking the error code which is sent with the exception
 application can try to recover from the error.
@@ -961,18 +1040,18 @@ runtime exceptions fall into this category.
 The handling strategy then consists of
 
 * processing the selected error codes for cases described above;
-* converting the generic SQLException into generic business error in the
+* converting the generic `SQLException` into a generic business error in the
 application (this can be throwing some generic exception defined in the
 application, but can also be an entry in the application event log and
 short message that asks to retry the operation later);
 * some emergency tactics, since the error that happened (e.g.
-NullPointerException or OutOfMemoryError) was not considered while the
+`NullPointerException` or `OutOfMemoryError`) was not considered while the
 application was created, thus possibly leaving it in an unknown state;
-further operating should be considered dangerous and the corresponding
+further operation should be considered dangerous and the corresponding
 execution branch has to be halted.
 
 The problem can be solved if resource allocation and deallocation
-happens in the same code block and is protected with try/finally block
+happens in the same code block and is protected with a try-with-resources block
 and the code to recover from error conditions should use try/catch
 blocks. Example of such error and resource handling code is presented
 below.
@@ -980,14 +1059,10 @@ below.
 [source,java]
 .Typical resource allocation and error handling patterns
 ----
-PreparedStatement updateSales = null;
-
 String updateString = "update COFFEES " +
     "set SALES = ? where COF_NAME like ?";
-    
-updateSales = con.prepareStatement(updateString);
 
-try {
+try (PreparedStatement updateSales = con.prepareStatement(updateString)) {
     int [] salesForWeek = {175, 150, 60, 155, 90};
     String [] coffees = {"Colombian", "French_Roast",
         "Espresso", "Colombian_Decaf",
@@ -1009,8 +1084,6 @@ try {
                 throw new BusinessDBException(ex);
         }
     }
-} finally {
-    updateSales.close();
 }
 ----
 
@@ -1022,23 +1095,30 @@ third scenario.
 
 A possible bug in the JDBC driver could have generated runtime exception
 in the `PreparedStatement.executeUpdate()` method, which would lead to
-the statement handle leakage if no try/finally block is used to do the
-resource cleanup. As a rule of thumb, the "try" keyword should go right
-after the resource was allocated and the "finally" keyword should be
-placed right before the resource is freed.
+the statement handle leakage if the try-with-resource block had not been used to do the
+resource cleanup. As a rule of thumb, always declare and allocate resources
+in a try-with-resources block: the resource will be automatically closed/freed 
+at the end of the block, even if exceptions occur.
 
 Such coding practice might look weird, because on the first sight the
-whole purpose of using the `PreparedStatement` is neglected – statement
+whole purpose of using the `PreparedStatement` is neglected: the statement
 is prepared, used only once and then deallocated. However, when this
-practice is combined with the connection and statement pooling, it
+practice is combined with connection and statement pooling, it
 brings enormous advantage to the application code. The code becomes much
 more manageable – resource allocations and deallocations happen in the
-same method and software developer must not remember the places where
-the same prepared statement might be used – statement pool will either
+same method and the software developer does not need to remember the places where
+the same prepared statement might be used – a statement pool will either
 reuse the statement or it will prepare a new one, if it detects that all
 pooled prepared statements are currently in use. As a side effect,
-application will always use the minimum number of statements handles,
+the application will always use the minimum number of statements handles,
 which in turn reduces the used resources on the server side.
+
+[WARNING]
+====
+Jaybird currently provides no statement pooling itself, availability will depend on the
+connection pool library used. Consult the documentation of your connection pool
+to see if - and how - it provides statement pooling.
+====
 
 === Warnings
 
@@ -1067,33 +1147,66 @@ In order to clear existing warning, call `Connection.clearWarnings()` method.
 
 === java.sql.SQLException in Jaybird
 
-An SQLException is a special exception that is thrown by the JDBC
+*TODO* Information in section is outdated
+
+An `SQLException` is a special exception that is thrown by the JDBC
 connectivity component in case of an error. Each instance of this
 exception is required to carry the vendor error code (if applicable) and
-a SQL state according to the X/Open SQLstate or SQL 2003 specifications.
+a SQL state according to the X/Open SQLstate or SQL:2003 specifications. Firebird 
+and Jaybird use SQL:2003 SQL state codes.footnoteref:[sqlstate, it is possible sometimes X/Open SQLstates are used]
 
 When multiple SQL errors happened, they are joined into a chain. Usually
 the most recent exception is thrown to the application, the exceptions
-that happened before can be obtained via
-`SQLException.getNextException()` method.
+that happened before can be obtained via `SQLException.getNextException()` method.
+Alternatively, `SQLException.iterator` can be used to walk over all exceptions in
+the chain and their causes.
 
-Unfortunately the JDBC specification does not provide a usable exception
-hierarchy that would allow application to react on the error situations
-using regular exception handling rather than checking the error code.
-Only two subclasses are defined in JDBC 3.0 specification:
+The JDBC specification provides an exception hierarchy that allows an application to
+react on the error situations using regular exception handling rather than checking 
+the error code. Error codes may still be necessary for handling specific error cases.
 
-* `java.sql.DataTruncation` exception is thrown when data truncation
+The JDBC 4.2 specification defines the following exception hierarchy (excluding those
+defined for `javax.sql.rowset`):
+
+* `java.sql.SQLException`
+** `java.sql.DataTruncation` exception is thrown when a data truncation
 error happens.
-* `java.sql.BatchUpdateException` exception is thrown when batch of the
+** `java.sql.BatchUpdateException` exception is thrown when batch of the
 statement did not execute successfully and contains the result of batch
 execution.
+** `java.sql.SQLClientInfoException` exception is thrown when client info properties 
+could not be set.
+** `java.sql.SQLNonTransientException` exception is thrown when retrying the same action would
+fail without fixing the underlying cause.
+*** `java.sql.SQLDataException` exception is thrown for data-related errors,
+for example conversion errors, too long values. (SQLstate class `22`)
+*** `java.sql.SQLFeatureNotSupportedException` exception is thrown to indicate that an optional 
+JDBC feature is not supported by the driver or the data source (Firebird).  (SQLstate class `0A`)
+*** `java.sql.SQLIntegrityConstraintViolationException` exception is throw for constraint 
+violations. (SQLstate class `23`)
+*** `java.sql.SQLInvalidAuthorizationSpecException` exception is thrown for authorization 
+failures. (SQLstate class `28`)
+*** `java.sql.NonTransientConnectionException` exception is thrown for connection operations 
+that will not succeed on retry without fixing the underlying cause. (SQLstate class `08`)
+*** `java.sql.SQLSyntaxErrorException` exception is thrown for syntax errors. (SQLstate class `42`)
+** `java.sql.SQLRecoverableException` exception is thrown when an action might be retried
+by taking recovery actions and restarting the transaction.
+** `java.sql.SQLTransientException` exception is thrown when the action might succeed if it is
+retried without further recovery steps.
+*** `java.sql.SQLTimeoutException` exception is thrown when the `queryTimeout` or 
+`loginTimeout` has expired.
+*** `java.sql.SQLTransactionRollbackException` exception is thrown when the statement was
+automatically rolled back because of deadlock or other transaction serialization failures. (SQLstate class `40`)
+*** `java.sql.SQLTransientConnectionException` exception is thrown for connection operations 
+that might succeed on retry without any changes. (SQLstate class `08`)
+** `java.sql.SQLWarning` should only be used to signal warnings, it should never be thrown
+by a JDBC driver.
 
-Upcoming JDBC 4.0 will address this issue by introducing better
-hierarchy of the exceptions and it will be supported by the next
-versions of Jaybird.
+Unfortunately Jaybird 3.0 does not yet fully use this exception hierarchy, we are
+working to address this with the next versions of Jaybird.
 
 Each of three layers in Jaybird use exceptions most appropriate to the
-specific layer.
+specific layer. *TODO* List needs revision
 
 * `org.firebirdsql.gds.GDSException` is an exception that directly
 corresponding to the error returned by the database engine. Instances of
@@ -1131,46 +1244,50 @@ conversions see <<Data Type Conversion Table>>.
 
 === SQL states
 
-Jaybird supports the SQL states from the X/Open standard, however only
-few states nicely map into the Firebird error codes. Below is the table
-containing the reported SQL states.
+Jaybird supports the SQLstate values from the SQL:2003 standard,footnoteref:[sqlstate] 
+however only few states nicely map into the Firebird error codes. Below is the table
+containing the reported SQLstates.
+
+*TODO* Tabel needs revision or total removal
 
 [cols="<,",options="header",]
-|=============================================
-|Constant name |Constant value
-|`SQL_STATE_INVALID_CON_ATTR` |`01S00`
-|`SQL_STATE_NO_ROW_AVAIL` |`01S06`
-|`SQL_STATE_GENERAL_ERROR` |`HY000`
-|`SQL_STATE_DRIVER_NOT_CAPABLE` |`HYC00`
-|`SQL_STATE_INVALID_COLUMN` |`HY002`
-|`SQL_STATE_INVALID_PARAM_TYPE` |`HY105`
-|`SQL_STATE_INVALID_ARG_VALUE` |`HY009`
-|`SQL_STATE_WRONG_PARAM_NUM` |`07001`
-|`SQL_STATE_NO_RESULT_SET` |`07005`
-|`SQL_STATE_INVALID_CONVERSION` |`07006`
-|`SQL_STATE_CONNECTION_CLOSED` |`08003`
+|====================================================
+|Constant name                        |SQLstate value
+|`SQL_STATE_INVALID_CON_ATTR`         |`01S00`
+|`SQL_STATE_NO_ROW_AVAIL`             |`01S06`
+|`SQL_STATE_GENERAL_ERROR`            |`HY000`
+|`SQL_STATE_DRIVER_NOT_CAPABLE`       |`HYC00`
+|`SQL_STATE_INVALID_COLUMN`           |`HY002`
+|`SQL_STATE_INVALID_PARAM_TYPE`       |`HY105`
+|`SQL_STATE_INVALID_ARG_VALUE`        |`HY009`
+|`SQL_STATE_WRONG_PARAM_NUM`          |`07001`
+|`SQL_STATE_NO_RESULT_SET`            |`07005`
+|`SQL_STATE_INVALID_CONVERSION`       |`07006`
+|`SQL_STATE_CONNECTION_CLOSED`        |`08003`
 |`SQL_STATE_CONNECTION_FAILURE_IN_TX` |`08007`
-|`SQL_STATE_COMM_LINK_FAILURE` |`08S01`
-|`SQL_STATE_INVALID_ESCAPE_SEQ` |`22025`
-|=============================================
+|`SQL_STATE_COMM_LINK_FAILURE`        |`08S01`
+|`SQL_STATE_INVALID_ESCAPE_SEQ`       |`22025`
+|====================================================
 
-Application can use the SQL state codes in the error handling routines
+Applications can use the SQLstate codes in the error handling routines
 which should handle errors that are returned from different databases.
 But since there is little agreement between RDBMS vendors, this method
 can be used only for very coarse error distinction.
 
 === Useful Firebird error codes
 
-Contrary to the SQL states, the Firebird native error codes are
+Contrary to the SQLstates, the Firebird native error codes are
 extremely useful to determine the type of an error that happened.
 
 Here you can find a short list of error codes, symbolic names of a
 corresponding constant in a `org.firebirdsql.gds.ISCConstants` class,
 the error message and short explanation of an error.
 
+*TODO* Needs revising now Jaybird tries to pull the most important error code to the top
+
 ==== DDL Errors
 
-Happen during execution of the DDL requests and two primary error codes
+DDL errors happen during execution of DDL requests, and two primary error codes
 are used in Firebird while executing the DDL operations. There are few
 other rare cases not mentioned here, but the corresponding error
 messages contain enough information to understand the reason of an
@@ -1178,79 +1295,89 @@ error.
 
 [cols="1,2,3",]
 |=======================================================================
-|335544351L |`isc_no_meta_update` a|
-`"unsuccessful metadata update"`
+|335544351L 
+|`isc_no_meta_update` 
+a|`"unsuccessful metadata update"`
 
-Error happens when the requested DDL operation cannot be completed, for
-example application tries to define a primary key that will exceed the
+This error is returned when the requested DDL operation cannot be completed, for
+example the application tries to define a primary key that will exceed the
 maximum allowed key size.
 
-|335544510L |`isc_lock_timeout` |In combination with `isc_obj_in_use`
-(335544453L) means that the DDL command tries to modify an object that
+|335544510L 
+|`isc_lock_timeout` 
+|In combination with `isc_obj_in_use`
+(335544453L), this means that the DDL command tries to modify an object that
 is used in some other place, usually in another transaction. The
 complete error message will contain the name of the locked object.
 
-|335544569L |`isc_dsql_error` |If the third error code is either
+|335544569L 
+|`isc_dsql_error` 
+|If the third error code is either
 `isc_dsql_datatype_err` or `isc_dsql_command_err`, then additional error
-codes and arguments specify the reason why the operation had failed.
+codes and arguments specify the reason why the operation has failed.
 |=======================================================================
 
 ==== Lock Errors
 
-Lock errors are reported by Firebird primarily when application tries to
+Lock errors are reported by Firebird primarily when the application tries to
 modify a record which is already modified by a concurrent transaction.
 Depending on the transaction parameters such error can be reported
-either right after detecting it or after waiting some defined timeout
+either right after detection or after waiting some defined timeout
 hoping that concurrent transaction will either commit or rollback and
 eventually release the resource. More information on transaction locking
 modes can be found in section <<Using transactions>>.
 
 [cols="1,2,3",]
 |=======================================================================
-|335544345L |`isc_lock_conflict` |
-`"lock conflict on no wait transaction"`
+|335544345L 
+|`isc_lock_conflict` 
+a|`"lock conflict on no wait transaction"`
 
-This error happens when a "no wait" transaction needs to acquire a lock
-but finds another concurrent transaction holding a lock.
+This error is returned when a "no wait" transaction needs to acquire a lock
+but finds another concurrent transaction holding that lock.
 
 Instead of waiting the predefined timeout hoping that concurrent
 transaction will either commit or rollback, an error is returned to
 notify an application about the situation.
 
-|335544510L |`isc_lock_timeout` |
-`"lock time-out on wait transaction"`
+|335544510L 
+|`isc_lock_timeout` 
+a|`"lock time-out on wait transaction"`
 
-Similar to the isc_deadlock, but is returned when the lock timeout that
-was specified for the current transaction expired while waiting for a
-lock.
+Similar to the `isc_deadlock`, but this error is returned when the lock timeout that
+was specified for the current transaction expired while waiting for a lock.
 
 Another source of this error are DDL operations that try to obtain a
 lock on a database object that is currently used in some other place.
 
-|335544336L |`isc_deadlock` |
-`"deadlock"`
+|335544336L 
+|`isc_deadlock` 
+a|`"deadlock"`
 
 Two transactions experience a deadlock when each of them has a lock on a
-resource on which another one is trying to obtain a lock.
+resource on which the other is trying to obtain a lock.
 
 |=======================================================================
 
 ==== Referential Integrity Errors
 
-Referential integrity constrains ensure that database remains in a
+Referential integrity constraints ensure that the database remains in a
 consistent state after the DML operation and/or whole transaction is
 completed. Three primary error codes are returned when the defined
 constraints are violated. The error messages are self-explanatory.
 
 [cols="1,2,3",]
 |=======================================================================
-|335544665L |`isc_unique_key_violation`
+|335544665L 
+|`isc_unique_key_violation`
 |`violation of PRIMARY or UNIQUE KEY constraint "{0}" on table "{1}"`
 
-|335544558L |`isc_check_constraint`
+|335544558L 
+|`isc_check_constraint`
 |`Operation violates CHECK constraint {0} on view or table {1}`
 
-|335544466L |`isc_foreign_key`
+|335544466L 
+|`isc_foreign_key`
 |`violation of FOREIGN KEY constraint "{0}" on table "{1}"`
 |=======================================================================
 
@@ -1260,18 +1387,24 @@ This group contains secondary codes for the primary error code
 `isc_dsql_error` (`335544569L`), that has a message
 `"Dynamic SQL Error"`.
 
+In most situations, Jaybird 3+ will put this secondary error code in the
+`SQLException` instead of `isc_dsql_error`.
+
 [cols="1,2,3",]
 |=======================================================================
-|335544573L |`isc_dsql_datatype_err` |
-`"Data type unknown"`
+|335544573L 
+|`isc_dsql_datatype_err` 
+a|`"Data type unknown"`
 
 Usually this error is reported during DDL operation when the specified
 data type is either unknown or cannot be used in the specified
 statement. However it also can happen in DML operation, e.g. when an
-ORDER BY clause contains unknown collation.
+`ORDER BY` clause contains unknown collation, or if a parameter is used
+in a `SELECT` clause without explicit cast.
 
-|335544570L |`isc_dsql_command_err` |
-`"Invalid command"`
+|335544570L 
+|`isc_dsql_command_err` 
+a|`"Invalid command"`
 
 Error happens either during parsing the specified SQL request or by
 handling the DDL command.
@@ -1286,50 +1419,55 @@ categories.
 
 [cols="1,2,3",]
 |=======================================================================
-|335544321L |`isc_arith_except` |
-`"arithmetic exception, numeric overflow, or string truncation"`
+|335544321L 
+|`isc_arith_except` 
+a|`"arithmetic exception, numeric overflow, or string truncation"`
 
 Happens at runtime when an arithmetic exception happens, like division
 by zero or the numeric overflow (e.g. number does not fit the 64 bits
 limit).
 
 Another source of these errors are all string operations, like string
-concatenation producing too long string, impossibility to transliterate
+concatenation producing a too long string, impossibility to transliterate
 characters between character sets, etc.
 
 Future versions of Firebird will provide a secondary code to distinguish
 the exact reason of an error.
 
-|335544348L |`isc_no_cur_rec` |
-`"no current record for fetch operation"`
+|335544348L 
+|`isc_no_cur_rec` 
+a|`"no current record for fetch operation"`
 
 Happens when application asks Firebird to fetch a record, but no record
 is available for fetching.
 
 Java applications should never get this error, since checks in the JDBC
-driver prevent application from executing fetch operation on the server
+driver prevent the application from executing a fetch operation on the server
 side.
 
-|335544374L |`isc_stream_eof` |
-`"attempt to fetch past the last record in a record stream"`
+|335544374L 
+|`isc_stream_eof` 
+a|`"attempt to fetch past the last record in a record stream"`
 
-Application tries to execute fetch operation after all records had been
-already fetched.
+Application tries to execute fetch operation after all records have 
+already been fetched.
 
-Similar to the previous error, Java application should not get this
+Similar to the previous error, Java applications should not get this
 error due to the checks that happen before issuing the fetch request to
 the server.
 
-|335544517L |`isc_except` |
-`"exception {0}"`
+|335544517L 
+|`isc_except` 
+a|`"exception {0}"`
 
 An custom exception has been raised on the server. Java application can
 examine the underlying GDSException to extract the exception message.
 
-|335544721L |`isc_network_error` a|
-`Unable to complete network request to host "{0}"`
+|335544721L 
+|`isc_network_error` 
+a|`Unable to complete network request to host "{0}"`
 
-This error is thrown when Java application cannot establish connection
+This error is thrown when Jaybird cannot establish a connection
 to the database server due to a network issues, e.g. host name is
 specified incorrectly, Firebird had not been started on the remote host,
 firewall configuration prevents client from establishing the connection,
@@ -1340,10 +1478,11 @@ etc.
 == Executing statements
 
 After obtaining a connection, the next thing to do is to execute the SQL
-statement. JDBC specification distinguishes three kinds of statements –
-regular statements that are execute fixed SQL requests, prepared
-statements used to executed SQL code with parameters in it and callable
-statements that are used to execute stored procedures.
+statement. The JDBC specification distinguishes three kinds of statements:
+
+1. Regular statements to execute fixed SQL requests, 
+2. prepared statements to execute SQL code with parameters, 
+3. and callable statements to execute stored procedures.
 
 === The java.sql.Statement interface
 
@@ -1351,10 +1490,10 @@ The `java.sql.Statement` interface is the simplest interface to execute
 SQL statements. It distinguishes only three types of them:
 
 * statements that return results, or, in other words, queries;
-* statements that change the state of the database but return no
-results;
-* INSERT statements that return the values of the columns which were
-generated by the database engine while inserting the record.
+* statements that change the state of the database but return no results;
+* `INSERT` statements that return the values of the columns which were
+generated by the database engine while inserting the record (or other statements
+with similar behaviour).
 
 Let's check one of the typical usages shown below. In general the usage
 pattern of the statement consists of three steps
@@ -1362,20 +1501,19 @@ pattern of the statement consists of three steps
 [source,java]
 .Typical way to execute query to get information about the user
 ----
-Statement stmt = connection.createStatement(); // <1>
 
-try {
+
+try (
+    Statement stmt = connection.createStatement(); // <1>
     ResultSet rs = stmt.executeQuery(
         "SELECT firstName, lastName FROM users" +
-        " WHERE userId = 5"); // <2>
-        
-    rs.next();
-   
-    String firstName = rs.getString(1);
-    String lastName = rs.getString(2);
-} finally {
-    stmt.close(); // <3>
-}
+        " WHERE userId = 5") // <2>
+){
+    if (rs.next()) {
+        String firstName = rs.getString(1);
+        String lastName = rs.getString(2);
+    }
+} // <3>
 ----
 
 <1> Create a `Statement` object by calling the
@@ -1386,24 +1524,25 @@ case we execute simple query
 `SELECT firstName, lastName FROM users WHERE userId = 5`. Processing of
 the query result will be discussed in details in the next chapter.
 
-<3> Close the statement to release all allocated resources. In
-our example this is done in the `finally` section of the `try/finally`
-block.
+<3> Close the result set and statement to release all allocated resources. In
+our example this is done using the try-with-resources block. With try-with-resources.
+Java takes care of closing resources in the right order, even if exceptions occur, or
+if a resource was not allocated (say, if `executeQuery` throws an exception).
 
-The fact that connection object is a factory for the statement objects
-puts a constraint on the object lifetime – statements are bound to the
+The fact that the connection object is a factory for the statement objects
+puts a constraint on the object lifetime: statements are bound to the
 connection; when the connection is closed, all statements that were
 created by that connection become invalid and the resources allocated by
 them are released. However, despite that fact that the resources are
-finally released, it is strongly recommended to use the `try/finally`
+finally released, it is strongly recommended to use the try-with-resources
 block, to guarantee that resources are released as soon as possible
 because of the reasons that will be discussed later.
 
 Statement can be executed using the following methods:
 
 * `Statement.executeQuery(String)` – executes a SELECT statement and
-returns a result set. If the specified statement is not a SELECT
-statement, an `SQLException` is thrown after the statement execution.
+returns a result set. If the specified statement does not produce a result set, 
+an `SQLException` is thrown after statement execution.
 * `Statement.executeUpdate(String)` – executes INSERT, UPDATE, DELETE or
 DDLfootnote:[DDL – Data Definition Language. This term is used to group
 all statements that are used to manipulate database schema, i.e.
@@ -1416,8 +1555,12 @@ executed and `false` is returned. You can use `Statement.getResultSet()`
 method to get the result of the executed query or you can use
 `Statement.getUpdateCount()` when you have executed update statement.
 
-Statement is closed by calling the `Statement.close()` method. After
-this the statement object is invalid and cannot be used anymore.
+These `execute` methods have several variants for additional features covered 
+later (*TODO* check if already covered).
+
+A statement is closed by calling the `Statement.close()` method (or by using 
+a try-with-resources which calls `close()` behind the scenes). After
+this the statement object is invalid and cannot be used any more.
 
 It is also allowed to use the same object to execute different types of
 queries one after other. The code below contains a short example in
@@ -1427,40 +1570,48 @@ which application first performs a select to find the ID of the user
 [source,java]
 .Using the same statement object multiple times to enable user account
 ----
-Statement stmt = connection.createStatement();
-try {
+
+try (Statement stmt = connection.createStatement()){
     ResultSet rs = stmt.executeQuery(
         "SELECT userId FROM users " + 
         "WHERE lastName = 'Doe' AND firstName = 'Joe'");
     if (rs.next()) {
         int userId = rs.getInt(1);
+        
         int rowsUpdated = stmt.executeUpdate(
             "UPDATE accounts SET accountEnabled = 1 " +
             "WHERE userId = " + userId);
+            
         if (rowsUpdated == 0)
             rowsUpdated = stmt.executeUpdate(
                 "INSERT INTO accounts (userId, enabled) " +
                 "VALUES (" + userId + ", 1)");
+                
         if (rowsUpdated != 1) 
             throw new SomeException(
                 "User was not updated correctly.");
     }
-} finally {
-    stmt.close();
 }
 ----
 
 The way the code is constructed is quite dangerous because of the result
-set lifetime constraints that are put by the JDBC specification, please
+set lifetime constraints that are defined by the JDBC specification, please
 read the chapter where result sets are discussed for more details.
-However, here it is done intentionally to emphasize that the single
-object is used to execute SELECT and UPDATE/INSERT statements. It also
+
+However, here it is done intentionally to emphasize that a single
+object is used to execute `SELECT` and `UPDATE`/`INSERT` statements. It also
 shows how to check whether the executed statement modified expected
-number of rows – application first tries to update the account and only
+number of rows – the application first tries to update the account and only
 if no rows were updated, it inserts new record into the `accounts`
 table.
 
-When application needs to execute DDL statements, it is recommended to
+[NOTE]
+======
+This example of 'try update, then insert' approach can be better handled 
+using https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-dml-merge.html[`MERGE`].
+======
+
+When an application needs to execute DDL statements, it is recommended to
 use the `Statement.execute(String)` method, as in this case amount of
 modified records makes little sense. The next code shows an example of
 creating database tables using the above mentioned method.
@@ -1468,44 +1619,39 @@ creating database tables using the above mentioned method.
 [source,java]
 .Example of creating database tables
 ----
-Statement stmt = connection.createStatement();
-try {
+try (Statement stmt = connection.createStatement()) {
     DatabaseMetaData metaData = connection.getMetaData();
     ResultSet tables = metaData.getTables(
-        null, null, "CUSTOMER", new String[]{"TABLE"});
+        null, null, "CUSTOMER", new String[] { "TABLE" });
     if (!tables.next())
         stmt.execute("CREATE TABLE customer(" + 
             "customerId INTEGER NOT NULL PRIMARY KEY, " + 
             "firstName VARCHAR(20) NOT NULL, " + 
             "lastName VARCHAR(40) NOT NULL)");
-} finally {
-    stmt.close();
 }
 ----
 
-First, application checks the existence of the table in the database by
-calling the
-`DatabaseMetaData.getTables(String, String, String, String[])` method
+First, the application checks the existence of the table in the database by
+calling the `DatabaseMetaData.getTables(String, String, String, String[])` method
 that returns a result set describing the database tables matching the
-specified search pattern. First two parameters of this method, the
+specified search pattern. The first two parameters of this method, the
 database catalog and schema names, are set to `null` as Firebird
-supports neither catalogs nor schemas. Third parameter is the table name
-search pattern, in our case we search for the table `"CUSTOMER"`. Last
+supports neither catalogs nor schemas. The third parameter is the table name
+search pattern, in our case we search for the table `"CUSTOMER"`. The last
 parameter is the list of table types to check, in our case we check for
-the `"TABLE"` type. Other tables types are `"SYSTEM TABLE"` and
-`"VIEW"`.
+the `"TABLE"` type. Other tables types are `"SYSTEM TABLE"`,
+`"VIEW"` and `"GLOBAL TEMPORARY"`.
 
-After that application checks if the result set is empty by calling the
+After that, the application checks if the result set is empty by calling the
 `ResultSet.next()` method. If no `"CUSTOMER"` table was found,
-application creates new table with three columns.
+the application creates a new table with three columns.
 
-As it was already mentioned, the `Statement.execute(String)` method can
-also be used to execute statements of the unknown type.
+As was already mentioned, the `Statement.execute(String)` method can
+also be used to execute statements of an unknown type.
 
 [source,java]
 ----
-Statement stmt = connection.createStatement();
-try {
+try (Statement stmt = connection.createStatement()) {
     boolean hasResultSet = stmt.execute(sql);
     if (hasResultSet) {
         ResultSet rs = stmt.getResultSet();
@@ -1514,8 +1660,6 @@ try {
         int updateCount = stmt.getUpdateCount();
         ...
     }
-} finally {
-    stmt.close();
 }
 ----
 
@@ -1541,10 +1685,10 @@ to the client a 32-bit identifier of the allocated object, a statement
 handle, that must be used in next operations.
 2.  An SQL statement is compiled into an executable form and is
 associated with the specified statement handle.
-3.  Jaybird asks server to describe the statement and Firebird returns
-the information about the statement type and possible statement input
+3.  Jaybird asks the server to describe the statement and Firebird returns
+information about the statement type and possible statement input
 parameters (we will discuss this with prepared statements) and output
-parameters, namely a result set columns.
+parameters, namely the result set columns.
 4.  If no parameters are required for the statement, Jaybird tells
 Firebird to execute statement passing the statement handle into
 corresponding method.
@@ -1552,27 +1696,33 @@ corresponding method.
 After this Jaybird has to make a decision depending on the operation
 that was called.
 
-* If `Statement.execute()` method was used, Jaybird only checks the
+* If `Statement.execute()` was used, Jaybird only checks the
 statement type to decide whether it should return true, telling the
 application that there is a result set for this operation, or false, if
 statement did not return any result set.
-* If `Statement.executeUpdate()` method was called Jaybird asks Firebird
+* If `Statement.executeUpdate()` was called, Jaybird asks Firebird
 to give the information about the number of affected rows. This method
 can be called only if the statement type tells that no query can be
 returned by the statement. When it is called for queries, an exception
 is thrown despite the fact that the statement was successfully executed
 on the server.
-* If `Statement.executeQuery()` method was called and statement type
-tells that result set can be returned, Jaybird constructs a `ResultSet`
+* If `Statement.executeQuery()` was called and the statement type
+indicates that a result set can be returned, Jaybird constructs a `ResultSet`
 object and returns it to the application. No additional checks, like
 whether result set contains rows, are performed, as it is the
-responsibility of the `ResultSet` object. If this method is used for the
+responsibility of the `ResultSet` object. If this method is used for
 statements that do not return result set, an exception is thrown despite
 the fact that the statement was successfully executed on the server.
 
+[WARNING]
+=====
+The described behaviour may change in the future by throwing the exception
+*before* executing the statement.
+=====
+
 When the application does not need to know how many rows were modified,
 it should use the `execute()` method instead of `executeUpdate()` one.
-This saves additional call to the server to get the number of modified
+This saves an additional call to the server to get the number of modified
 rows and significantly increases the performance in the situations where
 network latency is comparable with the statement execution times.
 
@@ -1581,43 +1731,42 @@ application does not know what kind of statement is being executed (for
 example, an application that allows the user to enter SQL statements to
 execute).
 
-After using the statement object application should close it. Two
-different possibilities exist – to close the result set object
+After using the statement object, an application should close it. Two
+different possibilities exist: to close the result set object
 associated with the statement handle and to close the object completely.
 
 If, for example, we want to reuse the statement object for another
 query, it is not necessary to completely release the allocated
 structures. Jaybird is required only to compile a new statement before
-using it, in other words we can skip the step 1. This saves us one
+using it, in other words we can skip step 1. This saves us one
 round-trip to the server over the network, which might improve the
 application performance.
 
 If we close the statement completely, the allocated statement handle is
 no longer usable. Jaybird could allocate a new statement handle, however
-the implementation does not allow to use the `Statement` object after
-`close()` method has been called to comply with the JDBC specification.
+the JDBC specification does not allow use of a `Statement` object after
+`close()` method has been called.
 
 ==== Statement lifetime and DDL
 
-The step 2 in the previous section is probably the most important, and
+Step 2 in the previous section is probably the most important, and
 usually, most expensive part of the statement execution life cycle.
 
-As it was already told, when Firebird server receives the "prepare
+As was already told, when Firebird server receives the "prepare
 statement" call, it parses the SQL statement and converts it into the
-executable form – BLR representation. BLR, a Binary Language
-Representation, contains low-level commands to traverse the database
-tables, conditions that are used to filter records, defines the order in
-which records are accessed, indices that are used to improve the
-performance, etc.
+executable form: BLR. BLR, or Binary Language Representation, contains 
+low-level commands to traverse the database tables, conditions that are used 
+to filter records, defines the order in which records are accessed, indices 
+that are used to improve the performance, etc.
 
-When a BLR is prepared, it holds the references to all database object
+When a statement is prepared, it holds the references to all database object
 definitions that are used during that statement execution. This
 mechanism preserves the database schema consistency, it saves the
 statement objects from the "surprises" like accessing the database table
 that is been accessed by some application.
 
 However, holding a reference on the database objects has one very
-unpleasant effect – it is not possible to upgrade the database schema,
+unpleasant effect: it is not possible to upgrade the database schema,
 if there are active connections to the database with open statements
 referencing the objects being upgraded. In other words, if two
 application are running and one is trying to modify the table, view,
@@ -1647,14 +1796,14 @@ needed to compile the SQL statement into the BLR form.
 The `PreparedStatement` interface addresses such inefficiency. An object
 that implements this interface represents a precompiled statement that
 can be executed multiple times. If we use the execution flow described
-in the "<<Statement dynamics>>" section, it allows
+in the "<<Statement dynamics>>" section, it allows us
 to go directly to the step 4 for the subsequent executions.
 
 However, executing the same statement with the same values makes little
 sense, unless we want to fill the table with the same data, which
 usually is not the case. Therefore, JDBC provides support for the
 parametrized statements – SQL statements where literals are replaced
-with the question marks. Application is required to fill the parameters
+with question marks (`?`). An application is required to fill the parameters
 before executing the statement.
 
 Our first example in this chapter can be rewritten the way it is shown
@@ -1664,60 +1813,55 @@ visible advantage.
 [source,java]
 .Example for user account update rewritten using prepared statements
 ----
-PreparedStatement stmt1 = connection.prepareStatement(
-    "SELECT userId FROM users WHERE " + 
-    "lastName = ? AND firstName = ?");
-try {
+try (
+    PreparedStatement stmt1 = connection.prepareStatement(
+        "SELECT userId FROM users WHERE " + 
+        "lastName = ? AND firstName = ?");
+) {
     stmt1.setString(1, "Doe");
     stmt1.setString(2, "Joe");
     ResultSet rs = stmt1.executeQuery();
     
     if (rs.next()) {
         int userId = rs.getInt(1);
-        
-        PreparedStatement stmt2 = 
-            connection.prepareStatement(
-                "UPDATE accounts SET accountEnabled = 1 " +
-                "WHERE userId = ?" );
                 
-        int rowsUpdated;
-        try {
+        try (
+            PreparedStatement stmt2 = 
+                connection.prepareStatement(
+                    "UPDATE accounts SET accountEnabled = 1 " +
+                    "WHERE userId = ?" );
+        ) {
             stmt2.setInt(1, userId);
             
-            rowsUpdated = stmt2.executeUpdate();
+            int rowsUpdated = stmt2.executeUpdate();
             
             if (rowsUpdated == 0) {
-                PreparedStatement stmt3 =
-                    connection.prepareStatement( 
-                        "INSERT INTO accounts " + 
-                        "(userId, enabled) VALUES (?, 1)");
-                try {
+                try (
+                    PreparedStatement stmt3 =
+                        connection.prepareStatement( 
+                            "INSERT INTO accounts " + 
+                            "(userId, enabled) VALUES (?, 1)");
+                ) {
                     stmt3.setInt(1, userId);
                     rowsUpdated = stmt3.executeUpdate();
-                } finally {
-                    stmt3.close();
                 }
             if (rowsUpdated != 1) 
                 throw new SomeException(
                     "User was not updated correctly.");
-        } finally {
-            stmt2.close();
         }
     }
-} finally {
-    stmt1.close();
 }
 ----
 
 * First, instead of using the one statement object we have to use three
 – one per statement.
 * Second, before executing the statement we have to set parameters
-first. As it is showed on the example, parameters are referenced by
+first. As is shown in the example, parameters are referenced by
 their position. The `PreparedStatement` interface provides setter
 methods for all primitive types in Java as well as for some widely used
-SQL data types (BLOBs, CLOBs, etc.). The NULL value is set by calling
+SQL data types (BLOBs, CLOBs, etc.). The `NULL` value is set by calling
 the `PreparedStatement.setNull(int)` method.
-* Third, we are forced now to use three nested `try/finally` blocks,
+* Third, we are forced now to use three nested try-with-resources blocks,
 which makes code less readable.
 
 So, where's the advantage? First of all, we can redesign our application
@@ -1725,7 +1869,7 @@ to prepare those statements before calling that code (for example in a
 constructor) and close them when application is shut down. In this case
 the code is even more compact (see the next example). Unfortunately the
 application is now responsible for prepared statement management. When
-connection is closed, the prepared statement object will be invalidated,
+a connection is closed, the prepared statement object will be invalidated,
 but the application will not be notified about this fact. Also, if the
 application uses similar statements in different parts of the
 application, the refactoring might affect many classes, possibly
@@ -1777,15 +1921,17 @@ queryStmt.close();
 
 The answer to the advantage question is hidden in the
 `prepareStatement(String)` call. Since the same statement can be used
-for different parameter values, connection object has a possibility to
-perform prepared statement caching. JDBC driver can ignore the request
+for different parameter values, the connection object has a possibility to
+perform prepared statement caching. A JDBC driver can ignore the request
 to close the prepared statement, save it internally and reuse it each
 time application asks to prepare an SQL statement that is known to the
 connection.
 
 === Prepared statement pooling
 
-As it was mentioned before, connection pooling was introduced to reduce
+*TODO* Feature not supported by Jaybird 3
+
+As was mentioned before, connection pooling was introduced to reduce
 the time needed to obtain a connection. Despite its rich features, the
 operation of obtaining new connection in Firebird is cheap – usually
 connection pooling in an application that heavily opens and closes
@@ -1805,20 +1951,26 @@ updated rows or a result set.
 
 The obvious approach is to save the compiled statement and use it later.
 JDBC specification already contains a `java.sql.PreparedStatement`
-interface exactly for such purposes. Application prepares statement and
+interface exactly for such purposes. An application prepares statement and
 uses it multiple times. This approach works fine within the context of
 the same connection.
 
-However, when connection pooling is used, application can no longer
+However, when connection pooling is used, an application can no longer
 cache prepared statements, since they are bound to the connection it
-obtained from the pool. Application must close all prepared statements
-before giving connection back to pool, but even if it does not do this,
-connection pool will perform this automatically according to the JDBC
+obtained from the pool. The application must close all prepared statements
+before giving the connection back to pool, but even if it does not do this,
+the connection pool will perform this automatically according to the JDBC
 specification. All advantages of the prepared statements are undone –
-when application obtains next connection from the pool, it must
+when the application obtains next connection from the pool, it must
 re-prepare statements.
 
-Solution to the problem is to allow connection pool do statement pooling
+The solution to the problem is to use a connection pool that does statement pooling
+internally.
+
+[WARNING]
+*INFORMATION BELOW IS LARGELY OUTDATED*
+
+The solution to the problem is to allow connection pool do statement pooling
 internally. In this case all code remains compliant with the JDBC
 specification saving all advantages of prepared statements.
 
@@ -1848,7 +2000,7 @@ connection. Additional care should be used when specifying the value of
 are pooled.
 * A compiled statement in Firebird contains references on database
 objects (tables, views, procedures, etc.) needed to execute that SQL
-command. When connection pool is used, those references are not released
+command. When a connection pool is used, those references are not released
 preventing any structure modification of the database objects used in
 the SQL statement. Therefore, if structure modification is needed,
 connection pool with enabled statement pooling must be shut down.
@@ -1915,7 +2067,7 @@ methods for executing and retrieving results from stored procedures. It
 was introduced in JDBC specification in order to unify access to the
 stored procedures across the database system. The main difference to
 `PreparedStatement` is that the procedure call is specified using the
-portable escaped syntax:
+portable escaped syntax:footnote:[escape syntax in limited form also works for `Statement and `PreparedStatement`]
 
 .Unified escaped syntax for stored procedure execution
 ....
@@ -1925,7 +2077,7 @@ params ::= <param> [, <param> ...]
 
 Each stored procedure is allowed to take zero or more input parameters,
 similar to the `PreparedStatement` interface. After being executed,
-procedure can either return data in the output parameters or it can
+a procedure can either return data in the output parameters or it can
 return a result set that can be traversed. Though the interface is
 generic enough to support also database engines that can return both and
 have multiple result sets. These features are of no interest to Jaybird
@@ -1948,21 +2100,21 @@ systems.
 Firebird stored procedures can be classified as follow:
 
 * Procedures that do not return any results. These are stored procedures
-that do not contain the RETURNS keyword in their header.
+that do not contain the `RETURNS` keyword in their header.
 * Procedures that return only a single row of results. These are stored
-procedures that contain the RETURNS keyword in their header, but do not
-contain the SUSPEND keyword in their procedure body. These procedures
-can be viewed as a functions that return multiple values. These
-procedures are executed by using the EXECUTE PROCEDURE statement.
+procedures that contain the `RETURNS` keyword in their header, but do not
+contain the `SUSPEND` keyword in their procedure body. These procedures
+can be viewed as functions that return multiple values. These
+procedures are executed by using the `EXECUTE PROCEDURE` statement.
 * Procedures that return result sets, also called "selectable stored
-procedures". These are stored procedures that contain the RETURNS
-keyword in their header and the SUSPEND keyword in their procedure body,
+procedures". These are stored procedures that contain the `RETURNS`
+keyword in their header and the `SUSPEND` keyword in their procedure body,
 usually within a loop. Selectable procedures are executed using the
 `"SELECT * FROM myProcedure(...)"` SQL statement. It is also allowed to
-use EXECUTE PROCEDURE statement, however this call might produce strange
+use the `EXECUTE PROCEDURE` statement, however this call might produce strange
 results, since for selectable procedures is is equivalent to executing a
-SELECT statement, but doing only one fetch after the select. If
-procedure implementation relies on the fact that all rows that it
+`SELECT` statement, but doing only one fetch after the select. If
+the procedure implementation relies on the fact that all rows that it
 returns must be fetched, the logic will be broken.
 
 Consider the following stored procedure that returns factorial of the
