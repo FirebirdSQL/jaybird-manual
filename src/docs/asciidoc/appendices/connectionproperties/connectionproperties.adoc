@@ -1,0 +1,89 @@
+[[connectionproperties]]
+[appendix]
+== Extended connection properties
+
+Jaybird allows using arbitrary Database Parameters Block entries. The
+current Firebird API has almost 70 DPB parameters, however only few of
+them are interesting for regular users. This chapter provides a list of
+most useful DPB parameters and short explanation to each of them.
+
+[cols="1,2",options="header",]
+|=======================================================================
+|DPB Parameter + alias(es) |Explanation
+
+a|`isc_dpb_user_name` +
+`user_name`, `user` 
+|Name of the user for the connection.
+
+a|`isc_dpb_password` +
+`password` 
+|Password corresponding to the specified user.
+
+a|`isc_dpb_lc_ctype` +
+`lc_ctype`, `encoding`
+|Character encoding for the connection.
+This property tells the database server the encoding in which it expects character content.
+For a list of the available encodings see <<Available Encodings>>.
+
+a|`charSet` +
+`localEncoding`
+|Character set for the connection.
+Similar to the previous property, however instead of Firebird-specific name allows using standard Java encoding name.
+
+a|`isc_dpb_num_buffers` +
+`num_buffers`
+|Number of database pages that will be cached.
+Default values are 75 for ClassicServer and 2048 for SuperServer.
+
+a|`isc_dpb_sql_role_name` +
+`sql_role_name`
+|Name of the SQL role for the specified connection.
+
+a|`isc_dpb_sql_dialect` +
+`sql_dialect`
+|SQL dialect, by default 3, can be 1, 2 and 3.
+
+a|`isc_dpb_set_db_readonly` +
+`set_db_readonly` 
+|Set the database into read-only state.
+
+a|`isc_dpb_set_db_sql_dialect` +
+`set_db_sql_dialect` 
+|Set the SQL dialect of the database.
+
+a|`isc_dpb_set_db_charset` +
+`set_db_charset` 
+|Set the default character set of the database.
+
+a|`isc_dpb_socket_buffer_size` +
+`socket_buffer_size` 
+|Jaybird specific parameter. 
+Tells Jaybird Type 4 driver the size of the socket buffer.
+Should be used on the systems where default socket buffer provided by JVM is not correct.
+
+a|`isc_dpb_blob_buffer_size` +
+`blob_buffer_size` 
+|Jaybird specific parameter. 
+Tells the driver the size of the buffer that is used to transfer BLOB content.
+It is recommended to keep the value equal to `n * <database page size>` (and preferably also socket buffer size).
+
+a|`isc_dpb_use_stream_blobs` +
+`use_stream_blobs` 
+|Jaybird specific parameter. 
+Tells the driver to create stream BLOBs. 
+By default segmented BLOBs are created.
+
+a|`isc_dpb_paranoia_mode` +
+`paranoia_mode` 
+|Jaybird specific parameter.
+Tells the driver to throw exception in the situation not covered by the specification.
+For example, the JDBC specification does not say whether it is allowed to call the `close()` method twice.
+In "paranoia mode" Jaybird will throw an exception while in normal mode it will simply ignore the second call.
+
+a|`isc_dpb_use_standard_udf` +
+`use_standard_udf` 
+|Jaybird specific parameter. 
+Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
+See "<<Supported JDBC Scalar Functions>>" for more details.
+|=======================================================================
+

@@ -1,0 +1,23 @@
+[[license]]
+== License
+
+The contents of this Documentation are subject to the Public
+Documentation License Version 1.0 (the "License"); you may only use this
+Documentation if you comply with the terms of this License. A copy of
+the License is available at
+http://www.firebirdsql.org/manual/licenses-pdl-text.html.
+
+The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer's
+Manual. The Initial Writer of the Original Documentation is Roman
+Rokytskyy Copyright (C) 2004-2008. All Rights Reserved. (Initial Writer
+contact(s): roman@rokytskyy.de).
+
+Contributor(s): Mark Rotteveel.
+
+Portions created by Mark Rotteveel are Copyright (C) 2014-2016. All
+Rights Reserved. (Contributor contact(s):
+mrotteveel@users.sourceforge.net).
+
+Portions created by ..... are Copyright (C).....[Insert year(s)].
+All Rights Reserved. (Contributor contact(s):...............[Insert
+hyperlink/alias]).

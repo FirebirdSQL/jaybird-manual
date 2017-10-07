@@ -1,0 +1,743 @@
+[[connection]]
+== Obtaining a connection
+
+Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via
+`java.sql.DriverManager` and via an implementation of the `javax.sql.DataSource` interface.
+
+=== Obtaining connection java.sql.DriverManager
+
+`java.sql.DriverManager` was the first connection factory in Java. It is based on the concept of the
+JDBC URL, a string that uniquely identifies the database to which user wants to connect. The driver
+manager then checks which driver(s) - if any - can establish a connection.
+
+There is also support to specify additional connection parameters, like user name and password.
+
+A JDBC URL consists of three parts:
+
+....
+jdbc:firebirdsql://localhost:3050/c:/database/example.fdb
+....
+
+* `jdbc` +
+JDBC protocol
+* `firebirdsql` +
+JDBC subprotocol, identifies driver to use
+* `//localhost:3050/c:/database/example.fdb` 
++
+RDBMS specific part, identifies the database to which the driver must connect, in our case that is
+`//<host>:<port>/<path to database>`
+
+The first part, `jdbc:firebirdsql:` is required by JDBC and specifies the so called protocol and 
+subprotocol for the JDBC connection. In other words, the type of the connection that the application
+wants to obtain, in our case it is a connection to a Firebird database. 
+
+An example of obtaining the connection is shown below.
+
+[source,java]
+.Simple example to obtain a JDBC connection
+----
+package hello;
+
+import java.sql.*;
+
+public class HelloServer {
+
+  public static void main(String[] args) throws Exception {
+  
+    Class.forName("org.firebirdsql.jdbc.FBDriver"); // <1>
+    
+    Connection connection = DriverManager.getConnection( 
+      "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
+      "SYSDBA", "masterkey"); // <2>
+      
+    // do something here
+  }
+}
+----
+
+The first line of this code is important – it tells JVM to load the Jaybird JDBC driver. According to
+the JDBC specification, at this point driver registers itself in `java.sql.DriverManager`.
+
+Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.firebirdsql.jdbc.FBDriver")`
+is no longer necessary, except when the driver is not on the system class path. Examples where it
+may be necessary to explicitly load the driver are web applications that include the driver in the
+deployment. There the driver is not on the system classpath and needs to be loaded explicitly.
+
+We will leave out usages of `Class.forName` in future examples.
+
+.Registering the JDBC driver
+[NOTE]
+====
+There are several ways to register JDBC driver:
+
+1. The JVM loads the driver from the system class path. This happens automatically.
+
+2. The application explicitly loads the driver's class. This is only necessary if the automatic
+loading (see previous item) is not available. This can be necessary because the driver `jar` is 
+loaded dynamically, through a different classloader, etc).
++
+The JDBC specification requires that during class initialization the driver registers itself with
+`DriverManager`.
++
+....
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+....
+3. The JDBC driver is listed in a `jdbc.drivers` system property. For example in your 
+`~/.hotjava/properties` file you can specify following line:
++
+....
+jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver
+....
++
+Alternatively you can specify the value of this property during JVM startup:
++
+....
+java\
+  -Djdbc.drivers=org.firebirdsql.jdbc.FBDriver\
+  -classpath jaybird-full-{jaybird-full-version}.jar;C:/myproject/classes\
+  my.company.SomeJavaExample
+....
+====
+
+The second statement of the example tells the `java.sql.DriverManager`
+to open database connection to the Firebird server running on the host
+where the Java code is executed, and the path to the database is
+`c:/database/employee.fdb`.
+
+The database specification consists of the name of the server where the database server resides, 
+optionally you can specify a port to which the driver will connect (by default port 3050 is used).
+The server name can be specified using either its DNS name (for example `fb-server.mycompany.com` or
+just `fb-server`), or its IP address (for example `192.168.0.5`, or `[1080::8:800:200C:417A]` for 
+an IPv6 address).
+
+After the server name and port, the alias or path to the database is specified. We suggest to specify
+a database alias instead of the absolute database path. For more information about using aliases see
+the documentation of Firebird server.
+
+The format in which the path is specified depends on the platform where the Firebird server runs. 
+
+On Windows it must include the drive letter and path, for example `c:/database/employee.fdb`, which
+points to the employee database that can be found in a root directory of drive C:. Java (and 
+Firebird) allows you to use either `/` or `\\` as path separator on the Windows platform. On Unix
+and Linux platform, you can use only `/` as the path separator.
+
+On Unix platforms the path must include the root, as the path is otherwise interpreted relative to
+a server-dependent folder. Having to include the root has the effect that a database in
+`/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the 
+connection string: `jdbc:firebirdsql://localhost//var/firebird/employee.fdb`
+
+It is possible to specify a relative path, but as this is highly dependent on the server
+configuration, we suggest you not to use this, and instead use an alias.
+
+==== Specifying extended properties
+
+What if we want to specify additional connection parameters, a client
+encoding, for example? JDBC specification provides a method that
+allows to specify additional connection properties:
+
+[source,java]
+.Obtaining JDBC connection with additional connection properties
+----
+package hello;
+
+import java.sql.*;
+import java.util.*;
+
+public class HelloServerWithEncoding {
+
+  public static void main(String[] args) throws Exception {
+    Properties props = new Properties();
+    
+    props.setProperty("user", "SYSDBA");
+    props.setProperty("password", "masterkey");
+    props.setProperty("encoding", "UTF8");
+    
+    Connection connection = DriverManager.getConnection(
+      "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb",
+      props);
+      
+    // do something here
+  }
+}
+----
+
+Additional properties, for example SQL role for the connection can be
+added to the `props` map. The list of all available extended properties
+can be found in <<Extended connection properties>>.
+
+However, it is not always possible to use the above described method.
+Jaybird also provides a possibility to specify extended properties in the
+JDBC URL. The example below shows the specification for specifying
+extended JDBC properties in the URL.
+
+.Extended JDBC URL format
+....
+jdbc:firebirdsql://host[:port]/<path to db>?<properties>
+<properties> ::= <property>[{& | ;}<properties>]
+<property>   ::= <name>[=<value>]
+....
+
+In this case extended properties are passed together with the URL using
+the HTTP-like parameter passing scheme: first comes the main part of the
+URL, then `"?"`, then name-value pairs separated with `&` or `;`. The code below
+is equivalent to the previous example.
+
+[source,java]
+.Specifying extended properties in the JDBC URL
+----
+import java.sql.*;
+
+...
+
+Connection connection = DriverManager.getConnection(
+    "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb?encoding=UTF8",
+    "SYSDBA",
+    "masterkey");
+----
+
+==== Obtaining a connection via javax.sql.DataSource
+
+The JDBC 2.0 specification introduced a mechanism to obtain database connections without
+requiring the application to know any specifics of the underlying JDBC driver. The application is
+only required to know the logical name to find an instance of the `javax.sql.DataSource` interface
+using Java Naming and Directory Interface (JNDI). This is a common way to obtain connections in web
+and application servers.
+
+In order to obtain a connection via `DataSource` object, you can use the code shown below. This code
+assumes that you have correctly configured the JNDI properties. For more information about 
+configuring JNDI please refer to the documentation provided with your web or application server.
+
+[source,java]
+.Typical way to obtain JDBC connection via JNDI
+----
+package hello;
+
+import java.sql.*;
+import javax.sql.*;
+import javax.naming.*;
+
+public class HelloServerJNDI {
+
+  public static void main(String[] args) throws Exception {
+  
+    InitialContext ctx = new InitialContext();
+    DataSource ds = (DataSource)ctx.lookup("jdbc/SomeDB");
+
+    try (Connection connection = ds.getConnection()) {
+      // do something here... 
+    }
+  }
+}
+----
+
+Usually, the binding between the `DataSource` object and its JNDI name
+happens in the configuration of your web or application server. However
+under some circumstances (e.g. you are developing your own JNDI-enabled
+application server/framework) you have to do this yourself. You can use
+this code snippet for this purpose:
+
+[source,java]
+.Programmatic way to instantiate javax.sql.DataSource implementation
+----
+import javax.naming.*;
+import org.firebirdsql.ds.*;
+...
+FBSimpleDataSource ds = new FBSimpleDataSource();
+
+ds.setDatabase("//localhost:3050/C:/database/employee.fdb");
+ds.setUser("SYSDBA");
+ds.setPassword("masterkey");
+
+InitialContext ctx = new InitialContext();
+
+ctx.bind("jdbc/SomeDB", ds);
+----
+
+The `DataSource` implementation supports all connection properties available
+to the `DriverManager` interface.
+
+Note that since version 3.0, Jaybird no longer provides a connection pool. If you need
+a `javax.sql.DataSource` implementation that provides a connection pool. consider using https://brettwooldridge.github.io/HikariCP/[HikariCP], 
+http://commons.apache.org/proper/commons-dbcp/[DBCP], or http://www.mchange.com/projects/c3p0/[c3p0].
+
+=== Driver types
+
+As was mentioned in the section <<Jaybird Architecture>>, Jaybird supports multiple 
+implementations of the GDS API. The default Jaybird distribution contains two main
+categories of the implementations: the pure Java implementation of the
+Firebird wire protocol, and a JNA proxy that can use a Firebird `fbclient` library.
+
+Below you find the list of existing types and their short configuration
+description with the corresponding JDBC URLs that should be used to
+obtain the connection of desired type. The type of the JDBC driver for
+the `javax.sql.DataSource` is configured via corresponding property.
+
+==== PURE_JAVA type
+
+The PURE_JAVA driver type uses a pure Java implementation of the Firebird
+wire protocol. This type is recommended for connecting to a remote
+database server using TCP/IP sockets. No installation is required except
+adding the JDBC driver to the class path. This type of driver provides
+best performance when connecting to the remote server.
+
+In order to obtain connection using the PURE_JAVA driver type you have
+to use JDBC URL that was shown in <<Obtaining connection java.sql.DriverManager>>:
+
+....
+jdbc:firebirdsql://host[:port]/<path to database>
+....
+
+When using `javax.sql.DataSource` implementation, you can specify either
+`"PURE_JAVA"` or `"TYPE4"` driver type, however this type is used by
+default.
+
+==== NATIVE and LOCAL types
+
+The NATIVE and LOCAL driver types use a JNA proxy to access the Firebird
+client library and requires installation of the Firebird client. The
+NATIVE driver type is used to access the remote database server, the
+LOCAL type accesses the database server running on the same host by
+means of IPC. Performance of NATIVE driver is approximately 10% lower
+compared to the PURE_JAVA driver, but LOCAL type has up to 30% higher
+performance compared to the PURE_JAVA driver when connecting the server
+on the same host. This is mostly due to the fact that TCP/IP stack is
+not involved in this mode.
+
+In order to instantiate a connection using the NATIVE JDBC driver to
+connect to a remote server you have to use the following JDBC URL with
+new subprotocol:
+
+....
+jdbc:firebirdsql:native:host[/port]:<path to database>
+....
+
+When connecting to a local database server using the LOCAL driver, you
+should use following:
+
+....
+jdbc:firebirdsql:local:<absolute path to database>
+....
+
+In addition to Jaybird, this requires a native Firebird client library.
+
+===== Windows
+
+On Windows, you need to make sure that `fbclient.dll` is located on the
+`PATH` environment variable. Alternatively you can specify the directory
+containing this DLL in the `jna.library.path` system property.
+
+For example, if you put a copy of `fbclient.dll` in the current directory you have to use
+the following command to start Java:
+
+....
+java -Djna.library.path=. com.mycompany.MyClass
+....
+
+===== Linux
+
+On Linux, you need to make sure that `libfbclient.so` is available through 
+the `LD_PATH` environment variable.
+
+Usually shared libraries are stored in the `/usr/lib/` directory; however you will need 
+root permissions to install the library there. Note that some distributions will only have,
+for example, `libfbclient.so.2.5`. In that case you will need to add a symlink.
+
+Alternatively you can specify directory containing the library in the `jna.library.path` 
+Java system property. See the Windows example above for more details.
+
+===== Limitations
+
+*TODO* Section might be outdated
+
+Firebird client library is not thread-safe when connecting to a local
+database server using IPC. Jaybird provides the necessary
+synchronization in Java code using a static object instance. However,
+this static object instance is local to the classloader that has loaded
+the Jaybird classes.
+
+In order to guarantee correct synchronization , the Jaybird driver must
+be loaded by the top-most classloader. For example, when using the Type
+2 JDBC driver with a web or application server, you have to add the
+Jaybird classes to the main classpath (for example, to the `lib/`
+directory of your web or application server), but *not* to the web or
+J2EE application, e.g. the `WEB-INF/lib` directory.
+
+==== EMBEDDED type
+
+The Embedded server JDBC driver is the Type 2 JDBC driver that, rather
+than using the Firebird client library, loads the Firebird embedded server
+library instead. This is the highest performance type of JDBC driver for
+accessing local databases, as the Java code accesses the database file
+directly.
+
+In order to obtain a connection via DriverManager you have to use
+following URL:
+
+....
+jdbc:firebirdsql:embedded:<path to database>
+
+jdbc:firebirdsql:embedded:host[/port]:<path to database>
+....
+
+When host and, optionally, port is specified, embedded server acts as
+client library (i.e. you get the same Type 2 behavior as you would get
+with using "native").
+
+This driver tries to load `fbembed.dll/libfbembed.so` and `fbclient.dll/libfbclient.so`,
+the last - of course - only works if that fbclient provides Firebird embedded.
+
+See also the <<NATIVE and LOCAL types>> section.
+
+When using Firebird 3 embedded, you will need to make sure the necessary plugins like
+`engine12.dll/libengine12.so` are accessible to the client library, consult the 
+Firebird 3 documentation for more information. *TODO* Extend documentation
+
+===== Limitations
+
+*TODO* Section might be outdated
+
+The Firebird embedded server for Linux is not thread safe. Jaybird
+provides the needed synchronization in Java code, similar to the one
+described for the Type 2 JDBC driver. This implies the same restrictions
+on the classloader that will load the Jaybird classes.
+
+The Firebird embedded server for Windows opens databases in exclusive
+mode. This means that this particular database is accessible only to one
+Java virtual machine. _There is no exclusive mode on the POSIX platform.
+When the same database file is accessed by multiple JVM instances,
+database will be corrupted!_
+
+=== Connection Pooling
+
+Each time a connection is opened via `DriverManager`, a new physical
+connection to server is opened. It is closed when the connection is
+closed. In order to avoid the overhead of creating connections, you should use 
+a connection pool implementation can maintain a cache of open physical
+connections that can be reused between user sessions.
+
+=== The javax.sql.ConnectionPoolDataSource implementation
+
+WARNING: The code presented in this section is deprecated and not
+correct/typical usage
+
+`FBConnectionPoolDataSource` is an implementation of the
+`javax.sql.ConnectionPoolDataSource` interface, which is used by an
+application to obtain `PooledConnection` objects. A `PooledConnection`
+instance represents a physical connection to a database and is a source
+of logical connection. Closing a logical connection returns the physical
+connection back into the pool. Additionally, the logical connection
+provides caching of prepared statements, which improves application
+performance even more than connection pooling.
+
+Usually the connection pool is specified in web or application server
+configuration. However, you can instantiate it also inside the
+application.
+
+[source,java]
+.Example of instantiating and using the javax.sql.ConnectionPoolDataSource implementation
+----
+package hello;
+
+import java.sql.*;
+import javax.sql.*;
+import org.firebirdsql.pool.*;
+
+public class HelloConnectionPool {
+
+  public static void main(String[] args) throws Exception {
+  
+    org.firebirdsql.pool.FBConnectionPoolDataSource pool = 
+      new org.firebirdsql.pool.FBConnectionPoolDataSource(); // <1>
+      
+    pool.setMaxPoolSize(5); // <2>
+    pool.setMinPoolSize(2);
+    pool.setMaxStatements(10);
+    pool.setMaxIdleTime(30 * 60 * 60);
+    
+    pool.setDatabase("localhost/3050:C:/db/employee.fdb"); // <3>
+    pool.setUser("SYSDBA");
+    pool.setPassword("masterkey");
+    
+    // obtain a physical connection to the database
+    PooledConnection pooledCon = pool.getPooledConnection(); // <4>
+    
+    // obtain a wrapped connection    
+    Connection connection = pooledCon.getConnection(); // <5>
+    try {
+      // do something here...
+    } finally {
+      // release the connection back to pool
+      connection.close(); // <6>
+    }
+  }
+}
+----
+
+In the code above we perform the following steps:
+
+<1> Create a connection pool object. In this example we
+create instance implementing the `javax.sql.ConnectionPoolDataSource`
+interface.
+
+<2> Now we specify the pooling properties: maximum of 5
+physical connections, with minimum of 2, and each connection will
+maintain a cache of 10 prepared statements of the same type (i.e. with
+the same SQL). Connections in the pool that are idle for more than half
+an hour (30 * 60 * 60 seconds) are closed automatically.
+
+<3> After specifying the pooling properties we set the
+database connection properties. In our case that is only database path,
+user name and password, but also any other supported property can be set
+here.
+
+<4>  Having configured the data source, we obtain the physical
+connection to the database. Our data source implementation will check
+the internal connection pool and will open a new physical connection to
+the database if the pool is empty. An instance of
+`javax.sql.PooledConnection` represents a physical connection to the
+database. Calling the `PooledConnection.close()` method will close the
+physical connection to the database and will remove this connection from
+the pool.
+
+<5>  Now we obtain regular JDBC connection to the database and
+perform the needed work.
+
+<6>  At the end of processing we close the JDBC connection, but
+note that we do not close the physical connection, but simply forget the
+reference to it.
+
+Please pay especial attention to the steps 4, 5 and 6. They show the
+typical approach of using the JDBC connections in case of connection
+pooling. The step 4 is to some extent optional – if we use
+`javax.sql.DataSource` connection factory, it provides already wrapped
+JDBC connections doing the step 4 implicitly.
+
+However it must be a rule for an application to use the `try/finally`
+block to release the connection. In the XXX chapter we will discuss the
+transaction boundaries and how they can influence that connection
+handling, but for the code running in the J2EE environment the
+`try/finally` guarantees that connections are never leaked in the
+application code, the container will take care for the rest.
+
+List of all pool-related properties can be found in
+"<<Pool Properties>>" and "<<Runtime Pool Properties>>".
+
+=== Using FBConnectionPoolDataSource with JNDI
+
+WARNING: The code presented in this section is deprecated and not
+correct/typical usage
+
+Connection pooling is tightly coupled with the Java Naming and Directory
+Interface, which provides a network-transparent hierarchical mapping of
+the symbolic references to objects. As it was showed in
+<<Obtaining a connection via javax.sql.DataSource>>, pooled connections are obtained
+from JNDI using a symbolic reference, a JNDI name. When an application
+binds an object into JNDI, typically following happens:
+
+* If object implements `java.io.Serializable` interface, object is
+directly bound to the specified name. If application accesses the JNDI
+from the local JVM, a reference to the object bound in JNDI is returned.
+If application accesses the JNDI from remote JVM, a serialized copy of
+an object is sent over the wire to the remote node, where it is
+deserialized and returned to the application
+* If object implements `javax.naming.Referencable` interface, JNDI
+implementation binds the so-called reference instead of an object.
+Reference contains all necessary information to reconstruct the object
+regardless of the JVM in which this operation happens. This is performed
+with the help of so-called object factories. Object factory knows how to
+convert instance of `javax.naming.Reference` into an appropriate object.
+* If object implements none of the above mentioned interfaces, the
+behavior is undefined. Usually JNDI provider allows to access bind
+objects in local JVM, but when access happens in remote JVM, an
+exception is thrown.
+
+`FBConnectionPoolDataSource` implements both `java.io.Serializable`* and
+`javax.naming.Referencable` interfaces. The code below shows how to
+create and bind the JNDI reference for a `FBConnectionPoolDataSource`
+class:
+
+[source,java]
+.Example of initializing and binding FBConnectionPoolDataSource reference
+----
+package hello;
+
+import javax.naming.*;
+import org.firebirdsql.pool.*;
+
+public class HelloBindJndi {
+
+  public static void main(String[] args) throws Exception {
+  
+    Reference ref = new Reference(
+        "org.firebirdsql.pool.FBConnectionPoolDataSource"); // <1>
+        
+    ref.add(new StringRefAddr("maxPoolSize", "5")); // <2>
+    ref.add(new StringRefAddr("minPoolSize", "2"));
+    ref.add(new StringRefAddr("maxStatements", "10"));
+    ref.add(new StringRefAddr("maxIdleTime", "108000"));
+    
+    ref.add(new StringRefAddr("database",
+        "localhost/3050:C:/db/employee.fdb)); // <3>
+    ref.add(new StringRefAddr("user", "SYSDBA"));
+    ref.add(new StringRefAddr("password", "masterkey"));
+    
+    Context ctx = new InitialContext(); // <4>
+    ctx.bind("jdbc/test", ref);
+  }
+}
+----
+
+<1> Create reference instance for the
+`FBConnectionPoolDataSource`. According to the JNDI specification we
+could specify another type here, however the identifier specified here
+is used later by the object factory to check whether it is responsible
+for materializing the specified reference. Our object factory accepts
+only references with the ID equal to
+`"org.firebirdsql.pool.FBConnectionPoolDataSource"`.
+
+<2> Fill the pooling properties as reference addresses.
+
+<3> Fill the database connection properties. Steps 2 and 3
+look quite strange from the programming point of view, especially
+compared to the previous section. However, this approach is very elegant
+if we consider reading the configuration from the file. In this case we
+no longer have to use Java reflection to set needed properties – object
+factory does it for us.
+
+<4> Create JNDI initial context and bind the reference to
+the specified name.
+
+The next example shows how to access the FBConnectionDataSource bound in
+previous example:
+
+[source,java]
+.Example of accessing the FBConnectionPoolDataSource via reference
+----
+package hello;
+
+import java.util.*;
+import javax.naming.*;
+import org.firebirdsql.pool.*;
+
+public class HelloLookupJndiFactory {
+
+  public static void main(String[] args) throws Exception {
+  
+    Hashtable props = new Hashtable(); // <1>
+    
+    props.put(
+        "java.naming.factory.initial",
+        "com.sun.jndi.fscontext.RefFSContextFactory"); // <2>
+        
+    props.put(
+        "java.naming.factory.object", 
+        "org.firebirdsql.pool.FBConnectionPoolDataSource"); // <3>
+        
+    Context ctx = new InitialContext(props);
+    FBConnectionPoolDataSource pool = 
+      (FBConnectionPoolDataSource)ctx.lookup("jdbc/test"); // <4>
+  }
+}
+----
+
+<1> Create an environment for the JNDI initial context.
+
+<2> Specify the "java.naming.factory.initial" property. Our
+example uses Sun file system JNDI provider. In J2EE environment this
+property should match the one used by J2EE container. Additionally one
+has to specify the "java.naming.provider.url" when accessing remote JVM.
+
+<3> Specify the "java.naming.factory.object" property. In
+our case it contains only one object factory – our pool class itself. In
+J2EE environment one has to configure the environment correctly.
+
+<4> Create JNDI context and perform the JNDI lookup.
+
+=== The javax.sql.DataSource implementation
+
+WARNING: The code presented in this section is deprecated and not
+correct/typical usage
+
+The example before showed how to work with the Jaybird 2.1 connection
+pool. However, the `javax.sql.ConnectionPoolDataSource` is usually not
+accessible to the application code, as it provides the ability to
+manipulate physical connections. In a J2EE environment application
+accesses the instance of `javax.sql.DataSource` interfaces instead. This
+is usually done by wrapping the connection pool by a simple
+implementation of the latter interface. Jaybird 2.1 provides such
+implementation in `org.firebirdsql.pool.SimpleDataSource` class that
+takes `javax.sql.ConnectionPoolDataSource` as parameter in constructor.
+
+Additionally Jaybird 2.1 provides a class that can be used in the same
+was as the `FBConnectionPoolDataSource`. The next example shows how to
+instantiate `FBWrappingDataSource` implementation in a client
+application.
+
+[source,java]
+.Example of instantiating and using the javax.sql.DataSource implementation
+----
+package hello;
+
+import java.sql.*;
+import javax.sql.*;
+import org.firebirdsql.pool.*;
+
+public class HelloConnectionPool {
+
+  public static void main(String[] args) throws Exception {
+  
+    org.firebirdsql.pool.FBWrappingDataSource pool = 
+      new org.firebirdsql.pool.FBWrappingDataSource(); // <1>
+      
+    pool.setMaxPoolSize(5); // <2>
+    pool.setMinPoolSize(2);
+    pool.setMaxStatements(10);
+    pool.setMaxIdleTime(30 * 60 * 60);
+    
+    pool.setDatabase("localhost/3050:C:/db/employee.gdb"); // <3>
+    pool.setUser("SYSDBA");
+    pool.setPassword("masterkey");
+    
+    // no step 4 as in previous example // <4>
+    
+    // obtain a wrapped connection    
+    Connection connection = pool.getConnection(); // <5>
+    try {
+      // do something here...
+    } finally {
+      // release the connection back to pool
+      connection.close(); // <6>
+    }
+  }
+}
+----
+
+This class is called "wrapping" because it wraps the connection pool and
+delegates all calls to the underlying implementation. As you can see,
+the code is very similar to the example in
+<<The javax.sql.ConnectionPoolDataSource implementation>>, only few places are
+different. Please note, that there is no longer a step 4, the wrapper does
+this automatically in `getConnection()` method used in step 5.
+
+=== The javax.sql.XADataSource implementation
+
+WARNING: The code presented in this section is deprecated and not
+correct/typical usage
+
+JDBC 2.0 specification introduced the javax.sql.XADataSource interface
+that should be used to access connections that can participate in
+distributed transactions with JTA-compatible transaction coordinator.
+This gives applications possibility to use two-phase commit to
+synchronize multiple resource managers.
+
+Jaybird 2.1 does not have separate class, but FBConnectionPoolDataSource
+also implements the javax.sql.XADataSource interface. For information
+how to instantiate this class please see
+<<The javax.sql.ConnectionPoolDataSource implementation>>.
+
+Applications usually do not need to access the `javax.sql.XADataSource`
+directly, this is task for a J2EE container. Chapter XXX contains more
+detailed description of distributed transactions and contains code to
+access and manipulate connections that participate in distributed
+transactions.
+

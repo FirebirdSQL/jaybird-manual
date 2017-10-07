@@ -1,0 +1,292 @@
+[[characterencoding]]
+[appendix]
+== Character Encodings
+
+Character encodings and their correct use with Firebird RDBMS from Java
+is an important topic, that initially seems to be complex, but in fact
+can be formulated by just a few rules. This appendix provides
+information on this topic.
+
+=== Encodings Types
+
+Firebird uses character encodings in two different areas:
+
+* The database encoding defines a character set in which all `CHAR`,
+`VARCHAR` and `BLOB SUB_TYPE 1` fields are physically stored on the disk.
+There is a default database encoding that is specified during database
+creation. It is also possible to specify character sets on per column
+basis.
+* The client connection encoding defines a character set in which client
+will send and expects to receive character data. This encoding might or
+might not match the database default encoding.
+
+The Firebird RDBMS performs translation between character sets of the
+client connection and the character set of the content. The list of
+allowed character sets as well as the allowed translations between them
+are specified in the `fbintl` shared libraryfootnote:[On Windows this
+library is represented by `fbintl.dll`, on Linux – `libfbintl.so`.]
+located in the `intl/` directory of the Firebird installation. There is
+also a special character set NONE that tells RDBMS not to interpret the
+contents of the character field.
+
+Firebird uses following algorithm when performing translations:
+
+* If source and target character sets match, send the content unchanged.
+* If the target character set is "NONE", send source content unchanged.
+* If the source character set is "NONE", send source content unchanged.
+* If there is a direct translation rule between source and target
+character sets, use that rule.
+* If there is no direct translation rule, check if there is rule to
+translate the source character set into the UTF8 character set and a
+rule to translate from UTF8 into the target character set. If yes, use
+these two rules for translation.
+* If no suitable translation rule can be found, throw an exception.
+
+=== Encodings in Java
+
+Java programming language is based on the Unicode character set and uses
+the UTF-16 encoding, in which each character is represented by one or
+two 16-bit units. The Firebird, on the other side, is not based on
+Unicode and allows different character sets to be assigned to different
+database objects. Additionally, Firebird requires a connection character
+set to be specified in connection options, which forces Firebird to
+convert data from the character set of the database object into the
+character set of the client application.
+
+There are two boundary cases that we will consider here, one when
+Firebird database was created with defaultfootnote:[The default
+character set simplifies the explanation, since we do not have to
+consider the cases when different columns with different character sets
+are used within the same connection. The statements made here,
+obviously, can be applied to those cases as well.] character set UTF8,
+another when Firebird database was created without specifying the
+character set (i.e. character set NONE).
+
+The UTF8 in Firebird 2.0 is a Unicode character set that uses UTF-8
+encoding and occupies from one to four 8-bit units. Firebird supported
+Unicode character set for a long time, however its implementation was
+deficient – it did not support proper uppercasing and correct sorting.
+These issues were addressed in the Firebird 2.0 release and at the
+moment nothing prevents developers from using Unicode in the database
+and on the client side, which greatly simplifies the
+internationalization and localization of the applications. Jaybird JDBC
+driver properly supports Firebird 2.0 since version
+2.1.0footnote:[Jaybird provided character set conversion from the very
+beginning, however Jaybird versions prior to 2.1.0 know nothing about
+improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was
+released almost a year before Firebird 2.0 was released.].
+
+==== The UTF8 character set
+
+Software developer must ensure two things to enable use of Unicode
+characters in the database and the application:
+
+* the database objects must be defined with the UTF8 character set; this
+can be done by either creating database with default UTF8 character set
+or by adding `CHARACTER SET UTF8` clause to the column or domain
+definitions.
+* the `encoding` connection property in the JDBC driver has to be set to
+UTF8; this can be done several ways: the he easiest one is to add the
+appropriate parameter to the JDBC URL (see the first example). Another
+possibility is to use appropriate method of the `DriverManager` class
+(see the second example). The applications that use `DataSource`
+interface to obtain the database connections also have access to the
+`encoding` propertyfootnote:[See https://github.com/FirebirdSQL/jaybird/wiki for configuration examples of the most popular application servers.].
+
+[source,java]
+.Specifying the connection encoding in JDBC URL
+----
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Connection connection = DriverManager.getConnection(
+  "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
+  "SYSDBA", "masterkey");
+----
+
+[source,java]
+.Specifying connection encoding in the connection properties
+----
+Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+Properties props = new Properties();
+
+props.setProperty("user", "SYSDBA"); 
+props.setProperty("password", "masterkey"); 
+props.setProperty("encoding", "UTF8");
+
+Connection connection = DriverManager.getConnection(
+    "jdbc:firebirdsql:localhost/3050:employee", props);
+----
+
+There are few limitations related to using the UTF8 character set:
+
+* it is not possible to create Unicode columns longer than 8191 Unicode
+characters; this limitation is caused by the fact that the longest
+possible `VARCHAR` column can occupy 32765 bytes (32767 for `CHAR` columns)
+and single UTF8 character can occupy maximum four bytes.
+* it is not possible to index Unicode columns longer than 1023
+characters; this limitation is caused by the fact that the longest index
+key cannot be longer than a quarter of the database page, which in
+Firebird 2.0 can be maximum 16k and the before mentioned fact that each
+UTF8 character can occupy up to four bytes.
+
+Also it should be mentioned, that using Unicode character set might
+cause noticeable performance degradation when database is used over the
+wide-area networks. This mainly applies to the cases when Cyrillic
+characters are stored in the database, since each character would occupy
+two bytes of the network packet, which in turn might cause additional
+roudtrips to the server to fetch data.
+
+==== The NONE character set
+
+Java introduces additional complexity when the NONE character set is
+used. The reason for this is that Java internally stores all strings in
+Unicode format, and the application must define the character encoding
+for the byte contents to the JVM. When the NONE character set is used,
+the driver does not know how to interpret the received data. The only
+choice that is left to the driver is to construct a string using the
+default character set of the JVM, which usually matches the regional
+settings of the operating system and can be accessed from within the JVM
+through the `file.encoding` system property.
+
+It is clear that the conversion using default character set that happens
+inside the JVM can lead to errors when the same content is accessed from
+two or more different Java Virtual Machines that have different
+configuration. One application running on the computer with, for
+example, Russian regional settings saves the Russian text (the default
+character set of the JVM is Cp1251) and another application running on
+computer with German regional settings (default character set is Cp1252)
+will read in such case some special or accented characters. However,
+when all client applications run same OS with the same regional settings
+in most cases will not have any severe consequences (except probably
+wrong sorting order or uppercasing on the server side).
+
+On Linux and other Unix platforms it might have more severe consequences
+as it is very common that regional settings are not configured and that
+the default "C" locale is used and the non-ASCII characters will be
+replaced with question marks ("?").
+
+Therefore, application should use NONE character encoding as an encoding
+for a database and a connection only when at least one of the following
+is met:
+
+* Database will contain only ASCII characters
+* It is guaranteed that all Java Virtual Machines accessing the database
+will have the same default encoding that can correctly handle all
+characters stored in the database.
+
+As a partial workaround one can specify the encoding that should be used
+to interpret bytes coming from the server in the `charSet` connection
+property. The following rules are used when interpreting the `encoding`
+and `charSet` properties:
+
+* When only `encoding` property specified, driver uses the default
+mapping between server and Java encodings. When `encoding` property is
+not set or set to NONE and `charSet` property is not set, the default
+JVM encoding is used to interpret bytes coming from the server.
+* When only `charSet` property is specified, driver uses the reverse
+mapping to specify the connection encoding for the server and interprets
+byte stream according to the value of the property.
+* When both `encoding` and `charSet` property are specified, driver sets
+the connection encoding according to the value of the `encoding`
+property, but interprets the byte stream according to the `charSet`
+property.
+
+The last case is most powerful, but also is the most dangerous in use.
+When used properly, it can solve the problems with the legacy databases;
+when used incorrectly, one can easily trash the content of the database.
+
+=== Available Encodings
+
+The below table lists the available character encodings in the default
+Firebird distribution and their mapping to the Java ones:
+
+[cols="2,2,1,5",options="header",]
+|=======================================================================
+|Firebird encoding (`encoding` property) |Java encoding (`charSet` property) |Size in bytes |Comments
+
+|NONE |- |1 |Raw bytes, no interpretation of the content is possible.
+
+|ASCII |ASCII |1 |-
+
+|BIG_5 |Big5 |2 |Traditional Chinese
+
+|DOS437 |Cp437 |1 |MS-DOS: United States, Australia, New Zeland, South
+Africa
+
+|DOS737 |Cp737 |1 |MS-DOS: Greek
+
+|DOS775 |Cp775 |1 |MS-DOS: Baltic
+
+|DOS850 |Cp850 |1 |MS-DOS: Latin-1
+
+|DOS852 |Cp852 |1 |MS-DOS: Latin-2
+
+|DOS857 |Cp857 |1 |IBM: Turkish
+
+|DOS858 |Cp858 |1 |IBM: Latin-1 + Euro
+
+|DOS860 |Cp860 |1 |MS-DOS: Portuguese
+
+|DOS861 |Cp861 |1 |MS-DOS: Icelandic
+
+|DOS862 |Cp862 |1 |IBM: Hebrew
+
+|DOS863 |Cp863 |1 |MS-DOS: Canadian French
+
+|DOS864 |Cp864 |1 |IBM: Arabic
+
+|DOS865 |Cp865 |1 |MS-DOS: Nordic
+
+|DOS866 |Cp866 |1 |IBM: Cyrillic
+
+|DOS869 |Cp869 |1 |IBM: Modern Greek
+
+|EUCJ_0208 |EUC_JP |2 |JIS X 0201, 0208, 0212, EUC encoding, Japanese
+
+|GB_2312 |EUC_CN |2 |GB2312, EUC encoding, Simplified Chinese
+
+|ISO8859_1 |ISO-8859-1 |1 |ISO 8859-1, Latin alphabet No. 1
+
+|ISO8859_2 |ISO-8859-2 |1 |ISO 8859-2
+
+|ISO8859_3 |ISO-8859-3 |1 |ISO 8859-3
+
+|ISO8859_4 |ISO-8859-4 |1 |ISO 8859-4
+
+|ISO8859_5 |ISO-8859-5 |1 |ISO 8859-5
+
+|ISO8859_6 |ISO-8859-6 |1 |ISO 8859-6
+
+|ISO8859_7 |ISO-8859-7 |1 |ISO 8859-7
+
+|ISO8859_8 |ISO-8859-8 |1 |ISO 8859-8
+
+|ISO8859_9 |ISO-8859-9 |1 |ISO 8859-9
+
+|ISO8859_13 |ISO-8859-13 |1 |ISO 8859-13
+
+|KSC_5601 |MS949 |2 |Windows Korean
+
+|UNICODE_FSS |UTF-8 |3 |8-bit Unicode Transformation Format (deprecated
+since FB 2.0)
+
+|UTF8 |UTF-8 |4 |8-bit Unicode Transformation Format (FB 2.0+)
+
+|WIN1250 |Cp1250 |1 |Windows Eastern European
+
+|WIN1251 |Cp1251 |1 |Windows Cyrillic
+
+|WIN1252 |Cp1252 |1 |Windows Latin-1
+
+|WIN1253 |Cp1253 |1 |Windows Greek
+
+|WIN1254 |Cp1254 |1 |Windows Turkish
+
+|WIN1255 |Cp1255 |1 |-
+
+|WIN1256 |Cp1256 |1 |-
+
+|WIN1257 |Cp1257 |1 |-
+|=======================================================================
+

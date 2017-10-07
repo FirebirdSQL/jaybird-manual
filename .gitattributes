@@ -1,6 +1,8 @@
 * text=auto
 
 *.gradle        text
+*.adoc          text
+*.asciidoc      text
 *.css           text
 *.df            text
 *.htm           text

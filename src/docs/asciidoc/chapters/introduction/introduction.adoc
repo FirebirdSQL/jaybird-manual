@@ -1,0 +1,206 @@
+[[introduction]]
+== Introduction
+
+Jaybird is a JCA/JDBC driver suite to connect to Firebird database
+server. When Borland released an open-source version of the InterBase
+RDBMS, it included sources for a type 3 JDBC driver called InterClient.
+However due to some inherent limitations of the InterBase (and later
+Firebird) client library, it was decided that the type 3 driver was a
+dead end, and the Firebird team developed a pure Java implementation of
+the wire protocol. This implementation became the basis for Jaybird, a
+pure Java driver for Firebird relational database.
+
+This driver is based on both the new JCA standard for application server
+connections to enterprise information systems and the well known JDBC
+standard. The JCA standard specifies an architecture in which an
+application server can cooperate with a driver so that the application
+server manages transactions, security, and resource pooling, and the
+driver supplies only the connection functionality.
+
+This manual covers Jaybird {jaybird-version} and uses Java 8 specific features, but most 
+examples and information also applies to previous versions.
+
+=== Jaybird Architecture
+
+The Jaybird driver consists of three layers, each of which is
+responsible for its part of the functionality.
+
+* The GDS layer represents a Java translation of the Firebird API. It is
+represented by a number of interfaces and classes from the 
+`org.firebirdsql.gds` package (and sub-packages).
++
+This API is implemented by a number of plugins that provide the pure java, native,
+local and embedded implementations of the driver.
+* The JCA layer represents the heart of the driver. Here all connection
+and transaction management happens. Additionally this layer adapts the
+GDS API and proxies the calls to the GDS implementation.
+* The JDBC layer is an implementation of the JDBC specification.
+
+In addition, the Services API allows you to manage the database and the server 
+itself. The Manager component represents a JMX 1.0 compatible implementation
+that utilizes the Services API. Currently only calls to create and drop database 
+are available in the Manager component, but in the future a full range of 
+services will be made public: database backup/restore, user management, 
+statistics gathering, etc.
+
+=== Supported Servers
+
+Jaybird 3.0 supports Firebird 2.0 and higher.
+
+=== Supported Specifications
+
+Jaybird supports the following specifications:
+
+[width="100%",cols="1,3",options="header",]
+|=======================================================================
+|Specification |Details
+|JDBC 4.3 
+|Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird. 
+It is not officially JDBC compliant, because we currently don't have access to the TCK.
+
+|JCA 1.5 
+|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related 
+interfaces. CCI interfaces are not supported.
+
+|JTA
+|The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
+framework and a `javax.sql.XADataSource` implementation.
+
+|JAAS 1.0 
+|**TODO** Is it?
+
+|JMX 1.2 
+|Jaybird provides an MBean that allows creating and dropping databases via a JMX agent.
+|=======================================================================
+
+=== Distribution
+
+The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
+generated key retrieval.
+
+==== Distribution package
+
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
+
+The following files can be found in the distribution package:
+
+[cols="2,5",options="header",]
+|=======================================================================
+|File name |Description
+|`jaybird-{jaybird-full-version}.jar` 
+|An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
+management classes.
+
+|`jaybird-full-{jaybird-full-version}.jar` 
+|Same as above, but including the JCA 1.5 dependency.
+
+| `lib/antlr-runtime-4.6.jar`
+| Optional dependency, required if you want to use `getGeneratedKeys` support
+
+| `lib/connector-api-1.5.jar`
+| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
+
+| `lib/jna-4.2.2.jar`
+| Optional dependency, required if you want to use Type 2 native, local or embedded protocols
+
+|=======================================================================
+
+==== Maven
+
+Alternatively, you can use maven to automatically download Jaybird and its 
+dependencies.
+
+Jaybird {jaybird-version} is available from Maven central:
+
+Groupid: `org.firebirdsql.jdbc`, +
+Artifactid: `jaybird-jdkXX` (where `XX` is `17` or `18`). +
+Version: `{jaybird-full-version}`
+
+For example:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>org.firebirdsql.jdbc</groupId>
+    <artifactId>jaybird-jdk18</artifactId>
+    <version>{jaybird-full-version}</version>
+</dependency>
+----
+
+If your application is deployed to a Java EE application server, you will need to
+exclude the `javax.resource:connector-api` dependency, and add it as a provided 
+dependency:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>org.firebirdsql.jdbc</groupId>
+    <artifactId>jaybird-jdk18</artifactId>
+    <version>{jaybird-full-version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector-api</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>javax.resource</groupId>
+    <artifactId>connector-api</artifactId>
+    <version>1.5</version>
+    <scope>provided</scope>
+</dependency>
+----
+
+If you want to use Type 2 support (native, local or embedded), you need to 
+explicitly include JNA 4.2.2 as a dependency:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.java.dev.jna</groupId>
+    <artifactId>jna</artifactId>
+    <version>4.2.2</version>
+</dependency>
+----
+
+We plan to make native and embedded support a separate library in future 
+releases, and provide Firebird client libraries as Maven dependencies as well.
+
+=== Quality Assurance
+
+The Jaybird team uses JUnit test cases to assure the quality of the released 
+driver. Also during development unit tests are extensively used. It is not 
+allowed to commit a code to the source control until it passes all existing unit
+tests. Also each reproducible bug usually gets its own test case. This guarantees
+that a clean check out can be compiled and will not contain any previously 
+discovered and fixed bug. Currently there are more than 3800 test cases covering 
+most of the driver code.
+
+=== Useful resources
+
+==== JDBC
+
+For extensive JDBC documentation, see the "Documentation" section of Oracle's website http://www.oracle.com/technetwork/java/javase/jdbc/index.html.
+
+==== Firebird
+
+General information about the Firebird database is available from the Firebird web site (http://www.firebirdsql.org/).
+
+Information about using SQL in Firebird, see the http://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html[Firebird 2.5 Language Reference] 
+and other documents, that are available for download from the http://www.firebirdsql.org/en/reference-manuals/[Reference Manuals] section 
+of the Firebird web site.
+
+==== Jaybird Support
+
+* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki].
++
+This is a place where the community shares information about different aspects of Jaybird usage,
+configuration examples for different applications/servers, tips and tricks, FAQ, etc.
+* On http://stackoverflow.com/[Stack Overflow], please tag your questions with 
+*jaybird* and *firebird*
+* The http://groups.yahoo.com/group/Firebird-Java[Firebird-Java group] and corresponding mailing 
+list firebird-java@yahoogroups.com
++
+You can subscribe to the mailing list by sending an email to firebird-java-subscribe@yahoogroups.com
+

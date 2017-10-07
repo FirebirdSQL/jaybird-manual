@@ -1,0 +1,754 @@
+[[services]]
+== Working with Services
+
+Additionally to the normal database connections Firebird features the
+server-wide connections. These are used to perform various
+administrative tasks in Firebird, e.g. database backup, maintenance,
+statistics. The set of API calls to perform such tasks are known under
+the name "Services API". Additionally client application can use the
+Services API to get some limited information about the server
+environment and configuration.
+
+The actual execution of the Services API calls can be viewed as a tasks
+triggered from the client application to be executed on server. The
+parameters passed in the calls are internally used to construct the
+string similar to the one that is passed to command-line tools. Later
+this string is passed into entry routine of the gbak, gfix, gsec or
+gstat utility. The output of the utility, which in normal case is
+printed to standard out, is in this case transmitted over the network to
+the client application.
+
+Jaybird JCA/JDBC driver hides the complexity of the original API
+providing a set of interfaces and their implementations to perform the
+administrative tasks regardless of the usage mode (i.e. remote server
+and embedded engine, wire protocol and access via native client
+library).
+
+This chapter describes the available Java API for the administrative
+tasks. All classes and interfaces described below are defined in the
+`org.firebirdsql.management` package. Each management class works as a
+standalone object and does not require an open connection to the server.
+
+=== ServiceManager
+
+The `ServiceManager` interface and the `FBServiceManager` class are
+defined as the common superclasses providing setters and getters for
+common properties as well as some common routines. The following
+properties can be specified:
+
+[cols="1,2,4",options="header",]
+|=======================================================================
+|Name |Type |Description
+
+|`host` 
+|`java.lang.String` 
+|Name or the IP address of the host to which we make the Service API request. __Required__.
+
+|`port` 
+|`int` 
+|Port to which we make the request, 3050 by default.
+
+|`database` 
+|`java.lang.String` 
+|Path to the database. 
+The meaning of the property depends on the service being invoked and will be described in each of chapters below.
+
+|`user` 
+|`java.lang.String` 
+|Name of the user on behalf of which which all Service API calls will be executed. __Required__.
+
+|`password` 
+|`java.lang.String` 
+|Password corresponding to the specified user. _Required._
+
+|`logger` 
+|`java.io.OutputStream` 
+|Stream into which the output of the remote service will be written to. __Optional__.
+|=======================================================================
+
+The last parameter requires some more information. The calls to all
+Services API routines are asynchronous. The client application can start
+the call, but there are no other means to find out whether execution of
+the service call is finished or not except reading the output of the
+service call – EOF in this case means that execution is finished.
+
+The `FBServiceManager` converts the asynchronous calls into synchronous
+by constantly polling the service output stream. If `logger` property is
+specified the received data are copied into the specified
+`OutputStream`, otherwise it is simply ignored and the EOF-marker is
+being watched.
+
+This behavior can be changed by overriding the appropriate method in the
+`FBServiceManager` class and/or subclasses. The only requirement is to
+detach from the service manager when it is no longer needed.
+
+=== Backup and restore
+
+The backup and restore routines are defined in the `BackupManager`
+interface and are implemented in the `FBBackupManager` class.
+Additionally to the setters and getters described in the previous
+section the following methods are used to specify the backup and restore
+paths and properties:
+
+[cols="2,1,4",options="header",]
+|=======================================================================
+|Name |Type |Description
+
+|`database` 
+|`String` 
+|For backup operation it specifies the path to the database to backup.
+
+For restore operation it specifies the path to the database into which the backup file will be restored. 
+In case when multi-file database should be created, use `addRestorePath(String, int)` method instead.
+
+|`backupPath` 
+|`String` 
+|Path to the backup file. 
+For backup operation specifies the path and the file name of the newly created backup file.
+If multi-file backup files are to be created, use `addBackupPath(String, int)` method instead. 
+For restore operations specifies path to the single backup file. 
+If database should be restored from multi-file backup, please use the `addBackupPath(String)` method instead.
+
+|`restorePageBufferCount` 
+|`int` 
+|Number of pages that will be cached of this particular database. 
+Should be used only for restore operation.
+
+|`restorePageSize` 
+|`int` 
+|Size of the database page. 
+Should be used only for restore operation. 
+Valid values depend on the Firebird version, but should be one of the 1024, 2048, 4096 or 8192.
+
+|`restoreReadOnly` 
+|`boolean` 
+|Set to `true` if the database should be restored in read-only mode.
+
+|`restoreReplace` 
+|`boolean` 
+| Set to `true` if restore should replace the existing database with the one from backup.
+
+*Warning!* It is easy to drop the only existing database if the backup can't be restored, as the existing database is first deleted and only after that the restore process starts. 
+To avoid such situation it is recommended to restore database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
+
+|`verbose` 
+|`boolean` 
+|Be verbose when writing to the log. 
+The service called on the server will produce lots of output that will be written to the output stream specified in logger property.
+|=======================================================================
+
+Additionally to the properties following methods are used to configure
+the paths to backup and database files when multi-file backup or restore
+operations are used.
+
+[cols="3,4",]
+|=======================================================================
+|Method |Description
+
+|`addBackupPath(String)` 
+|Add a path to a backup file from a multi-file backup. 
+Should be used for restore operation only.
+
+|`addBackupPath(String, int)` 
+|Add a path to the multi-file backup. 
+The second parameter specifies the maximum size of the particular file in bytes. 
+Should be used for backup operation only.
+
+|`addRestorePath(String, int)` 
+|Add a path for the multi-file database.
+The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by `restorePageSize` parameter)
+
+|`clearBackupPaths()` 
+|Clear all the specified backup paths. 
+This method also clears the path specified in `backupPath` property.
+
+|`clearRestorePaths()` 
+|Clear all the specified restore paths. 
+This method also clears the path specified in the database property.
+|=======================================================================
+
+****
+_Please note, all paths that are specified are paths specifications on
+the remote server. This has following implications: a) it is not
+possible to backup to the local or network drive unless it is mounted on
+the remote server; b) it is not possible to restore from the local or
+network drive unless it is mounted on the remote server._
+****
+
+After specifying all the needed properties application developer can use
+`backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods
+to perform the backup and restore tasks. These methods will block until
+the operation is finished. If the `logger` property was set, the output
+of the service will be written into the specified output stream,
+otherwise it will be ignoredfootnote:[The output of the service is
+always transferred over the network regardless whether the logger
+property is set or not. Additionally to providing a possibility to the
+user to track the service progress it acts also as a signal of operation
+completion – in this case the Java code will receive an EOF marker.].
+
+[source,java]
+.Example of backup and restore process
+----
+// backup the database
+BackupManager backupManager = new FBBackupManager();
+
+backupManager.setHost("localhost");
+backupManager.setPort(3050);
+backupManager.setUser("SYSDBA");
+backupManager.setPassword("masterkey");
+backupManager.setLogger(System.out);
+backupManager.setVerbose(true);
+
+backupManager.setDatabase("C:/database/employee.fdb");
+backupManager.setBackupPath("C:/database/employee.fbk");
+
+backupManager.backupDatabase();
+...
+// and restore it back
+BackupManager restoreManager = new FBBackupManager();
+
+restoreManager.setHost("localhost");
+restoreManager.setPort(3050);
+restoreManager.setUser("SYSDBA");
+restoreManager.setPassword("masterkey");
+restoreManager.setLogger(System.out);
+restoreManager.setVerbose(true);
+
+restoreManager.setRestoreReplace(true); // attention!!!
+
+restoreManager.setDatabase("C:/database/employee.fdb");
+restoreManager.setBackupPath("C:/database/employee.fbk");
+
+backupManager.restoreDatabase();
+----
+
+The methods `backupDatabase(int)` and `restoreDatabase(int)` provide a
+possibility to specify additional backup and restore options that cannot
+be specified via the properties of this class. The parameter value is
+bitwise combination of the following constants:
+
+[cols="3,4",options="header",]
+|=======================================================================
+|Constant |Description
+|BACKUP_CONVERT 
+|Backup external files as tables.
+
+By default external tables are not backed up, only references to the external files with data are stored in the backup file. 
+When this option is used, the backup will store the external table as if they were regular tables. 
+After restore the tables will remain regular tables.
+
+|BACKUP_EXPAND 
+|No data compression.
+
+The gbak utility uses RLE compression for the strings in backup file.
+Using this option tells it to write strings in their full length, possibly fully consisting of empty characters, etc.
+
+|BACKUP_IGNORE_CHECKSUMS 
+|Ignore checksums.
+
+The backup utility can't backup a database with page checksum errors.
+Such database is considered corrupted and the completeness and correctness of the backup cannot be guaranteed.
+However in some cases such errors can be ignored, e.g. when the index page is corrupted.
+In such case the data in the database are ok and the error disappears when the database is restored and index is recreated.
+
+Use this option only when checksum errors are detected and can't be corrected without full backup/restore cycle.
+Ensure that the restored database contains correct data afterwards.
+
+|BACKUP_IGNORE_LIMBO 
+|Ignore in-limbo transactions.
+
+The backup utility can't backup database with in-limbo transactions.
+When such situation appears, backup has to wait until the decision about the outcome of the in-limbo transaction.
+After some timeout exception is thrown and backup is aborted.
+This option allows to workaround this situation – the gbak looks for the most recent committed version of the record and writes it into backup.
+
+|BACKUP_METADATA_ONLY 
+|Backup metadata only.
+
+When this option is specified, the backup utility backups only the metadata information (e.g. table an/or view structure, stored procedures, etc.), but no data are backed up.
+This allows restoring a clean database from the backup.
+
+|BACKUP_NO_GARBAGE_COLLECT 
+|Do not collect garbage during backup.
+
+The backup process reads all records in the tables one by one.
+When cooperative garbage collection is enabledfootnote:[Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can't be switched off in ClassicServer architecture and in previous Firebird versions.] the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
+This process is time consuming and might be switched off when creating backup, where
+the most recent version will be read.
+
+Later operator can restore the database from the backup. 
+In databases with many backversions of the records, the backup-restore cycle can be
+faster than traditional garbage collection.
+
+|BACKUP_NON_TRANSPORTABLE 
+|Use non-transportable backup format.
+
+By default gbak creates so-called transportable backup where it does not make difference whether it is later restored on the platform with big or little endianess.
+By using this option a non-transportable format will be used which allows restoring the database only on the same architecture.
+
+|BACKUP_OLD_DESCRIPTIONS 
+|Save old style metadata descriptions.
+
+Actually no real information exist for this option, by default it is switched off.
+
+|RESTORE_DEACTIVATE_INDEX 
+|Deactivate indexes during restore.
+
+By default indexes are created at the beginning of the restore process and they are updated with each record being restored from the backup file.
+On a big tables it is more efficient first to store data in the database and to update the index afterwards.
+When this option is specified, the indexes will be restored in the inactive state.
+Application is however required to activate indexes afterwards, it won't happen automatically.
+
+|RESTORE_NO_SHADOW 
+|Do not restore shadow database.
+
+If the shadow database is configured, an absolute path to the shadow is stored in the backup file.
+If such backup file is restored on a different system where such path does not exist (e.g. moving database from Windows to Linux or otherwise), restore process will fail.
+Using this option allows to overcome such situation.
+
+|RESTORE_NO_VALIDITY 
+|Do not restore validity constraints.
+
+This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraintsfootnote:[All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.].
+
+When this option is specified, the validity constraints won't be restored.
+This allows to recover the data and perform cleanup tasks.
+Application and/or administrators are responsible for restoring the validity constrains afterwards.
+
+|RESTORE_ONE_AT_A_TIME 
+|Commit after completing restore of each table.
+
+By default all data are restored in one transaction.
+If for some reason the complete restore is not possible, using this option will allow to restore at least some of the data.
+
+|RESTORE_USE_ALL_SPACE
+|Do not reserve 20% on each page for the future versions, useful for read-only databases.
+|=======================================================================
+
+Example of using these options:
+
+[source,java]
+.Example of using extended options for restore
+----
+BackupManager restoreManager = new FBBackupManager();
+
+restoreManager.setHost("localhost");
+restoreManager.setPort(3050);
+restoreManager.setUser("SYSDBA");
+restoreManager.setPassword("masterkey");
+restoreManager.setLogger(System.out);
+restoreManager.setVerbose(true);
+
+restoreManager.setRestoreReplace(true); // attention!!!
+
+restoreManager.setDatabase("C:/database/employee.fdb");
+restoreManager.setBackupPath("C:/database/employee.fbk");
+
+// restore database with no indexes, 
+// validity constraints and shadow database
+backupManager.restoreDatabase(
+    BackupManager.RESTORE_DEACTIVATE_INDEX |
+      BackupManager.RESTORE_NO_VALIDITY |
+      BackupManager.RESTORE_NO_SHADOW |
+      BackupManager.RESTORE_ONE_AT_A_TIME);
+----
+
+=== User management
+
+The next service available is the user management. The routines are
+defined in the `UserManager` interface and are implemented in the
+`FBUserManager` class. Additionally, there is an `User` interface
+providing getters and setters for properties of a user account on the
+server and corresponding implementation in the `FBUser`footnote:[The
+class implementation is simple bean publishing the properties via
+getters and setters. You can replace it with any other implementation of
+User interface.] class. The available properties of the `FBUser` class
+are:
+
+[cols="2,1,4",options="header",]
+|=======================================================================
+|Name |Type |Description
+
+|`userName` 
+|`String` 
+|Unique name of the user on the Firebird server. Required.
+Maximum length is 31 byte.
+
+|`password` 
+|`String` 
+|Corresponding password. 
+Getter return value only if the password had been set
+
+|`firstName` 
+|`String` 
+|First name of the user. Optional.
+
+|`middleName` 
+|`String` 
+|Middle name of the user. Optional.
+
+|`lastName` 
+|`String` 
+|Last name of the user. Optional.
+
+|`userId` 
+|`int` 
+|ID of the user on Unix. Optional.
+
+|`groupId` 
+|`int` 
+|ID of the group on Unix. Optional.
+|=======================================================================
+
+The management class, `FBUserManager` has following methods to
+manipulate the user accounts on the server:
+
+[cols="3,4",options="header",]
+|=======================================================================
+|Method |Description
+
+|`getUsers():Map` 
+|Method delivers a map containing user names as keys and instances of `FBUser` class as values containing all users that are registered on the server. 
+The instances of `FBUser` class do not contain passwords, the corresponding property is `null`.
+
+|`addUser(User)` 
+|Register the user account on the server.
+
+|`updateUser(User)` 
+|Update the user account on the server.
+
+|`deleteUser(User)` 
+|Delete the user account on the server.
+|=======================================================================
+
+An example of using the `FBUserManager` class:
+
+[source,java]
+.Example of FBUserManager class usage
+----
+UserManager userManager = new FBUserManager();
+
+userManager.setHost("localhost");
+userManager.setPort(3050);
+userManager.setUser("SYSDBA");
+userManager.setPassword("masterkey");
+
+User user = new FBUser();
+user.setUserName("TESTUSER123");
+user.setPassword("test123");
+user.setFirstName("John");
+user.setMiddleName("W.");
+user.setLastName("Doe");
+
+userManager.add(user);
+----
+
+=== Database maintenance
+
+The database maintenance is something that everybody would prefer to
+avoid, and, contrary to the backup/restore and user management
+procedures, there little automation that can be done here. Usually the
+maintenance tasks are performed on the server by the database
+administrator, but some routines are needed to perform the automated
+database upgrade or perform periodic checks of the database validity.
+
+This chapter describes the methods declared in the `MaintenanceManager`
+interface and its implementation, the `FBMaintenanceManager` class.
+
+==== Database shutdown and restart
+
+One of the most often used maintenance operations is database shutdown
+and/or bringing it back online. When the database was shutdown only the
+user that initiated the shutdown, either SYSDBA or database owner, can
+connect to the database and perform other tasks, e.g. metadata
+modification or database validation and repair.
+
+The database shutdown is performed by `shutdownDatabase(int, int)`
+method. The first parameter is the shutdown mode, the second – maximum
+allowed time for operation.
+
+There are three shutdown modes:
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Shutdown mode |Description
+
+|`SHUTDOWN_ATTACH` 
+|The shutdown process is initiated and it is not possible to obtain a new connection to the database but the currently open connections are fully functional.
+
+When after the maximum allowed time for operation there are still open connections to the database, the shutdown process is aborted.
+
+|`SHUTDOWN_TRANSACTIONAL` 
+|The shutdown process is started and it is not possible to start new transactions or open new connections to the database.
+The transactions that were running at the time of shutdown initiation are fully functional.
+
+When after the maximum allowed time for operation there are still running transactions, the shutdown process is aborted.
+
+If no running transactions are found, the currently open connections are allowed to disconnect.
+
+|`SHUTDOWN_FORCE` 
+|The shutdown process is started and will be completed before or when the maximum allowed time for operation is reached.
+New connections and transactions are not prohibited during the wait.
+
+After that any running transaction won't be able to commit.
+
+|=======================================================================
+
+After database was shutdown, the owner of the database or SYSDBA can
+connect to it and perform maintenance tasks, e.g. migration to the new
+data modelfootnote:[Until Firebird 2.0 adding a foreign key constraint
+required an exclusive access to the database.], validation of the
+database, changing the database file configuration.
+
+To bring system back online use the `bringDatabaseOnline()` method.
+
+==== Shadow configuration
+
+Database shadow is an in-sync copy of the database that is usually
+stored on a different hard disk, possibly on remote
+computerfootnote:[Currently possible only on Unix platforms by using the
+NFS shares.], which can be used as a primary database if the main
+database server crashes. Shadows can be defined using `CREATE SHADOW`
+SQL command and are characterized by a _mode_ parameter:
+
+* in the AUTO mode database continues operating even if shadow becomes
+unavailable (disk or file system failure, remote node is not accessible,
+etc.)
+* in the MANUAL mode all database operations are halted until the
+problem is fixed. Usually it means that DBA has to kill the unavailable
+shadow and define a new one.
+
+The `MaintenanceManager` provides a `killUnavailableShadows()` method to
+kill the unavailable shadows. This is equivalent to the `gfix -kill`
+command.
+
+Additionally, if the main database becomes unavailable, DBA can decide
+to switch to the shadow database. In this case the shadow must be
+activated before use. To activate the shadow use the
+`activateShadowFile()` method. Please note, that in this case the
+`database` property of the `MaintenanceManager` must point to the shadow
+file which must be located on the local file system of the server to
+which the management class is connected.
+
+==== Database validation and repair
+
+The Firebird server does its best to keep the database file in a
+consistent form. In particular this is achieved by a special algorithm
+called _careful writes_ which guarantees that the server writes data on
+disk in such a manner than despite the server crash the database file
+always remains in consistent form. Unfortunately it is still possible
+that under certain conditions, e.g. crash of the file system or hardware
+failure, the database file might become corrupted. Firebird server can
+detect such cases including
+
+* Orphan pages. These are the database pages that were allocated for
+subsequent write, but due to a crash were not used. Such pages have to
+be marked as unused to return storage space back to the application;
+* Corrupted pages. These are the database pages that were caused by the
+operating system or hardware failures.
+
+The `MaintenanceManager` class provides a `validateDatabase()` method to
+perform simple health check of the database, and releasing the orphan
+pages if needed. It also reports presence of the checksum errors. The
+output of the routine is written to the output stream configured in the
+`logger` property.
+
+The `validateDatabase(int)` method can be used to customize the
+validation process:
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Validation mode |Description
+
+|`VALIDATE_READ_ONLY` 
+|Perform read-only validation. 
+In this case the database file won't be repaired, only the presence of the database file errors will be reported.
+
+Can be used for periodical health-check of the database.
+
+|`VALIDATE_FULL` 
+|Do a full check on record and pages structures, releasing unassigned record fragments.
+
+|`VALIDATE_IGNORE_CHECKSUM` 
+|Ignore checksums during repair operations.
+
+The checksum error means that the database page was overwritten in a random order and the data stored on it are corrupted.
+When this option is specified, the validation process will succeed even if checksum errors are present.
+
+|=======================================================================
+
+In order to repair the corrupted database use the `markCorruptRecords()`
+method which marks the corrupted records as unavailable. This method is
+equivalent to `gfix -mend` command. After this operation database can be
+backed up and restored to a different place.
+
+****
+_Note, the presence of the checksum errors and subsequent use of
+`markCorruptedRecords()` method will mark all corrupted data as unused
+space. You have to perform careful check after backup/restore cycle to
+assess the caused damage._
+****
+
+==== Limbo transactions
+
+The limbo transactions are transactions that were prepared for commit
+but were never committed. This can happen when, for example, database
+was accessed by JTA-enabled applications from Javafootnote:[Another
+reason for limbo transactions are multidatabase transactions which can
+be initiated via native Firebird API. However, since Jaybird does not
+provide methods to initiate them, we do not consider them in this
+manual.]. The in-limbo transactions affect the normal database
+operation, since the records that were modified in that transactions are
+not available – Firebird does not know whether the new version will be
+committed or rolled back and blocks access to them. Also the in-limbo
+transactions prevent the garbage collection, since garbage collector
+does not know whether it can discard the record versions of the in-limbo
+transaction.
+
+Jaybird contains needed functionality to allow the JTA-enabled
+transaction coordinator to recover the in-limbo transactions and either
+commit them or perform a rollback. For the cases when this is not
+possible `MaintenanceManager` provides following methods to perform this
+in interactive mode:
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Method |Description
+
+|`listLimboTransactions()` 
+|Method lists all IDs of the in-limbo transactions to the output stream specified in logger property.
+
+Application has to either parse the output to commit or rollback the transactions in automated mode or it should present the output to the user and let him/her make a decision.
+
+|`commitTransaction(int)` 
+|Commit the transaction with the specified ID.
+
+|`rollbackTransaction(int)` 
+|Rollback the transaction with the specified ID.
+|=======================================================================
+
+==== Sweeping the database
+
+The in-limbo transactions are not the only kind of transactions that
+prevent garbage collection. Another type are transactions are those that
+were finished by "rollback" and the changes made in such transactions
+were not automatically undone by using internal savepoint mechanism,
+e.g. when there were a lot of changes made in the transaction (e.g.
+10,000 records and more). Such transactions are marked as "rollback"
+transactions on Transaction Inventory Page and prevent advancing the
+so-called Oldest Interesting Transaction (OIT) – ID of the oldest
+transaction which created record versions that are relevant to any of
+the currently running transactions. On each access to the records,
+Firebird has to check all the record versions between the current
+transaction and the OIT, which leads to performance degradation on large
+databases. In order to solve the issue Firebird periodically starts the
+database sweeping process, that traverses all database records, removes
+the changes made by the rolled back transactions and moves forward the
+OITfootnote:[For more information please read article by Ann Harrison
+"Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep",
+available, for example, at
+http://www.ibphoenix.com/resources/documents/design/doc_21].
+
+The sweep process is controlled by a threshold parameter – a difference
+between the Next Transaction and OIT, by default it equal to 20,000.
+While this value is ok for the average database, DBA might decide to
+increase or decrease the number to fit the database usage scenario.
+Alternatively DBA can trigger the sweep process manually regardless of
+the current difference between Next Transaction and OIT.
+
+The `MaintenanceManager` provides following methods to help with
+database sweeping:
+
+[cols="1,3",options="header",]
+|=======================================================================
+|Method |Description
+
+|`setSweepThreshold(int)` 
+|Set the threshold between Next Transaction and OIT that will trigger the automatic sweep process.
+Default value is 20,000.
+
+|`sweepDatabase()` 
+|Perform the sweep regardless of the current difference between Next Transaction and OIT.
+|=======================================================================
+
+==== Other database properties
+
+There are few other properties of the database that can be set via
+`MaintenanceManager`:
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Method |Description
+|`setDatabaseAccessMode(int)` 
+a|Change the access mode of the database. 
+Possible values are:
+
+* `ACCESS_MODE_READ_ONLY` to make database read-only;
+* `ACCESS_MODE_READ_WRITE` to allow writes into the database.
+
+Please note, only read-only databases can be placed on read-only media, the read-write databases even if accessed within read-only transactions.
+
+|`setDatabaseDialect(int)` 
+|Change the database SQL dialect.
+The allowed values can be either 1 or 3.
+
+|`setDefaultCacheBuffer(int)` 
+|Change the number of database pages to cache. 
+Default value is 2048.
+
+|`setForcedWrites(boolean)` 
+|Change the forced writes setting for the database.
+
+When the forced writes are switched off, database engine does not enforce flushing pending changes to disk and they are kept in OS cache.
+When later the RDBMS changes the same page later, the write happens in memory, which in many cases increases the performance.
+However, in case of OS or hardware crash the database will be corrupted.
+
+|`setPageFill(int)`
+a|Set the page fill factor.
+Firebird leaves 20% of free space on each database page for the future record versions.
+It is possible to tell Firebird not to reserve the space, makes sense for read-only databases, since more data fit the page, which increases the performance.
+Possible values are:
+
+* `PAGE_FILL_FULL` – do not reserve additional space for future versions;
+* `PAGE_FILL_RESERVE` – reserve the free space for future record versions.
+
+|=======================================================================
+
+=== Database statistics
+
+The last but not least are the `StatisticsManager` interface and
+corresponding implementation in the `FBStatisticsManager` class, which
+allow to obtain the statistical information for the database, like page
+size, values of OIT and Next transactions, database dialect, database
+page allocation and its distribution.
+
+The following methods provide the functionality equivalent to the
+`gstat` command line tool, the output of the commands is written to the
+output stream specified in the `logger` property. It is the
+responsibility of the application to correctly parse the text output if
+needed.
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Method |Description
+
+|`getDatabaseStatistics()` 
+|Get complete statistics about the database.
+
+|`getDatabaseStatistics(int)`
+a|Get the statistical information for the specified options.
+Possible values are (bit mask, can be combined together):
+
+* `DATA_TABLE_STATISTICS`
+* `SYSTEM_TABLE_STATISTICS`
+* `INDEX_STATISTICS`
+* `RECORD_VERSION_STATISTICS`
+
+|`getHeaderPage()`
+|Get information from the header page (e.g. page size, OIT, OAT and Next transaction values, etc.)
+
+|`getTableStatistics(String[])`
+|Get statistic information for the specified tables.
+This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.
+|=======================================================================
+

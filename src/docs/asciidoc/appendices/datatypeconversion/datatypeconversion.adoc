@@ -1,0 +1,113 @@
+[[datatypeconversion]]
+[appendix]
+== Data Type Conversion Table
+
+=== Mapping between JDBC, Firebird and Java Types
+
+The below table describes a mapping of the JDBC data types defined in
+`java.sql.Types` class to the Firebird data types. Also, for each JDBC
+data type a class instance of which is returned by `ResultSet.getObject`
+method is provided.
+
+[cols=",,",options="header",]
+|================================================
+|JDBC Type |Firebird Type |Java Object Type
+|`CHAR` 
+|`CHAR` 
+|`String`
+
+|`VARCHAR` 
+|`VARCHAR` 
+|`String`
+
+|`LONGVARCHAR` 
+|`BLOB SUB_TYPE 1` 
+|`String`
+
+|`NUMERIC` 
+|`NUMERIC` 
+|`java.math.BigDecimal`
+
+|`DECIMAL` 
+|`DECIMAL` 
+|`java.math.BigDecimal`
+
+|`SMALLINT` 
+|`SMALLINT` 
+|`java.lang.Short`
+
+|`INTEGER` 
+|`INTEGER` 
+|`java.lang.Integer`
+
+|`BIGINT` 
+|`BIGINT` 
+|`java.lang.Long`
+
+|`REAL` 
+|`REAL` 
+|`java.lang.Float`
+
+|`FLOAT` 
+|`FLOAT` 
+|`java.lang.Double`
+
+|`DOUBLE` 
+|`DOUBLE PRECISION` 
+|`java.lang.Double`
+
+|`LONGVARBINARY` 
+|`BLOB SUB_TYPE 0` 
+|`byte[]`
+
+|`DATE` 
+|`DATE` 
+|`java.sql.Date`
+
+|`TIME` 
+|`TIME` 
+|`java.sql.Time`
+
+|`TIMESTAMP` 
+|`TIMESTAMP` 
+|`java.sql.Timestamp`
+
+|`BLOB` 
+|`BLOB SUB_TYPE < 0` 
+|`java.sql.Blob`
+|================================================
+
+=== Data Type Conversions
+
+This table specifies the compatible conversions between the Firebird and
+Java types.
+
+[cols="5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",options="header",]
+|=======================================================================
+| |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL` |`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0` |`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP`
+
+|`String` |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X
+
+|`java.math.BigDecimal` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`Boolean` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`Integer` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`Long` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`Float` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`Double` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+
+|`byte[]` | | | | | | | | | | |X |X |X | | | 
+
+|`Blob` | | | | | | | | | | |X |X |X | | | 
+
+|`Date` | | | | | | | | | | | | | |X | |X 
+
+|`Time` | | | | | | | | | | | | | | |X | 
+
+|`Timestamp` | | | | | | | | | | | | | |X | |X
+|=======================================================================
+
