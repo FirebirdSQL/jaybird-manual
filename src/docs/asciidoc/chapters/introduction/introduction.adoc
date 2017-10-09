@@ -77,11 +77,13 @@ framework and a `javax.sql.XADataSource` implementation.
 
 |=======================================================================
 
+[[distribution]]
 === Distribution
 
 The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
 generated key retrieval.
 
+[[distribution-package]]
 ==== Distribution package
 
 The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
@@ -109,6 +111,7 @@ management classes.
 
 |=======================================================================
 
+[[distribution-maven]]
 ==== Maven
 
 Alternatively, you can use maven to automatically download Jaybird and its 
