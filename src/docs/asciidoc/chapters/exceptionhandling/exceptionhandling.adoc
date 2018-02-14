@@ -4,11 +4,12 @@
 Exception handling is probably the most important aspect that
 directly affects the stability of the application. Correct handling of
 the error cases guarantees correct functioning of the client code as
-well as the database server. Additionally, all methods of the interfaces
-defined in the JDBC specification throw instances of
-`java.sql.SQLException` to notify about all error conditions that happen
-during request processing. The `SQLException` is checked exception,
-which forces Java programmer to either handle it with the try/catch
+well as the database server. 
+
+All methods of the interfaces defined in the JDBC specification throw instances of
+`java.sql.SQLException` to notify about error conditions that happen
+during request processing. The `SQLException` is a checked exception,
+which forces Java programmers to either handle it with the try/catch
 clause or redeclare it in the method signature.
 
 === Working with exceptions
@@ -17,12 +18,12 @@ Exception handling becomes even more important if we consider that
 this topic is either ignored or presented in incorrect form in most
 JDBC tutorials. The https://docs.oracle.com/javase/tutorial/jdbc/index.html[official JDBC tutorial from Oracle] 
 briefly mentions that exceptions should be handled by using try/catch blocks
-only at the end of the course, but neither reasons of doing this nor the
+only at the end of the course, but neither reasons for doing this nor the
 best practices are presented.
 
-There are a few reasons to think about exception handling in your
+There are good reasons to think about exception handling in your
 applications before you start coding. First of all, it is very hard to
-change the exception handling pattern in the existing code. The changes
+change the exception handling pattern in existing code. The changes
 will affect all layers above the place where the changes in exception
 handling are made and the new application must be thoroughly tested
 after the change.
@@ -33,22 +34,23 @@ server to notify about the error condition that happened during request
 processing. By checking the error code which is sent with the exception
 application can try to recover from the error.
 
-And the last but not the least issue is the resource management. When
+And last but not least, there is resource management. When an
 exception happens in the method, the execution flow of Java code differs
-from the normal one and only correctly coded application will ensure
+from the normal flow, and only correctly coded application will ensure
 that all allocated resources will be released. The resources in our case
-are JDBC connections, statement, prepared statement and callable
-statement objects, result sets, etc. All these objects not only take
-memory in the Java Virtual Machine in which application runs, but also
-consume memory on the server, which in worst cases can lead to
-Denial-of-Service attack.
+are JDBC connections, statements, prepared statements and callable
+statements, result sets, etc. All these objects not only take
+memory in the Java Virtual Machine of the application, but also
+consume memory on the server, which, worst case, can lead to
+an unintended Denial-of-Service attack, as the database server can
+no longer service requests.
 
 A good exception handling strategy requires you do distinguish three
 kinds of error conditions:
 
-* errors that database access layer can detect and correctly handle; for
+* errors that the database access layer can detect and correctly handle; for
 example, the application might decide to re-execute the business
-transaction if database server returned a deadlock error;
+transaction if the database server returned a deadlock error;
 * errors that database access layer can detect, but is unable to handle;
 usually those are all database errors that do not have special handling
 routines;
@@ -69,9 +71,9 @@ application was created, thus possibly leaving it in an unknown state;
 further operation should be considered dangerous and the corresponding
 execution branch has to be halted.
 
-The problem can be solved if resource allocation and deallocation
-happens in the same code block and is protected with a try-with-resources block
-and the code to recover from error conditions should use try/catch
+The problem of resource management can be solved if resource allocation and deallocation
+happens in the same code block and is protected with a try-with-resources block. 
+The code to recover from error conditions should use try/catch
 blocks. Example of such error and resource handling code is presented
 below.
 
@@ -97,14 +99,17 @@ try (PreparedStatement updateSales = con.prepareStatement(updateString)) {
         try {
             updateSales.executeUpdate();
         } catch(SQLException ex) {
-            if (ex.getErrorCode() == ...)
+            if (ex.getErrorCode() == ...) {
                 // do something
-            else
+            } else {
                 throw new BusinessDBException(ex);
+            }
         }
     }
 }
 ----
+
+// TODO Example doesn't actually show retry in case of deadlock!
 
 The nested try/catch block shows you an example of handling a deadlock
 error if it happens (first scenario according to our classification),
@@ -119,7 +124,7 @@ resource cleanup. As a rule of thumb, always declare and allocate resources
 in a try-with-resources block: the resource will be automatically closed/freed 
 at the end of the block, even if exceptions occur.
 
-Such coding practice might look weird, because on the first sight the
+Such coding practice might look weird, because on first sight the
 whole purpose of using the `PreparedStatement` is neglected: the statement
 is prepared, used only once and then deallocated. However, when this
 practice is combined with connection and statement pooling, it
@@ -130,7 +135,7 @@ the same prepared statement might be used – a statement pool will either
 reuse the statement or it will prepare a new one, if it detects that all
 pooled prepared statements are currently in use. As a side effect,
 the application will always use the minimum number of statements handles,
-which in turn reduces the used resources on the server side.
+which in turn reduces the used resources on the database side.
 
 [WARNING]
 ====
@@ -141,11 +146,12 @@ to see if - and how - it provides statement pooling.
 
 === Warnings
 
-Some errors returned by the Firebird server are treated as warnings.
+Some errors returned by Firebird are treated as warnings.
 They are converted into instances of `java.sql.SQLWarning` class in the
 JDBC layer. These exceptions are not thrown from the driver methods, but
-added to a connection instance. Currently no warning is added to
-`Statement` or `ResultSet` objects.
+added to a connection instance. 
+
+NOTE: Currently no warning is added to `Statement` or `ResultSet` objects.
 
 Each next warning is appended to the tail of the warning chain. In order
 to read the warning chain, use the code presented below.
@@ -184,44 +190,44 @@ The JDBC specification provides an exception hierarchy that allows an applicatio
 react on the error situations using regular exception handling rather than checking 
 the error code. Error codes may still be necessary for handling specific error cases.
 
-The JDBC 4.2 specification defines the following exception hierarchy (excluding those
-defined for `javax.sql.rowset`):
+The JDBC 4.2 specification defines the following exception hierarchy:footnote:[excluding those
+defined for `javax.sql.rowset`]
 
-* `java.sql.SQLException`
-** `java.sql.DataTruncation` exception is thrown when a data truncation
-error happens.
-** `java.sql.BatchUpdateException` exception is thrown when batch of the
-statement did not execute successfully and contains the result of batch
+* `java.sql.SQLException` - root of all JDBC exceptions
+** `java.sql.DataTruncation` - thrown when a data truncation
+error happens, can also be used as a warning.
+** `java.sql.BatchUpdateException` - thrown when batch of the
+statements did not execute successfully and contains the result of batch
 execution.
-** `java.sql.SQLClientInfoException` exception is thrown when client info properties 
+** `java.sql.SQLClientInfoException` - thrown when client info properties 
 could not be set.
-** `java.sql.SQLNonTransientException` exception is thrown when retrying the same action would
+** `java.sql.SQLNonTransientException` - thrown when retrying the same action would
 fail without fixing the underlying cause.
-*** `java.sql.SQLDataException` exception is thrown for data-related errors,
+*** `java.sql.SQLDataException` - thrown for data-related errors,
 for example conversion errors, too long values. (SQLstate class `22`)
-*** `java.sql.SQLFeatureNotSupportedException` exception is thrown to indicate that an optional 
+*** `java.sql.SQLFeatureNotSupportedException` - thrown to indicate that an optional 
 JDBC feature is not supported by the driver or the data source (Firebird).  (SQLstate class `0A`)
-*** `java.sql.SQLIntegrityConstraintViolationException` exception is throw for constraint 
+*** `java.sql.SQLIntegrityConstraintViolationException` - thrown for constraint 
 violations. (SQLstate class `23`)
-*** `java.sql.SQLInvalidAuthorizationSpecException` exception is thrown for authorization 
+*** `java.sql.SQLInvalidAuthorizationSpecException` - thrown for authorization 
 failures. (SQLstate class `28`)
-*** `java.sql.NonTransientConnectionException` exception is thrown for connection operations 
+*** `java.sql.NonTransientConnectionException` - thrown for connection operations 
 that will not succeed on retry without fixing the underlying cause. (SQLstate class `08`)
-*** `java.sql.SQLSyntaxErrorException` exception is thrown for syntax errors. (SQLstate class `42`)
-** `java.sql.SQLRecoverableException` exception is thrown when an action might be retried
+*** `java.sql.SQLSyntaxErrorException` - thrown for syntax errors. (SQLstate class `42`)
+** `java.sql.SQLRecoverableException` - thrown when an action might be retried
 by taking recovery actions and restarting the transaction.
-** `java.sql.SQLTransientException` exception is thrown when the action might succeed if it is
+** `java.sql.SQLTransientException` - thrown when the action might succeed if it is
 retried without further recovery steps.
-*** `java.sql.SQLTimeoutException` exception is thrown when the `queryTimeout` or 
+*** `java.sql.SQLTimeoutException` - thrown when the `queryTimeout` or 
 `loginTimeout` has expired.
-*** `java.sql.SQLTransactionRollbackException` exception is thrown when the statement was
+*** `java.sql.SQLTransactionRollbackException` - thrown when the statement was
 automatically rolled back because of deadlock or other transaction serialization failures. (SQLstate class `40`)
-*** `java.sql.SQLTransientConnectionException` exception is thrown for connection operations 
+*** `java.sql.SQLTransientConnectionException` - thrown for connection operations 
 that might succeed on retry without any changes. (SQLstate class `08`)
 ** `java.sql.SQLWarning` should only be used to signal warnings, it should never be thrown
 by a JDBC driver.
 
-Unfortunately Jaybird 3.0 does not yet fully use this exception hierarchy, we are
+NOTE: Unfortunately Jaybird 3.0 does not yet fully use this exception hierarchy, we are
 working to address this with the next versions of Jaybird.
 
 Each of three layers in Jaybird use exceptions most appropriate to the
@@ -363,7 +369,7 @@ notify an application about the situation.
 |`isc_lock_timeout` 
 a|`"lock time-out on wait transaction"`
 
-Similar to the `isc_deadlock`, but this error is returned when the lock timeout that
+Similar to the `isc_lock_conflict`, but this error is returned when the lock timeout that
 was specified for the current transaction expired while waiting for a lock.
 
 Another source of this error are DDL operations that try to obtain a
@@ -406,7 +412,7 @@ This group contains secondary codes for the primary error code
 `isc_dsql_error` (`335544569L`), that has a message
 `"Dynamic SQL Error"`.
 
-In most situations, Jaybird 3+ will put this secondary error code in the
+In most situations, Jaybird 3 and higher will put this secondary error code in the
 `SQLException` instead of `isc_dsql_error`.
 
 [cols="1,2,3",]
@@ -446,7 +452,7 @@ Happens at runtime when an arithmetic exception happens, like division
 by zero or the numeric overflow (e.g. number does not fit the 64 bits
 limit).
 
-Another source of these errors are all string operations, like string
+Another source of this error are string operations, like string
 concatenation producing a too long string, impossibility to transliterate
 characters between character sets, etc.
 
@@ -457,11 +463,11 @@ the exact reason of an error.
 |`isc_no_cur_rec` 
 a|`"no current record for fetch operation"`
 
-Happens when application asks Firebird to fetch a record, but no record
+Happens when the application asks Firebird to fetch a record, but no record
 is available for fetching.
 
 Java applications should never get this error, since checks in the JDBC
-driver prevent the application from executing a fetch operation on the server
+driver should prevent the application from executing a fetch operation on the server
 side.
 
 |335544374L 
@@ -488,7 +494,7 @@ a|`Unable to complete network request to host "{0}"`
 
 This error is thrown when Jaybird cannot establish a connection
 to the database server due to a network issues, e.g. host name is
-specified incorrectly, Firebird had not been started on the remote host,
+specified incorrectly, Firebird has not been started on the remote host,
 firewall configuration prevents client from establishing the connection,
 etc.
 

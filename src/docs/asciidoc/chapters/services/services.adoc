@@ -1,11 +1,11 @@
 [[services]]
 == Working with Services
 
-Additionally to the normal database connections Firebird features the
+In addition to normal database connections, Firebird features
 server-wide connections. These are used to perform various
 administrative tasks in Firebird, e.g. database backup, maintenance,
 statistics. The set of API calls to perform such tasks are known under
-the name "Services API". Additionally client application can use the
+the name "Services API". Additionallym client application can use the
 Services API to get some limited information about the server
 environment and configuration.
 
@@ -18,7 +18,7 @@ gstat utility. The output of the utility, which in normal case is
 printed to standard out, is in this case transmitted over the network to
 the client application.
 
-Jaybird JCA/JDBC driver hides the complexity of the original API
+Jaybird attempts to hide the complexity of the original API by
 providing a set of interfaces and their implementations to perform the
 administrative tasks regardless of the usage mode (i.e. remote server
 and embedded engine, wire protocol and access via native client
@@ -84,6 +84,8 @@ detach from the service manager when it is no longer needed.
 
 === Backup and restore
 
+// TODO Add documentation for streaming backup
+
 The backup and restore routines are defined in the `BackupManager`
 interface and are implemented in the `FBBackupManager` class.
 Additionally to the setters and getters described in the previous
@@ -137,7 +139,7 @@ To avoid such situation it is recommended to restore database into some dummy fi
 The service called on the server will produce lots of output that will be written to the output stream specified in logger property.
 |=======================================================================
 
-Additionally to the properties following methods are used to configure
+In addition to the properties, the following methods are used to configure
 the paths to backup and database files when multi-file backup or restore
 operations are used.
 
@@ -276,7 +278,7 @@ When cooperative garbage collection is enabledfootnote:[Cooperative garbage coll
 This process is time consuming and might be switched off when creating backup, where
 the most recent version will be read.
 
-Later operator can restore the database from the backup. 
+Later, operator can restore the database from the backup. 
 In databases with many backversions of the records, the backup-restore cycle can be
 faster than traditional garbage collection.
 
@@ -354,6 +356,12 @@ backupManager.restoreDatabase(
 ----
 
 === User management
+
+[IMPORTANT]
+====
+Starting with Firebird 3, user management through the Services API has been
+deprecated. You should use the SQL DDL statements for user management instead.
+====
 
 The next service available is the user management. The routines are
 defined in the `UserManager` interface and are implemented in the
@@ -445,9 +453,9 @@ userManager.add(user);
 
 === Database maintenance
 
-The database maintenance is something that everybody would prefer to
+Database maintenance is something that everybody would prefer to
 avoid, and, contrary to the backup/restore and user management
-procedures, there little automation that can be done here. Usually the
+procedures, there is little automation that can be done here. Usually the
 maintenance tasks are performed on the server by the database
 administrator, but some routines are needed to perform the automated
 database upgrade or perform periodic checks of the database validity.
@@ -474,7 +482,7 @@ There are three shutdown modes:
 |Shutdown mode |Description
 
 |`SHUTDOWN_ATTACH` 
-|The shutdown process is initiated and it is not possible to obtain a new connection to the database but the currently open connections are fully functional.
+|The shutdown process is initiated and it is not possible to obtain a new connection to the database, but the currently open connections are fully functional.
 
 When after the maximum allowed time for operation there are still open connections to the database, the shutdown process is aborted.
 
@@ -494,7 +502,7 @@ After that any running transaction won't be able to commit.
 
 |=======================================================================
 
-After database was shutdown, the owner of the database or SYSDBA can
+After database shutdown, the owner of the database or SYSDBA can
 connect to it and perform maintenance tasks, e.g. migration to the new
 data modelfootnote:[Until Firebird 2.0 adding a foreign key constraint
 required an exclusive access to the database.], validation of the
@@ -504,9 +512,9 @@ To bring system back online use the `bringDatabaseOnline()` method.
 
 ==== Shadow configuration
 
-Database shadow is an in-sync copy of the database that is usually
+A database shadow is an in-sync copy of the database that is usually
 stored on a different hard disk, possibly on remote
-computerfootnote:[Currently possible only on Unix platforms by using the
+computerfootnote:[Currently possible only on Unix platforms by using 
 NFS shares.], which can be used as a primary database if the main
 database server crashes. Shadows can be defined using `CREATE SHADOW`
 SQL command and are characterized by a _mode_ parameter:
@@ -582,16 +590,17 @@ method which marks the corrupted records as unavailable. This method is
 equivalent to `gfix -mend` command. After this operation database can be
 backed up and restored to a different place.
 
-****
-_Note, the presence of the checksum errors and subsequent use of
+[CAUTION]
+====
+The presence of the checksum errors and subsequent use of
 `markCorruptedRecords()` method will mark all corrupted data as unused
-space. You have to perform careful check after backup/restore cycle to
-assess the caused damage._
-****
+space. You have to perform a careful check after backup/restore cycle to
+assess the caused damage.
+====
 
 ==== Limbo transactions
 
-The limbo transactions are transactions that were prepared for commit
+Limbo transactions are transactions that were prepared for commit
 but were never committed. This can happen when, for example, database
 was accessed by JTA-enabled applications from Javafootnote:[Another
 reason for limbo transactions are multidatabase transactions which can
@@ -600,8 +609,8 @@ provide methods to initiate them, we do not consider them in this
 manual.]. The in-limbo transactions affect the normal database
 operation, since the records that were modified in that transactions are
 not available – Firebird does not know whether the new version will be
-committed or rolled back and blocks access to them. Also the in-limbo
-transactions prevent the garbage collection, since garbage collector
+committed or rolled back and blocks access to them. Also in-limbo
+transactions prevents garbage collection, since the garbage collector
 does not know whether it can discard the record versions of the in-limbo
 transaction.
 
@@ -620,10 +629,10 @@ in interactive mode:
 
 Application has to either parse the output to commit or rollback the transactions in automated mode or it should present the output to the user and let him/her make a decision.
 
-|`commitTransaction(int)` 
+|`commitTransaction(long)` 
 |Commit the transaction with the specified ID.
 
-|`rollbackTransaction(int)` 
+|`rollbackTransaction(long)` 
 |Rollback the transaction with the specified ID.
 |=======================================================================
 
@@ -641,7 +650,7 @@ transaction which created record versions that are relevant to any of
 the currently running transactions. On each access to the records,
 Firebird has to check all the record versions between the current
 transaction and the OIT, which leads to performance degradation on large
-databases. In order to solve the issue Firebird periodically starts the
+databases. In order to solve the issue Firebird periodically starts a
 database sweeping process, that traverses all database records, removes
 the changes made by the rolled back transactions and moves forward the
 OITfootnote:[For more information please read article by Ann Harrison
@@ -673,7 +682,7 @@ Default value is 20,000.
 
 ==== Other database properties
 
-There are few other properties of the database that can be set via
+There are a few other properties of the database that can be set via
 `MaintenanceManager`:
 
 [cols="1,2",options="header",]
@@ -686,7 +695,7 @@ Possible values are:
 * `ACCESS_MODE_READ_ONLY` to make database read-only;
 * `ACCESS_MODE_READ_WRITE` to allow writes into the database.
 
-Please note, only read-only databases can be placed on read-only media, the read-write databases even if accessed within read-only transactions.
+Please note, only read-only databases can be placed on read-only media, the read-write databases will need to be able to write even if only accessed within read-only transactions.
 
 |`setDatabaseDialect(int)` 
 |Change the database SQL dialect.
@@ -705,8 +714,8 @@ However, in case of OS or hardware crash the database will be corrupted.
 
 |`setPageFill(int)`
 a|Set the page fill factor.
-Firebird leaves 20% of free space on each database page for the future record versions.
-It is possible to tell Firebird not to reserve the space, makes sense for read-only databases, since more data fit the page, which increases the performance.
+Firebird leaves 20% of free space on each database page for future record versions.
+It is possible to tell Firebird not to reserve the space, makes sense for read-only databases, since more data fit the page, which increases performance.
 Possible values are:
 
 * `PAGE_FILL_FULL` – do not reserve additional space for future versions;

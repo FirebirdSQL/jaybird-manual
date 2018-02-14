@@ -11,7 +11,7 @@ undone.
 === JDBC transactions
 
 Firebird supports multiple concurrent transactions over the same
-database connection. This allows applications that work via native
+database connection. This allows applications that work via the native
 Firebird API to save the number of network connections, which in turn
 saves the resources on the serverfootnote:[Additionally, before the
 InterBase was open-sourced, this allowed application developers to
@@ -19,11 +19,11 @@ create multi-threaded application without need to purchase additional
 user licenses.].
 
 This model however cannot be applied to each database engine in the
-world and designers of the JDBC API have chosen a model where each
+world and the designers of the JDBC API have chosen a model where each
 database connection has one and only one active transaction associated
 with it. Also, unlike the Firebird model, where transactions require
 explicit start, JDBC specification requires the driver to start
-transaction automatically as soon as transactional context is needed.
+transaction automatically as soon as a transactional context is needed.
 
 The following code shows a very simple example of using transactions in
 JDBC where a hypothetical intruder that increases salary of each
@@ -56,7 +56,7 @@ try {
 }
 ----
 
-In order to do this, application first switches the auto-commit mode off
+In order to use transactions, the application first switches the auto-commit mode off
 (see below for more information), then creates a `java.sql.Statement`
 object, executes an UPDATE statement. Please note, that there is no
 explicit transaction start, new transaction will be started right before
@@ -65,18 +65,18 @@ executing the statement (step 2).
 If we have database where not only referential integrity is preserved,
 but also reasonable security rules are encoded in the triggers, it will
 raise an error preventing cleaning the audit trails information. In this
-case intruder chooses to undo all the changes he made, so that nobody
+case the intruder chooses to undo all the changes he made, so that nobody
 notices anything. But if no security rules are implemented, he commits
 the transaction.
 
 When connection uses explicit transaction control, each transaction must
-be finished by calling the `commit` or `rollback` methods of the
+be finished by calling the `commit()` or `rollback()` methods of the
 `Connection` object before the connection is closed. If a transaction
 was not finished, but the `close` method is called, the active
-transaction is rolled back automatically. This also happens when
-transaction was not finished and connection was not closed explicitly
+transaction is rolled back automatically. This also happens when the
+transaction was not finished, the connection was not closed explicitly
 and that `Connection` object became eligible for garbage collection. In
-this case, the `close` method is implicitly invoked by the class
+this case, the `close()` method is implicitly invoked by the class
 finalizer, which in turn rolls the transaction back.
 
 === Auto-commit mode
@@ -84,8 +84,8 @@ finalizer, which in turn rolls the transaction back.
 Each newly created connection by default has the auto-commit property
 set on. In other words, the duration of the transaction is limited by
 the duration of statement execution, or speaking formal language –
-transaction is ended when the statement is completed. The point when
-statement executions is considered complete is defined in the
+the transaction is ended when the statement is completed. The point when
+statement execution is considered complete, is defined in the
 specification as:
 
 .Rules when the statement is completed in auto-commit mode
@@ -109,9 +109,9 @@ application is executing inside an EJB container), it is an error to
 call `setAutoCommit` method.
 
 Special care should be taken when using multiple statements in
-auto-commit mode. The JDBC 2.0 specification did not define the rules
-for the statement completion as well as it did not define the behavior
-of multiple ResultSet objects created using the same Connection object
+auto-commit mode. The JDBC 2.0 specification did not fully define the rules
+for the statement completion as it did not define the behavior
+of multiple `ResultSe`t objects created using the same Connection object
 in auto-commit mode.
 
 Since Firebird does not allow the result set to remain open after the
@@ -160,10 +160,10 @@ while(rs.next()) { // <2>
 }
 ----
 
-Unfortunately not all applications can be changed either because there
+Unfortunately, not all applications can be changed either because there
 is no source code available or, simply, because any change in the code
-requires complete release testing of the software. The Jaybird 2.1
-introduces new connection parameter `defaultHoldable` which makes result
+requires complete release testing of the software. To address this, Jaybird 2.1
+introduced the connection parameter `defaultHoldable` which makes result
 sets holdable by default. The holdable result sets will be fully cached
 in memory, but won't be closed automatically when transaction
 endsfootnote:[Other cases, e.g. closing the statement object or the
@@ -203,6 +203,8 @@ the transaction, use the `setReadOnly` method of the
 read-only.
 
 === Transaction Isolation Levels
+
+// TODO Rephrase, weird as introduction
 
 To address the performance issue, the isolation property is relaxed. The
 ANSI/ISO SQL standard defines four such levels, each next one weaker
@@ -343,14 +345,14 @@ savepoint.
 If the savepoint is no longer needed, you can use the
 `Connection.releaseSavepoint` method to release system resources. After
 releasing a savepoint it is no longer possible to rollback the current
-transaction to that savepoint. Attempt to call the `rollback` method
+transaction to that savepoint. Attempts to call the `rollback(Savepoint)` method
 will result in an `SQLException`. Savepoints that have been created
 within a transaction are automatically released when transaction is
 committed or rolled back.
 
 === Transaction Parameter Buffer
 
-The behavior of the Firebird transactions is internally controlled by
+The behavior of Firebird transactions is internally controlled by
 the Transaction Parameter Buffer (TPB), which specifies different
 transaction properties:
 
@@ -391,9 +393,9 @@ parameters.
 
 ==== Isolation level
 
-As it was already mentioned before, Firebird supports three isolation
+Firebird supports three isolation
 levels: `read_committed`, `concurrency` and `consistency` which are
-represented by the appropriate constants in the
+represented by appropriate constants in the
 `TransactionParameterBuffer` class. The isolation level specifies the
 way the database engine processes the record versions on read
 operations. The `concurrency` isolation level is also often called
@@ -412,7 +414,7 @@ neither non-repeatable reads not phantom reads can ever occur.
 In `read_committed` mode Firebird database engine, however, accesses the
 record version with the highest timestamp, for which the corresponding
 transaction is marked as committed. This prevents engine from reading
-the record versions which were modified in the concurrent transactions
+the record versions which were modified in concurrent transactions
 that are not yet committed or were rolled back for whatever reasons.
 However, such mode allows non-repeatable reads as well as phantom reads
 if the concurrent transaction that modified records or inserted new ones
@@ -465,7 +467,7 @@ operation succeeds and application later tries to update the record, the
 lock is upgraded to the "write lock". And finally, if the resource is
 already locked for write, concurrent transactions cannot lock it for
 reading, since the system cannot allow the transaction to make a
-decision based on data that might be rolled back later. This in approach
+decision based on data that might be rolled back later. This approach
 significantly decreases concurrency. However, the databases systems that
 employ the record versioning mechanism do not have such restriction
 because each transaction "sees" its own version of the record – the only
@@ -541,7 +543,7 @@ connection.setTransactionParameters(tpb); // <3>
 // in protected mode
 ----
 
-The shows an example of reserving the TEST_LOCK table for writing in a
+This shows an example of reserving the TEST_LOCK table for writing in a
 protected mode. The code does the following:
 
 <1> Create a new instance of `TransactionParameterBuffer` class.

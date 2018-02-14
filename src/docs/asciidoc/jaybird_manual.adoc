@@ -6,8 +6,9 @@ Roman Rokytskyy;Mark Rotteveel
 :source-highlighter: prettify
 :toc: left
 :imagesdir: images
+:icons: font
 :jaybird-version: 3.0
-:jaybird-full-version: 3.0.2
+:jaybird-full-version: 3.0.3
 :jna-version: 4.4.0
 :antlr-version: 4.7
 
@@ -16,16 +17,37 @@ include::license.adoc[]
 :sectnums:
 
 include::chapters/introduction/introduction.adoc[]
+
+= User Manual
+
 include::chapters/connection/connection.adoc[]
+
 include::chapters/exceptionhandling/exceptionhandling.adoc[]
+
 include::chapters/statements/statements.adoc[]
+
 include::chapters/resultsets/resultsets.adoc[]
+
 include::chapters/transactions/transactions.adoc[]
+
 include::chapters/services/services.adoc[]
+
 include::chapters/events/events.adoc[]
 
+////
+= Reference Manual
+
+_TODO Move reference parts from user manual here, and expand on content_
+////
+
+= Appendices
+
 include::appendices/connectionproperties/connectionproperties.adoc[]
+
 include::appendices/datatypeconversion/datatypeconversion.adoc[]
+
 include::appendices/poolproperties/poolproperties.adoc[]
+
 include::appendices/characterencoding/characterencoding.adoc[]
+
 include::appendices/jdbcescape/jdbcescape.adoc[]

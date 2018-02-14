@@ -1,7 +1,7 @@
 [[statements]]
 == Executing statements
 
-After obtaining a connection, the next thing to do is to execute the SQL
+After obtaining a connection, the next thing to do is to execute an SQL
 statement. The JDBC specification distinguishes three kinds of statements:
 
 1. Regular statements to execute fixed SQL requests, 
@@ -11,7 +11,7 @@ statement. The JDBC specification distinguishes three kinds of statements:
 === The java.sql.Statement interface
 
 The `java.sql.Statement` interface is the simplest interface to execute
-SQL statements. It distinguishes only three types of them:
+SQL statements. It distinguishes three types:
 
 * statements that return results, or, in other words, queries;
 * statements that change the state of the database but return no results;
@@ -25,8 +25,6 @@ pattern of the statement consists of three steps
 [source,java]
 .Typical way to execute query to get information about the user
 ----
-
-
 try (
     Statement stmt = connection.createStatement(); // <1>
     ResultSet rs = stmt.executeQuery(
@@ -44,25 +42,24 @@ try (
 `createStatement()` method of the `Connection` object.
 
 <2> Use the Statement object by calling its methods, in our
-case we execute simple query
-`SELECT firstName, lastName FROM users WHERE userId = 5`. Processing of
-the query result will be discussed in details in the next chapter.
+case we execute a simple query
+`SELECT firstName, lastName FROM users WHERE userId = 5`. Processing of the query result will be discussed in details in <<resultsets>>.
 
 <3> Close the result set and statement to release all allocated resources. In
 our example this is done using the try-with-resources block. With try-with-resources.
 Java takes care of closing resources in the right order, even if exceptions occur, or
 if a resource was not allocated (say, if `executeQuery` throws an exception).
 
-The fact that the connection object is a factory for the statement objects
+As the connection object is the factory for the statement objects, this
 puts a constraint on the object lifetime: statements are bound to the
 connection; when the connection is closed, all statements that were
 created by that connection become invalid and the resources allocated by
-them are released. However, despite that fact that the resources are
-finally released, it is strongly recommended to use the try-with-resources
+them are released. However, despite that these resources are
+released when the connection closes, it is strongly recommended to use the try-with-resources
 block, to guarantee that resources are released as soon as possible
-because of the reasons that will be discussed later.
+because of reasons that will be discussed later.
 
-Statement can be executed using the following methods:
+A statement can be executed using the following methods:
 
 * `Statement.executeQuery(String)` – executes a SELECT statement and
 returns a result set. If the specified statement does not produce a result set, 
@@ -82,14 +79,23 @@ method to get the result of the executed query or you can use
 These `execute` methods have several variants for additional features covered 
 later (*TODO* check if already covered).
 
-A statement is closed by calling the `Statement.close()` method (or by using 
-a try-with-resources which calls `close()` behind the scenes). After
-this the statement object is invalid and cannot be used any more.
+A statement is closed by calling the `Statement.close()` method, or by using 
+a try-with-resources which calls `close()` behind the scenes. After
+a close, the statement object is invalid and cannot be used any more.
 
-It is also allowed to use the same object to execute different types of
+It is allowed to use the same statement object to execute different types of
 queries one after other. The code below contains a short example in
 which application first performs a select to find the ID of the user
 'Joe Doe', and if the record is found, it enables his account.
+
+[WARNING]
+====
+The concatenation of values into a query string as done in this example is not a good practice as it 
+can leave your code vulnerable to SQL injection.
+
+In this specific case it is safe to do as the values are integers. In general: don't do this, use a 
+prepared statement instead.
+====
 
 [source,java]
 .Using the same statement object multiple times to enable user account
@@ -118,9 +124,9 @@ try (Statement stmt = connection.createStatement()){
 }
 ----
 
-The way the code is constructed is quite dangerous because of the result
+The way the code is constructed is quite tricky because of the result
 set lifetime constraints that are defined by the JDBC specification, please
-read the chapter where result sets are discussed for more details.
+read the chapter <<resultsets>> for more details.
 
 However, here it is done intentionally to emphasize that a single
 object is used to execute `SELECT` and `UPDATE`/`INSERT` statements. It also
@@ -129,16 +135,17 @@ number of rows – the application first tries to update the account and only
 if no rows were updated, it inserts new record into the `accounts`
 table.
 
-[NOTE]
+[TIP]
 ======
 This example of 'try update, then insert' approach can be better handled 
-using https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-dml-merge.html[`MERGE`].
+using https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-dml-merge.html[`MERGE`^]
+or https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25-dml-update-or-insert.html[`UPDATE OR INSERT`^].
 ======
 
 When an application needs to execute DDL statements, it is recommended to
-use the `Statement.execute(String)` method, as in this case amount of
-modified records makes little sense. The next code shows an example of
-creating database tables using the above mentioned method.
+use the `Statement.execute(String)` method, as in this case the amount of
+modified records makes little sense. The next example shows the
+creation of database tables using this method.
 
 [source,java]
 .Example of creating database tables
@@ -147,17 +154,18 @@ try (Statement stmt = connection.createStatement()) {
     DatabaseMetaData metaData = connection.getMetaData();
     ResultSet tables = metaData.getTables(
         null, null, "CUSTOMER", new String[] { "TABLE" });
-    if (!tables.next())
+    if (!tables.next()) {
         stmt.execute("CREATE TABLE customer(" + 
             "customerId INTEGER NOT NULL PRIMARY KEY, " + 
             "firstName VARCHAR(20) NOT NULL, " + 
             "lastName VARCHAR(40) NOT NULL)");
+    }
 }
 ----
 
 First, the application checks the existence of the table in the database by
 calling the `DatabaseMetaData.getTables(String, String, String, String[])` method
-that returns a result set describing the database tables matching the
+which returns a result set describing the database tables matching the
 specified search pattern. The first two parameters of this method, the
 database catalog and schema names, are set to `null` as Firebird
 supports neither catalogs nor schemas. The third parameter is the table name
@@ -170,7 +178,7 @@ After that, the application checks if the result set is empty by calling the
 `ResultSet.next()` method. If no `"CUSTOMER"` table was found,
 the application creates a new table with three columns.
 
-As was already mentioned, the `Statement.execute(String)` method can
+As mentioned earlier, the `Statement.execute(String)` method can
 also be used to execute statements of an unknown type.
 
 [source,java]
@@ -194,6 +202,8 @@ statement, since Firebird does not support multiple results from a
 single statement. Calling the methods the second time will cause an
 exception.
 
+// TODO May need some revision to address retrieval of update counts after the result set
+
 === Statement behind the scenes
 
 The previous examples requires us to discuss the statement object
@@ -201,11 +211,11 @@ dynamics, its life cycle and how it affects other subsystems in details.
 
 ==== Statement dynamics
 
-When the Java application executes statement, a lot more operations
+When a Java application executes a statement, a lot more operations
 happen behind the scenes:
 
 1.  A new statement object is allocated on the server. Firebird returns
-to the client a 32-bit identifier of the allocated object, a statement
+a 32-bit identifier of the allocated object, a statement
 handle, that must be used in next operations.
 2.  An SQL statement is compiled into an executable form and is
 associated with the specified statement handle.
@@ -227,13 +237,13 @@ statement did not return any result set.
 * If `Statement.executeUpdate()` was called, Jaybird asks Firebird
 to give the information about the number of affected rows. This method
 can be called only if the statement type tells that no query can be
-returned by the statement. When it is called for queries, an exception
+returned by the statement. When called for queries, an exception
 is thrown despite the fact that the statement was successfully executed
 on the server.
 * If `Statement.executeQuery()` was called and the statement type
 indicates that a result set can be returned, Jaybird constructs a `ResultSet`
 object and returns it to the application. No additional checks, like
-whether result set contains rows, are performed, as it is the
+whether the result set contains rows, are performed, as it is the
 responsibility of the `ResultSet` object. If this method is used for
 statements that do not return result set, an exception is thrown despite
 the fact that the statement was successfully executed on the server.
@@ -244,10 +254,10 @@ The described behaviour may change in the future by throwing the exception
 *before* executing the statement.
 =====
 
-When the application does not need to know how many rows were modified,
-it should use the `execute()` method instead of `executeUpdate()` one.
+When an application does not need to know how many rows were modified,
+it should use the `execute()` method instead of `executeUpdate()`.
 This saves an additional call to the server to get the number of modified
-rows and significantly increases the performance in the situations where
+rows which can increase the performance in the situations where
 network latency is comparable with the statement execution times.
 
 The `execute()` method is also the only method that can be used when the
@@ -257,7 +267,7 @@ execute).
 
 After using the statement object, an application should close it. Two
 different possibilities exist: to close the result set object
-associated with the statement handle and to close the object completely.
+associated with the statement handle and to close the statement completely.
 
 If, for example, we want to reuse the statement object for another
 query, it is not necessary to completely release the allocated
@@ -276,7 +286,7 @@ the JDBC specification does not allow use of a `Statement` object after
 Step 2 in the previous section is probably the most important, and
 usually, most expensive part of the statement execution life cycle.
 
-As was already told, when Firebird server receives the "prepare
+When Firebird server receives the "prepare
 statement" call, it parses the SQL statement and converts it into the
 executable form: BLR. BLR, or Binary Language Representation, contains 
 low-level commands to traverse the database tables, conditions that are used 
@@ -286,8 +296,8 @@ that are used to improve the performance, etc.
 When a statement is prepared, it holds the references to all database object
 definitions that are used during that statement execution. This
 mechanism preserves the database schema consistency, it saves the
-statement objects from the "surprises" like accessing the database table
-that is been accessed by some application.
+statement objects from "surprises" like accessing the database table
+that is been accessed by some application. (*TODO* Meaning unclear)
 
 However, holding a reference on the database objects has one very
 unpleasant effect: it is not possible to upgrade the database schema,
@@ -303,36 +313,34 @@ it is no longer needed. This invalidates the BLR and release all
 references to the database objects, making them available for the
 modification.
 
-Special care should be taken when the statement pooling is used (check
-the details on <<Prepared statement pooling>>). In this case statements are not released even if the
-`close()` method is called. The only possibility to close the pooled
+Special care should be taken when the statement pooling is used. In that case statements are not 
+released even if the `close()` method is called. The only possibility to close the pooled
 statements is to close the pooled connections. Please check the
-corresponding chapter for more information.
+documentation of your connection pool for more information.
 
 === The java.sql.PreparedStatement interface
 
 As we have seen, Jaybird already performs internal optimization when it
 comes to multiple statement execution – it can reuse the allocated
 statement handle in subsequent calls. However this improvement is very
-small and sometimes can even be neglected when compared to the time
+small and sometimes can even be neglible compared to the time
 needed to compile the SQL statement into the BLR form.
 
-The `PreparedStatement` interface addresses such inefficiency. An object
+The `PreparedStatement` interface addresses such inefficiencies. An object
 that implements this interface represents a precompiled statement that
 can be executed multiple times. If we use the execution flow described
 in the "<<Statement dynamics>>" section, it allows us
-to go directly to the step 4 for the subsequent executions.
+to go directly to the step 4 for repeated executions.
 
 However, executing the same statement with the same values makes little
 sense, unless we want to fill the table with the same data, which
 usually is not the case. Therefore, JDBC provides support for the
 parametrized statements – SQL statements where literals are replaced
-with question marks (`?`). An application is required to fill the parameters
-before executing the statement.
+with question marks (`?`), so called positional parameters. The application then assigns values to 
+the  parameters before executing the statement.
 
-Our first example in this chapter can be rewritten the way it is shown
-below. At the first glance the code became more complicated without any
-visible advantage.
+Our first example in this chapter can be rewritten as shown below. At first glance the code becomes 
+more complicated without any visible advantage.
 
 [source,java]
 .Example for user account update rewritten using prepared statements
@@ -344,40 +352,42 @@ try (
 ) {
     stmt1.setString(1, "Doe");
     stmt1.setString(2, "Joe");
-    ResultSet rs = stmt1.executeQuery();
+    try (ResultSet rs = stmt1.executeQuery()) {
     
-    if (rs.next()) {
-        int userId = rs.getInt(1);
-                
-        try (
-            PreparedStatement stmt2 = 
-                connection.prepareStatement(
-                    "UPDATE accounts SET accountEnabled = 1 " +
-                    "WHERE userId = ?" );
-        ) {
-            stmt2.setInt(1, userId);
-            
-            int rowsUpdated = stmt2.executeUpdate();
-            
-            if (rowsUpdated == 0) {
-                try (
-                    PreparedStatement stmt3 =
-                        connection.prepareStatement( 
-                            "INSERT INTO accounts " + 
-                            "(userId, enabled) VALUES (?, 1)");
-                ) {
-                    stmt3.setInt(1, userId);
-                    rowsUpdated = stmt3.executeUpdate();
+        if (rs.next()) {
+            int userId = rs.getInt(1);
+
+            try (
+                PreparedStatement stmt2 =
+                    connection.prepareStatement(
+                        "UPDATE accounts SET accountEnabled = 1 " +
+                        "WHERE userId = ?" );
+            ) {
+                stmt2.setInt(1, userId);
+
+                int rowsUpdated = stmt2.executeUpdate();
+
+                if (rowsUpdated == 0) {
+                    try (
+                        PreparedStatement stmt3 =
+                            connection.prepareStatement(
+                                "INSERT INTO accounts " +
+                                "(userId, enabled) VALUES (?, 1)");
+                    ) {
+                        stmt3.setInt(1, userId);
+                        rowsUpdated = stmt3.executeUpdate();
+                    }
                 }
-            if (rowsUpdated != 1) 
-                throw new SomeException(
-                    "User was not updated correctly.");
+                if (rowsUpdated != 1)
+                    throw new SomeException(
+                        "User was not updated correctly.");
+            }
         }
     }
 }
 ----
 
-* First, instead of using the one statement object we have to use three
+* First, instead of using just one statement object we have to use three
 – one per statement.
 * Second, before executing the statement we have to set parameters
 first. As is shown in the example, parameters are referenced by
@@ -385,7 +395,7 @@ their position. The `PreparedStatement` interface provides setter
 methods for all primitive types in Java as well as for some widely used
 SQL data types (BLOBs, CLOBs, etc.). The `NULL` value is set by calling
 the `PreparedStatement.setNull(int)` method.
-* Third, we are forced now to use three nested try-with-resources blocks,
+* Third, we are forced now to use four nested try-with-resources blocks,
 which makes code less readable.
 
 So, where's the advantage? First of all, we can redesign our application
@@ -394,7 +404,7 @@ constructor) and close them when application is shut down. In this case
 the code is even more compact (see the next example). Unfortunately the
 application is now responsible for prepared statement management. When
 a connection is closed, the prepared statement object will be invalidated,
-but the application will not be notified about this fact. Also, if the
+but the application will not be notified. Also, if the
 application uses similar statements in different parts of the
 application, the refactoring might affect many classes, possibly
 destabilizing the code. So, the refactoring on this example is not
@@ -417,23 +427,24 @@ PreparedStatement insertStmt =
 queryStmt.clearParameters();
 queryStmt.setString(1, "Doe");
 queryStmt.setString(2, "Joe");
-ResultSet rs = queryStmt.executeQuery();
+try (ResultSet rs = queryStmt.executeQuery()) {
 
-if (rs.next()) {
-    int userId = rs.getInt(1);
-    
-    updateStmt.clearParameters();
-    updateStmt.setInt(1, userId);
-    int rowsUpdated = updateStmt.executeUpdate();
-    
-    if (rowsUpdated == 0) {
-        insertStmt.clearParameters();
-        insertStmt.setInt(1, userId);
-        rowsUpdated = insertStmt.executeUpdate();
+    if (rs.next()) {
+        int userId = rs.getInt(1);
         
-    if (rowsUpdated != 1) 
-       throw new SomeException(
-           "User was not updated correctly.");
+        updateStmt.clearParameters();
+        updateStmt.setInt(1, userId);
+        int rowsUpdated = updateStmt.executeUpdate();
+        
+        if (rowsUpdated == 0) {
+            insertStmt.clearParameters();
+            insertStmt.setInt(1, userId);
+            rowsUpdated = insertStmt.executeUpdate();
+            
+        if (rowsUpdated != 1) 
+           throw new SomeException(
+               "User was not updated correctly.");
+    }
 }
 ......................
 
@@ -445,15 +456,18 @@ queryStmt.close();
 
 The answer to the advantage question is hidden in the
 `prepareStatement(String)` call. Since the same statement can be used
-for different parameter values, the connection object has a possibility to
+for different parameter values, the connection object could have a possibility to
 perform prepared statement caching. A JDBC driver can ignore the request
 to close the prepared statement, save it internally and reuse it each
 time application asks to prepare an SQL statement that is known to the
 connection.
 
+NOTE: Jaybird currently does not perform statement caching
+
+////
 === Prepared statement pooling
 
-*TODO* Feature not supported by Jaybird 3
+*TODO* Feature not supported by Jaybird 3, remove entirely?
 
 As was mentioned before, connection pooling was introduced to reduce
 the time needed to obtain a connection. Despite its rich features, the
@@ -583,19 +597,21 @@ currently in use or not. This method can be used if a short-time
 application down time is acceptable. To continue functioning application
 must construct a new pool and replace the old one since `shutdown()`
 method invalidates the pool object.
+////
 
+[[callable-statement]]
 === The java.sql.CallableStatement interface
 
-The `CallableStatement` interface extends `PrepatedStatement` with
+The `CallableStatement` interface extends `PreparedStatement` with
 methods for executing and retrieving results from stored procedures. It
 was introduced in JDBC specification in order to unify access to the
 stored procedures across the database system. The main difference to
 `PreparedStatement` is that the procedure call is specified using the
-portable escaped syntax:footnote:[escape syntax in limited form also works for `Statement and `PreparedStatement`]
+portable escaped syntax:footnote:[escape syntax in limited form also works for `Statement` and `PreparedStatement`]
 
 .Unified escaped syntax for stored procedure execution
 ....
-procedure call ::= {[?=]call <params>}
+procedure call ::= {[?=]call <procedure-name>(<params>)}
 params ::= <param> [, <param> ...]
 ....
 
@@ -603,7 +619,7 @@ Each stored procedure is allowed to take zero or more input parameters,
 similar to the `PreparedStatement` interface. After being executed,
 a procedure can either return data in the output parameters or it can
 return a result set that can be traversed. Though the interface is
-generic enough to support also database engines that can return both and
+generic enough to support database engines that can return both and
 have multiple result sets. These features are of no interest to Jaybird
 users, since Firebird does not support them.
 
@@ -635,7 +651,7 @@ procedures". These are stored procedures that contain the `RETURNS`
 keyword in their header and the `SUSPEND` keyword in their procedure body,
 usually within a loop. Selectable procedures are executed using the
 `"SELECT * FROM myProcedure(...)"` SQL statement. It is also allowed to
-use the `EXECUTE PROCEDURE` statement, however this call might produce strange
+use the `EXECUTE PROCEDURE` statement, however that might produce strange
 results, since for selectable procedures is is equivalent to executing a
 `SELECT` statement, but doing only one fetch after the select. If
 the procedure implementation relies on the fact that all rows that it
@@ -738,34 +754,37 @@ result set handling.
 [source,java]
 .Example of using the PreparedStatement to call executable procedure
 ----
-PreparedStatement stmt = connection.prepareStatement(
-    "EXECUTE PROCEDURE factorial(?)");
+try (PreparedStatement stmt = connection.prepareStatement(
+             "EXECUTE PROCEDURE factorial(?)")) {
     
-stmt.setInt(1, 2);
-
-ResultSet rs = stmt.executeQuery();
-rs.next(); // move cursor to the first row
-
-int result = rs.getInt(1);
+    stmt.setInt(1, 2);
+    
+    try (ResultSet rs = stmt.executeQuery()) {
+        rs.next(); // move cursor to the first row
+        
+        int result = rs.getInt(1);
+    }
+}
 ----
 
-However, standard was of calling stored procedures in JDBC is to use the
-`CallableStatement`. Note that the call should be specified using the
-escaped syntax, but native Firebird EXECUTE PROCEDURE syntax is also
+However, the standard for calling stored procedures in JDBC is to use the
+`CallableStatement`. The call can be specified using the
+escaped syntax, but native Firebird `EXECUTE PROCEDURE` syntax is also
 supported.
 
 [source,java]
 .Accessing the executable procedure via CallableStatement
 ----
-CallableStatement stmt = connection.prepareCall(
-    "{call factorial(?,?)}");
+try (CallableStatement stmt = connection.prepareCall(
+             "{call factorial(?,?)}")) {
     
-stmt.setInt(1, 2);
-stmt.registerOutParameter(2, Types.INTEGER);
-
-stmt.execute();
-
-int result = stmt.getInt(2);
+    stmt.setInt(1, 2);
+    stmt.registerOutParameter(2, Types.INTEGER);
+    
+    stmt.execute();
+    
+    int result = stmt.getInt(2);
+}
 ----
 
 Please note the difference in the number of parameters used in the
@@ -784,7 +803,7 @@ call we get the result from the appropriate getter method.
 It is worth mentioning that the stored procedure call preparation
 happens in the `CallableStatement.execute` method, and not in the
 `prepareCall` method of the `Connection` object. Reason for this
-potential deviation from the specification is that Firebird does not
+deviation from the specification is that Firebird does not
 allow to prepare a procedure without specifying parameters and set them
 only after the statement is prepared. It seems that this part of the
 JDBC specification is modelled after the Oracle RDBMS and a workaround
@@ -800,30 +819,30 @@ applications from the database servers that allow INOUT parameter types,
 such as Oracle.
 
 The actual stored procedure call using the `CallableStatement` is
-equivalent to the call using the prepared statement as it was showed in
+equivalent to the call using the prepared statement as shown in
 the first example. There is no measurable performance differences when
 using the callable statement interface.
 
-Also the JDBC specification allows another syntax for the stored
-procedure calls:
+The JDBC specification allows another syntax for the stored procedure calls:
 
 [source,java]
 .Calling stored procedure using different syntax
 ----
-CallableStatement stmt = connection.prepareCall(
-    "{?= call factorial(?}");
+try (CallableStatement stmt = connection.prepareCall(
+             "{?= call factorial(?}")) {
     
-stmt.registerOutParameter(1, Types.INTEGER);
-stmt.setInt(2, 2);
-
-stmt.execute();
-
-int result = stmt.getInt(1);
+    stmt.registerOutParameter(1, Types.INTEGER);
+    stmt.setInt(2, 2);
+    
+    stmt.execute();
+    
+    int result = stmt.getInt(1);
+}
 ----
 
-Note, that input parameters have now indices 2 and 3, and not 1 and 2 as
+Note, that input parameter now has index 2, and not 1 as
 in the previous example. This syntax seems to be more intuitive, as it
-looks like a function call. It is also possible to use this syntax for
+looks like a function call. It is possible to use this syntax for
 stored procedures that return more than one parameter by combining code
 from the second and the last examples.
 
@@ -840,14 +859,16 @@ The SELECT SQL statement is the natural way of accessing the selectable
 procedures in Firebird. You "select" from such procedures using the
 `Statement` or `PreparedStatement` objects.
 
+// TODO Simplify example below
+
 With minor issues it is also possible to access selectable stored
 procedures through the `CallableStatement` interface. The escaped call
 must include all IN and OUT parameters. After the call is prepared,
-parameters are set the same way. However application must explicitly
+parameters are set the same way. However, the application must explicitly
 tell the driver that selectable procedure is used and access to the
 result set is desired. This is done by calling a Jaybird-specific method
-as showed in the example below. When this is not done, application has
-access only to the first row of the result set.
+as shown in the example below. When this is not done, the application has
+access only to the first row of the result set. *TODO* Outdated?
 
 The getter methods from the `CallableStatement` interface will provide
 you access only to the first row of the result set. In order to get
@@ -861,23 +882,25 @@ method.
 import java.sql.*;
 import org.firebirdsql.jdbc.*;
 ...
-CallableStatement stmt = connection.prepareCall(
-    "{call factorial(?, ?, ?)}");
+try (CallableStatement stmt = connection.prepareCall(
+             "{call factorial(?, ?, ?)}")) {
     
-FirebirdCallableStatement fbStmt = 
-        (FirebirdCallableStatement)stmt;
-fbStmt.setSelectableProcedure(true);
-
-stmt.setInt(1, 5);
-stmt.registerOutParameter(2, Types.INTEGER); // first OUT
-stmt.registerOutParameter(3, Types.INTEGER); // second OUT
-
-ResultSet rs = stmt.executeQuery();
-
-while(rs.next()) {
-    int firstCol = rs.getInt(1);             // first OUT
-    int secondCol = rs.getInt(2);            // second OUT
-    int anotherSecondCol = stmt.getInt(3);   // second OUT
+    FirebirdCallableStatement fbStmt = 
+            (FirebirdCallableStatement)stmt;
+    fbStmt.setSelectableProcedure(true);
+    
+    stmt.setInt(1, 5);
+    stmt.registerOutParameter(2, Types.INTEGER); // first OUT
+    stmt.registerOutParameter(3, Types.INTEGER); // second OUT
+    
+    try (ResultSet rs = stmt.executeQuery()) {
+    
+        while(rs.next()) {
+            int firstCol = rs.getInt(1);             // first OUT
+            int secondCol = rs.getInt(2);            // second OUT
+            int anotherSecondCol = stmt.getInt(3);   // second OUT
+        }
+    }
 }
 ----
 
@@ -904,15 +927,15 @@ that among other descriptions provides the following:
 * information whether the column is read-only or writable, whether it
 contains signed numbers, whether it can contains NULL values, etc.
 
-Additionally, the JDBC 3.0 specification defines a new interface
+Additionally, the JDBC 3.0 specification introduced the interface
 `java.sql.ParameterMetaData` that provides similar information for the
 input parameters of both `PreparedStatement` and `CallableStatement`
 objects.
 
-Note, due to the implementation specifics of the escaped syntax support
+NOTE: Due to the implementation specifics of the escaped syntax support
 for callable statements, it is not allowed to call
 `getParameterMetaData` before all OUT parameters are registered.
-Otherwise driver will try to prepare a procedure with an incorrect
+Otherwise the driver will try to prepare a procedure with an incorrect
 number of parameters and the database server will generate an error.
 
 === Batch Updates
@@ -932,21 +955,24 @@ Adding a statement that returns result set is an error.
 [source,java]
 .Example of batch updates using Statement object
 ----
-Statement stmt = connection.createStatement();
+try (Statement stmt = connection.createStatement()) {
 
-stmt.addBatch("UPDATE products " + 
-    "SET amount = amount – 1 WHERE id = 1");
-stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
-
-int[]updateCounts = stmt.executeBatch();
+    stmt.addBatch("UPDATE products " + 
+        "SET amount = amount – 1 WHERE id = 1");
+    stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
+    
+    int[] updateCounts = stmt.executeBatch();
+}
 ----
 
 The JDBC specification recommends to turn the auto-commit mode off to
 guarantee standard behavior for all databases. The specification
 explicitly states that behavior in auto-commit case is implementation
-defined. Jaybird executes a batch in a single transaction, i.e. the
+defined. 
+
+In auto-commit mode, Jaybird executes a batch in a single transaction, i.e. the
 "all-or-nothing" principle. A new transaction is started before the
-batch execution and is committed if there were no exception during batch
+batch execution and is committed if there were no exceptions during batch
 execution, or is rolled back if at least one batch command generated an
 error.
 
@@ -973,55 +999,58 @@ statements from batch after the first error. In auto-commit mode it will
 also rollback the transaction. An application can obtain update counts
 for the already executed statements using `getUpdateCounts` method of
 the `BatchUpdateException` class. The returned array will always contain
-fewer entries than there were statements in the batch.
+fewer entries than there were statements in the batch, as it will only
+report the update counts of succesfully executed statements.
 
 ==== Batch Updates with java.sql.PreparedStatement and java.sql.CallableStatement
 
 Using batch updates with a prepared statement is conceptually similar to
-the java.sql.Statement approach. Main difference is that only one
-statement can be used.
+the `java.sql.Statement` approach. The main difference is that only one
+statement can be used, but with different sets of parameter values.
 
 [source,java]
 .Example of batch updates with PreparedStatement
 ----
-PreparedStatement stmt = connection.prepareStatement(
-    "INSERT INTO products(id, name) VALUES(?, ?)");
+try (PreparedStatement stmt = connection.prepareStatement(
+             "INSERT INTO products(id, name) VALUES(?, ?)")) {
     
-stmt.setInt(1, 1);
-stmt.setString(2, "apple");
-stmt.addBatch();
-
-stmt.setInt(1, 2);
-stmt.setString(2, "orange");
-stmt.addBatch();
-
-int[] updateCounts = stmt.executeBatch();
+    stmt.setInt(1, 1);
+    stmt.setString(2, "apple");
+    stmt.addBatch();
+    
+    stmt.setInt(1, 2);
+    stmt.setString(2, "orange");
+    stmt.addBatch();
+    
+    int[] updateCounts = stmt.executeBatch();
+}
 ----
 
 [source,java]
 .Example of batch updates with CallableStatement
 ----
-CallableStatement stmt = connection.prepareCall(
-    "{call add_product(?, ?)");
+try (CallableStatement stmt = connection.prepareCall(
+             "{call add_product(?, ?)")) {
     
-stmt.setInt(1, 1);
-stmt.setString(2, "apple");
-stmt.addBatch();
-
-stmt.setInt(1, 2);
-stmt.setString(2, "orange");
-stmt.addBatch();
-
-int[] updateCounts = stmt.executeBatch();
+    stmt.setInt(1, 1);
+    stmt.setString(2, "apple");
+    stmt.addBatch();
+    
+    stmt.setInt(1, 2);
+    stmt.setString(2, "orange");
+    stmt.addBatch();
+    
+    int[] updateCounts = stmt.executeBatch();
+}
 ----
 
-=== Escaped Syntax
+=== Escape Syntax
 
-Escaped syntax was introduced as a portable JDBC-specific syntax to
-represent parts of the SQL language that are usually implemented
-differently by database vendors. Also, the escaped syntax is used to
+The escape syntax was introduced as a portable JDBC-specific syntax to
+represent parts of the SQL language that are (or were) usually implemented
+differently by database vendors. The escaped syntax is also used to
 define features that might not be implemented by the database server,
-but have an appropriate implementation in the driver.
+but can have an appropriate implementation in the driver.
 
 The JDBC specification defines escaped syntax for the following
 
@@ -1030,9 +1059,6 @@ The JDBC specification defines escaped syntax for the following
 * outer joins
 * calling stored procedures
 * escape characters for LIKE clauses
-
-Jaybird implements the escaped syntax support for all cases except the
-last one which will be addressed in next releases.
 
 ==== Scalar Functions
 
@@ -1044,7 +1070,7 @@ Escaped syntax for the scalar function call is defined as
 
 For example `{fn concat('Firebird', 'Java')}` concatenates these two
 words into `'FirebirdJava'` literal.
-"<<Supported JDBC Scalar Functions>>" provides a list of supported scalar functions.
+"<<jdbcescape>>" provides a list of supported scalar functions.
 
 ==== Date and Time Literals
 
@@ -1100,7 +1126,7 @@ SELECT * FROM {oj tableA a
 ==== Stored Procedures
 
 The escaped syntax for stored procedures is described in details in the
-the section <<The java.sql.CallableStatement interface>>.
+the section <<callable-statement>>.
 
 ==== LIKE Escaped Characters
 
