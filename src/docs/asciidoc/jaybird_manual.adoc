@@ -11,6 +11,17 @@ Roman Rokytskyy;Mark Rotteveel
 :jaybird-full-version: 3.0.3
 :jna-version: 4.4.0
 :antlr-version: 4.7
+:is-snapshot:
+
+ifdef::is-snapshot[]
+[NOTE]
+====
+This is a snapshot version of the Jaybird manual. It may contain obvious (and not so obvious)
+errors, or it may still miss information on more recent features. If you find any problems, don't
+hesitate to report them on https://github.com/FirebirdSQL/jaybird-manual/issues[^] or submit a pull
+request with the fix.
+====
+endif::is-snapshot[]
 
 include::license.adoc[]
 

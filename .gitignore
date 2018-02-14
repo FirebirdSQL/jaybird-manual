@@ -5,3 +5,4 @@ old-odt-manual/.~lock.jaybird_manual.odt#
 .project
 .settings/
 .idea/
+*.iml
