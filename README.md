@@ -6,14 +6,14 @@ Manual for [Jaybird](https://github.com/FirebirdSQL/jaybird), the Firebird JDBC 
 Snapshot build of manual
 ========================
 
-You can see the latest snapshot build of the manual on http://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
+You can see the latest snapshot build of the manual on https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
 
-This is automatically build for each change on master.
+This is automatically built for each change on master.
 
 Latest release
 ==============
 
-The latest published version of this manual is [Jaybird 2.1 JDBC driver Java Programmer's Manual](http://www.firebirdsql.org/file/documentation/drivers_documentation/Jaybird_2_1_JDBC_driver_manual.pdf)
+The latest published version of this manual is [Jaybird 2.1 JDBC driver Java Programmer's Manual](https://www.firebirdsql.org/file/documentation/drivers_documentation/Jaybird_2_1_JDBC_driver_manual.pdf)
 
 This version was created from the old ODT version; its rendering doesn't match
 the rendering of the current asciidoc version.
@@ -31,7 +31,7 @@ Run `gradlew` or its full equivalent `gradlew clean asciidoctor`.
 Supporting information
 ======================
 
-This project uses [asciidoctor](http://asciidoctor.org/).
+This project uses [asciidoctor](https://asciidoctor.org/).
 
 Reporting bugs
 ==============
