@@ -9,7 +9,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 script:
-  - .\gradlew clean asciidoctor
+  - ./gradlew clean asciidoctor
 
 deploy:
   provider: pages
