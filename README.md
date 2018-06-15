@@ -1,7 +1,14 @@
 # jaybird-manual
-Jaybird JDBC Driver Java Programmer's Manual
+Jaybird JDBC Driver Java Programmer's Manual [![Build Status](https://travis-ci.com/FirebirdSQL/jaybird-manual.svg?branch=master)](https://travis-ci.com/FirebirdSQL/jaybird-manual)
 
 Manual for [Jaybird](https://github.com/FirebirdSQL/jaybird), the Firebird JDBC driver.
+
+Snapshot build of manual
+========================
+
+You can see the latest snapshot build of the manual on http://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
+
+This is automatically build for each change on master.
 
 Latest release
 ==============
