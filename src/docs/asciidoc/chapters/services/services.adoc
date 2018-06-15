@@ -5,7 +5,7 @@ In addition to normal database connections, Firebird features
 server-wide connections. These are used to perform various
 administrative tasks in Firebird, e.g. database backup, maintenance,
 statistics. The set of API calls to perform such tasks are known under
-the name "Services API". Additionallym client application can use the
+the name "Services API". Additionally, client application can use the
 Services API to get some limited information about the server
 environment and configuration.
 
@@ -367,8 +367,8 @@ The next service available is the user management. The routines are
 defined in the `UserManager` interface and are implemented in the
 `FBUserManager` class. Additionally, there is an `User` interface
 providing getters and setters for properties of a user account on the
-server and corresponding implementation in the `FBUser`footnote:[The
-class implementation is simple bean publishing the properties via
+server and corresponding implementation in the `FBUser` footnote:[The
+class implementation is a simple bean publishing the properties via
 getters and setters. You can replace it with any other implementation of
 User interface.] class. The available properties of the `FBUser` class
 are:
@@ -513,7 +513,7 @@ To bring system back online use the `bringDatabaseOnline()` method.
 ==== Shadow configuration
 
 A database shadow is an in-sync copy of the database that is usually
-stored on a different hard disk, possibly on remote
+stored on a different hard disk, possibly on a remote
 computerfootnote:[Currently possible only on Unix platforms by using 
 NFS shares.], which can be used as a primary database if the main
 database server crashes. Shadows can be defined using `CREATE SHADOW`

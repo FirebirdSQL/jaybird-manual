@@ -29,7 +29,7 @@ located in the `intl/` directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.
 
-Firebird uses following algorithm when performing translations:
+Firebird uses the following algorithm when performing translations:
 
 * If source and target character sets match, send the content unchanged.
 * If the target character set is "NONE", send source content unchanged.
@@ -86,7 +86,7 @@ can be done by either creating database with default UTF8 character set
 or by adding `CHARACTER SET UTF8` clause to the column or domain
 definitions.
 * the `encoding` connection property in the JDBC driver has to be set to
-UTF8; this can be done several ways: the he easiest one is to add the
+UTF8; this can be done several ways: the easiest one is to add the
 appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the `DriverManager` class
 (see the second example). The applications that use `DataSource`
@@ -123,7 +123,7 @@ There are few limitations related to using the UTF8 character set:
 * it is not possible to create Unicode columns longer than 8191 Unicode
 characters; this limitation is caused by the fact that the longest
 possible `VARCHAR` column can occupy 32765 bytes (32767 for `CHAR` columns)
-and single UTF8 character can occupy maximum four bytes.
+and a single UTF8 character can occupy up to four bytes.
 * it is not possible to index Unicode columns longer than 1023
 characters; this limitation is caused by the fact that the longest index
 key cannot be longer than a quarter of the database page, which in
@@ -138,6 +138,8 @@ two bytes of the network packet, which in turn might cause additional
 roudtrips to the server to fetch data.
 
 ==== The NONE character set
+
+*TODO* Document changes in behavior introduced in Jaybird 3
 
 Java introduces additional complexity when the NONE character set is
 used. The reason for this is that Java internally stores all strings in

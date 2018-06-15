@@ -7,7 +7,7 @@ interface.
 
 === ResultSet properties
 
-[[resultsets-types]
+[[resultsets-types]]
 ==== ResultSet Types
 
 The JDBC specification defines three types of result sets
@@ -152,7 +152,7 @@ When getters for primitive types are used and original value in the
 result set is `NULL`, driver returns a default value for that type. For
 example `getInt()` method will return 0. In order to know whether the
 value is really 0 or NULL, you have to call `ResultSet.wasNull()`
-method *after* calling the _set_ method.
+method *after* calling the _get_ method.
 
 Getters that return object values (`getString`, `getDate`, `getObject`,
 etc.) will return a `null` value for columns containing
@@ -219,6 +219,8 @@ positioned updates.
 First, the application has to specify the name of the cursor and the list of the columns that will
 be updated before the query is executed. This name is later used in the `UPDATE` statement as
 showed on the example.
+
+// TODO Code doesn't set CONCUR_UPDATABLE
 
 [[using-positioned-updates]]
 [source,java]

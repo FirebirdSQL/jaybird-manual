@@ -111,7 +111,7 @@ call `setAutoCommit` method.
 Special care should be taken when using multiple statements in
 auto-commit mode. The JDBC 2.0 specification did not fully define the rules
 for the statement completion as it did not define the behavior
-of multiple `ResultSe`t objects created using the same Connection object
+of multiple `ResultSet` objects created using the same connection object
 in auto-commit mode.
 
 Since Firebird does not allow the result set to remain open after the
@@ -409,7 +409,7 @@ current transaction. The record version with the highest timestamp that
 is however lower or equal to the timestamp of the current transaction is
 returned to the application. This effectively returns the version of the
 record that was when the current transaction started and guarantees that
-neither non-repeatable reads not phantom reads can ever occur.
+neither non-repeatable reads nor phantom reads can ever occur.
 
 In `read_committed` mode Firebird database engine, however, accesses the
 record version with the highest timestamp, for which the corresponding
@@ -425,14 +425,13 @@ specifies the behavior of the transaction when it meets a record version
 with the timestamp which belongs to the currently running transaction
 which is not yet committed.
 
-The most application require the
-`TransactionParameterBuffer.REC_VERSION` mode, which is shown in the
+Most applications require the `TransactionParameterBuffer.REC_VERSION` mode, which is shown in the
 code above. In this mode database engine fetches the latest committed
 version as described before.
 
 The `TransactionParameterBuffer.NO_REC_VERSION` constant tells database
-engine to report the lock conflict when uncommitted record version is
-met while fetching data from the database. The outcome of the operation
+engine to report the lock conflict when an uncommitted record version is
+seen while fetching data from the database. The outcome of the operation
 is then controlled by the lock resolution mode (see section
 <<Lock resolution mode>>).
 
@@ -450,9 +449,9 @@ be made in the transaction. The "timestamp" affects the garbage
 collection process, since the database engine cannot release records
 that were modified in the transactions with higher "timestamps" even
 when these record versions are no longer needed (in other words, when
-there are already newer versions of the records). Thus, the long-running
+there are already newer versions of the records). Thus, long-running
 read-write transaction inhibits the garbage collection even when no
-modifications were done in it.
+modifications are done in it.
 
 Therefore, it is recommended to set the read-only mode for the
 transaction when it is used for read operations.

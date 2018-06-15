@@ -2,6 +2,8 @@
 [appendix]
 == Supported JDBC Scalar Functions
 
+*TODO* Needs updating with support improved in Jaybird 3 and 4
+
 The JDBC API supports the escaped syntax for numeric, string, time,
 date, system and conversion functions. Jaybird will try to provide an
 equivalent of the JDBC function using the built-in capabilities of the

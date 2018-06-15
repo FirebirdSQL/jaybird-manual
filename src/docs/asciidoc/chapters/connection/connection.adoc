@@ -62,7 +62,7 @@ by the JDBC specification, at this point driver registers itself with `java.sql.
 Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.firebirdsql.jdbc.FBDriver")`
 is no longer necessary, except when the driver is not on the system class path. Examples where it
 may be necessary to explicitly load the driver are web applications that include the driver in the
-deployment. There, the driver is not on the system classpath, so it will need to be loaded explicitly.
+deployment. There, the driver is not on the system class path, so it will need to be loaded explicitly.
 
 We will leave out usages of `Class.forName` in further examples.
 
@@ -127,7 +127,7 @@ a server-dependent folder. Having to include the root has the effect that a data
 connection string: `jdbc:firebirdsql://localhost//var/firebird/employee.fdb`
 
 It is possible to specify a relative path, but as this depends on the server
-configuration, we suggest you not to use relative paths, and instead use an alias.
+configuration, we suggest not to use relative paths, and instead use an alias.
 
 ==== Specifying extended properties
 
@@ -281,7 +281,7 @@ database server using TCP/IP sockets. No installation is required except
 adding the JDBC driver to the class path. This type of driver provides
 best performance when connecting to the remote server.
 
-In order to obtain connection using the `PURE_JAVA` driver type you have
+In order to obtain a connection using the `PURE_JAVA` driver type you have
 to use a JDBC URL as shown in <<Obtaining connection java.sql.DriverManager>>:
 
 ....

@@ -53,7 +53,7 @@ statistics gathering, etc.
 
 === Supported Servers
 
-Jaybird 3.0 supports Firebird 2.0 and higher.
+Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher.
 
 === Supported Specifications
 
@@ -239,7 +239,7 @@ provide a workaround and get you going again, whereas bug fixes might take awhil
 You can report bugs in the Firebird bug tracker, project http://tracker.firebirdsql.org/browse/JDBC["Java Client (Jaybird)"^]
 
 When reporting bugs, please provide a minimal, but complete reproduction, including databases and 
-sourcecode to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is 
+source code to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is 
 against a recent master version of the code. You can also fork the jaybird repository and create pull 
 requests.
 

@@ -9,6 +9,7 @@ Roman Rokytskyy;Mark Rotteveel
 :icons: font
 :jaybird-version: 3.0
 :jaybird-full-version: 3.0.3
+:min-support-firebird: 2.0
 :jna-version: 4.4.0
 :antlr-version: 4.7
 :is-snapshot:
@@ -22,8 +23,6 @@ hesitate to report them on https://github.com/FirebirdSQL/jaybird-manual/issues[
 request with the fix.
 ====
 endif::is-snapshot[]
-
-include::license.adoc[]
 
 :sectnums:
 
@@ -62,3 +61,7 @@ include::appendices/poolproperties/poolproperties.adoc[]
 include::appendices/characterencoding/characterencoding.adoc[]
 
 include::appendices/jdbcescape/jdbcescape.adoc[]
+
+:sectnums!:
+
+include::license.adoc[]

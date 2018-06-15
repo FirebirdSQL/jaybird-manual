@@ -2,6 +2,8 @@
 [appendix]
 == Extended connection properties
 
+*TODO* List is not complete and may miss some aliases
+
 Jaybird allows using arbitrary Database Parameters Block entries. The
 current Firebird API has almost 70 DPB parameters, however only few of
 them are interesting for regular users. This chapter provides a list of

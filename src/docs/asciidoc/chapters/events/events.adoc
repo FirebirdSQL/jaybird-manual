@@ -1,21 +1,19 @@
 [[events]]
 == Working with Events
 
-Until recently Firebird (InterBase) was, probably, the only RDBMS that
-provided asynchronous notification of the connected application about
-some system events. Where applications using other RDBMSs were required
-to reread the database tables to check for the changes, those using
-Firebird were able to avoid it – the triggers in the database can post
-an event in case of change. And even more, the event can be so specific
-that application would need to reread very limited set of records,
-possibly only one. This chapter describes the event mechanism in
-Firebird and the common usage scenarios.
+Firebird supports events, which is a feature that provides asynchronous notification to the 
+connected applications about some system events. Instead of requiring applications to reread the
+database tables to check for the changes, using events it is possible to avoid that: triggers in 
+the database can post an event in case of change. And even more, the event can be so specific that
+an application would need to reread only a limited set of records, possibly only one. 
+
+This chapter describes the event mechanism in Firebird and the common usage scenarios.
 
 === Database events
 
 The _event_ is a message generated in a trigger or stored procedure that
 is delivered to subscribed applications. The event is characterized only
-by name which is used when the event is posted, therefore two different
+by a name which is used when the event is posted, therefore two different
 events must have two different names. The applications that subscribe
 for events are required to specify the event names of interest, 
 no wildcards are allowed; and applications either provide a
@@ -64,7 +62,7 @@ used to tell the application that new records were added to the table.
 
 The events are posted from the trigger or stored procedure language
 using the `POST_EVENT` command. It is possible to create a stored
-procedure with thesole purpose of posting events:
+procedure with the sole purpose of posting events:
 
 [source,sql]
 .Example of posting events from PSQL code
@@ -75,7 +73,7 @@ AS BEGIN
 END
 ----
 
-Firebird 2.0 features new command `EXECUTE BLOCK` which allows to
+Firebird 2.0 features a new command `EXECUTE BLOCK` which allows to
 execute PSQL statements within DSQL code:
 
 [source,sql]
@@ -100,7 +98,7 @@ applications must implement to use the asynchronous event notification
 and an interface representing a database event with two properties –
 event name and occurrence count.
 
-Applications have to configure following properties before starting
+Applications have to configure the following properties before starting
 using the implementation `EventManager` interface:
 
 [cols="1,2,4",options="header",]
