@@ -438,7 +438,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#license">License</a></li>
 <li><a href="#introduction">1. Introduction</a>
 <ul class="sectlevel2">
 <li><a href="#_history">1.1. History</a></li>
@@ -551,6 +550,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_conversion_functions">E.5. Conversion Functions</a></li>
 </ul>
 </li>
+<li><a href="#license">Appendix F: License</a></li>
 </ul>
 </li>
 </ul>
@@ -575,37 +575,6 @@ request with the fix.</p>
 </td>
 </tr>
 </table>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="license">License</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The contents of this Documentation are subject to the Public
-Documentation License Version 1.0 (the "License"); you may only use this
-Documentation if you comply with the terms of this License. A copy of
-the License is available at
-<a href="http://www.firebirdsql.org/manual/licenses-pdl-text.html" class="bare">http://www.firebirdsql.org/manual/licenses-pdl-text.html</a>.</p>
-</div>
-<div class="paragraph">
-<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s
-Manual. The Initial Writer of the Original Documentation is Roman
-Rokytskyy Copyright &#169; 2004-2008. All Rights Reserved. (Initial Writer
-contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
-</div>
-<div class="paragraph">
-<p>Contributor(s): Mark Rotteveel.</p>
-</div>
-<div class="paragraph">
-<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2017. All
-Rights Reserved. (Contributor contact(s):
-<a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
-</div>
-<div class="paragraph">
-<p>Portions created by &#8230;&#8203;.. are Copyright &#169;&#8230;&#8203;..[Insert year(s)].
-All Rights Reserved. (Contributor contact(s):&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;[Insert
-hyperlink/alias]).</p>
 </div>
 </div>
 </div>
@@ -949,7 +918,7 @@ provide a workaround and get you going again, whereas bug fixes might take awhil
 </div>
 <div class="paragraph">
 <p>When reporting bugs, please provide a minimal, but complete reproduction, including databases and
-sourcecode to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is
+source code to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is
 against a recent master version of the code. You can also fork the jaybird repository and create pull
 requests.</p>
 </div>
@@ -1040,7 +1009,7 @@ by the JDBC specification, at this point driver registers itself with <code>java
 <p>Since Java 6 (JDBC 4), explicitly loading the driver using <code>Class.forName("org.firebirdsql.jdbc.FBDriver")</code>
 is no longer necessary, except when the driver is not on the system class path. Examples where it
 may be necessary to explicitly load the driver are web applications that include the driver in the
-deployment. There, the driver is not on the system classpath, so it will need to be loaded explicitly.</p>
+deployment. There, the driver is not on the system class path, so it will need to be loaded explicitly.</p>
 </div>
 <div class="paragraph">
 <p>We will leave out usages of <code>Class.forName</code> in further examples.</p>
@@ -1135,7 +1104,7 @@ connection string: <code>jdbc:firebirdsql://localhost//var/firebird/employee.fdb
 </div>
 <div class="paragraph">
 <p>It is possible to specify a relative path, but as this depends on the server
-configuration, we suggest you not to use relative paths, and instead use an alias.</p>
+configuration, we suggest not to use relative paths, and instead use an alias.</p>
 </div>
 <div class="sect3">
 <h4 id="_specifying_extended_properties">2.1.1. Specifying extended properties</h4>
@@ -1303,7 +1272,7 @@ adding the JDBC driver to the class path. This type of driver provides
 best performance when connecting to the remote server.</p>
 </div>
 <div class="paragraph">
-<p>In order to obtain connection using the <code>PURE_JAVA</code> driver type you have
+<p>In order to obtain a connection using the <code>PURE_JAVA</code> driver type you have
 to use a JDBC URL as shown in <a href="#connection-drivermanager">Obtaining connection java.sql.DriverManager</a>:</p>
 </div>
 <div class="literalblock">
@@ -3697,10 +3666,8 @@ interface.</p>
 </div>
 <div class="sect2">
 <h3 id="_resultset_properties">5.1. ResultSet properties</h3>
-<div class="paragraph">
-<p>[[resultsets-types]
-==== ResultSet Types</p>
-</div>
+<div class="sect3">
+<h4 id="resultsets-types">5.1.1. ResultSet Types</h4>
 <div class="paragraph">
 <p>The JDBC specification defines three types of result sets</p>
 </div>
@@ -3748,8 +3715,9 @@ usage and performance when the result set is large.</p>
 </tr>
 </table>
 </div>
+</div>
 <div class="sect3">
-<h4 id="_resultset_concurrency">5.1.1. ResultSet Concurrency</h4>
+<h4 id="_resultset_concurrency">5.1.2. ResultSet Concurrency</h4>
 <div class="paragraph">
 <p>Result set concurrency specifies whether the result set object can be
 updated directly or a separate SQL request should be used to update the
@@ -3798,7 +3766,7 @@ key definition or the <code>RDB$DB_KEY</code> column.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_resultset_holdability">5.1.2. ResultSet Holdability</h4>
+<h4 id="_resultset_holdability">5.1.3. ResultSet Holdability</h4>
 <div class="paragraph">
 <p>Result set holdability informs the driver whether result sets should be kept
 open across commits. <code>ResultSet.HOLD_CURSORS_OVER_COMMIT</code> tells the
@@ -3821,7 +3789,7 @@ executing a <code>"COMMIT RETAIN"</code> SQL statement.</p>
 <div class="paragraph">
 <p>To support holdable result sets, Jaybird will upgrade the result set to
 <code>TYPE_SCROLL_INSENSITIVE</code> to cache all rows locally, even if you asked for a <code>TYPE_FORWARD_ONLY</code>
-result set. See also <a href="#resultsets-types">[resultsets-types]</a>.</p>
+result set. See also <a href="#resultsets-types">ResultSet Types</a>.</p>
 </div>
 </div>
 </div>
@@ -3903,7 +3871,7 @@ is taken. <strong>TODO: Behavior changed with Jaybird 2.2, verify and update</st
 result set is <code>NULL</code>, driver returns a default value for that type. For
 example <code>getInt()</code> method will return 0. In order to know whether the
 value is really 0 or NULL, you have to call <code>ResultSet.wasNull()</code>
-method <strong>after</strong> calling the <em>set</em> method.</p>
+method <strong>after</strong> calling the <em>get</em> method.</p>
 </div>
 <div class="paragraph">
 <p>Getters that return object values (<code>getString</code>, <code>getDate</code>, <code>getObject</code>,
@@ -4161,7 +4129,7 @@ call <code>setAutoCommit</code> method.</p>
 <p>Special care should be taken when using multiple statements in
 auto-commit mode. The JDBC 2.0 specification did not fully define the rules
 for the statement completion as it did not define the behavior
-of multiple `ResultSe`t objects created using the same Connection object
+of multiple <code>ResultSet</code> objects created using the same connection object
 in auto-commit mode.</p>
 </div>
 <div class="paragraph">
@@ -4529,7 +4497,7 @@ current transaction. The record version with the highest timestamp that
 is however lower or equal to the timestamp of the current transaction is
 returned to the application. This effectively returns the version of the
 record that was when the current transaction started and guarantees that
-neither non-repeatable reads not phantom reads can ever occur.</p>
+neither non-repeatable reads nor phantom reads can ever occur.</p>
 </div>
 <div class="paragraph">
 <p>In <code>read_committed</code> mode Firebird database engine, however, accesses the
@@ -4548,15 +4516,14 @@ with the timestamp which belongs to the currently running transaction
 which is not yet committed.</p>
 </div>
 <div class="paragraph">
-<p>The most application require the
-<code>TransactionParameterBuffer.REC_VERSION</code> mode, which is shown in the
+<p>Most applications require the <code>TransactionParameterBuffer.REC_VERSION</code> mode, which is shown in the
 code above. In this mode database engine fetches the latest committed
 version as described before.</p>
 </div>
 <div class="paragraph">
 <p>The <code>TransactionParameterBuffer.NO_REC_VERSION</code> constant tells database
-engine to report the lock conflict when uncommitted record version is
-met while fetching data from the database. The outcome of the operation
+engine to report the lock conflict when an uncommitted record version is
+seen while fetching data from the database. The outcome of the operation
 is then controlled by the lock resolution mode (see section
 <a href="#_lock_resolution_mode">Lock resolution mode</a>).</p>
 </div>
@@ -4584,9 +4551,9 @@ be made in the transaction. The "timestamp" affects the garbage
 collection process, since the database engine cannot release records
 that were modified in the transactions with higher "timestamps" even
 when these record versions are no longer needed (in other words, when
-there are already newer versions of the records). Thus, the long-running
+there are already newer versions of the records). Thus, long-running
 read-write transaction inhibits the garbage collection even when no
-modifications were done in it.</p>
+modifications are done in it.</p>
 </div>
 <div class="paragraph">
 <p>Therefore, it is recommended to set the read-only mode for the
@@ -4806,7 +4773,7 @@ shared-read locks it if another transaction has either <code>concurrency</code> 
 server-wide connections. These are used to perform various
 administrative tasks in Firebird, e.g. database backup, maintenance,
 statistics. The set of API calls to perform such tasks are known under
-the name "Services API". Additionallym client application can use the
+the name "Services API". Additionally, client application can use the
 Services API to get some limited information about the server
 environment and configuration.</p>
 </div>
@@ -5244,7 +5211,7 @@ deprecated. You should use the SQL DDL statements for user management instead.</
 defined in the <code>UserManager</code> interface and are implemented in the
 <code>FBUserManager</code> class. Additionally, there is an <code>User</code> interface
 providing getters and setters for properties of a user account on the
-server and corresponding implementation in the <code>FBUser`<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnote_11" title="View footnote.">11</a>]</sup> class. The available properties of the `FBUser</code> class
+server and corresponding implementation in the <code>FBUser</code> <sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnote_11" title="View footnote.">11</a>]</sup> class. The available properties of the <code>FBUser</code> class
 are:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -5436,7 +5403,7 @@ database, changing the database file configuration.</p>
 <h4 id="_shadow_configuration">7.4.2. Shadow configuration</h4>
 <div class="paragraph">
 <p>A database shadow is an in-sync copy of the database that is usually
-stored on a different hard disk, possibly on remote
+stored on a different hard disk, possibly on a remote
 computer<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnote_13" title="View footnote.">13</a>]</sup>, which can be used as a primary database if the main
 database server crashes. Shadows can be defined using <code>CREATE SHADOW</code>
 SQL command and are characterized by a <em>mode</em> parameter:</p>
@@ -5815,22 +5782,21 @@ This method allows to limit the reported statistical information to a single or 
 <h2 id="events">8. Working with Events</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Until recently Firebird (InterBase) was, probably, the only RDBMS that
-provided asynchronous notification of the connected application about
-some system events. Where applications using other RDBMSs were required
-to reread the database tables to check for the changes, those using
-Firebird were able to avoid it – the triggers in the database can post
-an event in case of change. And even more, the event can be so specific
-that application would need to reread very limited set of records,
-possibly only one. This chapter describes the event mechanism in
-Firebird and the common usage scenarios.</p>
+<p>Firebird supports events, which is a feature that provides asynchronous notification to the
+connected applications about some system events. Instead of requiring applications to reread the
+database tables to check for the changes, using events it is possible to avoid that: triggers in
+the database can post an event in case of change. And even more, the event can be so specific that
+an application would need to reread only a limited set of records, possibly only one.</p>
+</div>
+<div class="paragraph">
+<p>This chapter describes the event mechanism in Firebird and the common usage scenarios.</p>
 </div>
 <div class="sect2">
 <h3 id="_database_events">8.1. Database events</h3>
 <div class="paragraph">
 <p>The <em>event</em> is a message generated in a trigger or stored procedure that
 is delivered to subscribed applications. The event is characterized only
-by name which is used when the event is posted, therefore two different
+by a name which is used when the event is posted, therefore two different
 events must have two different names. The applications that subscribe
 for events are required to specify the event names of interest,
 no wildcards are allowed; and applications either provide a
@@ -5892,7 +5858,7 @@ used to tell the application that new records were added to the table.</p>
 <div class="paragraph">
 <p>The events are posted from the trigger or stored procedure language
 using the <code>POST_EVENT</code> command. It is possible to create a stored
-procedure with thesole purpose of posting events:</p>
+procedure with the sole purpose of posting events:</p>
 </div>
 <div class="listingblock">
 <div class="title">Example of posting events from PSQL code</div>
@@ -5904,7 +5870,7 @@ END</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Firebird 2.0 features new command <code>EXECUTE BLOCK</code> which allows to
+<p>Firebird 2.0 features a new command <code>EXECUTE BLOCK</code> which allows to
 execute PSQL statements within DSQL code:</p>
 </div>
 <div class="listingblock">
@@ -5932,7 +5898,7 @@ and an interface representing a database event with two properties –
 event name and occurrence count.</p>
 </div>
 <div class="paragraph">
-<p>Applications have to configure following properties before starting
+<p>Applications have to configure the following properties before starting
 using the implementation <code>EventManager</code> interface:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -6063,6 +6029,9 @@ System.out.println(
 <div class="sect1">
 <h2 id="connectionproperties">Appendix A: Extended connection properties</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p><strong>TODO</strong> List is not complete and may miss some aliases</p>
+</div>
 <div class="paragraph">
 <p>Jaybird allows using arbitrary Database Parameters Block entries. The
 current Firebird API has almost 70 DPB parameters, however only few of
@@ -6960,7 +6929,7 @@ also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
 </div>
 <div class="paragraph">
-<p>Firebird uses following algorithm when performing translations:</p>
+<p>Firebird uses the following algorithm when performing translations:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7035,7 +7004,7 @@ definitions.</p>
 </li>
 <li>
 <p>the <code>encoding</code> connection property in the JDBC driver has to be set to
-UTF8; this can be done several ways: the he easiest one is to add the
+UTF8; this can be done several ways: the easiest one is to add the
 appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
@@ -7078,7 +7047,7 @@ Connection connection = DriverManager.getConnection(
 <p>it is not possible to create Unicode columns longer than 8191 Unicode
 characters; this limitation is caused by the fact that the longest
 possible <code>VARCHAR</code> column can occupy 32765 bytes (32767 for <code>CHAR</code> columns)
-and single UTF8 character can occupy maximum four bytes.</p>
+and a single UTF8 character can occupy up to four bytes.</p>
 </li>
 <li>
 <p>it is not possible to index Unicode columns longer than 1023
@@ -7100,6 +7069,9 @@ roudtrips to the server to fetch data.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_none_character_set">D.2.2. The NONE character set</h4>
+<div class="paragraph">
+<p><strong>TODO</strong> Document changes in behavior introduced in Jaybird 3</p>
+</div>
 <div class="paragraph">
 <p>Java introduces additional complexity when the NONE character set is
 used. The reason for this is that Java internally stores all strings in
@@ -7459,6 +7431,9 @@ since FB 2.0)</p></td>
 <div class="sect1">
 <h2 id="jdbcescape">Appendix E: Supported JDBC Scalar Functions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p><strong>TODO</strong> Needs updating with support improved in Jaybird 3 and 4</p>
+</div>
 <div class="paragraph">
 <p>The JDBC API supports the escaped syntax for numeric, string, time,
 date, system and conversion functions. Jaybird will try to provide an
@@ -8066,6 +8041,37 @@ following SQL types:</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="license">Appendix F: License</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The contents of this Documentation are subject to the Public
+Documentation License Version 1.0 (the "License"); you may only use this
+Documentation if you comply with the terms of this License. A copy of
+the License is available at
+<a href="http://www.firebirdsql.org/manual/licenses-pdl-text.html" class="bare">http://www.firebirdsql.org/manual/licenses-pdl-text.html</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s
+Manual. The Initial Writer of the Original Documentation is Roman
+Rokytskyy Copyright &#169; 2004-2008. All Rights Reserved. (Initial Writer
+contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
+</div>
+<div class="paragraph">
+<p>Contributor(s): Mark Rotteveel.</p>
+</div>
+<div class="paragraph">
+<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2018. All
+Rights Reserved. (Contributor contact(s):
+<a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
+</div>
+<div class="paragraph">
+<p>Portions created by &#8230;&#8203;.. are Copyright &#169;&#8230;&#8203;..[Insert year(s)].
+All Rights Reserved. (Contributor contact(s):&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;&#8230;&#8203;[Insert
+hyperlink/alias]).</p>
+</div>
+</div>
+</div>
 </div>
 <div id="footnotes">
 <hr>
@@ -8100,7 +8106,7 @@ following SQL types:</p>
 <a href="#_footnoteref_10">10</a>. All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
 </div>
 <div class="footnote" id="_footnote_11">
-<a href="#_footnoteref_11">11</a>. The class implementation is simple bean publishing the properties via getters and setters. You can replace it with any other implementation of User interface.
+<a href="#_footnoteref_11">11</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of User interface.
 </div>
 <div class="footnote" id="_footnote_12">
 <a href="#_footnoteref_12">12</a>. Until Firebird 2.0 adding a foreign key constraint required an exclusive access to the database.
@@ -8141,7 +8147,7 @@ following SQL types:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-15 13:15:28 UTC
+Last updated 2018-06-15 13:23:41 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
