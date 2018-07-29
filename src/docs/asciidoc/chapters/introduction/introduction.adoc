@@ -22,7 +22,8 @@ When Borland released an open-source version of the InterBase
 RDBMS, it included sources for a type 3 JDBC driver called InterClient.
 However due to some inherent limitations of the InterBase (and later
 Firebird) client library, it was decided that the type 3 driver was a
-dead end, and the Firebird team developed a pure Java implementation of
+dead endfootnote:[For those interested in software archaeology, you can find those
+Interclient sources archived on https://github.com/FirebirdSQL/x-cvs-interclient], and the Firebird team developed a pure Java implementation of
 the wire protocol. This implementation became the basis for Jaybird, a
 pure Java driver for Firebird relational database.
 
@@ -47,9 +48,8 @@ The JCA layer is an implementation of the Java Connector Architecture specificat
 In addition, the Services API allows you to manage the database and the server 
 itself. The Manager component represents a JMX compatible implementation
 that utilizes the Services API. Currently only calls to create and drop database 
-are available in the Manager component, but in the future a full range of 
-services will be made public: database backup/restore, user management, 
-statistics gathering, etc.
+are available in the Manager component, other class provide features for database 
+backup/restore, user management, statistics gathering, etc.
 
 === Supported Servers
 
@@ -73,9 +73,6 @@ interfaces. CCI interfaces are not supported.
 |JTA
 |The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
 framework and a `javax.sql.XADataSource` implementation.
-
-|JAAS 1.0 
-|**TODO** Is it?
 
 |=======================================================================
 
@@ -135,6 +132,8 @@ For example:
     <version>{jaybird-full-version}</version>
 </dependency>
 ----
+
+The Maven definition of Jaybird depends on antlr-runtime by default.
 
 If your application is deployed to a Java EE application server, you will need to
 exclude the `javax.resource:connector-api` dependency, and add it as a provided 

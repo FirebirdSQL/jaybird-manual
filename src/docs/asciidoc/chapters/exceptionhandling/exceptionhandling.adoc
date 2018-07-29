@@ -168,6 +168,24 @@ while (warning != null) {
 }
 ----
 
+or
+
+[source,java]
+.Alternative example how to work with warnings
+----
+import java.sql.*;
+....
+for (Throwable throwable : connection.getWarnings() {
+    if (throwable instanceof SQLWarning) {
+       SQLWarning warning = (SQLWarning) throwable;
+       .... // do something with the warning
+    }
+}
+----
+
+This second example will iterate over the first warning, all its causes (if any), and then on
+to other warnings (if any), and so on.
+
 In order to clear existing warning, call `Connection.clearWarnings()` method.
 
 === java.sql.SQLException in Jaybird
@@ -183,26 +201,24 @@ and Jaybird use SQL:2003 SQL state codes.footnoteref:[sqlstate, it is possible s
 When multiple SQL errors happened, they are joined into a chain. Usually
 the most recent exception is thrown to the application, the exceptions
 that happened before can be obtained via `SQLException.getNextException()` method.
-Alternatively, `SQLException.iterator` can be used to walk over all exceptions in
+Alternatively, `SQLException.iterator()` can be used to walk over all exceptions in
 the chain and their causes.
 
 The JDBC specification provides an exception hierarchy that allows an application to
 react on the error situations using regular exception handling rather than checking 
 the error code. Error codes may still be necessary for handling specific error cases.
 
-The JDBC 4.2 specification defines the following exception hierarchy:footnote:[excluding those
+The JDBC 4.3 specification defines the following exception hierarchy:footnote:[excluding those
 defined for `javax.sql.rowset`]
 
 * `java.sql.SQLException` - root of all JDBC exceptions
-** `java.sql.DataTruncation` - thrown when a data truncation
-error happens, can also be used as a warning.
 ** `java.sql.BatchUpdateException` - thrown when batch of the
-statements did not execute successfully and contains the result of batch
+statements did not execute successfully; contains the result of batch
 execution.
 ** `java.sql.SQLClientInfoException` - thrown when client info properties 
 could not be set.
-** `java.sql.SQLNonTransientException` - thrown when retrying the same action would
-fail without fixing the underlying cause.
+** `java.sql.SQLNonTransientException` - thrown when retrying the same action without fixing the 
+underlying cause would fail.
 *** `java.sql.SQLDataException` - thrown for data-related errors,
 for example conversion errors, too long values. (SQLstate class `22`)
 *** `java.sql.SQLFeatureNotSupportedException` - thrown to indicate that an optional 
@@ -226,6 +242,8 @@ automatically rolled back because of deadlock or other transaction serialization
 that might succeed on retry without any changes. (SQLstate class `08`)
 ** `java.sql.SQLWarning` should only be used to signal warnings, it should never be thrown
 by a JDBC driver.
+*** `java.sql.DataTruncation` - thrown when a data truncation
+error happens, can also be used as a warning.
 
 NOTE: Unfortunately Jaybird 3.0 does not yet fully use this exception hierarchy, we are
 working to address this with the next versions of Jaybird.
@@ -251,17 +269,15 @@ protocol error happens in JCA layer. Similar to the previous case,
 `XAException` can wrap the `GDSException`, which are extracted during
 exception conversion to preserve the error code.
 * Subclasses of `java.sql.SQLException` are thrown by the JDBC layer.
-Driver has also few subclasses that might be interesting to the
+Jaybird has a few subclasses that might be interesting to the
 application:
 ** `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` – this
 exception is thrown when driver detects an internal inconsistent state.
-SQL state is SQL_STATE_GENERAL_ERROR.
+SQL state is `HY000`.
 ** `org.firebirdsql.jdbc.FBDriverNotCapableException` – this exception
-is thrown when an unsupported method is called. SQL state is
-SQL_STATE_DRIVER_NOT_CAPABLE.
+is thrown when an unsupported method is called. SQL state is `0A000`.
 ** `org.firebirdsql.jdbc.FBSQLParseException` – this exception is thrown
-when incorrect escaped syntax is detected. SQL state is
-SQL_STATE_INVALID_ESCAPE_SEQ.
+when incorrect escaped syntax is detected. SQL state is `42000`.
 ** `org.firebirdsql.jdbc.field.TypeConversionException` – this exception
 is thrown when the driver is asked to perform a type conversion that is
 not defined in the JDBC specification. For a table of allowed type
@@ -270,34 +286,14 @@ conversions see <<Data Type Conversion Table>>.
 === SQL states
 
 Jaybird supports the SQLstate values from the SQL:2003 standard,footnoteref:[sqlstate] 
-however only few states nicely map into the Firebird error codes. Below is the table
-containing the reported SQLstates.
-
-*TODO* Tabel needs revision or total removal
-
-[cols="<,",options="header",]
-|====================================================
-|Constant name                        |SQLstate value
-|`SQL_STATE_INVALID_CON_ATTR`         |`01S00`
-|`SQL_STATE_NO_ROW_AVAIL`             |`01S06`
-|`SQL_STATE_GENERAL_ERROR`            |`HY000`
-|`SQL_STATE_DRIVER_NOT_CAPABLE`       |`HYC00`
-|`SQL_STATE_INVALID_COLUMN`           |`HY002`
-|`SQL_STATE_INVALID_PARAM_TYPE`       |`HY105`
-|`SQL_STATE_INVALID_ARG_VALUE`        |`HY009`
-|`SQL_STATE_WRONG_PARAM_NUM`          |`07001`
-|`SQL_STATE_NO_RESULT_SET`            |`07005`
-|`SQL_STATE_INVALID_CONVERSION`       |`07006`
-|`SQL_STATE_CONNECTION_CLOSED`        |`08003`
-|`SQL_STATE_CONNECTION_FAILURE_IN_TX` |`08007`
-|`SQL_STATE_COMM_LINK_FAILURE`        |`08S01`
-|`SQL_STATE_INVALID_ESCAPE_SEQ`       |`22025`
-|====================================================
+however only few states nicely map into the Firebird error codes.
 
 Applications can use the SQLstate codes in the error handling routines
 which should handle errors that are returned from different databases.
 But since there is little agreement between RDBMS vendors, this method
 can be used only for very coarse error distinction.
+
+// TODO Expand on SQL states
 
 === Useful Firebird error codes
 
@@ -423,7 +419,7 @@ a|`"Data type unknown"`
 
 Usually this error is reported during DDL operation when the specified
 data type is either unknown or cannot be used in the specified
-statement. However it also can happen in DML operation, e.g. when an
+statement. However it can also happen in DML operation, e.g. when an
 `ORDER BY` clause contains unknown collation, or if a parameter is used
 in a `SELECT` clause without explicit cast.
 

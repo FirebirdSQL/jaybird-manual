@@ -64,7 +64,8 @@ is no longer necessary, except when the driver is not on the system class path. 
 may be necessary to explicitly load the driver are web applications that include the driver in the
 deployment. There, the driver is not on the system class path, so it will need to be loaded explicitly.
 
-We will leave out usages of `Class.forName` in further examples.
+We will leave out usages of `Class.forName` in further examples, they will work because of automatic
+driver loading.
 
 .Registering the JDBC driver
 [NOTE]
@@ -127,7 +128,8 @@ a server-dependent folder. Having to include the root has the effect that a data
 connection string: `jdbc:firebirdsql://localhost//var/firebird/employee.fdb`
 
 It is possible to specify a relative path, but as this depends on the server
-configuration, we suggest not to use relative paths, and instead use an alias.
+configuration, this may be confusing or easily lead to errors. We suggest not to use relative paths, 
+and instead use an alias.
 
 ==== Specifying extended properties
 
@@ -163,8 +165,11 @@ public class HelloServerWithEncoding {
 }
 ----
 
+The `user` and `password` properties are defined in JDBC. All other property names, like `encoding` 
+here, are driver-specific.
+
 Additional properties, for example the SQL role for the connection can be
-added to the `props` object. The list of available extended properties
+added to the `props` object. The list of properties available in Jaybird
 can be found in <<Extended connection properties>>.
 
 It is not always possible to use the above described method. Jaybird also provides a possibility to 
@@ -183,6 +188,8 @@ In this case extended properties are passed together with the URL using
 the HTTP-like parameter passing scheme: first comes the main part of the
 URL, then `"?"`, then name-value pairs separated with `&` or `;`. This example
 is equivalent to the previous example.
+
+NOTE: Despite the URL-like syntax, Jaybird does not (yet) support URL encoding.
 
 [source,java]
 .Specifying extended properties in the JDBC URL
@@ -279,7 +286,7 @@ The `PURE_JAVA` type (JDBC Type 4) uses a pure Java implementation of the Firebi
 wire protocol. This type is recommended for connecting to a remote
 database server using TCP/IP sockets. No installation is required except
 adding the JDBC driver to the class path. This type of driver provides
-best performance when connecting to the remote server.
+the best performance when connecting to a remote server.
 
 In order to obtain a connection using the `PURE_JAVA` driver type you have
 to use a JDBC URL as shown in <<Obtaining connection java.sql.DriverManager>>:
@@ -336,6 +343,8 @@ the following command to start Java:
 ....
 java -cp <relevant claspath> -Djna.library.path=. com.mycompany.MyClass
 ....
+
+If your Java install is 32 bit, you need a 32 bit `fbclient.dll`, for 64 bit Java, a 64 bit `fbclient.dll`.
 
 [[driver-native-linux]]
 ===== Linux
@@ -398,7 +407,10 @@ See also the <<NATIVE and LOCAL types>> section.
 
 When using Firebird 3 embedded, you will need to make sure the necessary plugins like
 `engine12.dll/libengine12.so` are accessible to the client library, consult the 
-Firebird 3 documentation for more information. *TODO* Extend documentation
+Firebird 3 documentation for more information. For an example, see the article
+https://www.lawinegevaar.nl/firebird/jaybird_embedded_example.html[Jaybird with Firebird embedded example^]
+
+// TODO Extend documentation
 
 [[driver-embedded-limitations]]
 ===== Limitations
@@ -444,7 +456,7 @@ All other notes for <<driver-pure-java>> apply.
 
 Each time a connection is opened via `DriverManager`, a new physical
 connection to server is opened. It is closed when the connection is
-closed. In order to avoid the overhead of creating connections, you should use 
+closed. In order to avoid the overhead of creating connections, you can use 
 a connection pool implementation to maintain a cache of open physical
 connections that can be reused between user sessions.
 
@@ -467,7 +479,9 @@ connection that wraps a physical connection from the pool.
 [NOTE]
 ====
 The 'user' of a connection should not care whether the connection is pooled or not, the
-connection should behave the same from the perspective of the user.
+connection should behave the same from the perspective of the user, and the user should use the
+connection in the same way. This should allow for swapping between a non-pooling and pooling
+data source in an application without any changes to the code using the data source.
 ====
 
 When the application is done with the connection, it should call `close()` on the connection. 

@@ -59,17 +59,20 @@ try {
 In order to use transactions, the application first switches the auto-commit mode off
 (see below for more information), then creates a `java.sql.Statement`
 object, executes an UPDATE statement. Please note, that there is no
-explicit transaction start, new transaction will be started right before
+explicit transaction start, a new transaction will be started right before
 executing the statement (step 2).
 
-If we have database where not only referential integrity is preserved,
+If we work with a database where not only referential integrity is preserved,
 but also reasonable security rules are encoded in the triggers, it will
 raise an error preventing cleaning the audit trails information. In this
 case the intruder chooses to undo all the changes he made, so that nobody
 notices anything. But if no security rules are implemented, he commits
 the transaction.
 
-When connection uses explicit transaction control, each transaction must
+TIP: Firebird PSQL has an `IN AUTONOMOUS TRANSACTION` block that can be used to prevent such abuse
+and prevent audit-records from being wiped out by a transaction rollback.
+
+When a connection uses explicit transaction control, each transaction must
 be finished by calling the `commit()` or `rollback()` methods of the
 `Connection` object before the connection is closed. If a transaction
 was not finished, but the `close` method is called, the active
@@ -79,11 +82,14 @@ and that `Connection` object became eligible for garbage collection. In
 this case, the `close()` method is implicitly invoked by the class
 finalizer, which in turn rolls the transaction back.
 
+WARNING: Given the non-deterministic delay of garbage collection, make sure to explicitly end
+the transaction and close the connection. Do not rely on the garbage collector for this.
+
 === Auto-commit mode
 
 Each newly created connection by default has the auto-commit property
-set on. In other words, the duration of the transaction is limited by
-the duration of statement execution, or speaking formal language –
+enabled. In other words, the duration of the transaction is limited by
+the duration of statement execution, or more formally –
 the transaction is ended when the statement is completed. The point when
 statement execution is considered complete, is defined in the
 specification as:
@@ -117,7 +123,7 @@ in auto-commit mode.
 Since Firebird does not allow the result set to remain open after the
 transaction ends, Jaybird 1.5.x and below cached the complete result set
 in memory when the SELECT statements were executed and corresponding
-transaction was committed. It had an adverse effect on allocated memory
+transaction was committed. This had an adverse effect on allocated memory
 when the result set is big, especially when it contains BLOB fields. The
 JDBC 3.0 specification addressed this unclear situation (see above) and
 Jaybird 2.1 was improved to correctly handle them. It also allowed to
@@ -129,14 +135,14 @@ specification might no longer work with Jaybird 2.1 and above unless
 additional steps are taken.
 
 The piece of code below works perfectly with explicit transaction
-control. However, it won't work correctly with a driver that complies
-with JDBC 3.0 specification, while the `selectStmt` and `updateStmt`
-object were created by the same connection object (step 1). When the
+control. However, it won't work correctly with auto-commit with a driver - like Jaybird - that 
+complies with the JDBC 3.0 specification, when the `selectStmt` and `updateStmt`
+object are created by the same connection object (step 1). When the
 UPDATE is executed in step 3, the result set produced by the SELECT
-statement must be closed before the execution. When Java application
+statement must be closed before the execution. When the Java application
 tries to fetch the next record by calling the `rs.next()` method, it
-will receive an `SQLException` with a message "Result set object is
-closed".
+will receive an `SQLException` with a message _"The result set is
+closed"_.
 
 The only correct solution to this situation is to fix the application by
 either using explicit transaction control, or by using two connection
@@ -166,11 +172,11 @@ requires complete release testing of the software. To address this, Jaybird 2.1
 introduced the connection parameter `defaultHoldable` which makes result
 sets holdable by default. The holdable result sets will be fully cached
 in memory, but won't be closed automatically when transaction
-endsfootnote:[Other cases, e.g. closing the statement object or the
+ends.footnote:[Other cases, e.g. closing the statement object or the
 connection object will still ensure that the result set object is
 closed. If you need result sets that can be "detached" from the
 statement object that created them, please check the `javax.sql.RowSet`
-implementations.]. Please note, this property affects also the cases
+implementations.] Please note, this property affects also the cases
 with explicit transaction control.
 
 === Read-only Transactions
@@ -204,11 +210,8 @@ read-only.
 
 === Transaction Isolation Levels
 
-// TODO Rephrase, weird as introduction
-
-To address the performance issue, the isolation property is relaxed. The
-ANSI/ISO SQL standard defines four such levels, each next one weaker
-than the previous. These isolation levels were reflected in the JDBC
+The ANSI/ISO SQL standard defines four such levels, each next one weaker
+than the previous. These isolation levels are also used in the JDBC
 specification:
 
 [cols="2,3",options="header",]
@@ -216,12 +219,12 @@ specification:
 |=======================================================================
 |JDBC isolation level |Description
 |TRANSACTION_SERIALIZABLE |Transactions with this isolation level
-prohibit the phantom reads, the situation when one transaction reads all
+prohibit phantom reads, the situation when one transaction reads all
 rows satisfying the WHERE condition, another transaction inserts a row
 satisfying that condition, and first transaction re-executes the
 statement.
 
-|TRANSACTION_REPEATABLE_READ |This isolation level prevents the
+|TRANSACTION_REPEATABLE_READ |This isolation level prevents
 non-repeatable reads, a situation when a row is read in one transaction,
 then modified in another transaction, and later re-read in the first
 transaction. In this case different values had been read within the same
@@ -240,7 +243,7 @@ running transactions.
 Firebird, however, defines other isolation levels: `read_committed`,
 `concurrency` and `consistency`. Only the `read_committed` isolation
 level can be mapped to the same level defined by the ANSI/ISO SQL
-standard. The dirty reads are prevented, non-repeatable reads as well as
+standard. Dirty reads are prevented, non-repeatable reads as well as
 phantom reads can occur.
 
 The `concurrency` isolation level is stronger than repeatable read
@@ -276,9 +279,9 @@ transaction.
 in Firebird – any modification to a table happens in serial way: all
 transactions wait until the current modification is done. This mode can
 be considered as a traditional pessimistic locking scheme, but the lock
-is placed on the whole table. See Chapter "<<Table Reservation>>" for more information.
+is placed on the whole table. See section "<<transactions-table-reservation>>" for more information.
 
-The mapping is specified in the `isc_tpb_mapping.properties` file that
+The default mapping is specified in the `isc_tpb_mapping.properties` file that
 can be found in the Jaybird archive and can be overridden via the
 connection properties
 
@@ -286,8 +289,8 @@ connection properties
 `PropertiesResourceBundle` with the new mapping of the isolation level;
 * via the direct specification of the JDBC transaction isolation level.
 The following code contains an example of such operation, the values in
-the mapping are described in section "<<Transaction Parameter Buffer>>".
-* via the connection pool configuration.
+the mapping are described in section "<<transactions-tpb>>".
+* via the data source configuration.
 
 [source,java]
 .Overriding the default isolation level mapping
@@ -306,9 +309,10 @@ Connection connection = DriverManager.getConnection(
 
 The overridden mapping is used for all transactions started within the
 database connection. If the default mapping is overridden via the
-connection pool configuration, it will be used for all connections
-created by the pool.
+data source configuration, it will be used for all connections
+created by the data source.
 
+[[transactions-savepoints]]
 === Savepoints
 
 Savepoints provide finer-grained control over transactions by providing
@@ -316,11 +320,14 @@ intermediate steps within a larger transaction. Once a savepoint has
 been set, transaction can be rollback to that point without affecting
 preceding work.
 
-In order to set a savepoint, use following code:
+In order to set a savepoint, use the following code:
 
 [source,java]
 .Example of using savepoints
 ----
+Connection connection = ...;
+connection.setAutoCommit(false);
+
 Statement stmt = connection.createStatement();
 
 stmt.executeUpdate(
@@ -347,9 +354,10 @@ If the savepoint is no longer needed, you can use the
 releasing a savepoint it is no longer possible to rollback the current
 transaction to that savepoint. Attempts to call the `rollback(Savepoint)` method
 will result in an `SQLException`. Savepoints that have been created
-within a transaction are automatically released when transaction is
+within a transaction are automatically released when that transaction is
 committed or rolled back.
 
+[[transactions-tpb]]
 === Transaction Parameter Buffer
 
 The behavior of Firebird transactions is internally controlled by
@@ -359,12 +367,13 @@ transaction properties:
 * the transaction isolation level;
 * the transaction's read-only or read-write mode;
 * the lock conflict resolution mode – wait or no wait;
+* the lock wait timeout;
 * and, finally, the table reservations – their names and reservation
 modes.
 
 The TPB is automatically generated depending on the transaction
-isolation level specified for the `java.sql.Connection` object and
-usually there is no need to manipulate the TPB directly. Additionally,
+isolation level specified for the `java.sql.Connection` object.
+Usually there is no need to manipulate the TPB directly. Additionally,
 if the connection is set to read-only mode, this is reflected in the TPB
 by appropriate constant. However, the lock resolution mode as well as
 table reservations cannot be specified by using the standard JDBC
@@ -384,6 +393,7 @@ tpb.addArgument(TransactionParameterBuffer.READ_COMMITTED);
 tpb.addArgument(TransactionParameterBuffer.REC_VERSION);
 tpb.addArgument(TransactionParameterBuffer.WRITE);
 tpb.addArgument(TransactionParameterBuffer.WAIT);
+tpb.addArgument(TransactionParameterBuffer.LOCK_TIMEOUT, 15);
 
 fbConnection.setTransactionParameters(tpb);
 ----
@@ -411,8 +421,8 @@ returned to the application. This effectively returns the version of the
 record that was when the current transaction started and guarantees that
 neither non-repeatable reads nor phantom reads can ever occur.
 
-In `read_committed` mode Firebird database engine, however, accesses the
-record version with the highest timestamp, for which the corresponding
+In `read_committed` mode, the Firebird database engine accesses the
+record version with the highest timestamp for which the corresponding
 transaction is marked as committed. This prevents engine from reading
 the record versions which were modified in concurrent transactions
 that are not yet committed or were rolled back for whatever reasons.
@@ -421,8 +431,8 @@ if the concurrent transaction that modified records or inserted new ones
 had been committed.
 
 The `read_committed` isolation mode requires another constant that
-specifies the behavior of the transaction when it meets a record version
-with the timestamp which belongs to the currently running transaction
+specifies the behavior of the transaction when it sees a record version
+with a timestamp that belongs to a currently running transaction
 which is not yet committed.
 
 Most applications require the `TransactionParameterBuffer.REC_VERSION` mode, which is shown in the
@@ -430,11 +440,12 @@ code above. In this mode database engine fetches the latest committed
 version as described before.
 
 The `TransactionParameterBuffer.NO_REC_VERSION` constant tells database
-engine to report the lock conflict when an uncommitted record version is
+engine to report a lock conflict when an uncommitted record version is
 seen while fetching data from the database. The outcome of the operation
 is then controlled by the lock resolution mode (see section
-<<Lock resolution mode>>).
+<<transactions-lock-resolution>>).
 
+[[transactions-read-only]]
 ==== Read-only transactions
 
 The read-only or read-write transaction mode is controlled by two
@@ -443,11 +454,11 @@ constants:
 * `TranscationParameterBuffer.READ` and
 * `TransactionParameterBuffer.WRITE`
 
-When the read-write mode is specified, database engine stores the
-"timestamp" of new transaction in the database even no modification will
+When the read-write mode (constant `WRITE`) is specified, the database engine stores the
+"timestamp" of the new transaction in the database even when no modification will
 be made in the transaction. The "timestamp" affects the garbage
 collection process, since the database engine cannot release records
-that were modified in the transactions with higher "timestamps" even
+that were modified in transactions with higher "timestamps" even
 when these record versions are no longer needed (in other words, when
 there are already newer versions of the records). Thus, long-running
 read-write transaction inhibits the garbage collection even when no
@@ -456,19 +467,20 @@ modifications are done in it.
 Therefore, it is recommended to set the read-only mode for the
 transaction when it is used for read operations.
 
+[[transactions-lock-resolution]]
 ==== Lock resolution mode
 
-The RDBMS systems that use pessimistic locking for the concurrency
+Relational database systems that use pessimistic locking for concurrency
 control lock the records regardless of the operation type, read or
-write. When application tries to read a record from the database,
-database engine tries to obtain a "read lock" to that record. If the
-operation succeeds and application later tries to update the record, the
-lock is upgraded to the "write lock". And finally, if the resource is
+write. When an application tries to read a record from the database,
+the database engine tries to obtain a "read lock" to that record. If the
+operation succeeds and the application later tries to update the record, the
+lock is upgraded to a "write lock". And finally, if the resource is
 already locked for write, concurrent transactions cannot lock it for
 reading, since the system cannot allow the transaction to make a
 decision based on data that might be rolled back later. This approach
-significantly decreases concurrency. However, the databases systems that
-employ the record versioning mechanism do not have such restriction
+significantly decreases concurrency. However, databases systems that
+employ a record versioning mechanism do not have such restrictions
 because each transaction "sees" its own version of the record – the only
 possible conflict happens when two concurrent transactions try to obtain
 "write lock" for the same database record.
@@ -477,10 +489,10 @@ Firebird belongs to the latter, and on `read_committed` and
 `concurrency` isolation levels it behaves appropriately – there are no
 lock conflicts between readers and writers, and only writers competing
 for the same resource raise a lock conflict. However, on the
-`consistency` isolation level Firebird emulates the behavior of the
-systems with pessimistic locking – read operation will conflict with
-write. Even more, the locks are obtained for the whole tables (see
-"<<Table Reservation>>" chapter for details).
+`consistency` isolation level Firebird emulates the behavior of
+systems with pessimistic locking – read operations will conflict with
+write operations. Even more, the locks are obtained for whole tables (see
+"<<transactions-table-reservation>>" for details).
 
 The following table summarizes the above for Firebird 2.0. It shows that
 read-committed or repeatable read transactions conflict only when they
@@ -506,18 +518,19 @@ read-only |Consistency, read-write |Consistency, read-only
 |Consistency read-only |conflict | |conflict |
 |=======================================================================
 
+[[transactions-table-reservation]]
 === Table Reservation
 
-Table reservation allows to specify the database tables and the
-corresponding access modes at the beginning of the transaction. When
-transaction is started, engine tries to obtain the requested locks for
+Table reservation allows you to specify the database tables and the
+corresponding access modes at the beginning of the transaction. When the
+transaction is started, the engine tries to obtain the requested locks for
 the specified tables and proceeds only when all of them were
 successfully obtained. Such behavior allows to create a deadlock-free
-execution historiesfootnote:[This approach follows the two-phase locking
+execution historyfootnote:[This approach follows the two-phase locking
 protocol, where all locks are acquired on the beginning of the
 transaction and are released only when transaction is finished.].
 
-The table reservation is specified via TPB and includes the table to
+The table reservation is specified via a TPB and includes the table to
 lock, the lock mode (read or write) and lock type (shared, protected and
 exclusive).
 
@@ -547,11 +560,9 @@ protected mode. The code does the following:
 
 <1> Create a new instance of `TransactionParameterBuffer` class.
 <2> Populate the TPB. The first three statements were
-described in the section "<<Transaction Parameter Buffer>>". The fourth call specifies that the application wants
+described in "<<transactions-tpb>>". The fourth call specifies that the application wants
 to obtain a lock on the table `TEST_LOCK` for writing. The fifth call
-specifies the type of the lock to obtain, in our case the protected
-lock.
-
+specifies the type of the lock to obtain, in our case the protected lock.
 <3> Set the new TPB to be used for the next transaction.
 
 The lock mode to the table specified in the TPB can be either
@@ -567,7 +578,7 @@ The lock type can be either
 * or, `TransactionParameterBuffer.PROTECTED` for protected access to the
 table;
 
-The `TransactionParameterBuffer.EXCLUSIVE` mode was introduced in latter
+The `TransactionParameterBuffer.EXCLUSIVE` mode was introduced in later
 versions of Firebird, however it behaves like `PROTECTED` mode for all
 read-write transactions.
 
@@ -578,7 +589,7 @@ transactions and has the following properties:
 regardless of the lock type and transaction isolation mode;
 * `LOCK_WRITE` always conflicts with another `LOCK_READ` mode if both
 transactions have `consistency` isolation, but has no conflict with
-shared-read locks it if another transaction has either `concurrency` or
+shared-read locks if the other transaction has either `concurrency` or
 `read_committed` isolation level;
 * `LOCK_READ` mode never conflicts with `LOCK_READ` mode.
 

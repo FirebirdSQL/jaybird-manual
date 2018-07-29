@@ -1,17 +1,18 @@
 [[events]]
 == Working with Events
 
-Firebird supports events, which is a feature that provides asynchronous notification to the 
-connected applications about some system events. Instead of requiring applications to reread the
-database tables to check for the changes, using events it is possible to avoid that: triggers in 
-the database can post an event in case of change. And even more, the event can be so specific that
-an application would need to reread only a limited set of records, possibly only one. 
+Firebird supports events. Events are a feature that provides asynchronous notification to the 
+connected applications about events triggered by the database or other applications. Instead of 
+requiring applications to reread the database tables to check for the changes, events make it 
+possible to avoid that: triggers in the database can post an event in case of a change. And even 
+more, the event can be so specific that an application would need to reread only a limited set of 
+records, possibly only one. 
 
 This chapter describes the event mechanism in Firebird and the common usage scenarios.
 
 === Database events
 
-The _event_ is a message generated in a trigger or stored procedure that
+An _event_ is a message generated in a trigger, stored procedure or execute block that
 is delivered to subscribed applications. The event is characterized only
 by a name which is used when the event is posted, therefore two different
 events must have two different names. The applications that subscribe
@@ -20,19 +21,18 @@ no wildcards are allowed; and applications either provide a
 callback function that will be invoked in case of event or are required
 to poll for the posted events periodically.
 
-The events are delivered to the application only if the transaction that
-generated the event was committed. Also Firebird does not provide any
-guarantees about the time of event delivery – it depends on the load of
-the RDBMS, application load, network delays between application and
-RDBMS. The database engine will continue operating even if no
+Events are delivered to the application only on (after) commit of the transaction that generated 
+the event. Firebird does not provide any guarantees about the time of event delivery – it depends on 
+the load of the Firebird engine, application load, network delays between application and
+the database system. The database engine will continue operating even if no
 application subscribes to events or when the subscribed application
 crashed in the meantime.
 
 It can also happen that multiple transactions will be committed before
 the events are delivered to the client system. But even in such case the
 callback function will be invoked only once, and only the event name and
-the count of the events will be passed as parameters. Same applies to
-periodical polling – the application will receive event name and count of
+the count of the events will be passed as parameters. The same applies to
+periodical polling – the application will receive event names and counts of
 the events since last polling.
 
 Internally, Firebird can be thought to store the subscription information
@@ -58,9 +58,9 @@ the IDs of the modified records are stored and the event mechanism is
 used to tell the application that new records were added to the table.
 ====
 
-=== Posting the events
+=== Posting events
 
-The events are posted from the trigger or stored procedure language
+Events are posted from PSQL procedural code (trigger, stored procedure, execute block, function)
 using the `POST_EVENT` command. It is possible to create a stored
 procedure with the sole purpose of posting events:
 
@@ -73,7 +73,7 @@ AS BEGIN
 END
 ----
 
-Firebird 2.0 features a new command `EXECUTE BLOCK` which allows to
+Firebird 2.0 introduced a new command `EXECUTE BLOCK` which allows to
 execute PSQL statements within DSQL code:
 
 [source,sql]
@@ -99,7 +99,7 @@ and an interface representing a database event with two properties –
 event name and occurrence count.
 
 Applications have to configure the following properties before starting
-using the implementation `EventManager` interface:
+use of the implementation `EventManager` interface:
 
 [cols="1,2,4",options="header",]
 |=======================================================================
@@ -142,11 +142,11 @@ The asynchronous event notification uses a separate daemon thread to
 wait for the event notifications and to deliver the events to the
 registered listeners. The listeners are added using the
 `addEventListener(String, EventListener)` method, where the first
-parameter contains the name of the event to which application registers
-to and the second parameter – an instance of `EventListener` interface
-that will be notified about the events. It is allowed to use the same
+parameter contains the name of the event to register on
+and the second parameter – an instance of `EventListener` interface
+that will be notified about occurrences of this event. It is allowed to use the same
 instance of `EventListener` interface to listen on different events. The
-code below shows an example of using the asynchronous event
+code below shows an example of using asynchronous event
 notification.
 
 [source,java]
@@ -176,7 +176,7 @@ eventManager.addEventListener("test_event",
 
 Alternatively, an application can use the synchronous methods, one that
 blocks until the named event is received – the `waitForEvent(String)`
-method, or the one will block until the named event is received or
+method, or one that will block until the named event is received or
 timeout specified in the second parameter occurs – the
 `waitForEvent(String, int)` method. The following shows an example of
 using the blocking methods.
