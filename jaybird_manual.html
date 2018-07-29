@@ -493,9 +493,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_auto_commit_mode">6.2. Auto-commit mode</a></li>
 <li><a href="#_read_only_transactions">6.3. Read-only Transactions</a></li>
 <li><a href="#_transaction_isolation_levels">6.4. Transaction Isolation Levels</a></li>
-<li><a href="#_savepoints">6.5. Savepoints</a></li>
-<li><a href="#_transaction_parameter_buffer">6.6. Transaction Parameter Buffer</a></li>
-<li><a href="#_table_reservation">6.7. Table Reservation</a></li>
+<li><a href="#transactions-savepoints">6.5. Savepoints</a></li>
+<li><a href="#transactions-tpb">6.6. Transaction Parameter Buffer</a></li>
+<li><a href="#transactions-table-reservation">6.7. Table Reservation</a></li>
 </ul>
 </li>
 <li><a href="#services">7. Working with Services</a>
@@ -510,7 +510,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#events">8. Working with Events</a>
 <ul class="sectlevel2">
 <li><a href="#_database_events">8.1. Database events</a></li>
-<li><a href="#_posting_the_events">8.2. Posting the events</a></li>
+<li><a href="#_posting_events">8.2. Posting events</a></li>
 <li><a href="#_subscribing_to_events">8.3. Subscribing to events</a></li>
 </ul>
 </li>
@@ -607,7 +607,7 @@ examples and information also applies to previous versions of the driver and of 
 RDBMS, it included sources for a type 3 JDBC driver called InterClient.
 However due to some inherent limitations of the InterBase (and later
 Firebird) client library, it was decided that the type 3 driver was a
-dead end, and the Firebird team developed a pure Java implementation of
+dead end<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>, and the Firebird team developed a pure Java implementation of
 the wire protocol. This implementation became the basis for Jaybird, a
 pure Java driver for Firebird relational database.</p>
 </div>
@@ -646,9 +646,8 @@ GDS API and proxies the calls to the GDS implementation.</p>
 <p>In addition, the Services API allows you to manage the database and the server
 itself. The Manager component represents a JMX compatible implementation
 that utilizes the Services API. Currently only calls to create and drop database
-are available in the Manager component, but in the future a full range of
-services will be made public: database backup/restore, user management,
-statistics gathering, etc.</p>
+are available in the Manager component, other class provide features for database
+backup/restore, user management, statistics gathering, etc.</p>
 </div>
 </div>
 <div class="sect2">
@@ -688,10 +687,6 @@ interfaces. CCI interfaces are not supported.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The driver provides an implementation of the <code>javax.transaction.xa.XAResource</code> interface via the JCA
 framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JAAS 1.0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>TODO</strong> Is it?</p></td>
 </tr>
 </tbody>
 </table>
@@ -771,6 +766,9 @@ Version: <code>3.0.3</code></p>
     &lt;version&gt;3.0.3&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The Maven definition of Jaybird depends on antlr-runtime by default.</p>
 </div>
 <div class="paragraph">
 <p>If your application is deployed to a Java EE application server, you will need to
@@ -1012,7 +1010,8 @@ may be necessary to explicitly load the driver are web applications that include
 deployment. There, the driver is not on the system class path, so it will need to be loaded explicitly.</p>
 </div>
 <div class="paragraph">
-<p>We will leave out usages of <code>Class.forName</code> in further examples.</p>
+<p>We will leave out usages of <code>Class.forName</code> in further examples, they will work because of automatic
+driver loading.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1104,7 +1103,8 @@ connection string: <code>jdbc:firebirdsql://localhost//var/firebird/employee.fdb
 </div>
 <div class="paragraph">
 <p>It is possible to specify a relative path, but as this depends on the server
-configuration, we suggest not to use relative paths, and instead use an alias.</p>
+configuration, this may be confusing or easily lead to errors. We suggest not to use relative paths,
+and instead use an alias.</p>
 </div>
 <div class="sect3">
 <h4 id="_specifying_extended_properties">2.1.1. Specifying extended properties</h4>
@@ -1142,8 +1142,12 @@ public class HelloServerWithEncoding {
 </div>
 </div>
 <div class="paragraph">
+<p>The <code>user</code> and <code>password</code> properties are defined in JDBC. All other property names, like <code>encoding</code>
+here, are driver-specific.</p>
+</div>
+<div class="paragraph">
 <p>Additional properties, for example the SQL role for the connection can be
-added to the <code>props</code> object. The list of available extended properties
+added to the <code>props</code> object. The list of properties available in Jaybird
 can be found in <a href="#connectionproperties">Extended connection properties</a>.</p>
 </div>
 <div class="paragraph">
@@ -1166,6 +1170,18 @@ specify extended properties in the JDBC URL.</p>
 the HTTP-like parameter passing scheme: first comes the main part of the
 URL, then <code>"?"</code>, then name-value pairs separated with <code>&amp;</code> or <code>;</code>. This example
 is equivalent to the previous example.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Despite the URL-like syntax, Jaybird does not (yet) support URL encoding.
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="title">Specifying extended properties in the JDBC URL</div>
@@ -1269,7 +1285,7 @@ the <code>javax.sql.DataSource</code> is configured via a corresponding property
 wire protocol. This type is recommended for connecting to a remote
 database server using TCP/IP sockets. No installation is required except
 adding the JDBC driver to the class path. This type of driver provides
-best performance when connecting to the remote server.</p>
+the best performance when connecting to a remote server.</p>
 </div>
 <div class="paragraph">
 <p>In order to obtain a connection using the <code>PURE_JAVA</code> driver type you have
@@ -1337,6 +1353,9 @@ the following command to start Java:</p>
 <div class="content">
 <pre>java -cp &lt;relevant claspath&gt; -Djna.library.path=. com.mycompany.MyClass</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>If your Java install is 32 bit, you need a 32 bit <code>fbclient.dll</code>, for 64 bit Java, a 64 bit <code>fbclient.dll</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -1413,7 +1432,8 @@ the last - of course - only works if that fbclient provides Firebird embedded.</
 <div class="paragraph">
 <p>When using Firebird 3 embedded, you will need to make sure the necessary plugins like
 <code>engine12.dll/libengine12.so</code> are accessible to the client library, consult the
-Firebird 3 documentation for more information. <strong>TODO</strong> Extend documentation</p>
+Firebird 3 documentation for more information. For an example, see the article
+<a href="https://www.lawinegevaar.nl/firebird/jaybird_embedded_example.html" target="_blank" rel="noopener">Jaybird with Firebird embedded example</a></p>
 </div>
 <div class="sect4">
 <h5 id="driver-embedded-limitations">Limitations</h5>
@@ -1475,7 +1495,7 @@ it is not about the Firebird embedded use that has been introduced in recent Lib
 <div class="paragraph">
 <p>Each time a connection is opened via <code>DriverManager</code>, a new physical
 connection to server is opened. It is closed when the connection is
-closed. In order to avoid the overhead of creating connections, you should use
+closed. In order to avoid the overhead of creating connections, you can use
 a connection pool implementation to maintain a cache of open physical
 connections that can be reused between user sessions.</p>
 </div>
@@ -1507,7 +1527,9 @@ connection that wraps a physical connection from the pool.</p>
 <td class="content">
 <div class="paragraph">
 <p>The 'user' of a connection should not care whether the connection is pooled or not, the
-connection should behave the same from the perspective of the user.</p>
+connection should behave the same from the perspective of the user, and the user should use the
+connection in the same way. This should allow for swapping between a non-pooling and pooling
+data source in an application without any changes to the code using the data source.</p>
 </div>
 </td>
 </tr>
@@ -1813,6 +1835,26 @@ while (warning != null) {
 </div>
 </div>
 <div class="paragraph">
+<p>or</p>
+</div>
+<div class="listingblock">
+<div class="title">Alternative example how to work with warnings</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">import java.sql.*;
+....
+for (Throwable throwable : connection.getWarnings() {
+    if (throwable instanceof SQLWarning) {
+       SQLWarning warning = (SQLWarning) throwable;
+       .... // do something with the warning
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This second example will iterate over the first warning, all its causes (if any), and then on
+to other warnings (if any), and so on.</p>
+</div>
+<div class="paragraph">
 <p>In order to clear existing warning, call <code>Connection.clearWarnings()</code> method.</p>
 </div>
 </div>
@@ -1826,13 +1868,13 @@ while (warning != null) {
 connectivity component in case of an error. Each instance of this
 exception is required to carry the vendor error code (if applicable) and
 a SQL state according to the X/Open SQLstate or SQL:2003 specifications. Firebird
-and Jaybird use SQL:2003 SQL state codes.<sup class="footnote" id="_footnote_sqlstate">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup></p>
+and Jaybird use SQL:2003 SQL state codes.<sup class="footnote" id="_footnote_sqlstate">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>When multiple SQL errors happened, they are joined into a chain. Usually
 the most recent exception is thrown to the application, the exceptions
 that happened before can be obtained via <code>SQLException.getNextException()</code> method.
-Alternatively, <code>SQLException.iterator</code> can be used to walk over all exceptions in
+Alternatively, <code>SQLException.iterator()</code> can be used to walk over all exceptions in
 the chain and their causes.</p>
 </div>
 <div class="paragraph">
@@ -1841,7 +1883,7 @@ react on the error situations using regular exception handling rather than check
 the error code. Error codes may still be necessary for handling specific error cases.</p>
 </div>
 <div class="paragraph">
-<p>The JDBC 4.2 specification defines the following exception hierarchy:<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup></p>
+<p>The JDBC 4.3 specification defines the following exception hierarchy:<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
 </div>
 <div class="ulist">
 <ul>
@@ -1850,12 +1892,8 @@ the error code. Error codes may still be necessary for handling specific error c
 <div class="ulist">
 <ul>
 <li>
-<p><code>java.sql.DataTruncation</code> - thrown when a data truncation
-error happens, can also be used as a warning.</p>
-</li>
-<li>
 <p><code>java.sql.BatchUpdateException</code> - thrown when batch of the
-statements did not execute successfully and contains the result of batch
+statements did not execute successfully; contains the result of batch
 execution.</p>
 </li>
 <li>
@@ -1863,8 +1901,8 @@ execution.</p>
 could not be set.</p>
 </li>
 <li>
-<p><code>java.sql.SQLNonTransientException</code> - thrown when retrying the same action would
-fail without fixing the underlying cause.</p>
+<p><code>java.sql.SQLNonTransientException</code> - thrown when retrying the same action without fixing the
+underlying cause would fail.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1920,6 +1958,14 @@ that might succeed on retry without any changes. (SQLstate class <code>08</code>
 <li>
 <p><code>java.sql.SQLWarning</code> should only be used to signal warnings, it should never be thrown
 by a JDBC driver.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.sql.DataTruncation</code> - thrown when a data truncation
+error happens, can also be used as a warning.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -1970,24 +2016,22 @@ exception conversion to preserve the error code.</p>
 </li>
 <li>
 <p>Subclasses of <code>java.sql.SQLException</code> are thrown by the JDBC layer.
-Driver has also few subclasses that might be interesting to the
+Jaybird has a few subclasses that might be interesting to the
 application:</p>
 <div class="ulist">
 <ul>
 <li>
 <p><code>org.firebirdsql.jdbc.FBDriverConsistencyCheckException</code> – this
 exception is thrown when driver detects an internal inconsistent state.
-SQL state is SQL_STATE_GENERAL_ERROR.</p>
+SQL state is <code>HY000</code>.</p>
 </li>
 <li>
 <p><code>org.firebirdsql.jdbc.FBDriverNotCapableException</code> – this exception
-is thrown when an unsupported method is called. SQL state is
-SQL_STATE_DRIVER_NOT_CAPABLE.</p>
+is thrown when an unsupported method is called. SQL state is <code>0A000</code>.</p>
 </li>
 <li>
 <p><code>org.firebirdsql.jdbc.FBSQLParseException</code> – this exception is thrown
-when incorrect escaped syntax is detected. SQL state is
-SQL_STATE_INVALID_ESCAPE_SEQ.</p>
+when incorrect escaped syntax is detected. SQL state is <code>42000</code>.</p>
 </li>
 <li>
 <p><code>org.firebirdsql.jdbc.field.TypeConversionException</code> – this exception
@@ -2004,83 +2048,9 @@ conversions see <a href="#datatypeconversion">Data Type Conversion Table</a>.</p
 <div class="sect2">
 <h3 id="_sql_states">3.4. SQL states</h3>
 <div class="paragraph">
-<p>Jaybird supports the SQLstate values from the SQL:2003 standard,<sup class="footnoteref">[<a class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>
-however only few states nicely map into the Firebird error codes. Below is the table
-containing the reported SQLstates.</p>
+<p>Jaybird supports the SQLstate values from the SQL:2003 standard,<sup class="footnoteref">[<a class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup>
+however only few states nicely map into the Firebird error codes.</p>
 </div>
-<div class="paragraph">
-<p><strong>TODO</strong> Tabel needs revision or total removal</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Constant name</th>
-<th class="tableblock halign-left valign-top">SQLstate value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_CON_ATTR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>01S00</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_NO_ROW_AVAIL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>01S06</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_GENERAL_ERROR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HY000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_DRIVER_NOT_CAPABLE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HYC00</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_COLUMN</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HY002</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_PARAM_TYPE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HY105</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_ARG_VALUE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HY009</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_WRONG_PARAM_NUM</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>07001</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_NO_RESULT_SET</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>07005</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_CONVERSION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>07006</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_CONNECTION_CLOSED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>08003</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_CONNECTION_FAILURE_IN_TX</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>08007</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_COMM_LINK_FAILURE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>08S01</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQL_STATE_INVALID_ESCAPE_SEQ</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>22025</code></p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
 <p>Applications can use the SQLstate codes in the error handling routines
 which should handle errors that are returned from different databases.
@@ -2271,7 +2241,7 @@ constraints are violated. The error messages are self-explanatory.</p>
 <div class="paragraph">
 <p>Usually this error is reported during DDL operation when the specified
 data type is either unknown or cannot be used in the specified
-statement. However it also can happen in DML operation, e.g. when an
+statement. However it can also happen in DML operation, e.g. when an
 <code>ORDER BY</code> clause contains unknown collation, or if a parameter is used
 in a <code>SELECT</code> clause without explicit cast.</p>
 </div></div></td>
@@ -2423,9 +2393,8 @@ SQL statements. It distinguishes three types:</p>
 <p>statements that change the state of the database but return no results;</p>
 </li>
 <li>
-<p><code>INSERT</code> statements that return the values of the columns which were
-generated by the database engine while inserting the record (or other statements
-with similar behaviour).</p>
+<p><code>INSERT</code> statements (or other statements with similar behaviour) that return the values of the
+columns which were generated by the database engine while inserting the record.</p>
 </li>
 </ul>
 </div>
@@ -2493,7 +2462,7 @@ an <code>SQLException</code> is thrown after statement execution.</p>
 </li>
 <li>
 <p><code>Statement.executeUpdate(String)</code> – executes INSERT, UPDATE, DELETE or
-DDL<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup> statements and returns the
+DDL<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup> statements and returns the
 number of updated rows. If the specified statement is a query, an
 <code>SQLException</code> is thrown.</p>
 </li>
@@ -2517,8 +2486,8 @@ a close, the statement object is invalid and cannot be used any more.</p>
 </div>
 <div class="paragraph">
 <p>It is allowed to use the same statement object to execute different types of
-queries one after other. The code below contains a short example in
-which application first performs a select to find the ID of the user
+queries one after other. The code below contains a short example
+which first performs a select to find the ID of the user
 'Joe Doe', and if the record is found, it enables his account.</p>
 </div>
 <div class="admonitionblock warning">
@@ -2605,34 +2574,12 @@ creation of database tables using this method.</p>
 <div class="title">Example of creating database tables</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()) {
-    DatabaseMetaData metaData = connection.getMetaData();
-    ResultSet tables = metaData.getTables(
-        null, null, "CUSTOMER", new String[] { "TABLE" });
-    if (!tables.next()) {
-        stmt.execute("CREATE TABLE customer(" +
-            "customerId INTEGER NOT NULL PRIMARY KEY, " +
-            "firstName VARCHAR(20) NOT NULL, " +
-            "lastName VARCHAR(40) NOT NULL)");
-    }
+    stmt.execute("CREATE TABLE customer(" +
+        "customerId INTEGER NOT NULL PRIMARY KEY, " +
+        "firstName VARCHAR(20) NOT NULL, " +
+        "lastName VARCHAR(40) NOT NULL)");
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>First, the application checks the existence of the table in the database by
-calling the <code>DatabaseMetaData.getTables(String, String, String, String[])</code> method
-which returns a result set describing the database tables matching the
-specified search pattern. The first two parameters of this method, the
-database catalog and schema names, are set to <code>null</code> as Firebird
-supports neither catalogs nor schemas. The third parameter is the table name
-search pattern, in our case we search for the table <code>"CUSTOMER"</code>. The last
-parameter is the list of table types to check, in our case we check for
-the <code>"TABLE"</code> type. Other tables types are <code>"SYSTEM TABLE"</code>,
-<code>"VIEW"</code> and <code>"GLOBAL TEMPORARY"</code>.</p>
-</div>
-<div class="paragraph">
-<p>After that, the application checks if the result set is empty by calling the
-<code>ResultSet.next()</code> method. If no <code>"CUSTOMER"</code> table was found,
-the application creates a new table with three columns.</p>
 </div>
 <div class="paragraph">
 <p>As mentioned earlier, the <code>Statement.execute(String)</code> method can
@@ -2712,19 +2659,24 @@ statement did not return any result set.</p>
 <li>
 <p>If <code>Statement.executeUpdate()</code> was called, Jaybird asks Firebird
 to give the information about the number of affected rows. This method
-can be called only if the statement type tells that no query can be
-returned by the statement. When called for queries, an exception
+can be called only if the statement type tells that no result set can be
+returned by the statement.</p>
+<div class="paragraph">
+<p>When called for queries, an exception
 is thrown despite the fact that the statement was successfully executed
 on the server.</p>
+</div>
 </li>
 <li>
 <p>If <code>Statement.executeQuery()</code> was called and the statement type
 indicates that a result set can be returned, Jaybird constructs a <code>ResultSet</code>
 object and returns it to the application. No additional checks, like
 whether the result set contains rows, are performed, as it is the
-responsibility of the <code>ResultSet</code> object. If this method is used for
-statements that do not return result set, an exception is thrown despite
+responsibility of the <code>ResultSet</code> object.</p>
+<div class="paragraph">
+<p>If this method is used for statements that do not return result set, an exception is thrown despite
 the fact that the statement was successfully executed on the server.</p>
+</div>
 </li>
 </ul>
 </div>
@@ -2794,8 +2746,8 @@ that are used to improve the performance, etc.</p>
 <p>When a statement is prepared, it holds the references to all database object
 definitions that are used during that statement execution. This
 mechanism preserves the database schema consistency, it saves the
-statement objects from "surprises" like accessing the database table
-that is been accessed by some application. (<strong>TODO</strong> Meaning unclear)</p>
+statement objects from "surprises" like accessing a database table
+that has been removed by another application.</p>
 </div>
 <div class="paragraph">
 <p>However, holding a reference on the database objects has one very
@@ -2840,10 +2792,10 @@ to go directly to the step 4 for repeated executions.</p>
 <div class="paragraph">
 <p>However, executing the same statement with the same values makes little
 sense, unless we want to fill the table with the same data, which
-usually is not the case. Therefore, JDBC provides support for the
+usually is not the case. Therefore, JDBC provides support for
 parametrized statements – SQL statements where literals are replaced
 with question marks (<code>?</code>), so called positional parameters. The application then assigns values to
-the  parameters before executing the statement.</p>
+the parameters before executing the statement.</p>
 </div>
 <div class="paragraph">
 <p>Our first example in this chapter can be rewritten as shown below. At first glance the code becomes
@@ -2909,13 +2861,21 @@ SQL data types (BLOBs, CLOBs, etc.). The <code>NULL</code> value is set by calli
 the <code>PreparedStatement.setNull(int)</code> method.</p>
 </li>
 <li>
-<p>Third, we are forced now to use four nested try-with-resources blocks,
+<p>Third, we are now forced to use four nested try-with-resources blocks,
 which makes code less readable.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>So, where&#8217;s the advantage? First of all, we can redesign our application
+<p>So, where&#8217;s the advantage? First of all, prepared statements parameters protect against SQL
+injection as the values are sent separately from the statement itself. It is not possible to change
+the meaning of a statement due to incorrect string concatenation, so data leaks or other problems
+cause by SQL injection can be avoided. Second of all, the driver handles conversion of Java object
+types to the correct format for the target datatype in Firebird: you don&#8217;t need to convert a Java
+value to the correct string literal format for Firebirds SQL dialect.</p>
+</div>
+<div class="paragraph">
+<p>And to address some of the identified problems, we can redesign our application
 to prepare those statements before calling that code (for example in a
 constructor) and close them when application is shut down. In this case
 the code is even more compact (see the next example). Unfortunately the
@@ -3001,7 +2961,7 @@ methods for executing and retrieving results from stored procedures. It
 was introduced in JDBC specification in order to unify access to the
 stored procedures across the database system. The main difference to
 <code>PreparedStatement</code> is that the procedure call is specified using the
-portable escaped syntax:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+portable escaped syntax:<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup></p>
 </div>
 <div class="literalblock">
 <div class="title">Unified escaped syntax for stored procedure execution</div>
@@ -3052,7 +3012,7 @@ can be viewed as functions that return multiple values. These
 procedures are executed by using the <code>EXECUTE PROCEDURE</code> statement.</p>
 </li>
 <li>
-<p>Procedures that return result sets, also called "selectable stored
+<p>Procedures that return a result set, also called "selectable stored
 procedures". These are stored procedures that contain the <code>RETURNS</code>
 keyword in their header and the <code>SUSPEND</code> keyword in their procedure body,
 usually within a loop. Selectable procedures are executed using the
@@ -3399,8 +3359,8 @@ number of parameters and the database server will generate an error.
 <div class="paragraph">
 <p>Batch updates are intended to group multiple update operations to be
 submitted to a database server to be processed at once. Firebird does
-not provide support for such functionality, but Jaybird emulates it by
-issuing separate update commands.</p>
+not provide support for such functionality<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnote_6" title="View footnote.">6</a>]</sup>,
+but Jaybird emulates it by issuing separate update commands.</p>
 </div>
 <div class="sect3">
 <h4 id="_batch_updates_with_java_sql_statement_interface">4.5.1. Batch Updates with java.sql.Statement interface</h4>
@@ -3568,7 +3528,7 @@ words into <code>'FirebirdJava'</code> literal.
 <div class="sect3">
 <h4 id="_date_and_time_literals">4.6.2. Date and Time Literals</h4>
 <div class="paragraph">
-<p>It is allowed to include date and time literals in SQL statements. In
+<p>It is possible to include date and time literals in SQL statements. In
 order to guarantee that each database will interpret the literal
 identically, the JDBC specification provides following syntax to specify
 them:</p>
@@ -3690,7 +3650,7 @@ visible.</p>
 </li>
 <li>
 <p><code>TYPE_SCROLL_SENSITIVE</code>, is not supported by Firebird and Jaybird.
-Driver allows an application to ask for this type of result set, however
+Jaybird allows an application to ask for this type of result set, however
 in compliance with the JDBC specification, the type is "downgraded" to the
 <code>TYPE_SCROLL_INSENSITIVE</code> and a corresponding warning is added to the connection
 object.</p>
@@ -3717,7 +3677,7 @@ usage and performance when the result set is large.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_resultset_concurrency">5.1.2. ResultSet Concurrency</h4>
+<h4 id="resultsets-concurrency">5.1.2. ResultSet Concurrency</h4>
 <div class="paragraph">
 <p>Result set concurrency specifies whether the result set object can be
 updated directly or a separate SQL request should be used to update the
@@ -3766,7 +3726,7 @@ key definition or the <code>RDB$DB_KEY</code> column.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_resultset_holdability">5.1.3. ResultSet Holdability</h4>
+<h4 id="resultsets-holdability">5.1.3. ResultSet Holdability</h4>
 <div class="paragraph">
 <p>Result set holdability informs the driver whether result sets should be kept
 open across commits. <code>ResultSet.HOLD_CURSORS_OVER_COMMIT</code> tells the
@@ -3876,7 +3836,7 @@ method <strong>after</strong> calling the <em>get</em> method.</p>
 <div class="paragraph">
 <p>Getters that return object values (<code>getString</code>, <code>getDate</code>, <code>getObject</code>,
 etc.) will return a <code>null</code> value for columns containing
-<code>NULL</code>.</p>
+<code>NULL</code>. Calling <code>wasNull</code> after object <em>get</em> methods is possible but unnecessary.</p>
 </div>
 <div id="using-forward-only" class="listingblock">
 <div class="title">Example of using forward-only result sets</div>
@@ -3941,7 +3901,7 @@ positioned updates.</p>
 <div class="paragraph">
 <p>First, the application has to specify the name of the cursor and the list of the columns that will
 be updated before the query is executed. This name is later used in the <code>UPDATE</code> statement as
-showed on the example.</p>
+shown in the example.</p>
 </div>
 <div id="using-positioned-updates" class="listingblock">
 <div class="title">Example of using the positioned updates</div>
@@ -4005,7 +3965,7 @@ undone.</p>
 <p>Firebird supports multiple concurrent transactions over the same
 database connection. This allows applications that work via the native
 Firebird API to save the number of network connections, which in turn
-saves the resources on the server<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup>.</p>
+saves the resources on the server<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnote_7" title="View footnote.">7</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>This model however cannot be applied to each database engine in the
@@ -4051,19 +4011,32 @@ try {
 <p>In order to use transactions, the application first switches the auto-commit mode off
 (see below for more information), then creates a <code>java.sql.Statement</code>
 object, executes an UPDATE statement. Please note, that there is no
-explicit transaction start, new transaction will be started right before
+explicit transaction start, a new transaction will be started right before
 executing the statement (step 2).</p>
 </div>
 <div class="paragraph">
-<p>If we have database where not only referential integrity is preserved,
+<p>If we work with a database where not only referential integrity is preserved,
 but also reasonable security rules are encoded in the triggers, it will
 raise an error preventing cleaning the audit trails information. In this
 case the intruder chooses to undo all the changes he made, so that nobody
 notices anything. But if no security rules are implemented, he commits
 the transaction.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Firebird PSQL has an <code>IN AUTONOMOUS TRANSACTION</code> block that can be used to prevent such abuse
+and prevent audit-records from being wiped out by a transaction rollback.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>When connection uses explicit transaction control, each transaction must
+<p>When a connection uses explicit transaction control, each transaction must
 be finished by calling the <code>commit()</code> or <code>rollback()</code> methods of the
 <code>Connection</code> object before the connection is closed. If a transaction
 was not finished, but the <code>close</code> method is called, the active
@@ -4073,13 +4046,26 @@ and that <code>Connection</code> object became eligible for garbage collection. 
 this case, the <code>close()</code> method is implicitly invoked by the class
 finalizer, which in turn rolls the transaction back.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Given the non-deterministic delay of garbage collection, make sure to explicitly end
+the transaction and close the connection. Do not rely on the garbage collector for this.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_auto_commit_mode">6.2. Auto-commit mode</h3>
 <div class="paragraph">
 <p>Each newly created connection by default has the auto-commit property
-set on. In other words, the duration of the transaction is limited by
-the duration of statement execution, or speaking formal language –
+enabled. In other words, the duration of the transaction is limited by
+the duration of statement execution, or more formally –
 the transaction is ended when the statement is completed. The point when
 statement execution is considered complete, is defined in the
 specification as:</p>
@@ -4136,7 +4122,7 @@ in auto-commit mode.</p>
 <p>Since Firebird does not allow the result set to remain open after the
 transaction ends, Jaybird 1.5.x and below cached the complete result set
 in memory when the SELECT statements were executed and corresponding
-transaction was committed. It had an adverse effect on allocated memory
+transaction was committed. This had an adverse effect on allocated memory
 when the result set is big, especially when it contains BLOB fields. The
 JDBC 3.0 specification addressed this unclear situation (see above) and
 Jaybird 2.1 was improved to correctly handle them. It also allowed to
@@ -4150,14 +4136,14 @@ additional steps are taken.</p>
 </div>
 <div class="paragraph">
 <p>The piece of code below works perfectly with explicit transaction
-control. However, it won&#8217;t work correctly with a driver that complies
-with JDBC 3.0 specification, while the <code>selectStmt</code> and <code>updateStmt</code>
-object were created by the same connection object (step 1). When the
+control. However, it won&#8217;t work correctly with auto-commit with a driver - like Jaybird - that
+complies with the JDBC 3.0 specification, when the <code>selectStmt</code> and <code>updateStmt</code>
+object are created by the same connection object (step 1). When the
 UPDATE is executed in step 3, the result set produced by the SELECT
-statement must be closed before the execution. When Java application
+statement must be closed before the execution. When the Java application
 tries to fetch the next record by calling the <code>rs.next()</code> method, it
-will receive an <code>SQLException</code> with a message "Result set object is
-closed".</p>
+will receive an <code>SQLException</code> with a message <em>"The result set is
+closed"</em>.</p>
 </div>
 <div class="paragraph">
 <p>The only correct solution to this situation is to fix the application by
@@ -4189,7 +4175,7 @@ requires complete release testing of the software. To address this, Jaybird 2.1
 introduced the connection parameter <code>defaultHoldable</code> which makes result
 sets holdable by default. The holdable result sets will be fully cached
 in memory, but won&#8217;t be closed automatically when transaction
-ends<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnote_6" title="View footnote.">6</a>]</sup>. Please note, this property affects also the cases
+ends.<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnote_8" title="View footnote.">8</a>]</sup> Please note, this property affects also the cases
 with explicit transaction control.</p>
 </div>
 </div>
@@ -4230,9 +4216,8 @@ read-only.</p>
 <div class="sect2">
 <h3 id="_transaction_isolation_levels">6.4. Transaction Isolation Levels</h3>
 <div class="paragraph">
-<p>To address the performance issue, the isolation property is relaxed. The
-ANSI/ISO SQL standard defines four such levels, each next one weaker
-than the previous. These isolation levels were reflected in the JDBC
+<p>The ANSI/ISO SQL standard defines four such levels, each next one weaker
+than the previous. These isolation levels are also used in the JDBC
 specification:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -4251,14 +4236,14 @@ specification:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TRANSACTION_SERIALIZABLE</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Transactions with this isolation level
-prohibit the phantom reads, the situation when one transaction reads all
+prohibit phantom reads, the situation when one transaction reads all
 rows satisfying the WHERE condition, another transaction inserts a row
 satisfying that condition, and first transaction re-executes the
 statement.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TRANSACTION_REPEATABLE_READ</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">This isolation level prevents the
+<td class="tableblock halign-left valign-top"><p class="tableblock">This isolation level prevents
 non-repeatable reads, a situation when a row is read in one transaction,
 then modified in another transaction, and later re-read in the first
 transaction. In this case different values had been read within the same
@@ -4283,7 +4268,7 @@ running transactions.</p></td>
 <p>Firebird, however, defines other isolation levels: <code>read_committed</code>,
 <code>concurrency</code> and <code>consistency</code>. Only the <code>read_committed</code> isolation
 level can be mapped to the same level defined by the ANSI/ISO SQL
-standard. The dirty reads are prevented, non-repeatable reads as well as
+standard. Dirty reads are prevented, non-repeatable reads as well as
 phantom reads can occur.</p>
 </div>
 <div class="paragraph">
@@ -4329,12 +4314,12 @@ transaction.</p>
 in Firebird – any modification to a table happens in serial way: all
 transactions wait until the current modification is done. This mode can
 be considered as a traditional pessimistic locking scheme, but the lock
-is placed on the whole table. See Chapter "<a href="#_table_reservation">Table Reservation</a>" for more information.</p>
+is placed on the whole table. See section "<a href="#transactions-table-reservation">Table Reservation</a>" for more information.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The mapping is specified in the <code>isc_tpb_mapping.properties</code> file that
+<p>The default mapping is specified in the <code>isc_tpb_mapping.properties</code> file that
 can be found in the Jaybird archive and can be overridden via the
 connection properties</p>
 </div>
@@ -4347,10 +4332,10 @@ connection properties</p>
 <li>
 <p>via the direct specification of the JDBC transaction isolation level.
 The following code contains an example of such operation, the values in
-the mapping are described in section "<a href="#_transaction_parameter_buffer">Transaction Parameter Buffer</a>".</p>
+the mapping are described in section "<a href="#transactions-tpb">Transaction Parameter Buffer</a>".</p>
 </li>
 <li>
-<p>via the connection pool configuration.</p>
+<p>via the data source configuration.</p>
 </li>
 </ul>
 </div>
@@ -4372,12 +4357,12 @@ Connection connection = DriverManager.getConnection(
 <div class="paragraph">
 <p>The overridden mapping is used for all transactions started within the
 database connection. If the default mapping is overridden via the
-connection pool configuration, it will be used for all connections
-created by the pool.</p>
+data source configuration, it will be used for all connections
+created by the data source.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_savepoints">6.5. Savepoints</h3>
+<h3 id="transactions-savepoints">6.5. Savepoints</h3>
 <div class="paragraph">
 <p>Savepoints provide finer-grained control over transactions by providing
 intermediate steps within a larger transaction. Once a savepoint has
@@ -4385,12 +4370,15 @@ been set, transaction can be rollback to that point without affecting
 preceding work.</p>
 </div>
 <div class="paragraph">
-<p>In order to set a savepoint, use following code:</p>
+<p>In order to set a savepoint, use the following code:</p>
 </div>
 <div class="listingblock">
 <div class="title">Example of using savepoints</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Statement stmt = connection.createStatement();
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Connection connection = ...;
+connection.setAutoCommit(false);
+
+Statement stmt = connection.createStatement();
 
 stmt.executeUpdate(
     "INSERT INTO myTable(id, name) VALUES (1, 'John')");
@@ -4418,12 +4406,12 @@ savepoint.</p>
 releasing a savepoint it is no longer possible to rollback the current
 transaction to that savepoint. Attempts to call the <code>rollback(Savepoint)</code> method
 will result in an <code>SQLException</code>. Savepoints that have been created
-within a transaction are automatically released when transaction is
+within a transaction are automatically released when that transaction is
 committed or rolled back.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_transaction_parameter_buffer">6.6. Transaction Parameter Buffer</h3>
+<h3 id="transactions-tpb">6.6. Transaction Parameter Buffer</h3>
 <div class="paragraph">
 <p>The behavior of Firebird transactions is internally controlled by
 the Transaction Parameter Buffer (TPB), which specifies different
@@ -4441,6 +4429,9 @@ transaction properties:</p>
 <p>the lock conflict resolution mode – wait or no wait;</p>
 </li>
 <li>
+<p>the lock wait timeout;</p>
+</li>
+<li>
 <p>and, finally, the table reservations – their names and reservation
 modes.</p>
 </li>
@@ -4448,8 +4439,8 @@ modes.</p>
 </div>
 <div class="paragraph">
 <p>The TPB is automatically generated depending on the transaction
-isolation level specified for the <code>java.sql.Connection</code> object and
-usually there is no need to manipulate the TPB directly. Additionally,
+isolation level specified for the <code>java.sql.Connection</code> object.
+Usually there is no need to manipulate the TPB directly. Additionally,
 if the connection is set to read-only mode, this is reflected in the TPB
 by appropriate constant. However, the lock resolution mode as well as
 table reservations cannot be specified by using the standard JDBC
@@ -4469,6 +4460,7 @@ tpb.addArgument(TransactionParameterBuffer.READ_COMMITTED);
 tpb.addArgument(TransactionParameterBuffer.REC_VERSION);
 tpb.addArgument(TransactionParameterBuffer.WRITE);
 tpb.addArgument(TransactionParameterBuffer.WAIT);
+tpb.addArgument(TransactionParameterBuffer.LOCK_TIMEOUT, 15);
 
 fbConnection.setTransactionParameters(tpb);</code></pre>
 </div>
@@ -4500,8 +4492,8 @@ record that was when the current transaction started and guarantees that
 neither non-repeatable reads nor phantom reads can ever occur.</p>
 </div>
 <div class="paragraph">
-<p>In <code>read_committed</code> mode Firebird database engine, however, accesses the
-record version with the highest timestamp, for which the corresponding
+<p>In <code>read_committed</code> mode, the Firebird database engine accesses the
+record version with the highest timestamp for which the corresponding
 transaction is marked as committed. This prevents engine from reading
 the record versions which were modified in concurrent transactions
 that are not yet committed or were rolled back for whatever reasons.
@@ -4511,8 +4503,8 @@ had been committed.</p>
 </div>
 <div class="paragraph">
 <p>The <code>read_committed</code> isolation mode requires another constant that
-specifies the behavior of the transaction when it meets a record version
-with the timestamp which belongs to the currently running transaction
+specifies the behavior of the transaction when it sees a record version
+with a timestamp that belongs to a currently running transaction
 which is not yet committed.</p>
 </div>
 <div class="paragraph">
@@ -4522,14 +4514,14 @@ version as described before.</p>
 </div>
 <div class="paragraph">
 <p>The <code>TransactionParameterBuffer.NO_REC_VERSION</code> constant tells database
-engine to report the lock conflict when an uncommitted record version is
+engine to report a lock conflict when an uncommitted record version is
 seen while fetching data from the database. The outcome of the operation
 is then controlled by the lock resolution mode (see section
-<a href="#_lock_resolution_mode">Lock resolution mode</a>).</p>
+<a href="#transactions-lock-resolution">Lock resolution mode</a>).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_read_only_transactions_2">6.6.2. Read-only transactions</h4>
+<h4 id="transactions-read-only">6.6.2. Read-only transactions</h4>
 <div class="paragraph">
 <p>The read-only or read-write transaction mode is controlled by two
 constants:</p>
@@ -4545,11 +4537,11 @@ constants:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>When the read-write mode is specified, database engine stores the
-"timestamp" of new transaction in the database even no modification will
+<p>When the read-write mode (constant <code>WRITE</code>) is specified, the database engine stores the
+"timestamp" of the new transaction in the database even when no modification will
 be made in the transaction. The "timestamp" affects the garbage
 collection process, since the database engine cannot release records
-that were modified in the transactions with higher "timestamps" even
+that were modified in transactions with higher "timestamps" even
 when these record versions are no longer needed (in other words, when
 there are already newer versions of the records). Thus, long-running
 read-write transaction inhibits the garbage collection even when no
@@ -4561,19 +4553,19 @@ transaction when it is used for read operations.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_lock_resolution_mode">6.6.3. Lock resolution mode</h4>
+<h4 id="transactions-lock-resolution">6.6.3. Lock resolution mode</h4>
 <div class="paragraph">
-<p>The RDBMS systems that use pessimistic locking for the concurrency
+<p>Relational database systems that use pessimistic locking for concurrency
 control lock the records regardless of the operation type, read or
-write. When application tries to read a record from the database,
-database engine tries to obtain a "read lock" to that record. If the
-operation succeeds and application later tries to update the record, the
-lock is upgraded to the "write lock". And finally, if the resource is
+write. When an application tries to read a record from the database,
+the database engine tries to obtain a "read lock" to that record. If the
+operation succeeds and the application later tries to update the record, the
+lock is upgraded to a "write lock". And finally, if the resource is
 already locked for write, concurrent transactions cannot lock it for
 reading, since the system cannot allow the transaction to make a
 decision based on data that might be rolled back later. This approach
-significantly decreases concurrency. However, the databases systems that
-employ the record versioning mechanism do not have such restriction
+significantly decreases concurrency. However, databases systems that
+employ a record versioning mechanism do not have such restrictions
 because each transaction "sees" its own version of the record – the only
 possible conflict happens when two concurrent transactions try to obtain
 "write lock" for the same database record.</p>
@@ -4583,10 +4575,10 @@ possible conflict happens when two concurrent transactions try to obtain
 <code>concurrency</code> isolation levels it behaves appropriately – there are no
 lock conflicts between readers and writers, and only writers competing
 for the same resource raise a lock conflict. However, on the
-<code>consistency</code> isolation level Firebird emulates the behavior of the
-systems with pessimistic locking – read operation will conflict with
-write. Even more, the locks are obtained for the whole tables (see
-"<a href="#_table_reservation">Table Reservation</a>" chapter for details).</p>
+<code>consistency</code> isolation level Firebird emulates the behavior of
+systems with pessimistic locking – read operations will conflict with
+write operations. Even more, the locks are obtained for whole tables (see
+"<a href="#transactions-table-reservation">Table Reservation</a>" for details).</p>
 </div>
 <div class="paragraph">
 <p>The following table summarizes the above for Firebird 2.0. It shows that
@@ -4648,17 +4640,17 @@ read-only</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_table_reservation">6.7. Table Reservation</h3>
+<h3 id="transactions-table-reservation">6.7. Table Reservation</h3>
 <div class="paragraph">
-<p>Table reservation allows to specify the database tables and the
-corresponding access modes at the beginning of the transaction. When
-transaction is started, engine tries to obtain the requested locks for
+<p>Table reservation allows you to specify the database tables and the
+corresponding access modes at the beginning of the transaction. When the
+transaction is started, the engine tries to obtain the requested locks for
 the specified tables and proceeds only when all of them were
 successfully obtained. Such behavior allows to create a deadlock-free
-execution histories<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnote_7" title="View footnote.">7</a>]</sup>.</p>
+execution history<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnote_9" title="View footnote.">9</a>]</sup>.</p>
 </div>
 <div class="paragraph">
-<p>The table reservation is specified via TPB and includes the table to
+<p>The table reservation is specified via a TPB and includes the table to
 lock, the lock mode (read or write) and lock type (shared, protected and
 exclusive).</p>
 </div>
@@ -4696,10 +4688,9 @@ protected mode. The code does the following:</p>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>Populate the TPB. The first three statements were
-described in the section "<a href="#_transaction_parameter_buffer">Transaction Parameter Buffer</a>". The fourth call specifies that the application wants
+described in "<a href="#transactions-tpb">Transaction Parameter Buffer</a>". The fourth call specifies that the application wants
 to obtain a lock on the table <code>TEST_LOCK</code> for writing. The fifth call
-specifies the type of the lock to obtain, in our case the protected
-lock.</td>
+specifies the type of the lock to obtain, in our case the protected lock.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -4737,7 +4728,7 @@ table;</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>TransactionParameterBuffer.EXCLUSIVE</code> mode was introduced in latter
+<p>The <code>TransactionParameterBuffer.EXCLUSIVE</code> mode was introduced in later
 versions of Firebird, however it behaves like <code>PROTECTED</code> mode for all
 read-write transactions.</p>
 </div>
@@ -4754,7 +4745,7 @@ regardless of the lock type and transaction isolation mode;</p>
 <li>
 <p><code>LOCK_WRITE</code> always conflicts with another <code>LOCK_READ</code> mode if both
 transactions have <code>consistency</code> isolation, but has no conflict with
-shared-read locks it if another transaction has either <code>concurrency</code> or
+shared-read locks if the other transaction has either <code>concurrency</code> or
 <code>read_committed</code> isolation level;</p>
 </li>
 <li>
@@ -4773,7 +4764,7 @@ shared-read locks it if another transaction has either <code>concurrency</code> 
 server-wide connections. These are used to perform various
 administrative tasks in Firebird, e.g. database backup, maintenance,
 statistics. The set of API calls to perform such tasks are known under
-the name "Services API". Additionally, client application can use the
+the name "Services API". Additionally, client applications can use the
 Services API to get some limited information about the server
 environment and configuration.</p>
 </div>
@@ -4856,7 +4847,7 @@ The meaning of the property depends on the service being invoked and will be des
 </tbody>
 </table>
 <div class="paragraph">
-<p>The last parameter requires some more information. The calls to all
+<p>The last parameter requires some explanation. The calls to all
 Services API routines are asynchronous. The client application can start
 the call, but there are no other means to find out whether execution of
 the service call is finished or not except reading the output of the
@@ -4864,8 +4855,8 @@ service call – EOF in this case means that execution is finished.</p>
 </div>
 <div class="paragraph">
 <p>The <code>FBServiceManager</code> converts the asynchronous calls into synchronous
-by constantly polling the service output stream. If <code>logger</code> property is
-specified the received data are copied into the specified
+by constantly polling the service output stream. If the <code>logger</code> property is
+specified the received data is copied into the specified
 <code>OutputStream</code>, otherwise it is simply ignored and the EOF-marker is
 being watched.</p>
 </div>
@@ -4935,15 +4926,28 @@ Valid values depend on the Firebird version, but should be one of the 1024, 2048
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restoreReplace</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> if restore should replace the existing database with the one from backup.</p>
-<p class="tableblock"><strong>Warning!</strong> It is easy to drop the only existing database if the backup can&#8217;t be restored, as the existing database is first deleted and only after that the restore process starts.
-To avoid such situation it is recommended to restore database into some dummy file first and then use file system commands to replace the existing database with the newly created one.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Set to <code>true</code> if restore should replace the existing database with the one from backup.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+It is easy to drop an existing database if the backup can&#8217;t be restored, as the existing database is first deleted and only after that the restore process starts.
+To avoid such situation it is recommended to restore a database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
+</td>
+</tr>
+</table>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>verbose</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Be verbose when writing to the log.
-The service called on the server will produce lots of output that will be written to the output stream specified in logger property.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Be verbose when writing to the log.</p>
+<p class="tableblock">The service called on the server will produce lots of output that will be written to the output stream specified in logger property.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4992,24 +4996,40 @@ This method also clears the path specified in the database property.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="sidebarblock">
-<div class="content">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p><em>Please note, all paths that are specified are paths specifications on
-the remote server. This has following implications: a) it is not
-possible to backup to the local or network drive unless it is mounted on
-the remote server; b) it is not possible to restore from the local or
-network drive unless it is mounted on the remote server.</em></p>
+<p>All paths specified are paths specifications on the remote server. This has the following
+implications:</p>
 </div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>it is not possible to backup to the local or network drive unless it is mounted on the remote
+server;</p>
+</li>
+<li>
+<p>it is not possible to restore from the local or network drive unless it is mounted on the remote
+server.</p>
+</li>
+</ol>
 </div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>After specifying all the needed properties application developer can use
+<p>After specifying all the needed properties, the application developer can use
 <code>backupDatabase()</code>, <code>backupMetadata()</code> and <code>restoreDatabase()</code> methods
 to perform the backup and restore tasks. These methods will block until
 the operation is finished. If the <code>logger</code> property was set, the output
 of the service will be written into the specified output stream,
-otherwise it will be ignored<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnote_8" title="View footnote.">8</a>]</sup>.</p>
+otherwise it will be ignored.<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnote_10" title="View footnote.">10</a>]</sup></p>
 </div>
 <div class="listingblock">
 <div class="title">Example of backup and restore process</div>
@@ -5093,20 +5113,21 @@ Ensure that the restored database contains correct data afterwards.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ignore in-limbo transactions.</p>
 <p class="tableblock">The backup utility can&#8217;t backup database with in-limbo transactions.
 When such situation appears, backup has to wait until the decision about the outcome of the in-limbo transaction.
-After some timeout exception is thrown and backup is aborted.
-This option allows to workaround this situation – the gbak looks for the most recent committed version of the record and writes it into backup.</p></td>
+After a wait timeout, an exception is thrown and backup is aborted.
+This option allows to workaround this situation – the gbak looks for the most recent committed version of the record and writes it into the backup.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BACKUP_METADATA_ONLY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Backup metadata only.</p>
-<p class="tableblock">When this option is specified, the backup utility backups only the metadata information (e.g. table an/or view structure, stored procedures, etc.), but no data are backed up.
+<p class="tableblock">When this option is specified, the backup utility creates a backup of only the metadata information
+(e.g. table an/or view structure, stored procedures, etc.), but no data are backed up.
 This allows restoring a clean database from the backup.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BACKUP_NO_GARBAGE_COLLECT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Do not collect garbage during backup.</p>
 <p class="tableblock">The backup process reads all records in the tables one by one.
-When cooperative garbage collection is enabled<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnote_9" title="View footnote.">9</a>]</sup> the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
+When cooperative garbage collection is enabled<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnote_11" title="View footnote.">11</a>]</sup> the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
 This process is time consuming and might be switched off when creating backup, where
 the most recent version will be read.</p>
 <p class="tableblock">Later, operator can restore the database from the backup.
@@ -5127,31 +5148,33 @@ By using this option a non-transportable format will be used which allows restor
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_DEACTIVATE_INDEX</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deactivate indexes during restore.</p>
-<p class="tableblock">By default indexes are created at the beginning of the restore process and they are updated with each record being restored from the backup file.
-On a big tables it is more efficient first to store data in the database and to update the index afterwards.
-When this option is specified, the indexes will be restored in the inactive state.
-Application is however required to activate indexes afterwards, it won&#8217;t happen automatically.</p></td>
+<p class="tableblock">By default indexes are created at the beginning of the restore process and they are updated with
+each record being restored from the backup file. On a big tables it is more efficient first to
+store data in the database and to update the index afterwards. When this option is specified, the
+indexes will be restored in the inactive state. The downside of this option is that the database
+administrator is required to activate indexes afterwards, it won&#8217;t happen automatically.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_NO_SHADOW</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Do not restore shadow database.</p>
 <p class="tableblock">If the shadow database is configured, an absolute path to the shadow is stored in the backup file.
-If such backup file is restored on a different system where such path does not exist (e.g. moving database from Windows to Linux or otherwise), restore process will fail.
-Using this option allows to overcome such situation.</p></td>
+If such backup file is restored on a different system where the path does not exist (e.g. moving
+a database from Windows to Linux or otherwise), the restore will fail. Using this option allows to
+overcome such situations.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_NO_VALIDITY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Do not restore validity constraints.</p>
-<p class="tableblock">This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnote_10" title="View footnote.">10</a>]</sup>.</p>
-<p class="tableblock">When this option is specified, the validity constraints won&#8217;t be restored.
-This allows to recover the data and perform cleanup tasks.
-Application and/or administrators are responsible for restoring the validity constrains afterwards.</p></td>
+<p class="tableblock">This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnote_12" title="View footnote.">12</a>]</sup>.</p>
+<p class="tableblock">When this option is specified, the validity constraints won&#8217;t be restored. This allows to recover
+the data and perform cleanup tasks. The application and/or database administrators are responsible
+for restoring the validity constrains afterwards.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_ONE_AT_A_TIME</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Commit after completing restore of each table.</p>
-<p class="tableblock">By default all data are restored in one transaction.
-If for some reason the complete restore is not possible, using this option will allow to restore at least some of the data.</p></td>
+<p class="tableblock">By default all data is restored in one transaction. If for some reason a complete restore is not
+possible, using this option will allow to restore at least some of the data.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_USE_ALL_SPACE</p></td>
@@ -5211,7 +5234,7 @@ deprecated. You should use the SQL DDL statements for user management instead.</
 defined in the <code>UserManager</code> interface and are implemented in the
 <code>FBUserManager</code> class. Additionally, there is an <code>User</code> interface
 providing getters and setters for properties of a user account on the
-server and corresponding implementation in the <code>FBUser</code> <sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnote_11" title="View footnote.">11</a>]</sup> class. The available properties of the <code>FBUser</code> class
+server and corresponding implementation in the <code>FBUser</code> class.<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnote_13" title="View footnote.">13</a>]</sup> The available properties of the <code>FBUser</code> class
 are:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -5345,7 +5368,7 @@ interface and its implementation, the <code>FBMaintenanceManager</code> class.</
 <div class="paragraph">
 <p>One of the most often used maintenance operations is database shutdown
 and/or bringing it back online. When the database was shutdown only the
-user that initiated the shutdown, either SYSDBA or database owner, can
+user that initiated the shutdown, either SYSDBA or the database owner, can
 connect to the database and perform other tasks, e.g. metadata
 modification or database validation and repair.</p>
 </div>
@@ -5392,11 +5415,11 @@ New connections and transactions are not prohibited during the wait.</p>
 <div class="paragraph">
 <p>After database shutdown, the owner of the database or SYSDBA can
 connect to it and perform maintenance tasks, e.g. migration to the new
-data model<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnote_12" title="View footnote.">12</a>]</sup>, validation of the
+data model<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnote_14" title="View footnote.">14</a>]</sup>, validation of the
 database, changing the database file configuration.</p>
 </div>
 <div class="paragraph">
-<p>To bring system back online use the <code>bringDatabaseOnline()</code> method.</p>
+<p>To bring the database back online use the <code>bringDatabaseOnline()</code> method.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5404,7 +5427,7 @@ database, changing the database file configuration.</p>
 <div class="paragraph">
 <p>A database shadow is an in-sync copy of the database that is usually
 stored on a different hard disk, possibly on a remote
-computer<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnote_13" title="View footnote.">13</a>]</sup>, which can be used as a primary database if the main
+computer<sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="#_footnote_15" title="View footnote.">15</a>]</sup>, which can be used as a primary database if the main
 database server crashes. Shadows can be defined using <code>CREATE SHADOW</code>
 SQL command and are characterized by a <em>mode</em> parameter:</p>
 </div>
@@ -5428,7 +5451,7 @@ kill the unavailable shadows. This is equivalent to the <code>gfix -kill</code>
 command.</p>
 </div>
 <div class="paragraph">
-<p>Additionally, if the main database becomes unavailable, DBA can decide
+<p>Additionally, if the main database becomes unavailable, the DBA can decide
 to switch to the shadow database. In this case the shadow must be
 activated before use. To activate the shadow use the
 <code>activateShadowFile()</code> method. Please note, that in this case the
@@ -5443,8 +5466,8 @@ which the management class is connected.</p>
 <p>The Firebird server does its best to keep the database file in a
 consistent form. In particular this is achieved by a special algorithm
 called <em>careful writes</em> which guarantees that the server writes data on
-disk in such a manner than despite the server crash the database file
-always remains in consistent form. Unfortunately it is still possible
+disk in such a manner that despite events like a server crash the database file
+always remains in a consistent state. Unfortunately, it is still possible
 that under certain conditions, e.g. crash of the file system or hardware
 failure, the database file might become corrupted. Firebird server can
 detect such cases including</p>
@@ -5520,7 +5543,7 @@ backed up and restored to a different place.</p>
 <p>The presence of the checksum errors and subsequent use of
 <code>markCorruptedRecords()</code> method will mark all corrupted data as unused
 space. You have to perform a careful check after backup/restore cycle to
-assess the caused damage.</p>
+assess the damage.</p>
 </div>
 </td>
 </tr>
@@ -5531,8 +5554,8 @@ assess the caused damage.</p>
 <h4 id="_limbo_transactions">7.4.4. Limbo transactions</h4>
 <div class="paragraph">
 <p>Limbo transactions are transactions that were prepared for commit
-but were never committed. This can happen when, for example, database
-was accessed by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnote_14" title="View footnote.">14</a>]</sup>. The in-limbo transactions affect the normal database
+but were never committed. This can happen when, for example, the database
+was accessed by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnote_16" title="View footnote.">16</a>]</sup>. The in-limbo transactions affect the normal database
 operation, since the records that were modified in that transactions are
 not available – Firebird does not know whether the new version will be
 committed or rolled back and blocks access to them. Also in-limbo
@@ -5541,10 +5564,10 @@ does not know whether it can discard the record versions of the in-limbo
 transaction.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird contains needed functionality to allow the JTA-enabled
+<p>Jaybird contains functionality to allow the JTA-enabled
 transaction coordinator to recover the in-limbo transactions and either
 commit them or perform a rollback. For the cases when this is not
-possible <code>MaintenanceManager</code> provides following methods to perform this
+possible <code>MaintenanceManager</code> provides the following methods to perform this
 in interactive mode:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
@@ -5561,8 +5584,18 @@ in interactive mode:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>listLimboTransactions()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method lists all IDs of the in-limbo transactions to the output stream specified in logger property.</p>
-<p class="tableblock">Application has to either parse the output to commit or rollback the transactions in automated mode or it should present the output to the user and let him/her make a decision.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Method lists IDs of all in-limbo transactions to the output stream specified in logger property.</p>
+<p class="tableblock">The application has to either parse the output to commit or rollback the transactions in some
+automated fashion or it should present the output to the user and let him/her make a decision.
+Alternatively, use one of the following two methods</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limboTransactionsAsList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a <code>List&lt;Long&gt;</code> of the IDs of all in-limbo transactions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getLimboTransactions()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns an array of <code>long</code> with the IDs of all in-limbo transactions</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>commitTransaction(long)</code></p></td>
@@ -5581,10 +5614,10 @@ in interactive mode:</p>
 <p>The in-limbo transactions are not the only kind of transactions that
 prevent garbage collection. Another type are transactions are those that
 were finished by "rollback" and the changes made in such transactions
-were not automatically undone by using internal savepoint mechanism,
+were not automatically undone by the internal savepoint mechanism,
 e.g. when there were a lot of changes made in the transaction (e.g.
 10,000 records and more). Such transactions are marked as "rollback"
-transactions on Transaction Inventory Page and prevent advancing the
+transactions on Transaction Inventory Page and this prevents advancing the
 so-called Oldest Interesting Transaction (OIT) – ID of the oldest
 transaction which created record versions that are relevant to any of
 the currently running transactions. On each access to the records,
@@ -5593,14 +5626,14 @@ transaction and the OIT, which leads to performance degradation on large
 databases. In order to solve the issue Firebird periodically starts a
 database sweeping process, that traverses all database records, removes
 the changes made by the rolled back transactions and moves forward the
-OIT<sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="#_footnote_15" title="View footnote.">15</a>]</sup>.</p>
+OIT.<sup class="footnote">[<a id="_footnoteref_17" class="footnote" href="#_footnote_17" title="View footnote.">17</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>The sweep process is controlled by a threshold parameter – a difference
 between the Next Transaction and OIT, by default it equal to 20,000.
-While this value is ok for the average database, DBA might decide to
+While this value is ok for the average database, a DBA can decide to
 increase or decrease the number to fit the database usage scenario.
-Alternatively DBA can trigger the sweep process manually regardless of
+Alternatively, a DBA can trigger the sweep process manually regardless of
 the current difference between Next Transaction and OIT.</p>
 </div>
 <div class="paragraph">
@@ -5666,7 +5699,7 @@ Possible values are:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Please note, only read-only databases can be placed on read-only media, the read-write databases will need to be able to write even if only accessed within read-only transactions.</p>
+<p>Please note, only read-only databases can be placed on read-only media, the read-write databases will need to be able to write even if only accessed with read-only transactions.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5676,23 +5709,29 @@ The allowed values can be either 1 or 3.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setDefaultCacheBuffer(int)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Change the number of database pages to cache.
-Default value is 2048.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the number of database pages to cache.</p>
+<p class="tableblock">This setting applies to this specific database, overriding the system-wide configuration.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setForcedWrites(boolean)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change the forced writes setting for the database.</p>
-<p class="tableblock">When the forced writes are switched off, database engine does not enforce flushing pending changes to disk and they are kept in OS cache.
-When later the RDBMS changes the same page later, the write happens in memory, which in many cases increases the performance.
-However, in case of OS or hardware crash the database will be corrupted.</p></td>
+<p class="tableblock">When forced writes are switched off, the database engine does not enforce flushing pending changes
+to disk and they are kept in OS cache. Tthe same page is changed again later, the write happens in
+memory, which in many cases increases the performance. However, in case of OS or hardware crashes
+the database will be corrupted.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setPageFill(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Set the page fill factor.
-Firebird leaves 20% of free space on each database page for future record versions.
-It is possible to tell Firebird not to reserve the space, makes sense for read-only databases, since more data fit the page, which increases performance.
-Possible values are:</p>
+<p>Set the page fill factor.</p>
+</div>
+<div class="paragraph">
+<p>Firebird leaves 20% of free space on each database page for future record versions.
+It is possible to tell Firebird not to reserve the space, this makes sense for read-only databases,
+since more data fit the page, which increases performance.</p>
+</div>
+<div class="paragraph">
+<p>Possible values are:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5712,9 +5751,9 @@ Possible values are:</p>
 <div class="sect2">
 <h3 id="_database_statistics">7.5. Database statistics</h3>
 <div class="paragraph">
-<p>The last but not least are the <code>StatisticsManager</code> interface and
+<p>And last but not least is the <code>StatisticsManager</code> interface and
 corresponding implementation in the <code>FBStatisticsManager</code> class, which
-allow to obtain the statistical information for the database, like page
+allow to obtain statistical information for the database, like page
 size, values of OIT and Next transactions, database dialect, database
 page allocation and its distribution.</p>
 </div>
@@ -5744,8 +5783,10 @@ needed.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabaseStatistics(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Get the statistical information for the specified options.
-Possible values are (bit mask, can be combined together):</p>
+<p>Get the statistical information for the specified options.</p>
+</div>
+<div class="paragraph">
+<p>Possible values are (bit mask, can be combined):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5770,8 +5811,8 @@ Possible values are (bit mask, can be combined together):</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTableStatistics(String[])</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Get statistic information for the specified tables.
-This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get statistic information for the specified tables.</p>
+<p class="tableblock">This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.</p></td>
 </tr>
 </tbody>
 </table>
@@ -5782,11 +5823,12 @@ This method allows to limit the reported statistical information to a single or 
 <h2 id="events">8. Working with Events</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Firebird supports events, which is a feature that provides asynchronous notification to the
-connected applications about some system events. Instead of requiring applications to reread the
-database tables to check for the changes, using events it is possible to avoid that: triggers in
-the database can post an event in case of change. And even more, the event can be so specific that
-an application would need to reread only a limited set of records, possibly only one.</p>
+<p>Firebird supports events. Events are a feature that provides asynchronous notification to the
+connected applications about events triggered by the database or other applications. Instead of
+requiring applications to reread the database tables to check for the changes, events make it
+possible to avoid that: triggers in the database can post an event in case of a change. And even
+more, the event can be so specific that an application would need to reread only a limited set of
+records, possibly only one.</p>
 </div>
 <div class="paragraph">
 <p>This chapter describes the event mechanism in Firebird and the common usage scenarios.</p>
@@ -5794,7 +5836,7 @@ an application would need to reread only a limited set of records, possibly only
 <div class="sect2">
 <h3 id="_database_events">8.1. Database events</h3>
 <div class="paragraph">
-<p>The <em>event</em> is a message generated in a trigger or stored procedure that
+<p>An <em>event</em> is a message generated in a trigger, stored procedure or execute block that
 is delivered to subscribed applications. The event is characterized only
 by a name which is used when the event is posted, therefore two different
 events must have two different names. The applications that subscribe
@@ -5804,11 +5846,10 @@ callback function that will be invoked in case of event or are required
 to poll for the posted events periodically.</p>
 </div>
 <div class="paragraph">
-<p>The events are delivered to the application only if the transaction that
-generated the event was committed. Also Firebird does not provide any
-guarantees about the time of event delivery – it depends on the load of
-the RDBMS, application load, network delays between application and
-RDBMS. The database engine will continue operating even if no
+<p>Events are delivered to the application only on (after) commit of the transaction that generated
+the event. Firebird does not provide any guarantees about the time of event delivery – it depends on
+the load of the Firebird engine, application load, network delays between application and
+the database system. The database engine will continue operating even if no
 application subscribes to events or when the subscribed application
 crashed in the meantime.</p>
 </div>
@@ -5816,8 +5857,8 @@ crashed in the meantime.</p>
 <p>It can also happen that multiple transactions will be committed before
 the events are delivered to the client system. But even in such case the
 callback function will be invoked only once, and only the event name and
-the count of the events will be passed as parameters. Same applies to
-periodical polling – the application will receive event name and count of
+the count of the events will be passed as parameters. The same applies to
+periodical polling – the application will receive event names and counts of
 the events since last polling.</p>
 </div>
 <div class="paragraph">
@@ -5830,7 +5871,7 @@ and increases the event count for the subscribed applications. Another
 thread checks the table periodically and notifies the application about
 all new events relevant to the particular application. Such mechanism
 allows Firebird to keep the event notification table very
-small<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnote_16" title="View footnote.">16</a>]</sup> and to
+small<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnote_18" title="View footnote.">18</a>]</sup> and to
 reduce the number of messages sent to the application.</p>
 </div>
 <div class="admonitionblock note">
@@ -5854,9 +5895,9 @@ used to tell the application that new records were added to the table.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_posting_the_events">8.2. Posting the events</h3>
+<h3 id="_posting_events">8.2. Posting events</h3>
 <div class="paragraph">
-<p>The events are posted from the trigger or stored procedure language
+<p>Events are posted from PSQL procedural code (trigger, stored procedure, execute block, function)
 using the <code>POST_EVENT</code> command. It is possible to create a stored
 procedure with the sole purpose of posting events:</p>
 </div>
@@ -5870,7 +5911,7 @@ END</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Firebird 2.0 features a new command <code>EXECUTE BLOCK</code> which allows to
+<p>Firebird 2.0 introduced a new command <code>EXECUTE BLOCK</code> which allows to
 execute PSQL statements within DSQL code:</p>
 </div>
 <div class="listingblock">
@@ -5899,7 +5940,7 @@ event name and occurrence count.</p>
 </div>
 <div class="paragraph">
 <p>Applications have to configure the following properties before starting
-using the implementation <code>EventManager</code> interface:</p>
+use of the implementation <code>EventManager</code> interface:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -5961,11 +6002,11 @@ or timeout occurs.</p>
 wait for the event notifications and to deliver the events to the
 registered listeners. The listeners are added using the
 <code>addEventListener(String, EventListener)</code> method, where the first
-parameter contains the name of the event to which application registers
-to and the second parameter – an instance of <code>EventListener</code> interface
-that will be notified about the events. It is allowed to use the same
+parameter contains the name of the event to register on
+and the second parameter – an instance of <code>EventListener</code> interface
+that will be notified about occurrences of this event. It is allowed to use the same
 instance of <code>EventListener</code> interface to listen on different events. The
-code below shows an example of using the asynchronous event
+code below shows an example of using asynchronous event
 notification.</p>
 </div>
 <div class="listingblock">
@@ -5997,7 +6038,7 @@ eventManager.addEventListener("test_event",
 <div class="paragraph">
 <p>Alternatively, an application can use the synchronous methods, one that
 blocks until the named event is received – the <code>waitForEvent(String)</code>
-method, or the one will block until the named event is received or
+method, or one that will block until the named event is received or
 timeout specified in the second parameter occurs – the
 <code>waitForEvent(String, int)</code> method. The following shows an example of
 using the blocking methods.</p>
@@ -6923,7 +6964,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_17" class="footnote" href="#_footnote_17" title="View footnote.">17</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnote_19" title="View footnote.">19</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -6972,7 +7013,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnote_18" title="View footnote.">18</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnote_20" title="View footnote.">20</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -6986,7 +7027,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnote_19" title="View footnote.">19</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnote_21" title="View footnote.">21</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set">D.2.1. The UTF8 character set</h4>
@@ -7009,7 +7050,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnote_20" title="View footnote.">20</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnote_22" title="View footnote.">22</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -7445,7 +7486,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnote_21" title="View footnote.">21</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnote_23" title="View footnote.">23</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -7579,7 +7620,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnote_22" title="View footnote.">22</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnote_24" title="View footnote.">24</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -7698,7 +7739,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnote_23" title="View footnote.">23</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnote_25" title="View footnote.">25</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -8076,78 +8117,84 @@ hyperlink/alias]).</p>
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnote_1">
-<a href="#_footnoteref_1">1</a>. it is possible sometimes X/Open SQLstates are used
+<a href="#_footnoteref_1">1</a>. For those interested in software archaeology, you can find those Interclient sources archived on <a href="https://github.com/FirebirdSQL/x-cvs-interclient" class="bare">https://github.com/FirebirdSQL/x-cvs-interclient</a>
 </div>
 <div class="footnote" id="_footnote_2">
-<a href="#_footnoteref_2">2</a>. excluding those defined for <code>javax.sql.rowset</code>
+<a href="#_footnoteref_2">2</a>. it is possible sometimes X/Open SQLstates are used
 </div>
 <div class="footnote" id="_footnote_3">
-<a href="#_footnoteref_3">3</a>. DDL – Data Definition Language. This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.
+<a href="#_footnoteref_3">3</a>. excluding those defined for <code>javax.sql.rowset</code>
 </div>
 <div class="footnote" id="_footnote_4">
-<a href="#_footnoteref_4">4</a>. escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
+<a href="#_footnoteref_4">4</a>. DDL – Data Definition Language. This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.
 </div>
 <div class="footnote" id="_footnote_5">
-<a href="#_footnoteref_5">5</a>. Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.
+<a href="#_footnoteref_5">5</a>. escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
 </div>
 <div class="footnote" id="_footnote_6">
-<a href="#_footnoteref_6">6</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be "detached" from the statement object that created them, please check the <code>javax.sql.RowSet</code> implementations.
+<a href="#_footnoteref_6">6</a>. Support is expected in Firebird 4 for prepared statements, Jaybird will add support in a future version
 </div>
 <div class="footnote" id="_footnote_7">
-<a href="#_footnoteref_7">7</a>. This approach follows the two-phase locking protocol, where all locks are acquired on the beginning of the transaction and are released only when transaction is finished.
+<a href="#_footnoteref_7">7</a>. Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.
 </div>
 <div class="footnote" id="_footnote_8">
-<a href="#_footnoteref_8">8</a>. The output of the service is always transferred over the network regardless whether the logger property is set or not. Additionally to providing a possibility to the user to track the service progress it acts also as a signal of operation completion – in this case the Java code will receive an EOF marker.
+<a href="#_footnoteref_8">8</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be "detached" from the statement object that created them, please check the <code>javax.sql.RowSet</code> implementations.
 </div>
 <div class="footnote" id="_footnote_9">
-<a href="#_footnoteref_9">9</a>. Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can&#8217;t be switched off in ClassicServer architecture and in previous Firebird versions.
+<a href="#_footnoteref_9">9</a>. This approach follows the two-phase locking protocol, where all locks are acquired on the beginning of the transaction and are released only when transaction is finished.
 </div>
 <div class="footnote" id="_footnote_10">
-<a href="#_footnoteref_10">10</a>. All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
+<a href="#_footnoteref_10">10</a>. The output of the service is always transferred over the network regardless whether the logger property is set or not. Additionally to providing a possibility to the user to track the service progress it acts also as a signal of operation completion – in this case the Java code will receive an EOF marker.
 </div>
 <div class="footnote" id="_footnote_11">
-<a href="#_footnoteref_11">11</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of User interface.
+<a href="#_footnoteref_11">11</a>. Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can&#8217;t be switched off in ClassicServer architecture and in previous Firebird versions.
 </div>
 <div class="footnote" id="_footnote_12">
-<a href="#_footnoteref_12">12</a>. Until Firebird 2.0 adding a foreign key constraint required an exclusive access to the database.
+<a href="#_footnoteref_12">12</a>. All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
 </div>
 <div class="footnote" id="_footnote_13">
-<a href="#_footnoteref_13">13</a>. Currently possible only on Unix platforms by using NFS shares.
+<a href="#_footnoteref_13">13</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of the <code>User</code> interface.
 </div>
 <div class="footnote" id="_footnote_14">
-<a href="#_footnoteref_14">14</a>. Another reason for limbo transactions are multidatabase transactions which can be initiated via native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
+<a href="#_footnoteref_14">14</a>. Until Firebird 2.0 adding a foreign key constraint required exclusive access to the database.
 </div>
 <div class="footnote" id="_footnote_15">
-<a href="#_footnoteref_15">15</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="http://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">http://www.ibphoenix.com/resources/documents/design/doc_21</a>
+<a href="#_footnoteref_15">15</a>. Currently possible only on Unix platforms by using NFS shares.
 </div>
 <div class="footnote" id="_footnote_16">
-<a href="#_footnoteref_16">16</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
+<a href="#_footnoteref_16">16</a>. Another reason for limbo transactions are multidatabase transactions which can be initiated via native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
 </div>
 <div class="footnote" id="_footnote_17">
-<a href="#_footnoteref_17">17</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_17">17</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="http://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">http://www.ibphoenix.com/resources/documents/design/doc_21</a>
 </div>
 <div class="footnote" id="_footnote_18">
-<a href="#_footnoteref_18">18</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnote_19">
-<a href="#_footnoteref_19">19</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_19">19</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnote_20">
-<a href="#_footnoteref_20">20</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_20">20</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnote_21">
-<a href="#_footnoteref_21">21</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_21">21</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnote_22">
-<a href="#_footnoteref_22">22</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_22">22</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnote_23">
-<a href="#_footnoteref_23">23</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_23">23</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+</div>
+<div class="footnote" id="_footnote_24">
+<a href="#_footnoteref_24">24</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnote_25">
+<a href="#_footnoteref_25">25</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-26 20:17:26 UTC
+Last updated 2018-07-29 13:03:48 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
