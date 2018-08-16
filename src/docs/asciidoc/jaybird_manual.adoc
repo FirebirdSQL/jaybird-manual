@@ -1,4 +1,4 @@
-= Jaybird 3.0 JDBC driver Java Programmer's Manual
+= Jaybird 3.0 JDBC Driver Java Programmer's Manual
 Roman Rokytskyy;Mark Rotteveel
 :doctype: book
 :forceinclude: true
@@ -8,7 +8,7 @@ Roman Rokytskyy;Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird-version: 3.0
-:jaybird-full-version: 3.0.3
+:jaybird-full-version: 3.0.4
 :min-support-firebird: 2.0
 :jna-version: 4.4.0
 :antlr-version: 4.7

@@ -18,14 +18,10 @@ examples and information also applies to previous versions of the driver and of 
 
 === History
 
-When Borland released an open-source version of the InterBase
-RDBMS, it included sources for a type 3 JDBC driver called InterClient.
-However due to some inherent limitations of the InterBase (and later
-Firebird) client library, it was decided that the type 3 driver was a
-dead endfootnote:[For those interested in software archaeology, you can find those
-Interclient sources archived on https://github.com/FirebirdSQL/x-cvs-interclient], and the Firebird team developed a pure Java implementation of
-the wire protocol. This implementation became the basis for Jaybird, a
-pure Java driver for Firebird relational database.
+When Borland released an open-source version of the InterBase RDBMS, it included sources for a type 3 JDBC driver called InterClient.footnote:[For those interested in software archaeology, you can find the open sourced Interclient sources archived on https://github.com/FirebirdSQL/x-cvs-interclient]
+However due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end. 
+Instead, the Firebird team decided to develop a pure Java implementation of the wire protocol. 
+This implementation became the basis for Jaybird, a pure Java driver for Firebird relational database.
 
 === Jaybird Architecture
 

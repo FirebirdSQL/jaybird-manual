@@ -175,7 +175,7 @@ or
 ----
 import java.sql.*;
 ....
-for (Throwable throwable : connection.getWarnings() {
+for (Throwable throwable : connection.getWarnings()) {
     if (throwable instanceof SQLWarning) {
        SQLWarning warning = (SQLWarning) throwable;
        .... // do something with the warning

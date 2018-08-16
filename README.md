@@ -21,7 +21,11 @@ the rendering of the current asciidoc version.
 Style
 =====
 
-Line breaking convention: max 100 characters on a line, except where this would be weird (eg long URLs) or syntactically incorrect.
+Line breaking convention: a single sentence per line, no line breaks within a sentence. If a line 
+becomes too long, take that as a hint to rewrite (if possible).
+
+NOTE: The previous convention was 100 characters per line. Only apply the single sentence per line style
+per paragraph when making changes in that paragraph.
 
 How to build
 ============
