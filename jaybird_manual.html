@@ -518,9 +518,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#reference">Reference Manual</a>
 <ul class="sectlevel1">
-<li><a href="#ref-statement">9. Statement reference</a>
+<li><a href="#ref-connection">9. Connection reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-generatedkeys">9.1. Generated keys retrieval</a></li>
+<li><a href="#ref-wirecrypt">9.1. Wire encryption support</a></li>
+<li><a href="#ref-dbcrypt">9.2. Database encryption support</a></li>
+<li><a href="#ref-defaultholdable">9.3. Default holdable result sets</a></li>
+<li><a href="#ref-firebirdautocommit">9.4. Firebird auto commit mode (experimental)</a></li>
+</ul>
+</li>
+<li><a href="#ref-statement">10. Statement reference</a>
+<ul class="sectlevel2">
+<li><a href="#ref-generatedkeys">10.1. Generated keys retrieval</a></li>
 </ul>
 </li>
 </ul>
@@ -723,12 +731,12 @@ generated key retrieval.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.4.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.5.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.4.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.5.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
 </tr>
 <tr>
@@ -758,7 +766,7 @@ dependencies.</p>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
-Version: <code>3.0.4</code></p>
+Version: <code>3.0.5</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -768,7 +776,7 @@ Version: <code>3.0.4</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.4&lt;/version&gt;
+  &lt;version&gt;3.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -785,7 +793,7 @@ dependency:</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.4&lt;/version&gt;
+  &lt;version&gt;3.0.5&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -6065,10 +6073,249 @@ System.out.println(
 </div>
 <h1 id="reference" class="sect0">Reference Manual</h1>
 <div class="sect1">
-<h2 id="ref-statement">9. Statement reference</h2>
+<h2 id="ref-connection">9. Connection reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ref-generatedkeys">9.1. Generated keys retrieval</h3>
+<h3 id="ref-wirecrypt">9.1. Wire encryption support</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.4</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 3 and higher have support for encrypting the data sent over the network.
+This <em>wire encryption</em> is configured using the connection property <code>wireCrypt</code>, with the following (case-insensitive) values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>DEFAULT</code></dt>
+<dd>
+<p>default (value used when <code>wireCrypt</code> is not specified; you&#8217;d normally not specify <code>DEFAULT</code> explicitly)</p>
+</dd>
+<dt class="hdlist1"><code>ENABLED</code></dt>
+<dd>
+<p>enable, but not require, wire encryption</p>
+</dd>
+<dt class="hdlist1"><code>REQUIRED</code></dt>
+<dd>
+<p>require wire encryption (only if Firebird version is 3.0 or higher)</p>
+</dd>
+<dt class="hdlist1"><code>DISABLED</code></dt>
+<dd>
+<p>disable wire encryption</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The default value acts as <code>ENABLED</code> for pure Java connections, for JNA (native) connections this wil use the fbclient default (either <code>Enabled</code> or the configured value of <code>WireCrypt</code> from a <code>firebird.conf</code> read by the native library).</p>
+</div>
+<div class="paragraph">
+<p>Connection property <code>wireCrypt=REQUIRED</code> will <strong>not</strong> reject unencrypted connections when connecting to Firebird 2.5 or lower.
+This behavior matches the Firebird 3 client library behavior.
+The value will also be ignored when using native connections with a Firebird 2.5 client library.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>wireCrypt=DISABLED</code> when Firebird 3 or higher uses setting <code>WireCrypt = Required</code> (or vice versa) will yield error <em>"Incompatible wire encryption levels requested on client and server"</em> (error: <em>isc_wirecrypt_incompatible / 335545064</em>).</p>
+</div>
+<div class="paragraph">
+<p>The same error is raised when connecting to Firebird 3 and higher with a legacy authentication user with connection property <code>wireCrypt=REQUIRED</code>.</p>
+</div>
+<div class="paragraph">
+<p>Alternative wire encryption plugins are currently not supported, although we made some preparations to support this. If you want to develop such a plugin, contact us on the Firebird-Java mailing list so we can work out the details of adding plugin support.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The implementation comes with a number of caveats:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>we cannot guarantee that the session key cannot be obtained by someone with access to your application or the machine hosting your application (although that in itself would already imply a severe security breach)</p>
+</li>
+<li>
+<p>the ARC4 encryption - the default provided by Firebird - is considered to be a weak (maybe even broken) cipher these days</p>
+</li>
+<li>
+<p>the encryption cipher uses ARCFOUR with a 160 bits key, this means that the unlimited Cryptographic Jurisdiction Policy needs to be used (or at minimum a custom policy that allows ARCFOUR with 160 bits keys). See also FAQ entry <a href="https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html#encryption-key-did-not-meet-algorithm-requirements-of-symmetricarc4-337248282" target="_blank" rel="noopener">Encryption key did not meet algorithm requirements of Symmetric/Arc4 (337248282)</a></p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-dbcrypt">9.2. Database encryption support</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.4</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3.0.4 added support for Firebird 3 database encryption callbacks in the pure Java implementation of the version 13 protocol.</p>
+</div>
+<div class="paragraph">
+<p>The current implementation is simple and only supports replying with a static value from a connection property.
+Be aware that a static value response for database encryption is not very secure as it can easily lead to replay attacks or unintended key exposure.</p>
+</div>
+<div class="paragraph">
+<p>Future versions of Jaybird (likely 4, maybe 5) will introduce plugin support for database encryption plugins that require a more complex callback.</p>
+</div>
+<div class="paragraph">
+<p>The static response value of the encryption callback can be set through the <code>dbCryptConfig</code> connection property.
+Data sources and <code>ServiceManager</code> implementations have an equivalent property with the same name.
+This property can be set as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later)</p>
+</li>
+<li>
+<p>Strings prefixed with <code>base64:</code>: rest of the string is decoded as base64 to bytes.
+The <code>=</code> padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length)</p>
+</li>
+<li>
+<p>Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with <code>&amp;</code> or <code>;</code>.
+Likewise, avoid <code>:</code> so that we can support other prefixes similar to <code>base64:</code> in the future.
+If you need these characters, consider using a base64 encoded value instead.</p>
+</div>
+<div class="paragraph">
+<p>For service operations, as implemented in the <code>org.firebirdsql.management</code> package, Firebird requires the <code>KeyHolderPlugin</code> configuration to be globally defined in <code>firebird.conf</code>.
+Database-specific configuration in <code>databases.conf</code> will be ignored for service operations.
+Be aware that some service operations on encrypted databases are not supported by Firebird 3 (eg <code>gstat</code> equivalents other than <code>gstat -h</code> or <code>gstat -e</code>).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Other warnings and limitations</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Database encryption callback support is only available in the pure Java implementation.
+Support for native and embedded connections will be added in a future version.</p>
+</li>
+<li>
+<p>The database encryption callback does not require an encrypted connection, so the key can be exchanged unencrypted if wire protocol encryption has been disabled client-side or server-side, or if legacy authentication is used.
+Consider setting connection property <code>wireCrypt=REQUIRED</code> to force encryption (caveat: see the next point).</p>
+</li>
+<li>
+<p>Firebird may ask for the database encryption key before the connection has been encrypted (for example if the encrypted database itself is used as the security database).
+<em>This applies to v15 protocol support, which is not yet available.</em></p>
+</li>
+<li>
+<p>The improvements of the versions 14 and 15 wire protocol are not implemented, and as a result encrypted security databases (external or security database hosted in the database itself) will not work unless the encryption plugin does not require a callback.
+Support for the version 15 wire protocol will be added in a future version.</p>
+</li>
+<li>
+<p>We cannot guarantee that the <code>dbCryptConfig</code> value cannot be obtained by someone with access to your application or the machine hosting your application (although that in itself would already imply a severe security breach).</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-defaultholdable">9.3. Default holdable result sets</h3>
+<div class="paragraph">
+<p>This connection property enables a connection to create holdable result sets by default.
+This propery can be used as a workaround for applications that expect a result to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
+</div>
+<div class="paragraph">
+<p>Specifically, such applications open a result set and, while traversing it, execute other statements using the same connection.
+According to the JDBC specification the result set has to be closed if another statement is executed using the same connection in auto-commit mode.
+With the default result set holdability, close on commit, doing this yields a <code>SQLException</code> with message <em>"The result set is closed"</em>.</p>
+</div>
+<div class="paragraph">
+<p>The property is called:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>defaultResultSetHoldable</code> as connection property with no value, empty value or <code>true</code> (aliases: <code>defaultHoldable</code> and <code>result_set_holdable</code>);</p>
+</li>
+<li>
+<p><code>isc_dpb_result_set_holdable</code> as a DPB member;</p>
+</li>
+<li>
+<p><code>FirebirdConnectionProperties</code> interface methods <code>isDefaultResultSetHoldable()</code> and <code>setDefaultResultSetHoldable(boolean)</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The price for using this feature is that each holdable result set will be fully cached in memory.
+The memory occupied by this result set will be released when the statement that produced the result set is either closed or re-executed.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-firebirdautocommit">9.4. Firebird auto commit mode (experimental)</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.2.9</em></p>
+</div>
+<div class="paragraph">
+<p>This option is enabled by specifying the connection property <code>useFirebirdAutocommit=true</code>.</p>
+</div>
+<div class="paragraph">
+<p>With this option, Jaybird will configure the transaction to use <code>isc_tpb_autocommit</code> with <code>autoCommit=true</code>.
+This means that Firebird server will internally commit the transaction after each statement completion.
+Jaybird itself will not commit until connection close (or switching to <code>autoCommit=false</code>).
+The exception is if the statement was of type <code>isc_info_sql_stmt_ddl</code>, in that case Jaybird will commit on statement success and rollback on statement failure (just like it does for all statements in normal auto commit mode).
+The reason is that Firebird for some DDL commands only executes at a real commit boundary and relying on the Firebird auto-commit is insufficient.</p>
+</div>
+<div class="paragraph">
+<p>On statement completion (as specified in JDBC), result sets will still close unless they are holdable over commit.
+The result set is only closed client side, which means that the cursor remains open server side to prevent roundtrips.
+This may lead to additional resource usage server side unless explicitly closed in the code.
+Note that any open blobs will be closed client- and server-side (until this is improved with <a href="http://tracker.firebirdsql.org/browse/JDBC-401" target="_blank" rel="noopener">JDBC-401</a>).</p>
+</div>
+<div class="paragraph">
+<p>A connection can be interrogated using <code>FirebirdConnection.isUseFirebirdAutocommit()</code> if it uses <code>isc_tpb_autocommit</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you manually add <code>isc_tpb_autocommit</code> to the transaction parameter buffer and you enable this option, the <code>isc_tpb_autocommit</code> will be removed from the TPB if <code>autoCommit=false</code>.</p>
+</div>
+<div class="paragraph">
+<p>Artificial testing with repeated inserts (using a prepared statement) against a Firebird server on localhost shows that this leads to a reduction of execution time of +/- 7%.</p>
+</div>
+<div class="paragraph">
+<p>Support for this option is experimental, and should only be enabled if you 1) know what you&#8217;re doing, and 2) really need this feature.
+Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ref-statement">10. Statement reference</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="ref-generatedkeys">10.1. Generated keys retrieval</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 2.2</em></p>
 </div>
@@ -6164,7 +6411,7 @@ Attempting to use generated keys retrieval with a statement that affects multipl
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-examples">9.1.1. Examples</h4>
+<h4 id="ref-generatedkeys-examples">10.1.1. Examples</h4>
 <div class="paragraph">
 <p>The examples in this section will use the following (Firebird 3) table:</p>
 </div>
@@ -6414,7 +6661,7 @@ Quoting the column names would then be done by Jaybird.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-limitations">9.1.2. Limitations</h4>
+<h4 id="ref-generatedkeys-limitations">10.1.2. Limitations</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 does not support generated keys retrieval for batch execution of prepared statements.
 Support for generated key retrieval with batch execution was introduced in Jaybird 3.0.</p>
@@ -8569,7 +8816,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-08 11:54:36 UTC
+Last updated 2018-09-08 13:18:18 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
