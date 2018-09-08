@@ -4174,14 +4174,13 @@ while(rs.next()) { <i class="conum" data-value="2"></i><b>(2)</b>
 </div>
 </div>
 <div class="paragraph">
-<p>Unfortunately, not all applications can be changed either because there
-is no source code available or, simply, because any change in the code
-requires complete release testing of the software. To address this, Jaybird 2.1
-introduced the connection parameter <code>defaultHoldable</code> which makes result
-sets holdable by default. The holdable result sets will be fully cached
-in memory, but won&#8217;t be closed automatically when transaction
-ends.<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnote_8" title="View footnote.">8</a>]</sup> Please note, this property affects also the cases
-with explicit transaction control.</p>
+<p>Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software.
+To address this, Jaybird 2.1 introduced the connection parameter <code>defaultHoldable</code> which makes result sets holdable by default.
+The holdable result sets will be fully cached in memory, but won&#8217;t be closed automatically when transaction ends.<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnote_8" title="View footnote.">8</a>]</sup>
+This property also affects the default holdability of result sets when auto-commit is disabled.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#ref-defaultholdable">Default holdable result sets</a> for more information.</p>
 </div>
 </div>
 <div class="sect2">
@@ -8816,7 +8815,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-08 13:18:18 UTC
+Last updated 2018-09-08 13:57:36 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
