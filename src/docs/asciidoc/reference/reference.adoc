@@ -1,0 +1,9 @@
+[[reference]]
+= Reference Manual
+
+[[ref-statement]]
+== Statement reference
+
+include::statement/generatedkeys.adoc[]
+
+

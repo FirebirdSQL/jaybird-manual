@@ -28,6 +28,7 @@ endif::is-snapshot[]
 
 include::chapters/introduction/introduction.adoc[]
 
+[[user-manual]]
 = User Manual
 
 include::chapters/connection/connection.adoc[]
@@ -44,11 +45,9 @@ include::chapters/services/services.adoc[]
 
 include::chapters/events/events.adoc[]
 
-////
-= Reference Manual
+// Reference manual
 
-_TODO Move reference parts from user manual here, and expand on content_
-////
+include::reference/reference.adoc[]
 
 = Appendices
 
