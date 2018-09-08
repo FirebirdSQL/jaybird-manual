@@ -13,8 +13,7 @@ driver supplies only the connection functionality.
 
 Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
 
-This manual covers Jaybird {jaybird-version} and may use Java 8 specific features, but most 
-examples and information also applies to previous versions of the driver and of Java.
+This manual covers Jaybird {jaybird-version} and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.
 
 === History
 
