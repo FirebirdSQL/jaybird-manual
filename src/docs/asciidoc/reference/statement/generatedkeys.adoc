@@ -44,7 +44,7 @@ Except for calling methods with `NO_GENERATED_KEYS`, absence of the ANTLR runtim
 
 TIP: The required ANTLR runtime version depends on the Jaybird version, check the release notes of your version for details.
 
-This functionality should work for `INSERT` (from Firebird 2.0), for `UPDATE`, `UPDATE OR INSERT` and `DELETE` (from Firebird 2.1), and for `MERGE` (from Firebird 3.0).
+This functionality should work for `INSERT` ([.since]_Firebird 2.0_), for `UPDATE`, `UPDATE OR INSERT` and `DELETE` ([.since]_Firebird 2.1_), and for `MERGE` ([.since]_Firebird 3.0_).
 
 [NOTE] 
 ====
