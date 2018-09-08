@@ -40,19 +40,19 @@ connection.setAutoCommit(false); // <1>
 
 Statement stmt = connection.createStament();
 try {
-    stmt.executeUpdate("UPDATE employee " + 
-        " SET salary = salary * 2"); // <2>
+  stmt.executeUpdate("UPDATE employee " + 
+      " SET salary = salary * 2"); // <2>
         
-    // ... do some more changes to database
-    // to hide the identity of the person
-    // that messed up the salary information
-    // by deleting the audit trails logs, etc.
+  // ... do some more changes to database
+  // to hide the identity of the person
+  // that messed up the salary information
+  // by deleting the audit trails logs, etc.
     
-    stmt.executeUpdate("DELETE FROM audit_trails");
+  stmt.executeUpdate("DELETE FROM audit_trails");
     
-    connection.commit(); // <3>
+  connection.commit(); // <3>
 } catch(SQLException ex) {
-    connection.rollback(); // <4>
+  connection.rollback(); // <4>
 }
 ----
 
@@ -155,7 +155,7 @@ Statement selectStmt = connection.createStatement(); // <1>
 Statement updateStmt = connection.createStatement();
 
 ResultSet rs = selectStmt.executeQuery(
-  "SELECT * FROM myTable");
+    "SELECT * FROM myTable");
   
 while(rs.next()) { // <2>
   int id = rs.getInt(1);
@@ -539,14 +539,14 @@ exclusive).
 ----
 Connection connection = ...
 TransactionParameterBuffer tpb =
-  connection.createTransactionParameterBuffer(); // <1>
+    connection.createTransactionParameterBuffer(); // <1>
 
 tpb.addArgument(TransactionParameterBuffer.CONSISTENCY); // <2>
 tpb.addArgument(TransactionParameterBuffer.WRITE);
 tpb.addArgument(TransactionParameterBuffer.NOWAIT);
 
 tpb.addArgument(TransactionParameterBuffer.LOCK_WRITE,
-  "TEST_LOCK");
+    "TEST_LOCK");
 tpb.addArgument(TransactionParameterBuffer.PROTECTED);
 
 connection.setTransactionParameters(tpb); // <3>

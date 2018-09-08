@@ -99,8 +99,8 @@ interface to obtain the database connections also have access to the
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 
 Connection connection = DriverManager.getConnection(
-  "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
-  "SYSDBA", "masterkey");
+    "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
+    "SYSDBA", "masterkey");
 ----
 
 [source,java]

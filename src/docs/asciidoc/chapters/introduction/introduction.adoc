@@ -122,9 +122,9 @@ For example:
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
-    <groupId>org.firebirdsql.jdbc</groupId>
-    <artifactId>jaybird-jdk18</artifactId>
-    <version>{jaybird-full-version}</version>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird-jdk18</artifactId>
+  <version>{jaybird-full-version}</version>
 </dependency>
 ----
 
@@ -137,21 +137,21 @@ dependency:
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
-    <groupId>org.firebirdsql.jdbc</groupId>
-    <artifactId>jaybird-jdk18</artifactId>
-    <version>{jaybird-full-version}</version>
-    <exclusions>
-        <exclusion>
-            <groupId>javax.resource</groupId>
-            <artifactId>connector-api</artifactId>
-        </exclusion>
-    </exclusions>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird-jdk18</artifactId>
+  <version>{jaybird-full-version}</version>
+  <exclusions>
+    <exclusion>
+      <groupId>javax.resource</groupId>
+      <artifactId>connector-api</artifactId>
+    </exclusion>
+  </exclusions>
 </dependency>
 <dependency>
-    <groupId>javax.resource</groupId>
-    <artifactId>connector-api</artifactId>
-    <version>1.5</version>
-    <scope>provided</scope>
+  <groupId>javax.resource</groupId>
+  <artifactId>connector-api</artifactId>
+  <version>1.5</version>
+  <scope>provided</scope>
 </dependency>
 ----
 
@@ -162,8 +162,8 @@ the Jaybird dependency:
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
-    <groupId>net.java.dev.jna</groupId>
-    <artifactId>jna</artifactId>
+  <groupId>net.java.dev.jna</groupId>
+  <artifactId>jna</artifactId>
 </dependency>
 ----
 

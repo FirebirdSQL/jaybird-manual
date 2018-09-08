@@ -69,7 +69,7 @@ procedure with the sole purpose of posting events:
 ----
 CREATE PROCEDURE sp_post_event(event_name VARCHAR(72)) 
 AS BEGIN
-    POST_EVENT :event_name;
+  POST_EVENT :event_name;
 END
 ----
 
@@ -82,7 +82,7 @@ execute PSQL statements within DSQL code:
 Statement stmt = connection.createStatement();
 try {
   stmt.execute(
-    "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
+      "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
 } finally {
   stmt.close();
 }
@@ -163,11 +163,11 @@ eventManager.connect();
 
 eventManager.addEventListener("test_event", 
     new EventListener() {
-        public void eventOccurred(DatabaseEvent event){
-            System.out.println("Event [" +
-                event.getEventName() + "] occured " + 
-                event.getEventCount() + " time(s)");
-        }
+      public void eventOccurred(DatabaseEvent event){
+        System.out.println("Event [" +
+            event.getEventName() + "] occured " + 
+            event.getEventCount() + " time(s)");
+      }
     }
 );
 ----

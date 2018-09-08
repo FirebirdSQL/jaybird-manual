@@ -358,9 +358,9 @@ restoreManager.setBackupPath("C:/database/employee.fbk");
 // validity constraints and shadow database
 backupManager.restoreDatabase(
     BackupManager.RESTORE_DEACTIVATE_INDEX |
-      BackupManager.RESTORE_NO_VALIDITY |
-      BackupManager.RESTORE_NO_SHADOW |
-      BackupManager.RESTORE_ONE_AT_A_TIME);
+    BackupManager.RESTORE_NO_VALIDITY |
+    BackupManager.RESTORE_NO_SHADOW |
+    BackupManager.RESTORE_ONE_AT_A_TIME);
 ----
 
 === User management

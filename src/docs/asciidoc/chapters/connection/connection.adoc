@@ -48,8 +48,8 @@ public class HelloServer {
     Class.forName("org.firebirdsql.jdbc.FBDriver"); // <1>
     
     Connection connection = DriverManager.getConnection( 
-      "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
-      "SYSDBA", "masterkey"); // <2>
+        "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
+        "SYSDBA", "masterkey"); // <2>
       
     // do something here
   }

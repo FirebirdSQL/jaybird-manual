@@ -24,16 +24,15 @@ pattern of the statement consists of three steps
 [source,java]
 .Typical way to execute query to get information about the user
 ----
-try (
-    Statement stmt = connection.createStatement(); // <1>
-    ResultSet rs = stmt.executeQuery(
-        "SELECT firstName, lastName FROM users" +
-        " WHERE userId = 5") // <2>
+try (Statement stmt = connection.createStatement(); // <1>
+     ResultSet rs = stmt.executeQuery(
+         "SELECT firstName, lastName FROM users" +
+         " WHERE userId = 5") // <2>
 ){
-    if (rs.next()) {
-        String firstName = rs.getString(1);
-        String lastName = rs.getString(2);
-    }
+  if (rs.next()) {
+    String firstName = rs.getString(1);
+    String lastName = rs.getString(2);
+  }
 } // <3>
 ----
 
@@ -100,26 +99,26 @@ prepared statement instead.
 .Using the same statement object multiple times to enable user account
 ----
 
-try (Statement stmt = connection.createStatement()){
-    ResultSet rs = stmt.executeQuery(
-        "SELECT userId FROM users " + 
-        "WHERE lastName = 'Doe' AND firstName = 'Joe'");
-    if (rs.next()) {
-        int userId = rs.getInt(1);
+try (Statement stmt = connection.createStatement();
+     ResultSet rs = stmt.executeQuery(
+         "SELECT userId FROM users " + 
+         "WHERE lastName = 'Doe' AND firstName = 'Joe'")) {
+  if (rs.next()) {
+    int userId = rs.getInt(1);
         
-        int rowsUpdated = stmt.executeUpdate(
-            "UPDATE accounts SET accountEnabled = 1 " +
-            "WHERE userId = " + userId);
+    int rowsUpdated = stmt.executeUpdate(
+        "UPDATE accounts SET accountEnabled = 1 " +
+        "WHERE userId = " + userId);
             
-        if (rowsUpdated == 0)
-            rowsUpdated = stmt.executeUpdate(
-                "INSERT INTO accounts (userId, enabled) " +
-                "VALUES (" + userId + ", 1)");
+    if (rowsUpdated == 0)
+      rowsUpdated = stmt.executeUpdate(
+          "INSERT INTO accounts (userId, enabled) " +
+          "VALUES (" + userId + ", 1)");
                 
-        if (rowsUpdated != 1) 
-            throw new SomeException(
-                "User was not updated correctly.");
-    }
+    if (rowsUpdated != 1) 
+      throw new SomeException(
+          "User was not updated correctly.");
+  }
 }
 ----
 
@@ -150,10 +149,10 @@ creation of database tables using this method.
 .Example of creating database tables
 ----
 try (Statement stmt = connection.createStatement()) {
-    stmt.execute("CREATE TABLE customer(" + 
-        "customerId INTEGER NOT NULL PRIMARY KEY, " + 
-        "firstName VARCHAR(20) NOT NULL, " + 
-        "lastName VARCHAR(40) NOT NULL)");
+  stmt.execute("CREATE TABLE customer(" + 
+      "customerId INTEGER NOT NULL PRIMARY KEY, " + 
+      "firstName VARCHAR(20) NOT NULL, " + 
+      "lastName VARCHAR(40) NOT NULL)");
 }
 ----
 
@@ -163,14 +162,14 @@ also be used to execute statements of an unknown type.
 [source,java]
 ----
 try (Statement stmt = connection.createStatement()) {
-    boolean hasResultSet = stmt.execute(sql);
-    if (hasResultSet) {
-        ResultSet rs = stmt.getResultSet();
-        ...
-    } else {
-        int updateCount = stmt.getUpdateCount();
-        ...
-    }
+  boolean hasResultSet = stmt.execute(sql);
+  if (hasResultSet) {
+    ResultSet rs = stmt.getResultSet();
+    ...
+  } else {
+    int updateCount = stmt.getUpdateCount();
+    ...
+  }
 }
 ----
 
@@ -327,45 +326,39 @@ more complicated without any visible advantage.
 [source,java]
 .Example for user account update rewritten using prepared statements
 ----
-try (
-    PreparedStatement stmt1 = connection.prepareStatement(
-        "SELECT userId FROM users WHERE " + 
-        "lastName = ? AND firstName = ?");
-) {
-    stmt1.setString(1, "Doe");
-    stmt1.setString(2, "Joe");
-    try (ResultSet rs = stmt1.executeQuery()) {
+try (PreparedStatement stmt1 = connection.prepareStatement(
+         "SELECT userId FROM users WHERE " + 
+         "lastName = ? AND firstName = ?")) {
+  stmt1.setString(1, "Doe");
+  stmt1.setString(2, "Joe");
+  try (ResultSet rs = stmt1.executeQuery()) {
     
-        if (rs.next()) {
-            int userId = rs.getInt(1);
+    if (rs.next()) {
+      int userId = rs.getInt(1);
 
-            try (
-                PreparedStatement stmt2 =
-                    connection.prepareStatement(
-                        "UPDATE accounts SET accountEnabled = 1 " +
-                        "WHERE userId = ?" );
-            ) {
-                stmt2.setInt(1, userId);
+      try (PreparedStatement stmt2 =
+               connection.prepareStatement(
+                   "UPDATE accounts SET accountEnabled = 1 " +
+                   "WHERE userId = ?" )) {
+        stmt2.setInt(1, userId);
 
-                int rowsUpdated = stmt2.executeUpdate();
+        int rowsUpdated = stmt2.executeUpdate();
 
-                if (rowsUpdated == 0) {
-                    try (
-                        PreparedStatement stmt3 =
-                            connection.prepareStatement(
-                                "INSERT INTO accounts " +
-                                "(userId, enabled) VALUES (?, 1)");
-                    ) {
-                        stmt3.setInt(1, userId);
-                        rowsUpdated = stmt3.executeUpdate();
-                    }
-                }
-                if (rowsUpdated != 1)
-                    throw new SomeException(
-                        "User was not updated correctly.");
-            }
+        if (rowsUpdated == 0) {
+          try (PreparedStatement stmt3 =
+                   connection.prepareStatement(
+                       "INSERT INTO accounts " +
+                       "(userId, enabled) VALUES (?, 1)")) {
+            stmt3.setInt(1, userId);
+            rowsUpdated = stmt3.executeUpdate();
+          }
         }
+        if (rowsUpdated != 1)
+          throw new SomeException(
+              "User was not updated correctly.");
+      }
     }
+  }
 }
 ----
 
@@ -417,23 +410,23 @@ queryStmt.clearParameters();
 queryStmt.setString(1, "Doe");
 queryStmt.setString(2, "Joe");
 try (ResultSet rs = queryStmt.executeQuery()) {
-
-    if (rs.next()) {
-        int userId = rs.getInt(1);
+  if (rs.next()) {
+    int userId = rs.getInt(1);
         
-        updateStmt.clearParameters();
-        updateStmt.setInt(1, userId);
-        int rowsUpdated = updateStmt.executeUpdate();
+    updateStmt.clearParameters();
+    updateStmt.setInt(1, userId);
+    int rowsUpdated = updateStmt.executeUpdate();
         
-        if (rowsUpdated == 0) {
-            insertStmt.clearParameters();
-            insertStmt.setInt(1, userId);
-            rowsUpdated = insertStmt.executeUpdate();
-            
-        if (rowsUpdated != 1) 
-           throw new SomeException(
-               "User was not updated correctly.");
+    if (rowsUpdated == 0) {
+      insertStmt.clearParameters();
+      insertStmt.setInt(1, userId);
+      rowsUpdated = insertStmt.executeUpdate();
     }
+            
+    if (rowsUpdated != 1) 
+      throw new SomeException(
+          "User was not updated correctly.");
+  }
 }
 ......................
 
@@ -653,22 +646,22 @@ specified number.
 .Source code for the procedure that multiplies two integers
 ----
 CREATE PROCEDURE factorial(
-    max_value INTEGER
+  max_value INTEGER
 ) RETURNS (
-    factorial INTEGER
+  factorial INTEGER
 ) AS
-    DECLARE VARIABLE temp INTEGER;
-    DECLARE VARIABLE counter INTEGER;
+  DECLARE VARIABLE temp INTEGER;
+  DECLARE VARIABLE counter INTEGER;
 BEGIN
-    counter = 0;
-    temp = 1;
-    WHILE (counter <= max_value) DO BEGIN
-        IF (counter = 0) THEN
-            temp = 1;
-        ELSE
-            temp = temp * row_num;
-        counter = counter + 1;
-    END
+  counter = 0;
+  temp = 1;
+  WHILE (counter <= max_value) DO BEGIN
+    IF (counter = 0) THEN
+      temp = 1;
+    ELSE
+      temp = temp * row_num;
+    counter = counter + 1;
+  END
 END
 ----
 
@@ -690,26 +683,26 @@ Now let's modify this procedure to return each intermediate result to the client
 .Modified procedure that returns each intermediate result
 ----
 CREATE PROCEDURE factorial(
-    max_value INTEGER
+  max_value INTEGER
 ) RETURNS (
-    row_num INTEGER,
-    factorial INTEGER
+  row_num INTEGER,
+  factorial INTEGER
 ) AS
-    DECLARE VARIABLE temp INTEGER;
-    DECLARE VARIABLE counter INTEGER;
+  DECLARE VARIABLE temp INTEGER;
+  DECLARE VARIABLE counter INTEGER;
 BEGIN
-    counter = 0;
-    temp = 1;
-    WHILE (counter <= max_value) DO BEGIN
-        IF (row_num = 0) THEN
-            temp = 1;
-        ELSE
-            temp = temp * row_num;
-        factorial = temp;
-        row_num = counter;
-        counter = counter + 1;
-        SUSPEND;
-    END
+  counter = 0;
+  temp = 1;
+  WHILE (counter <= max_value) DO BEGIN
+    IF (row_num = 0) THEN
+      temp = 1;
+    ELSE
+      temp = temp * row_num;
+    factorial = temp;
+    row_num = counter;
+    counter = counter + 1;
+    SUSPEND;
+  END
 END
 ----
 
@@ -744,15 +737,15 @@ result set handling.
 .Example of using the PreparedStatement to call executable procedure
 ----
 try (PreparedStatement stmt = connection.prepareStatement(
-             "EXECUTE PROCEDURE factorial(?)")) {
+         "EXECUTE PROCEDURE factorial(?)")) {
+
+  stmt.setInt(1, 2);
     
-    stmt.setInt(1, 2);
-    
-    try (ResultSet rs = stmt.executeQuery()) {
-        rs.next(); // move cursor to the first row
-        
-        int result = rs.getInt(1);
-    }
+  try (ResultSet rs = stmt.executeQuery()) {
+    rs.next(); // move cursor to the first row
+       
+    int result = rs.getInt(1);
+  }
 }
 ----
 
@@ -769,14 +762,14 @@ supported.
 .Accessing the executable procedure via CallableStatement
 ----
 try (CallableStatement stmt = connection.prepareCall(
-             "{call factorial(?,?)}")) {
+         "{call factorial(?,?)}")) {
     
-    stmt.setInt(1, 2);
-    stmt.registerOutParameter(2, Types.INTEGER);
+  stmt.setInt(1, 2);
+  stmt.registerOutParameter(2, Types.INTEGER);
     
-    stmt.execute();
+  stmt.execute();
     
-    int result = stmt.getInt(2);
+  int result = stmt.getInt(2);
 }
 ----
 
@@ -822,14 +815,14 @@ The JDBC specification allows another syntax for the stored procedure calls:
 .Calling stored procedure using different syntax
 ----
 try (CallableStatement stmt = connection.prepareCall(
-             "{?= call factorial(?}")) {
+         "{?= call factorial(?}")) {
     
-    stmt.registerOutParameter(1, Types.INTEGER);
-    stmt.setInt(2, 2);
+  stmt.registerOutParameter(1, Types.INTEGER);
+  stmt.setInt(2, 2);
     
-    stmt.execute();
+  stmt.execute();
     
-    int result = stmt.getInt(1);
+  int result = stmt.getInt(1);
 }
 ----
 
@@ -876,24 +869,24 @@ import java.sql.*;
 import org.firebirdsql.jdbc.*;
 ...
 try (CallableStatement stmt = connection.prepareCall(
-             "{call factorial(?, ?, ?)}")) {
+         "{call factorial(?, ?, ?)}")) {
     
-    FirebirdCallableStatement fbStmt = 
-            (FirebirdCallableStatement)stmt;
-    fbStmt.setSelectableProcedure(true);
+  FirebirdCallableStatement fbStmt = 
+      (FirebirdCallableStatement)stmt;
+  fbStmt.setSelectableProcedure(true);
     
-    stmt.setInt(1, 5);
-    stmt.registerOutParameter(2, Types.INTEGER); // first OUT
-    stmt.registerOutParameter(3, Types.INTEGER); // second OUT
+  stmt.setInt(1, 5);
+  stmt.registerOutParameter(2, Types.INTEGER); // first OUT
+  stmt.registerOutParameter(3, Types.INTEGER); // second OUT
     
-    try (ResultSet rs = stmt.executeQuery()) {
+  try (ResultSet rs = stmt.executeQuery()) {
     
-        while(rs.next()) {
-            int firstCol = rs.getInt(1);             // first OUT
-            int secondCol = rs.getInt(2);            // second OUT
-            int anotherSecondCol = stmt.getInt(3);   // second OUT
-        }
+    while(rs.next()) {
+      int firstCol = rs.getInt(1);             // first OUT
+      int secondCol = rs.getInt(2);            // second OUT
+      int anotherSecondCol = stmt.getInt(3);   // second OUT
     }
+  }
 }
 ----
 
@@ -950,11 +943,11 @@ Adding a statement that returns result set is an error.
 ----
 try (Statement stmt = connection.createStatement()) {
 
-    stmt.addBatch("UPDATE products " + 
-        "SET amount = amount – 1 WHERE id = 1");
-    stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
+  stmt.addBatch("UPDATE products " + 
+      "SET amount = amount – 1 WHERE id = 1");
+  stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
     
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }
 ----
 
@@ -1005,17 +998,17 @@ statement can be used, but with different sets of parameter values.
 .Example of batch updates with PreparedStatement
 ----
 try (PreparedStatement stmt = connection.prepareStatement(
-             "INSERT INTO products(id, name) VALUES(?, ?)")) {
+         "INSERT INTO products(id, name) VALUES(?, ?)")) {
     
-    stmt.setInt(1, 1);
-    stmt.setString(2, "apple");
-    stmt.addBatch();
+  stmt.setInt(1, 1);
+  stmt.setString(2, "apple");
+  stmt.addBatch();
     
-    stmt.setInt(1, 2);
-    stmt.setString(2, "orange");
-    stmt.addBatch();
+  stmt.setInt(1, 2);
+  stmt.setString(2, "orange");
+  stmt.addBatch();
     
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }
 ----
 
@@ -1023,17 +1016,17 @@ try (PreparedStatement stmt = connection.prepareStatement(
 .Example of batch updates with CallableStatement
 ----
 try (CallableStatement stmt = connection.prepareCall(
-             "{call add_product(?, ?)")) {
+         "{call add_product(?, ?)")) {
     
-    stmt.setInt(1, 1);
-    stmt.setString(2, "apple");
-    stmt.addBatch();
+  stmt.setInt(1, 1);
+  stmt.setString(2, "apple");
+  stmt.addBatch();
     
-    stmt.setInt(1, 2);
-    stmt.setString(2, "orange");
-    stmt.addBatch();
+  stmt.setInt(1, 2);
+  stmt.setString(2, "orange");
+  stmt.addBatch();
     
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }
 ----
 

@@ -112,7 +112,7 @@ drivers of different vendors treat it differently.
 ----
 try (Statement stmt = connection.createStatement();
      ResultSet rs = stmt.executeQuery("SELECT * FROM myTable")) {
-    // process result set
+  // process result set
 }
 ----
 
@@ -120,12 +120,12 @@ try (Statement stmt = connection.createStatement();
 .Using Statement.getResultSet() method
 ----
 try (Statement stmt = connection.createStatement()) {
-    boolean hasResultSet = stmt.execute("SELECT * FROM myTable");
-    if (hasResultSet) {
-        try (ResultSet rs = stmt.getResultSet()) {
-            // process result set
-        }
+  boolean hasResultSet = stmt.execute("SELECT * FROM myTable");
+  if (hasResultSet) {
+    try (ResultSet rs = stmt.getResultSet()) {
+      // process result set
     }
+  }
 }
 ----
 
@@ -166,13 +166,13 @@ etc.) will return a `null` value for columns containing
 ----
 try (Statement forwardStatement = connection.createStatement();
      ResultSet rs = forwardStatement.executeQuery(
-             "SELECT id, name, price FROM myTable")) {
+         "SELECT id, name, price FROM myTable")) {
     
-    while(rs.next()) {
-        int id = rs.getInt(1);
-        String name = rs.getString("name");
-        double price = rs.getDouble(3);
-    }
+  while(rs.next()) {
+    int id = rs.getInt(1);
+    String name = rs.getString("name");
+    double price = rs.getDouble(3);
+  }
 }
 ----
 
@@ -229,21 +229,21 @@ shown in the example.
 connections.setAutoCommit(false);
 try (Statement selectStmt = connection.createStatement();
      Statement updateStmt = connection.createStatement()) {
-    selectStmt.setCursorName("someCursor");
+  selectStmt.setCursorName("someCursor");
 
-    try (ResultSet rs = selectStmt.executeQuery(
-        "SELECT id, name, price FROM myTable " +
-        "FOR UPDATE OF myColumn")) {
+  try (ResultSet rs = selectStmt.executeQuery(
+           "SELECT id, name, price FROM myTable " +
+           "FOR UPDATE OF myColumn")) {
 
-        while(rs.next()) {
-            ...
-            if (someCondition) {
-                updateStmt.executeUpdate("UPDATE myTable " +
-                    "SET myColumn = myColumn + 1 " +
-                    "WHERE CURRENT OF " + rs.getCursorName());
-            }
-        }
+    while(rs.next()) {
+      ...
+      if (someCondition) {
+        updateStmt.executeUpdate("UPDATE myTable " +
+            "SET myColumn = myColumn + 1 " +
+            "WHERE CURRENT OF " + rs.getCursorName());
+      }
     }
+  }
 }
 ----
 

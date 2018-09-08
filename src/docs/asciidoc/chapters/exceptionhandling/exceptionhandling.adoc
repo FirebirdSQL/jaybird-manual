@@ -84,28 +84,27 @@ String updateString = "update COFFEES " +
     "set SALES = ? where COF_NAME like ?";
 
 try (PreparedStatement updateSales = con.prepareStatement(updateString)) {
-    int [] salesForWeek = {175, 150, 60, 155, 90};
-    String [] coffees = {"Colombian", "French_Roast",
-        "Espresso", "Colombian_Decaf",
-        "French_Roast_Decaf"};
-        
-    int len = coffees.length;
+  int [] salesForWeek = {175, 150, 60, 155, 90};
+  String [] coffees = {"Colombian", "French_Roast",
+      "Espresso", "Colombian_Decaf",
+      "French_Roast_Decaf"};
+       
+  int len = coffees.length;
     
-    for(int i = 0; i < len; i++) {
-    
-        updateSales.setInt(1, salesForWeek[i]);
-        updateSales.setString(2, coffees[i]);
+  for(int i = 0; i < len; i++) {
+    updateSales.setInt(1, salesForWeek[i]);
+    updateSales.setString(2, coffees[i]);
         
-        try {
-            updateSales.executeUpdate();
-        } catch(SQLException ex) {
-            if (ex.getErrorCode() == ...) {
-                // do something
-            } else {
-                throw new BusinessDBException(ex);
-            }
-        }
+    try {
+      updateSales.executeUpdate();
+    } catch(SQLException ex) {
+      if (ex.getErrorCode() == ...) {
+        // do something
+      } else {
+        throw new BusinessDBException(ex);
+      }
     }
+  }
 }
 ----
 
@@ -163,8 +162,8 @@ import java.sql.*;
 ....
 SQLWarning warning = connection.getWarnings();
 while (warning != null) {
-    .... // do something with the warning
-    warning = warning.getNextWarning();
+  .... // do something with the warning
+  warning = warning.getNextWarning();
 }
 ----
 
@@ -176,10 +175,10 @@ or
 import java.sql.*;
 ....
 for (Throwable throwable : connection.getWarnings()) {
-    if (throwable instanceof SQLWarning) {
-       SQLWarning warning = (SQLWarning) throwable;
-       .... // do something with the warning
-    }
+  if (throwable instanceof SQLWarning) {
+    SQLWarning warning = (SQLWarning) throwable;
+    .... // do something with the warning
+  }
 }
 ----
 

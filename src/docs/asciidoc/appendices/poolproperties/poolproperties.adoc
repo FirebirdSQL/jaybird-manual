@@ -6,6 +6,14 @@ This chapter contains the list of properties of the
 `ConnectionPoolDataSource`, `DataSource` and `XADataSource` interface
 implementations.
 
+[NOTE]
+====
+The documentation in this section is only valid for Jaybird 2.2 and earlier.
+
+Connection pooling was removed from Jaybird 3.0. 
+Either use the connection pool provided by your application server, or use a third-party connection pool like https://www.mchange.com/projects/c3p0/[c3p0^], https://commons.apache.org/proper/commons-dbcp/[Apache DBCP^] or https://brettwooldridge.github.io/HikariCP/[HikariCP^].
+====
+
 === Standard JDBC Properties
 
 This group contains properties defined in the JDBC specification and
@@ -188,8 +196,8 @@ parameter would look like this:
 [source,xml]
 ----
 <parameter>
-    <name>nonStandardProperty</name>
-    <value>sql_dialect=3</value>
+  <name>nonStandardProperty</name>
+  <value>sql_dialect=3</value>
 </parameter>
 ----
 
