@@ -6,6 +6,8 @@
 
 include::connection/wirecrypt.adoc[]
 
+include::connection/dbencryption.adoc[]
+
 include::connection/defaultholdable.adoc[]
 
 include::connection/firebirdautocommit.adoc[]
