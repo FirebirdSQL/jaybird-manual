@@ -4,6 +4,8 @@
 [[ref-connection]]
 == Connection reference
 
+include::connection/defaultholdable.adoc[]
+
 include::connection/firebirdautocommit.adoc[]
 
 // TODO client-info
@@ -15,3 +17,8 @@ include::statement/generatedkeys.adoc[]
 
 // TODO: Document closeOnCompletion support?
 
+////
+[[ref-services]]
+== Services reference
+
+////

@@ -1,0 +1,21 @@
+[[ref-defaultholdable]]
+=== Default holdable result sets
+
+This connection property enables a connection to create holdable result sets by default. 
+This propery can be used as a workaround for applications that expect a result to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.
+
+Specifically, such applications open a result set and, while traversing it, execute other statements using the same connection. 
+According to the JDBC specification the result set has to be closed if another statement is executed using the same connection in auto-commit mode. 
+With the default result set holdability, close on commit, doing this yields a `SQLException` with message _"The result set is closed"_.
+
+The property is called:
+
+* `defaultResultSetHoldable` as connection property with no value, empty value or `true` (aliases: `defaultHoldable` and `result_set_holdable`);
+* `isc_dpb_result_set_holdable` as a DPB member;
+* `FirebirdConnectionProperties` interface methods `isDefaultResultSetHoldable()` and `setDefaultResultSetHoldable(boolean)`
+
+[WARNING]
+====
+The price for using this feature is that each holdable result set will be fully cached in memory. 
+The memory occupied by this result set will be released when the statement that produced the result set is either closed or re-executed.
+====
