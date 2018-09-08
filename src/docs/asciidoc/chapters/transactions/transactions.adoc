@@ -166,18 +166,14 @@ while(rs.next()) { // <2>
 }
 ----
 
-Unfortunately, not all applications can be changed either because there
-is no source code available or, simply, because any change in the code
-requires complete release testing of the software. To address this, Jaybird 2.1
-introduced the connection parameter `defaultHoldable` which makes result
-sets holdable by default. The holdable result sets will be fully cached
-in memory, but won't be closed automatically when transaction
-ends.footnote:[Other cases, e.g. closing the statement object or the
-connection object will still ensure that the result set object is
-closed. If you need result sets that can be "detached" from the
-statement object that created them, please check the `javax.sql.RowSet`
-implementations.] Please note, this property affects also the cases
-with explicit transaction control.
+Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software. 
+To address this, Jaybird 2.1 introduced the connection parameter `defaultHoldable` which makes result sets holdable by default. 
+The holdable result sets will be fully cached in memory, but won't be closed automatically when transaction ends.footnote:[
+Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. 
+If you need result sets that can be "detached" from the statement object that created them, please check the `javax.sql.RowSet` implementations.] 
+This property also affects the default holdability of result sets when auto-commit is disabled.
+
+See <<ref-defaultholdable>> for more information.
 
 === Read-only Transactions
 
