@@ -4,6 +4,8 @@
 [[ref-connection]]
 == Connection reference
 
+include::connection/wirecrypt.adoc[]
+
 include::connection/defaultholdable.adoc[]
 
 include::connection/firebirdautocommit.adoc[]
