@@ -8,7 +8,7 @@ Roman Rokytskyy;Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird-version: 3.0
-:jaybird-full-version: 3.0.4
+:jaybird-full-version: 3.0.5
 :min-support-firebird: 2.0
 :jna-version: 4.4.0
 :antlr-version: 4.7
