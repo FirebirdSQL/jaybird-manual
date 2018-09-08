@@ -27,6 +27,8 @@ becomes too long, take that as a hint to rewrite (if possible).
 NOTE: The previous convention was 100 characters per line. Only apply the single sentence per line style
 per paragraph when making changes in that paragraph.
 
+Sourcecode examples: indent 2 spaces, continuations: 4 spaces 
+
 How to build
 ============
 
