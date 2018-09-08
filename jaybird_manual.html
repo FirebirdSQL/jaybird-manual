@@ -766,9 +766,9 @@ Version: <code>3.0.4</code></p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-    &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-    &lt;version&gt;3.0.4&lt;/version&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
+  &lt;version&gt;3.0.4&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -783,21 +783,21 @@ dependency:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-    &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-    &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-    &lt;version&gt;3.0.4&lt;/version&gt;
-    &lt;exclusions&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;javax.resource&lt;/groupId&gt;
-            &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-    &lt;/exclusions&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
+  &lt;version&gt;3.0.4&lt;/version&gt;
+  &lt;exclusions&gt;
+    &lt;exclusion&gt;
+      &lt;groupId&gt;javax.resource&lt;/groupId&gt;
+      &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
+    &lt;/exclusion&gt;
+  &lt;/exclusions&gt;
 &lt;/dependency&gt;
 &lt;dependency&gt;
-    &lt;groupId&gt;javax.resource&lt;/groupId&gt;
-    &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
-    &lt;version&gt;1.5&lt;/version&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
+  &lt;groupId&gt;javax.resource&lt;/groupId&gt;
+  &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
+  &lt;version&gt;1.5&lt;/version&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -809,8 +809,8 @@ the Jaybird dependency:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-    &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
-    &lt;artifactId&gt;jna&lt;/artifactId&gt;
+  &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
+  &lt;artifactId&gt;jna&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -996,8 +996,8 @@ public class HelloServer {
     Class.forName("org.firebirdsql.jdbc.FBDriver"); <i class="conum" data-value="1"></i><b>(1)</b>
 
     Connection connection = DriverManager.getConnection(
-      "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
-      "SYSDBA", "masterkey"); <i class="conum" data-value="2"></i><b>(2)</b>
+        "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
+        "SYSDBA", "masterkey"); <i class="conum" data-value="2"></i><b>(2)</b>
 
     // do something here
   }
@@ -1732,28 +1732,27 @@ below.</p>
     "set SALES = ? where COF_NAME like ?";
 
 try (PreparedStatement updateSales = con.prepareStatement(updateString)) {
-    int [] salesForWeek = {175, 150, 60, 155, 90};
-    String [] coffees = {"Colombian", "French_Roast",
-        "Espresso", "Colombian_Decaf",
-        "French_Roast_Decaf"};
+  int [] salesForWeek = {175, 150, 60, 155, 90};
+  String [] coffees = {"Colombian", "French_Roast",
+      "Espresso", "Colombian_Decaf",
+      "French_Roast_Decaf"};
 
-    int len = coffees.length;
+  int len = coffees.length;
 
-    for(int i = 0; i &lt; len; i++) {
+  for(int i = 0; i &lt; len; i++) {
+    updateSales.setInt(1, salesForWeek[i]);
+    updateSales.setString(2, coffees[i]);
 
-        updateSales.setInt(1, salesForWeek[i]);
-        updateSales.setString(2, coffees[i]);
-
-        try {
-            updateSales.executeUpdate();
-        } catch(SQLException ex) {
-            if (ex.getErrorCode() == ...) {
-                // do something
-            } else {
-                throw new BusinessDBException(ex);
-            }
-        }
+    try {
+      updateSales.executeUpdate();
+    } catch(SQLException ex) {
+      if (ex.getErrorCode() == ...) {
+        // do something
+      } else {
+        throw new BusinessDBException(ex);
+      }
     }
+  }
 }</code></pre>
 </div>
 </div>
@@ -1834,8 +1833,8 @@ to read the warning chain, use the code presented below.</p>
 ....
 SQLWarning warning = connection.getWarnings();
 while (warning != null) {
-    .... // do something with the warning
-    warning = warning.getNextWarning();
+  .... // do something with the warning
+  warning = warning.getNextWarning();
 }</code></pre>
 </div>
 </div>
@@ -1848,10 +1847,10 @@ while (warning != null) {
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">import java.sql.*;
 ....
 for (Throwable throwable : connection.getWarnings()) {
-    if (throwable instanceof SQLWarning) {
-       SQLWarning warning = (SQLWarning) throwable;
-       .... // do something with the warning
-    }
+  if (throwable instanceof SQLWarning) {
+    SQLWarning warning = (SQLWarning) throwable;
+    .... // do something with the warning
+  }
 }</code></pre>
 </div>
 </div>
@@ -2410,16 +2409,15 @@ pattern of the statement consists of three steps</p>
 <div class="listingblock">
 <div class="title">Typical way to execute query to get information about the user</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (
-    Statement stmt = connection.createStatement(); <i class="conum" data-value="1"></i><b>(1)</b>
-    ResultSet rs = stmt.executeQuery(
-        "SELECT firstName, lastName FROM users" +
-        " WHERE userId = 5") <i class="conum" data-value="2"></i><b>(2)</b>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement(); <i class="conum" data-value="1"></i><b>(1)</b>
+     ResultSet rs = stmt.executeQuery(
+         "SELECT firstName, lastName FROM users" +
+         " WHERE userId = 5") <i class="conum" data-value="2"></i><b>(2)</b>
 ){
-    if (rs.next()) {
-        String firstName = rs.getString(1);
-        String lastName = rs.getString(2);
-    }
+  if (rs.next()) {
+    String firstName = rs.getString(1);
+    String lastName = rs.getString(2);
+  }
 } <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
@@ -2517,26 +2515,26 @@ prepared statement instead.</p>
 <div class="listingblock">
 <div class="title">Using the same statement object multiple times to enable user account</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()){
-    ResultSet rs = stmt.executeQuery(
-        "SELECT userId FROM users " +
-        "WHERE lastName = 'Doe' AND firstName = 'Joe'");
-    if (rs.next()) {
-        int userId = rs.getInt(1);
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement();
+     ResultSet rs = stmt.executeQuery(
+         "SELECT userId FROM users " +
+         "WHERE lastName = 'Doe' AND firstName = 'Joe'")) {
+  if (rs.next()) {
+    int userId = rs.getInt(1);
 
-        int rowsUpdated = stmt.executeUpdate(
-            "UPDATE accounts SET accountEnabled = 1 " +
-            "WHERE userId = " + userId);
+    int rowsUpdated = stmt.executeUpdate(
+        "UPDATE accounts SET accountEnabled = 1 " +
+        "WHERE userId = " + userId);
 
-        if (rowsUpdated == 0)
-            rowsUpdated = stmt.executeUpdate(
-                "INSERT INTO accounts (userId, enabled) " +
-                "VALUES (" + userId + ", 1)");
+    if (rowsUpdated == 0)
+      rowsUpdated = stmt.executeUpdate(
+          "INSERT INTO accounts (userId, enabled) " +
+          "VALUES (" + userId + ", 1)");
 
-        if (rowsUpdated != 1)
-            throw new SomeException(
-                "User was not updated correctly.");
-    }
+    if (rowsUpdated != 1)
+      throw new SomeException(
+          "User was not updated correctly.");
+  }
 }</code></pre>
 </div>
 </div>
@@ -2579,10 +2577,10 @@ creation of database tables using this method.</p>
 <div class="title">Example of creating database tables</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()) {
-    stmt.execute("CREATE TABLE customer(" +
-        "customerId INTEGER NOT NULL PRIMARY KEY, " +
-        "firstName VARCHAR(20) NOT NULL, " +
-        "lastName VARCHAR(40) NOT NULL)");
+  stmt.execute("CREATE TABLE customer(" +
+      "customerId INTEGER NOT NULL PRIMARY KEY, " +
+      "firstName VARCHAR(20) NOT NULL, " +
+      "lastName VARCHAR(40) NOT NULL)");
 }</code></pre>
 </div>
 </div>
@@ -2593,14 +2591,14 @@ also be used to execute statements of an unknown type.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()) {
-    boolean hasResultSet = stmt.execute(sql);
-    if (hasResultSet) {
-        ResultSet rs = stmt.getResultSet();
-        ...
-    } else {
-        int updateCount = stmt.getUpdateCount();
-        ...
-    }
+  boolean hasResultSet = stmt.execute(sql);
+  if (hasResultSet) {
+    ResultSet rs = stmt.getResultSet();
+    ...
+  } else {
+    int updateCount = stmt.getUpdateCount();
+    ...
+  }
 }</code></pre>
 </div>
 </div>
@@ -2809,45 +2807,39 @@ more complicated without any visible advantage.</p>
 <div class="listingblock">
 <div class="title">Example for user account update rewritten using prepared statements</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (
-    PreparedStatement stmt1 = connection.prepareStatement(
-        "SELECT userId FROM users WHERE " +
-        "lastName = ? AND firstName = ?");
-) {
-    stmt1.setString(1, "Doe");
-    stmt1.setString(2, "Joe");
-    try (ResultSet rs = stmt1.executeQuery()) {
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement stmt1 = connection.prepareStatement(
+         "SELECT userId FROM users WHERE " +
+         "lastName = ? AND firstName = ?")) {
+  stmt1.setString(1, "Doe");
+  stmt1.setString(2, "Joe");
+  try (ResultSet rs = stmt1.executeQuery()) {
 
-        if (rs.next()) {
-            int userId = rs.getInt(1);
+    if (rs.next()) {
+      int userId = rs.getInt(1);
 
-            try (
-                PreparedStatement stmt2 =
-                    connection.prepareStatement(
-                        "UPDATE accounts SET accountEnabled = 1 " +
-                        "WHERE userId = ?" );
-            ) {
-                stmt2.setInt(1, userId);
+      try (PreparedStatement stmt2 =
+               connection.prepareStatement(
+                   "UPDATE accounts SET accountEnabled = 1 " +
+                   "WHERE userId = ?" )) {
+        stmt2.setInt(1, userId);
 
-                int rowsUpdated = stmt2.executeUpdate();
+        int rowsUpdated = stmt2.executeUpdate();
 
-                if (rowsUpdated == 0) {
-                    try (
-                        PreparedStatement stmt3 =
-                            connection.prepareStatement(
-                                "INSERT INTO accounts " +
-                                "(userId, enabled) VALUES (?, 1)");
-                    ) {
-                        stmt3.setInt(1, userId);
-                        rowsUpdated = stmt3.executeUpdate();
-                    }
-                }
-                if (rowsUpdated != 1)
-                    throw new SomeException(
-                        "User was not updated correctly.");
-            }
+        if (rowsUpdated == 0) {
+          try (PreparedStatement stmt3 =
+                   connection.prepareStatement(
+                       "INSERT INTO accounts " +
+                       "(userId, enabled) VALUES (?, 1)")) {
+            stmt3.setInt(1, userId);
+            rowsUpdated = stmt3.executeUpdate();
+          }
         }
+        if (rowsUpdated != 1)
+          throw new SomeException(
+              "User was not updated correctly.");
+      }
     }
+  }
 }</code></pre>
 </div>
 </div>
@@ -2910,23 +2902,23 @@ queryStmt.clearParameters();
 queryStmt.setString(1, "Doe");
 queryStmt.setString(2, "Joe");
 try (ResultSet rs = queryStmt.executeQuery()) {
+  if (rs.next()) {
+    int userId = rs.getInt(1);
 
-    if (rs.next()) {
-        int userId = rs.getInt(1);
+    updateStmt.clearParameters();
+    updateStmt.setInt(1, userId);
+    int rowsUpdated = updateStmt.executeUpdate();
 
-        updateStmt.clearParameters();
-        updateStmt.setInt(1, userId);
-        int rowsUpdated = updateStmt.executeUpdate();
-
-        if (rowsUpdated == 0) {
-            insertStmt.clearParameters();
-            insertStmt.setInt(1, userId);
-            rowsUpdated = insertStmt.executeUpdate();
-
-        if (rowsUpdated != 1)
-           throw new SomeException(
-               "User was not updated correctly.");
+    if (rowsUpdated == 0) {
+      insertStmt.clearParameters();
+      insertStmt.setInt(1, userId);
+      rowsUpdated = insertStmt.executeUpdate();
     }
+
+    if (rowsUpdated != 1)
+      throw new SomeException(
+          "User was not updated correctly.");
+  }
 }
 ......................
 
@@ -3038,22 +3030,22 @@ specified number.</p>
 <div class="title">Source code for the procedure that multiplies two integers</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">CREATE PROCEDURE factorial(
-    max_value INTEGER
+  max_value INTEGER
 ) RETURNS (
-    factorial INTEGER
+  factorial INTEGER
 ) AS
-    DECLARE VARIABLE temp INTEGER;
-    DECLARE VARIABLE counter INTEGER;
+  DECLARE VARIABLE temp INTEGER;
+  DECLARE VARIABLE counter INTEGER;
 BEGIN
-    counter = 0;
-    temp = 1;
-    WHILE (counter &lt;= max_value) DO BEGIN
-        IF (counter = 0) THEN
-            temp = 1;
-        ELSE
-            temp = temp * row_num;
-        counter = counter + 1;
-    END
+  counter = 0;
+  temp = 1;
+  WHILE (counter &lt;= max_value) DO BEGIN
+    IF (counter = 0) THEN
+      temp = 1;
+    ELSE
+      temp = temp * row_num;
+    counter = counter + 1;
+  END
 END</code></pre>
 </div>
 </div>
@@ -3078,26 +3070,26 @@ is done in isql, the output looks as follow</p>
 <div class="title">Modified procedure that returns each intermediate result</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">CREATE PROCEDURE factorial(
-    max_value INTEGER
+  max_value INTEGER
 ) RETURNS (
-    row_num INTEGER,
-    factorial INTEGER
+  row_num INTEGER,
+  factorial INTEGER
 ) AS
-    DECLARE VARIABLE temp INTEGER;
-    DECLARE VARIABLE counter INTEGER;
+  DECLARE VARIABLE temp INTEGER;
+  DECLARE VARIABLE counter INTEGER;
 BEGIN
-    counter = 0;
-    temp = 1;
-    WHILE (counter &lt;= max_value) DO BEGIN
-        IF (row_num = 0) THEN
-            temp = 1;
-        ELSE
-            temp = temp * row_num;
-        factorial = temp;
-        row_num = counter;
-        counter = counter + 1;
-        SUSPEND;
-    END
+  counter = 0;
+  temp = 1;
+  WHILE (counter &lt;= max_value) DO BEGIN
+    IF (row_num = 0) THEN
+      temp = 1;
+    ELSE
+      temp = temp * row_num;
+    factorial = temp;
+    row_num = counter;
+    counter = counter + 1;
+    SUSPEND;
+  END
 END</code></pre>
 </div>
 </div>
@@ -3137,15 +3129,15 @@ result set handling.</p>
 <div class="title">Example of using the PreparedStatement to call executable procedure</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement stmt = connection.prepareStatement(
-             "EXECUTE PROCEDURE factorial(?)")) {
+         "EXECUTE PROCEDURE factorial(?)")) {
 
-    stmt.setInt(1, 2);
+  stmt.setInt(1, 2);
 
-    try (ResultSet rs = stmt.executeQuery()) {
-        rs.next(); // move cursor to the first row
+  try (ResultSet rs = stmt.executeQuery()) {
+    rs.next(); // move cursor to the first row
 
-        int result = rs.getInt(1);
-    }
+    int result = rs.getInt(1);
+  }
 }</code></pre>
 </div>
 </div>
@@ -3159,14 +3151,14 @@ supported.</p>
 <div class="title">Accessing the executable procedure via CallableStatement</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (CallableStatement stmt = connection.prepareCall(
-             "{call factorial(?,?)}")) {
+         "{call factorial(?,?)}")) {
 
-    stmt.setInt(1, 2);
-    stmt.registerOutParameter(2, Types.INTEGER);
+  stmt.setInt(1, 2);
+  stmt.registerOutParameter(2, Types.INTEGER);
 
-    stmt.execute();
+  stmt.execute();
 
-    int result = stmt.getInt(2);
+  int result = stmt.getInt(2);
 }</code></pre>
 </div>
 </div>
@@ -3218,14 +3210,14 @@ using the callable statement interface.</p>
 <div class="title">Calling stored procedure using different syntax</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (CallableStatement stmt = connection.prepareCall(
-             "{?= call factorial(?}")) {
+         "{?= call factorial(?}")) {
 
-    stmt.registerOutParameter(1, Types.INTEGER);
-    stmt.setInt(2, 2);
+  stmt.registerOutParameter(1, Types.INTEGER);
+  stmt.setInt(2, 2);
 
-    stmt.execute();
+  stmt.execute();
 
-    int result = stmt.getInt(1);
+  int result = stmt.getInt(1);
 }</code></pre>
 </div>
 </div>
@@ -3276,24 +3268,24 @@ method.</p>
 import org.firebirdsql.jdbc.*;
 ...
 try (CallableStatement stmt = connection.prepareCall(
-             "{call factorial(?, ?, ?)}")) {
+         "{call factorial(?, ?, ?)}")) {
 
-    FirebirdCallableStatement fbStmt =
-            (FirebirdCallableStatement)stmt;
-    fbStmt.setSelectableProcedure(true);
+  FirebirdCallableStatement fbStmt =
+      (FirebirdCallableStatement)stmt;
+  fbStmt.setSelectableProcedure(true);
 
-    stmt.setInt(1, 5);
-    stmt.registerOutParameter(2, Types.INTEGER); // first OUT
-    stmt.registerOutParameter(3, Types.INTEGER); // second OUT
+  stmt.setInt(1, 5);
+  stmt.registerOutParameter(2, Types.INTEGER); // first OUT
+  stmt.registerOutParameter(3, Types.INTEGER); // second OUT
 
-    try (ResultSet rs = stmt.executeQuery()) {
+  try (ResultSet rs = stmt.executeQuery()) {
 
-        while(rs.next()) {
-            int firstCol = rs.getInt(1);             // first OUT
-            int secondCol = rs.getInt(2);            // second OUT
-            int anotherSecondCol = stmt.getInt(3);   // second OUT
-        }
+    while(rs.next()) {
+      int firstCol = rs.getInt(1);             // first OUT
+      int secondCol = rs.getInt(2);            // second OUT
+      int anotherSecondCol = stmt.getInt(3);   // second OUT
     }
+  }
 }</code></pre>
 </div>
 </div>
@@ -3380,11 +3372,11 @@ Adding a statement that returns result set is an error.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()) {
 
-    stmt.addBatch("UPDATE products " +
-        "SET amount = amount – 1 WHERE id = 1");
-    stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
+  stmt.addBatch("UPDATE products " +
+      "SET amount = amount – 1 WHERE id = 1");
+  stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
 
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }</code></pre>
 </div>
 </div>
@@ -3449,17 +3441,17 @@ statement can be used, but with different sets of parameter values.</p>
 <div class="title">Example of batch updates with PreparedStatement</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement stmt = connection.prepareStatement(
-             "INSERT INTO products(id, name) VALUES(?, ?)")) {
+         "INSERT INTO products(id, name) VALUES(?, ?)")) {
 
-    stmt.setInt(1, 1);
-    stmt.setString(2, "apple");
-    stmt.addBatch();
+  stmt.setInt(1, 1);
+  stmt.setString(2, "apple");
+  stmt.addBatch();
 
-    stmt.setInt(1, 2);
-    stmt.setString(2, "orange");
-    stmt.addBatch();
+  stmt.setInt(1, 2);
+  stmt.setString(2, "orange");
+  stmt.addBatch();
 
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }</code></pre>
 </div>
 </div>
@@ -3467,17 +3459,17 @@ statement can be used, but with different sets of parameter values.</p>
 <div class="title">Example of batch updates with CallableStatement</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (CallableStatement stmt = connection.prepareCall(
-             "{call add_product(?, ?)")) {
+         "{call add_product(?, ?)")) {
 
-    stmt.setInt(1, 1);
-    stmt.setString(2, "apple");
-    stmt.addBatch();
+  stmt.setInt(1, 1);
+  stmt.setString(2, "apple");
+  stmt.addBatch();
 
-    stmt.setInt(1, 2);
-    stmt.setString(2, "orange");
-    stmt.addBatch();
+  stmt.setInt(1, 2);
+  stmt.setString(2, "orange");
+  stmt.addBatch();
 
-    int[] updateCounts = stmt.executeBatch();
+  int[] updateCounts = stmt.executeBatch();
 }</code></pre>
 </div>
 </div>
@@ -3790,7 +3782,7 @@ drivers of different vendors treat it differently.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement();
      ResultSet rs = stmt.executeQuery("SELECT * FROM myTable")) {
-    // process result set
+  // process result set
 }</code></pre>
 </div>
 </div>
@@ -3798,12 +3790,12 @@ drivers of different vendors treat it differently.</p>
 <div class="title">Using Statement.getResultSet() method</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement stmt = connection.createStatement()) {
-    boolean hasResultSet = stmt.execute("SELECT * FROM myTable");
-    if (hasResultSet) {
-        try (ResultSet rs = stmt.getResultSet()) {
-            // process result set
-        }
+  boolean hasResultSet = stmt.execute("SELECT * FROM myTable");
+  if (hasResultSet) {
+    try (ResultSet rs = stmt.getResultSet()) {
+      // process result set
     }
+  }
 }</code></pre>
 </div>
 </div>
@@ -3848,13 +3840,13 @@ etc.) will return a <code>null</code> value for columns containing
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (Statement forwardStatement = connection.createStatement();
      ResultSet rs = forwardStatement.executeQuery(
-             "SELECT id, name, price FROM myTable")) {
+         "SELECT id, name, price FROM myTable")) {
 
-    while(rs.next()) {
-        int id = rs.getInt(1);
-        String name = rs.getString("name");
-        double price = rs.getDouble(3);
-    }
+  while(rs.next()) {
+    int id = rs.getInt(1);
+    String name = rs.getString("name");
+    double price = rs.getDouble(3);
+  }
 }</code></pre>
 </div>
 </div>
@@ -3914,21 +3906,21 @@ shown in the example.</p>
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">connections.setAutoCommit(false);
 try (Statement selectStmt = connection.createStatement();
      Statement updateStmt = connection.createStatement()) {
-    selectStmt.setCursorName("someCursor");
+  selectStmt.setCursorName("someCursor");
 
-    try (ResultSet rs = selectStmt.executeQuery(
-        "SELECT id, name, price FROM myTable " +
-        "FOR UPDATE OF myColumn")) {
+  try (ResultSet rs = selectStmt.executeQuery(
+           "SELECT id, name, price FROM myTable " +
+           "FOR UPDATE OF myColumn")) {
 
-        while(rs.next()) {
-            ...
-            if (someCondition) {
-                updateStmt.executeUpdate("UPDATE myTable " +
-                    "SET myColumn = myColumn + 1 " +
-                    "WHERE CURRENT OF " + rs.getCursorName());
-            }
-        }
+    while(rs.next()) {
+      ...
+      if (someCondition) {
+        updateStmt.executeUpdate("UPDATE myTable " +
+            "SET myColumn = myColumn + 1 " +
+            "WHERE CURRENT OF " + rs.getCursorName());
+      }
     }
+  }
 }</code></pre>
 </div>
 </div>
@@ -3996,19 +3988,19 @@ connection.setAutoCommit(false); <i class="conum" data-value="1"></i><b>(1)</b>
 
 Statement stmt = connection.createStament();
 try {
-    stmt.executeUpdate("UPDATE employee " +
-        " SET salary = salary * 2"); <i class="conum" data-value="2"></i><b>(2)</b>
+  stmt.executeUpdate("UPDATE employee " +
+      " SET salary = salary * 2"); <i class="conum" data-value="2"></i><b>(2)</b>
 
-    // ... do some more changes to database
-    // to hide the identity of the person
-    // that messed up the salary information
-    // by deleting the audit trails logs, etc.
+  // ... do some more changes to database
+  // to hide the identity of the person
+  // that messed up the salary information
+  // by deleting the audit trails logs, etc.
 
-    stmt.executeUpdate("DELETE FROM audit_trails");
+  stmt.executeUpdate("DELETE FROM audit_trails");
 
-    connection.commit(); <i class="conum" data-value="3"></i><b>(3)</b>
+  connection.commit(); <i class="conum" data-value="3"></i><b>(3)</b>
 } catch(SQLException ex) {
-    connection.rollback(); <i class="conum" data-value="4"></i><b>(4)</b>
+  connection.rollback(); <i class="conum" data-value="4"></i><b>(4)</b>
 }</code></pre>
 </div>
 </div>
@@ -4162,7 +4154,7 @@ objects, one for SELECT statement and one for UPDATE statement.</p>
 Statement updateStmt = connection.createStatement();
 
 ResultSet rs = selectStmt.executeQuery(
-  "SELECT * FROM myTable");
+    "SELECT * FROM myTable");
 
 while(rs.next()) { <i class="conum" data-value="2"></i><b>(2)</b>
   int id = rs.getInt(1);
@@ -4664,14 +4656,14 @@ exclusive).</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">Connection connection = ...
 TransactionParameterBuffer tpb =
-  connection.createTransactionParameterBuffer(); <i class="conum" data-value="1"></i><b>(1)</b>
+    connection.createTransactionParameterBuffer(); <i class="conum" data-value="1"></i><b>(1)</b>
 
 tpb.addArgument(TransactionParameterBuffer.CONSISTENCY); <i class="conum" data-value="2"></i><b>(2)</b>
 tpb.addArgument(TransactionParameterBuffer.WRITE);
 tpb.addArgument(TransactionParameterBuffer.NOWAIT);
 
 tpb.addArgument(TransactionParameterBuffer.LOCK_WRITE,
-  "TEST_LOCK");
+    "TEST_LOCK");
 tpb.addArgument(TransactionParameterBuffer.PROTECTED);
 
 connection.setTransactionParameters(tpb); <i class="conum" data-value="3"></i><b>(3)</b>
@@ -5211,9 +5203,9 @@ restoreManager.setBackupPath("C:/database/employee.fbk");
 // validity constraints and shadow database
 backupManager.restoreDatabase(
     BackupManager.RESTORE_DEACTIVATE_INDEX |
-      BackupManager.RESTORE_NO_VALIDITY |
-      BackupManager.RESTORE_NO_SHADOW |
-      BackupManager.RESTORE_ONE_AT_A_TIME);</code></pre>
+    BackupManager.RESTORE_NO_VALIDITY |
+    BackupManager.RESTORE_NO_SHADOW |
+    BackupManager.RESTORE_ONE_AT_A_TIME);</code></pre>
 </div>
 </div>
 </div>
@@ -5911,7 +5903,7 @@ procedure with the sole purpose of posting events:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">CREATE PROCEDURE sp_post_event(event_name VARCHAR(72))
 AS BEGIN
-    POST_EVENT :event_name;
+  POST_EVENT :event_name;
 END</code></pre>
 </div>
 </div>
@@ -5925,7 +5917,7 @@ execute PSQL statements within DSQL code:</p>
 <pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">Statement stmt = connection.createStatement();
 try {
   stmt.execute(
-    "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
+      "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
 } finally {
   stmt.close();
 }</code></pre>
@@ -6028,11 +6020,11 @@ eventManager.connect();
 
 eventManager.addEventListener("test_event",
     new EventListener() {
-        public void eventOccurred(DatabaseEvent event){
-            System.out.println("Event [" +
-                event.getEventName() + "] occured " +
-                event.getEventCount() + " time(s)");
-        }
+      public void eventOccurred(DatabaseEvent event){
+        System.out.println("Event [" +
+            event.getEventName() + "] occured " +
+            event.getEventCount() + " time(s)");
+      }
     }
 );</code></pre>
 </div>
@@ -6153,7 +6145,7 @@ The required ANTLR runtime version depends on the Jaybird version, check the rel
 </table>
 </div>
 <div class="paragraph">
-<p>This functionality should work for <code>INSERT</code> (from Firebird 2.0), for <code>UPDATE</code>, <code>UPDATE OR INSERT</code> and <code>DELETE</code> (from Firebird 2.1), and for <code>MERGE</code> (from Firebird 3.0).</p>
+<p>This functionality should work for <code>INSERT</code> (<em class="since">Firebird 2.0</em>), for <code>UPDATE</code>, <code>UPDATE OR INSERT</code> and <code>DELETE</code> (<em class="since">Firebird 2.1</em>), and for <code>MERGE</code> (<em class="since">Firebird 3.0</em>).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6977,6 +6969,24 @@ Java types.</p>
 <code>ConnectionPoolDataSource</code>, <code>DataSource</code> and <code>XADataSource</code> interface
 implementations.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The documentation in this section is only valid for Jaybird 2.2 and earlier.</p>
+</div>
+<div class="paragraph">
+<p>Connection pooling was removed from Jaybird 3.0.
+Either use the connection pool provided by your application server, or use a third-party connection pool like <a href="https://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>, <a href="https://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">Apache DBCP</a> or <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="_standard_jdbc_properties">C.1. Standard JDBC Properties</h3>
 <div class="paragraph">
@@ -7265,8 +7275,8 @@ parameter would look like this:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;parameter&gt;
-    &lt;name&gt;nonStandardProperty&lt;/name&gt;
-    &lt;value&gt;sql_dialect=3&lt;/value&gt;
+  &lt;name&gt;nonStandardProperty&lt;/name&gt;
+  &lt;value&gt;sql_dialect=3&lt;/value&gt;
 &lt;/parameter&gt;</code></pre>
 </div>
 </div>
@@ -7425,8 +7435,8 @@ interface to obtain the database connections also have access to the
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">Class.forName("org.firebirdsql.jdbc.FBDriver");
 
 Connection connection = DriverManager.getConnection(
-  "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
-  "SYSDBA", "masterkey");</code></pre>
+    "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
+    "SYSDBA", "masterkey");</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -8559,7 +8569,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-08 11:20:08 UTC
+Last updated 2018-09-08 11:54:36 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
