@@ -1,9 +1,17 @@
 [[reference]]
 = Reference Manual
 
+[[ref-connection]]
+== Connection reference
+
+include::connection/firebirdautocommit.adoc[]
+
+// TODO client-info
+
 [[ref-statement]]
 == Statement reference
 
 include::statement/generatedkeys.adoc[]
 
+// TODO: Document closeOnCompletion support?
 

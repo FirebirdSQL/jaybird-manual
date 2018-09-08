@@ -1,0 +1,26 @@
+[[ref-firebirdautocommit]]
+=== Firebird auto commit mode (experimental)
+
+[.since]_Jaybird 2.2.9_
+
+This option is enabled by specifying the connection property `useFirebirdAutocommit=true`.
+
+With this option, Jaybird will configure the transaction to use `isc_tpb_autocommit` with `autoCommit=true`. 
+This means that Firebird server will internally commit the transaction after each statement completion. 
+Jaybird itself will not commit until connection close (or switching to `autoCommit=false`). 
+The exception is if the statement was of type `isc_info_sql_stmt_ddl`, in that case Jaybird will commit on statement success and rollback on statement failure (just like it does for all statements in normal auto commit mode). 
+The reason is that Firebird for some DDL commands only executes at a real commit boundary and relying on the Firebird auto-commit is insufficient.
+
+On statement completion (as specified in JDBC), result sets will still close unless they are holdable over commit. 
+The result set is only closed client side, which means that the cursor remains open server side to prevent roundtrips. 
+This may lead to additional resource usage server side unless explicitly closed in the code. 
+Note that any open blobs will be closed client- and server-side (until this is improved with http://tracker.firebirdsql.org/browse/JDBC-401[JDBC-401^]).
+
+A connection can be interrogated using `FirebirdConnection.isUseFirebirdAutocommit()` if it uses `isc_tpb_autocommit`.
+
+If you manually add `isc_tpb_autocommit` to the transaction parameter buffer and you enable this option, the `isc_tpb_autocommit` will be removed from the TPB if `autoCommit=false`.
+
+Artificial testing with repeated inserts (using a prepared statement) against a Firebird server on localhost shows that this leads to a reduction of execution time of +/- 7%.
+
+Support for this option is experimental, and should only be enabled if you 1) know what you're doing, and 2) really need this feature. 
+Internally `isc_tpb_autocommit` uses `commit_retaining`, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.
