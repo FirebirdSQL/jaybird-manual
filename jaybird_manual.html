@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="keywords" content="jaybird, firebird, jdbc, sql, database, java">
 <meta name="author" content="Roman Rokytskyy, Mark Rotteveel">
-<title>Jaybird 3.0 JDBC driver Java Programmer&#8217;s Manual</title>
+<title>Jaybird 3.0 JDBC Driver Java Programmer&#8217;s Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -430,7 +430,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>Jaybird 3.0 JDBC driver Java Programmer&#8217;s Manual</h1>
+<h1>Jaybird 3.0 JDBC Driver Java Programmer&#8217;s Manual</h1>
 <div class="details">
 <span id="author" class="author">Roman Rokytskyy</span><br>
 <span id="author2" class="author">Mark Rotteveel</span><br>
@@ -450,7 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_contributing">1.8. Contributing</a></li>
 </ul>
 </li>
-<li><a href="#_user_manual">User Manual</a>
+<li><a href="#user-manual">User Manual</a>
 <ul class="sectlevel1">
 <li><a href="#connection">2. Obtaining a connection</a>
 <ul class="sectlevel2">
@@ -512,6 +512,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_database_events">8.1. Database events</a></li>
 <li><a href="#_posting_events">8.2. Posting events</a></li>
 <li><a href="#_subscribing_to_events">8.3. Subscribing to events</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#reference">Reference Manual</a>
+<ul class="sectlevel1">
+<li><a href="#ref-statement">9. Statement reference</a>
+<ul class="sectlevel2">
+<li><a href="#ref-generatedkeys">9.1. Generated keys retrieval</a></li>
 </ul>
 </li>
 </ul>
@@ -597,19 +606,15 @@ driver supplies only the connection functionality.</p>
 <p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.</p>
 </div>
 <div class="paragraph">
-<p>This manual covers Jaybird 3.0 and may use Java 8 specific features, but most
-examples and information also applies to previous versions of the driver and of Java.</p>
+<p>This manual covers Jaybird 3.0 and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.</p>
 </div>
 <div class="sect2">
 <h3 id="_history">1.1. History</h3>
 <div class="paragraph">
-<p>When Borland released an open-source version of the InterBase
-RDBMS, it included sources for a type 3 JDBC driver called InterClient.
-However due to some inherent limitations of the InterBase (and later
-Firebird) client library, it was decided that the type 3 driver was a
-dead end<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>, and the Firebird team developed a pure Java implementation of
-the wire protocol. This implementation became the basis for Jaybird, a
-pure Java driver for Firebird relational database.</p>
+<p>When Borland released an open-source version of the InterBase RDBMS, it included sources for a type 3 JDBC driver called InterClient.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>
+However due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end.
+Instead, the Firebird team decided to develop a pure Java implementation of the wire protocol.
+This implementation became the basis for Jaybird, a pure Java driver for Firebird relational database.</p>
 </div>
 </div>
 <div class="sect2">
@@ -718,12 +723,12 @@ generated key retrieval.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.3.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.4.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.3.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.4.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
 </tr>
 <tr>
@@ -753,7 +758,7 @@ dependencies.</p>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
-Version: <code>3.0.3</code></p>
+Version: <code>3.0.4</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -763,7 +768,7 @@ Version: <code>3.0.3</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-    &lt;version&gt;3.0.3&lt;/version&gt;
+    &lt;version&gt;3.0.4&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -780,7 +785,7 @@ dependency:</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-    &lt;version&gt;3.0.3&lt;/version&gt;
+    &lt;version&gt;3.0.4&lt;/version&gt;
     &lt;exclusions&gt;
         &lt;exclusion&gt;
             &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -924,7 +929,7 @@ requests.</p>
 </div>
 </div>
 </div>
-<h1 id="_user_manual" class="sect0">User Manual</h1>
+<h1 id="user-manual" class="sect0">User Manual</h1>
 <div class="sect1">
 <h2 id="connection">2. Obtaining a connection</h2>
 <div class="sectionbody">
@@ -1842,7 +1847,7 @@ while (warning != null) {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">import java.sql.*;
 ....
-for (Throwable throwable : connection.getWarnings() {
+for (Throwable throwable : connection.getWarnings()) {
     if (throwable instanceof SQLWarning) {
        SQLWarning warning = (SQLWarning) throwable;
        .... // do something with the warning
@@ -6066,6 +6071,366 @@ System.out.println(
 </div>
 </div>
 </div>
+<h1 id="reference" class="sect0">Reference Manual</h1>
+<div class="sect1">
+<h2 id="ref-statement">9. Statement reference</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="ref-generatedkeys">9.1. Generated keys retrieval</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.2</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 2.2 added support for the <code>getGeneratedKeys()</code> JDBC feature for <code>Statement</code> and <code>PreparedStatement</code>.
+This feature can be used to retrieve the generated ids (and other columns) from DML statements.</p>
+</div>
+<div class="paragraph">
+<p>This feature is available for <code>Connection.prepareStatement</code>, and <code>Statement.execute</code>, <code>Statement.executeUpdate</code> and <code>Statement.executeLargeUpdate</code> (<em class="since">Java 8/JDBC 4.2</em>)</p>
+</div>
+<div class="paragraph">
+<p>There are four distinct use-cases:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Methods accepting an <code>int</code> parameter with values of <code>Statement.NO_GENERATED_KEYS</code> and <code>Statement.RETURN_GENERATED_KEYS</code>.</p>
+<div class="paragraph">
+<p>When <code>NO_GENERATED_KEYS</code> is passed, the query will be executed as a normal query.</p>
+</div>
+<div class="paragraph">
+<p>When <code>RETURN_GENERATED_KEYS</code> is passed, the driver will add <em>*all*</em> columns of the table in ordinal position order (as reported in the (JDBC) metadata of the table).
+It is advisable to retrieve the values from the <code>getGeneratedKeys()</code> result set by column name.</p>
+</div>
+<div class="paragraph">
+<p>We opted to include all columns as it is next to impossible to decide which columns are populated by a trigger or otherwise and only returning the primary key will be too limiting (consider computed columns, default values, etc).</p>
+</div>
+<div class="paragraph">
+<p>Passing <code>NO_GENERATED_KEYS</code> hardcoded would normally not be done, passing that value only makes sense in code that dynamically decides between <code>NO_GENERATED_KEYS</code> and <code>RETURN_GENERATED_KEYS</code>.</p>
+</div>
+</li>
+<li>
+<p>Methods accepting an <code>int[]</code> parameter with column indexes.</p>
+<div class="paragraph">
+<p>The values in the <code>int[]</code> parameter are the ordinal positions of the columns as specified in the (JDBC) metadata of the table.
+For a null or empty array the statement is processed as is.
+Invalid ordinal positions are ignored and silently dropped (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future)</p>
+</div>
+</li>
+<li>
+<p>Methods accepting a <code>String[]</code> parameter with column names.</p>
+<div class="paragraph">
+<p>The values in the <code>String[]</code> are the column names to be returned.
+The column names provided are processed as is and are not checked for validity or the need of quoting.
+Providing non-existent or incorrectly (un)quoted columns will result in an exception when the statement is processed by Firebird (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future).</p>
+</div>
+<div class="paragraph">
+<p>This method is the fastest as it does not retrieve metadata from the server.</p>
+</div>
+</li>
+<li>
+<p>Providing a query already containing a <code>RETURNING</code> clause.</p>
+<div class="paragraph">
+<p>In this case all of the previous cases are ignored and the query is executed as is.
+It is possible to retrieve the result set using <code>getGeneratedKeys()</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This functionality will only be available if the ANTLR runtime classes are on the classpath.
+Except for calling methods with <code>NO_GENERATED_KEYS</code>, absence of the ANTLR runtime will throw <code>FBDriverNotCapableException</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The required ANTLR runtime version depends on the Jaybird version, check the release notes of your version for details.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This functionality should work for <code>INSERT</code> (from Firebird 2.0), for <code>UPDATE</code>, <code>UPDATE OR INSERT</code> and <code>DELETE</code> (from Firebird 2.1), and for <code>MERGE</code> (from Firebird 3.0).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Generated keys retrieval modifies the statement to add a <code>RETURNING</code>-clause.
+Currently Firebird only supports <code>RETURNING</code> for DML operations that affect a single row.
+Attempting to use generated keys retrieval with a statement that affects multiple rows will yield an error.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="ref-generatedkeys-examples">9.1.1. Examples</h4>
+<div class="paragraph">
+<p>The examples in this section will use the following (Firebird 3) table:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example person table</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">create table PERSON (
+  ID integer generated by default as identity constraint pk_employee primary key,
+  FIRSTNAME varchar(20),
+  LASTNAME varchar(20),
+  BIRTHDATE date,
+  "age" integer generated always as (datediff(year, birthdate, current_date))
+)</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-generatedkeys-examples-RETURN-GENERATED-KEYS">Using RETURN_GENERATED_KEYS</h5>
+<div class="paragraph">
+<p>The following will insert a person using a <code>Statement</code> and retrieve the generated id using <code>Statement.RETURN_GENERATED_KEYS</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Statement generated keys retrieval</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Connection connection = ...;
+try (Statement statement = connection.createStatement()) {
+  statement.executeUpdate(
+      "insert into person(firstname, lastname, birthdate) "
+          + "values ('Mark', 'Rotteveel', date'1979-01-12')",
+      Statement.RETURN_GENERATED_KEYS);                 <i class="conum" data-value="1"></i><b>(1)</b>
+
+  try (ResultSet keys = statement.getGeneratedKeys()) { <i class="conum" data-value="2"></i><b>(2)</b>
+    if (keys.next()) {                                  <i class="conum" data-value="3"></i><b>(3)</b>
+      int generatedId = keys.getInt("id");              <i class="conum" data-value="4"></i><b>(4)</b>
+      int age = keys.getInt("age");                     <i class="conum" data-value="5"></i><b>(5)</b>
+      String firstName = keys.getString("firstname");   <i class="conum" data-value="6"></i><b>(6)</b>
+
+      System.out.printf("Inserted: %s, Id: %d, Age: %d%n",
+          firstName, generatedId, age);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use of <code>Statement.RETURN_GENERATED_KEYS</code> instructs Jaybird to parse the statement and add a <code>RETURNING</code> clause with all columns of the <code>PERSON</code> table</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Get the generated keys result set from the statement</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Just like a normal result set, it is positioned before the first row, so you need to call <code>next()</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The generated value of the <code>ID</code> column</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The calculated value of the <code>AGE</code> column</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>The generated keys result set also contains the normal columns like <code>FIRSTNAME</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The equivalent using <code>PreparedStatement</code> is:</p>
+</div>
+<div class="listingblock">
+<div class="title">Prepared statement generated keys retrieval</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement statement = connection.prepareStatement(
+         "insert into person(firstname, lastname, birthdate) values (?, ?, ?)",
+         Statement.RETURN_GENERATED_KEYS)) {            <i class="conum" data-value="1"></i><b>(1)</b>
+  statement.setString(1, "Mark");
+  statement.setString(2, "Rotteveel");
+  statement.setObject(3, LocalDate.of(1979, 1, 12));
+
+  statement.executeUpdate();
+  try (ResultSet keys = statement.getGeneratedKeys()) { <i class="conum" data-value="2"></i><b>(2)</b>
+    if (keys.next()) {                                  <i class="conum" data-value="3"></i><b>(3)</b>
+      int generatedId = keys.getInt("id");              <i class="conum" data-value="4"></i><b>(4)</b>
+      int age = keys.getInt("age");                     <i class="conum" data-value="5"></i><b>(5)</b>
+      String firstName = keys.getString("firstname");
+
+      System.out.printf("Inserted: %s, Id: %d, Age: %d%n",
+          firstName, generatedId, age);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Besides use of parameters, the only real difference is that use of <code>Statement.RETURN_GENERATED_KEYS</code> moved from execution to prepare.
+This makes sense if you consider that once prepared, the statement can be reused.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-generatedkeys-examples-column-index">Using column indexes</h5>
+<div class="paragraph">
+<p>Retrieval by column index uses the ordinal position as reported in <code>DatabaseMetaData.getColumns</code>, column <code>ORDINAL_POSITION</code>.
+In practice this is the value of <code>RDB$RELATION_FIELDS.RDB$FIELD_POSITION + 1</code> of that column.</p>
+</div>
+<div class="paragraph">
+<p>In our example, the columns are</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>ID</code></p>
+</li>
+<li>
+<p><code>FIRSTNAME</code></p>
+</li>
+<li>
+<p><code>LASTNAME</code></p>
+</li>
+<li>
+<p><code>BIRTHDATE</code></p>
+</li>
+<li>
+<p><code>age</code></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="title">Prepared statement generated keys retrieval by index</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement statement = connection.prepareStatement(
+         "insert into person(firstname, lastname, birthdate) values (?, ?, ?)",
+         new int[] { 1, 5 })) {                         <i class="conum" data-value="1"></i><b>(1)</b>
+  statement.setString(1, "Mark");
+  statement.setString(2, "Rotteveel");
+  statement.setObject(3, LocalDate.of(1979, 1, 12));
+
+  statement.executeUpdate();
+  try (ResultSet keys = statement.getGeneratedKeys()) {
+    if (keys.next()) {
+      int generatedId = keys.getInt("id");              <i class="conum" data-value="2"></i><b>(2)</b>
+      int age = keys.getInt(2);                         <i class="conum" data-value="3"></i><b>(3)</b>
+
+      System.out.printf("Id: %d, Age: %d%n",
+          generatedId, age);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Instead of <code>Statement.RETURN_GENERATED_KEYS</code>, the column indices are passed in an array, in this case <code>1</code> for <code>ID</code> and <code>5</code> for <code>age</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Retrieval of the first column, <code>ID</code>, by name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Retrieval of the second column, <code>age</code>, by id.
+Notice that the index used for retrieval does not match the position (5) passed in the prepare.
+As this is the second column, it is retrieved from the result set by <code>2</code>.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Invalid ordinal positions are currently ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even though we don&#8217;t have sixth column.
+This behavior may change in future Jaybird versions</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-generatedkeys-examples-column-name">Using column names</h5>
+<div class="listingblock">
+<div class="title">Prepared statement generated keys retrieval by name</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">try (PreparedStatement statement = connection.prepareStatement(
+         "insert into person(firstname, lastname, birthdate) values (?, ?, ?)",
+         new String[] { "id", "\"age\"" })) {           <i class="conum" data-value="1"></i><b>(1)</b>
+  statement.setString(1, "Mark");
+  statement.setString(2, "Rotteveel");
+  statement.setObject(3, LocalDate.of(1979, 1, 12));
+
+  statement.executeUpdate();
+  try (ResultSet keys = statement.getGeneratedKeys()) {
+    if (keys.next()) {
+      int generatedId = keys.getInt("id");
+      int age = keys.getInt("age");
+
+      System.out.printf("Id: %d, Age: %d%n",
+          generatedId, age);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The column names are passed as is, this means that correct quoting is required for case sensitive columns (and other names that require quoting).</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The requirement to pass column names correctly quoted is not specified in the JDBC standard.
+It may change in future Jaybird versions to conform with column names as returned from <code>DatabaseMetaData.getColumn</code>.
+That is, unquoted exactly as stored in <code>RDB$RELATION_FIELDS.RDB$FIELD_NAME</code>.
+Quoting the column names would then be done by Jaybird.</p>
+</div>
+<div class="paragraph">
+<p>When this changes, a connection property for backwards compatibility will be provided.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-generatedkeys-limitations">9.1.2. Limitations</h4>
+<div class="paragraph">
+<p>Jaybird 2.2 does not support generated keys retrieval for batch execution of prepared statements.
+Support for generated key retrieval with batch execution was introduced in Jaybird 3.0.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 <h1 id="_appendices" class="sect0">Appendices</h1>
 <div class="sect1">
 <h2 id="connectionproperties">Appendix A: Extended connection properties</h2>
@@ -8117,7 +8482,7 @@ hyperlink/alias]).</p>
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnote_1">
-<a href="#_footnoteref_1">1</a>. For those interested in software archaeology, you can find those Interclient sources archived on <a href="https://github.com/FirebirdSQL/x-cvs-interclient" class="bare">https://github.com/FirebirdSQL/x-cvs-interclient</a>
+<a href="#_footnoteref_1">1</a>. For those interested in software archaeology, you can find the open sourced Interclient sources archived on <a href="https://github.com/FirebirdSQL/x-cvs-interclient" class="bare">https://github.com/FirebirdSQL/x-cvs-interclient</a>
 </div>
 <div class="footnote" id="_footnote_2">
 <a href="#_footnoteref_2">2</a>. it is possible sometimes X/Open SQLstates are used
@@ -8194,7 +8559,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-29 13:03:48 UTC
+Last updated 2018-09-08 11:20:08 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
