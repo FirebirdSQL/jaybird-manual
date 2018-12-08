@@ -10,8 +10,6 @@ This feature is available for `Connection.prepareStatement`, and `Statement.exec
 
 There are four distinct use-cases:
 
-// TODO Consider breaking up in subsections per type and splitting the examples section up per type as well
-
 . Methods accepting an `int` parameter with values of `Statement.NO_GENERATED_KEYS` and `Statement.RETURN_GENERATED_KEYS`, see <<ref-generatedkeys-RETURN-GENERATED-KEYS>>,
 . Methods accepting an `int[]` parameter with column indexes, see <<ref-generatedkeys-column-index>>.
 . Methods accepting a `String[]` parameter with column names, see <<ref-generatedkeys-column-name>>.
