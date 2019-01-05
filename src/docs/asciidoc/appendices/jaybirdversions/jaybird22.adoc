@@ -1,0 +1,155 @@
+[[jb22]]
+=== Jaybird 2.2
+
+[[jb22-java]]
+==== Java support
+
+Jaybird 2.2 supports Java 6 (JDBC 4.0), Java 7 (JDBC 4.1) and Java 8 (JDBC 4.2). 
+Java 5 support was dropped in Jaybird 2.2.8.
+
+For compatibility with Java 9 modules, version 2.2.14 introduced the automatic module name `org.firebirdsql.jaybird`. 
+This guarantees a stable module name for Jaybird, and allows for future modularization of Jaybird. 
+
+[[jb22-firebird]]
+==== Firebird support
+
+Jaybird 2.2 supports Firebird 1.0 and higher, but is only tested with Firebird 2.5 and 3.0. 
+
+Connecting to Firebird 3 requires some additional configuration, see https://github.com/FirebirdSQL/jaybird/wiki/Jaybird-and-Firebird-3[Jaybird and Firebird 3.0^] for details.
+
+Firebird 4 is not formally supported in Jaybird 2.2.x, although connecting and most functionality will work. 
+We suggest that you use Jaybird 3.x or higher for Firebird 4. 
+Support for newer data types like `DECFLOAT` and `NUMERIC`/`DECIMAL` with precision higher than 18 will be introduced in Jaybird 4.
+
+The Type 2 and embedded server JDBC drivers require the appropriate JNI library. 
+Precompiled JNI binaries for Windows and Linux platforms are shipped in the default installation, other platforms require porting/building the JNI library for that platform.
+
+[[jb22-spec]]
+==== Supported Specifications
+
+Jaybird 2.2 supports the following specifications:
+
+[width="100%",cols="1,3",options="header",]
+|=======================================================================
+|Specification |Details
+|JDBC 4.2 
+|Driver does not fully support JDBC 4.2 features, but implements large update count methods by calling the normal update count methods, and methods with `SQLType` by calling methods accepting the `java.sql.Types` integer value. Supports new `java.time` classes with some caveats.
+
+|JDBC 4.1
+|Driver implements all JDBC 4.1 methods added to existing interfaces.
+The driver explicitly supports `closeOnCompletion`, most other methods introduced with JDBC 4.1 throw `SQLFeatureNotSupportedException`.
+
+|JDBC 4.0
+|Driver implements all JDBC 4.0 interfaces and supports exception chaining.
+
+|JCA 1.0 
+|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related interfaces. 
+CCI interfaces are not supported.
+Although Jaybird 2.2 depends on the JCA 1.5 classes, JCA 1.5 compatibility is currently not guaranteed.
+
+|JTA
+|The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
+framework and a `javax.sql.XADataSource` implementation.
+
+|=======================================================================
+
+[[jb22-distribution]]
+==== Distribution
+
+The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. 
+Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.
+
+[[jb22-distribution-package]]
+===== Distribution package
+
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
+
+The following files can be found in the distribution package:
+
+[cols="2,5",options="header",]
+|=======================================================================
+|File name |Description
+| `jaybird-{jaybird22-full-version}.jar` 
+| An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
+management classes.
+
+| `jaybird-full-{jaybird22-full-version}.jar` 
+| Same as above, but including the JCA 1.5 dependency.
+
+| `lib/antlr-runtime-3.4.jar`
+| Optional dependency, required if you want to use `getGeneratedKeys` support
+
+| `lib/connector-api-1.5.jar`
+| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
+
+| `lib/log4j-core.jar` 
+| Optional dependency, core Log4J classes that provide logging.
+
+|=======================================================================
+
+Jaybird 2.2 has compile-time and run-time dependencies on the JCA 1.5 classes. 
+Additionally, if Log4J classes are found in the class path, it is possible to enable extensive logging inside the driver. 
+If the ANTLR runtime classes are absent, the generated keys functionality will not be available.
+
+Native dependencies (required only for Type 2 and Embedded):
+
+* `jaybird22.dll` – Windows 32-bit
+* `jaybird22_x64.dll` – Windows 64-bit
+* `libjaybird22.so` – Linux 32-bit (x86)
+* `libjaybird22_x64.so` – Linux 64-bit (AMD/Intel 64)
+
+The Windows DLLs have been built with Microsoft Visual Studio 2010 SP1. 
+To use the native or embedded driver, you will need to install the Microsoft Visual C++ 2010 SP 1 redistributable available at:
+
+    x86: http://www.microsoft.com/download/en/details.aspx?id=8328
+    x64: http://www.microsoft.com/download/en/details.aspx?id=13523
+
+
+[[jb22-distribution-maven]]
+===== Maven
+
+Alternatively, you can use maven to automatically download Jaybird and its dependencies.
+
+Jaybird 2.2 is available from Maven central:
+
+Groupid: `org.firebirdsql.jdbc`, +
+Artifactid: `jaybird-jdkXX` (where `XX` is `16`, `17` or `18`). +
+Version: `{jaybird22-full-version}`
+
+For example:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird-jdk18</artifactId>
+  <version>{jaybird22-full-version}</version>
+</dependency>
+----
+
+The Maven definition of Jaybird depends on antlr-runtime by default.
+
+If your application is deployed to a Java EE application server, you will need to
+exclude the `javax.resource:connector-api` dependency, and add it as a provided 
+dependency:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird-jdk18</artifactId>
+  <version>{jaybird22-full-version}</version>
+  <exclusions>
+    <exclusion>
+      <groupId>javax.resource</groupId>
+      <artifactId>connector-api</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>javax.resource</groupId>
+  <artifactId>connector-api</artifactId>
+  <version>1.5</version>
+  <scope>provided</scope>
+</dependency>
+----

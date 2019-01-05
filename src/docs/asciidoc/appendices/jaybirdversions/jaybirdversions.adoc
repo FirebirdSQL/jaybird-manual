@@ -1,0 +1,7 @@
+[[jaybirdversions]]
+[appendix]
+== Jaybird versions
+
+This appendix lists the distribution files and supported specifications of earlier Jaybird versions.
+
+include::jaybird22.adoc[]
