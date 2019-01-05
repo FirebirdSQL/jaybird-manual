@@ -6385,11 +6385,11 @@ Treat it as informational only, as clients can report fake information.
 <dl>
 <dt class="hdlist1"><code>process_id</code></dt>
 <dd>
-<p>Process id</p>
+<p>Process id (alias: <code>processId</code> (<em class="since">Jaybird 3</em>))</p>
 </dd>
 <dt class="hdlist1"><code>process_name</code></dt>
 <dd>
-<p>Process name</p>
+<p>Process name (alias: <code>processName</code> (<em class="since">Jaybird 3</em>))</p>
 </dd>
 </dl>
 </div>
@@ -6831,13 +6831,19 @@ Support for generated key retrieval with batch execution was introduced in Jaybi
 <h2 id="connectionproperties"><a class="anchor" href="#connectionproperties"></a>Appendix A: Extended connection properties</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>TODO</strong> List is not complete and may miss some aliases</p>
+<p>Jaybird has a number of connection properties that can be used to configure a connection.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird allows using arbitrary Database Parameters Block entries. The
-current Firebird API has almost 70 DPB parameters, however only few of
-them are interesting for regular users. This chapter provides a list of
-most useful DPB parameters and short explanation to each of them.</p>
+<p>This appendix provides a list of most connection properties and a short explanation to each of them.
+The properties listed below are usable as JDBC connection properties.</p>
+</div>
+<div class="paragraph">
+<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code> or <code>false</code>, but also without a value, or with an empty value.
+For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>A subset of these properties is also exposed in the <code>javax.sql.DataSource</code> implementations in Jaybird.
+When using data sources, unexposed properties can be set using <code>setNonStandardProperty</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -6846,31 +6852,31 @@ most useful DPB parameters and short explanation to each of them.</p>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">DPB Parameter + alias(es)</th>
+<th class="tableblock halign-left valign-top">Connection property (+ aliases)</th>
 <th class="tableblock halign-left valign-top">Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_user_name</code><br>
-<code>user_name</code>, <code>user</code></p>
+<p><code>user</code><br>
+<code>userName</code>, <code>user_name</code>, <code>isc_dpb_user_name</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the user for the connection.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_password</code><br>
-<code>password</code></p>
+<p><code>password</code><br>
+<code>isc_dpb_password</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Password corresponding to the specified user.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_lc_ctype</code><br>
-<code>lc_ctype</code>, <code>encoding</code></p>
+<p><code>encoding</code><br>
+<code>lc_ctype</code>, <code>isc_dpb_lc_ctype</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Character encoding for the connection.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
 For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.</p></td>
 </tr>
@@ -6879,100 +6885,247 @@ For a list of the available encodings see <a href="#_available_encodings">Availa
 <p><code>charSet</code><br>
 <code>localEncoding</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Character set for the connection.
-Similar to the previous property, however instead of Firebird-specific name allows using standard Java encoding name.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Character set for the connection using Java character set name.
+Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_num_buffers</code><br>
-<code>num_buffers</code></p>
+<p><code>num_buffers</code><br>
+<code>isc_dpb_num_buffers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of database pages that will be cached.
-Default values are 75 for ClassicServer and 2048 for SuperServer.</p></td>
+Overrides server or database default for this specific connection.
+Use with care to avoid using an excessive amount of memory.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_sql_role_name</code><br>
-<code>sql_role_name</code></p>
+<p><code>roleName</code><br>
+<code>sqlRole</code>, <code>sql_role_name</code>, <code>isc_dpb_sql_role_name</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the SQL role for the specified connection.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_sql_dialect</code><br>
-<code>sql_dialect</code></p>
+<p><code>sqlDialect</code><br>
+<code>dialect</code> (<em class="since">Jaybird 3</em>), <code>sql_dialect</code>, <code>isc_dpb_sql_dialect</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">SQL dialect, by default 3, can be 1, 2 and 3.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_set_db_readonly</code><br>
-<code>set_db_readonly</code></p>
+<p><code>authPlugins</code><br>
+<code>auth_plugin_list</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the database into read-only state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em>).
+Specifies the list of authentication plugins to try.
+<strong>TODO</strong> Improve documentation (define reference section based on Jaybird 4 release notes)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_set_db_sql_dialect</code><br>
-<code>set_db_sql_dialect</code></p>
+<p><code>wireCrypt</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the SQL dialect of the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
+Allowed values: <code>DEFAULT</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DISABLED</code>.
+Configures Firebird 3 wire encryption behaviour.
+See <a href="#ref-wirecrypt">Wire encryption support</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_set_db_charset</code><br>
-<code>set_db_charset</code></p>
+<p><code>dbCryptConfig</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the default character set of the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
+Configures Firebird 3 database encryption support.
+See <a href="#ref-dbcrypt">Database encryption support</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_socket_buffer_size</code><br>
-<code>socket_buffer_size</code></p>
+<p><code>process_id</code><br>
+<code>processId</code> (<em class="since">Jaybird 3</em>), <code>isc_dpb_process_id</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific parameter.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the process id reported to Firebird.
+See <a href="#ref-processinfo">Process information</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>process_name</code><br>
+<code>processName</code> (<em class="since">Jaybird 3</em>), <code>isc_dpb_process_name</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the process name reported to Firebird.
+See <a href="#ref-processinfo">Process information</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>defaultHoldable</code><br>
+<code>defaultResultSetHoldable</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
+Set result sets to be holdable by default.
+A workaround for applications with incorrect assumptions on result sets in auto-commit mode.
+See <a href="#ref-defaultholdable">Default holdable result sets</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>useFirebirdAutocommit</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 2.2.9</em>).
+Boolean property.
+Enable experimental feature to use Firebird auto-commit for JDBC auto-commit mode.
+See <a href="#ref-firebirdautocommit">Firebird auto commit mode (experimental)</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>generatedKeysEnabled</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em>).
+Configure generated keys support behaviour.
+<strong>TODO</strong> Improve documentation (define reference section based on Jaybird 4 release notes)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>socketBufferSize</code><br>
+<code>socket_buffer_size</code>, <code>isc_dpb_socket_buffer_size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Tells Jaybird Type 4 driver the size of the socket buffer.
 Should be used on the systems where default socket buffer provided by JVM is not correct.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_blob_buffer_size</code><br>
-<code>blob_buffer_size</code></p>
+<p><code>blobBufferSize</code><br>
+<code>blob_buffer_size</code>, <code>isc_dpb_blob_buffer_size</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific parameter.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Tells the driver the size of the buffer that is used to transfer BLOB content.
 It is recommended to keep the value equal to <code>n * &lt;database page size&gt;</code> (and preferably also socket buffer size).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_use_stream_blobs</code><br>
-<code>use_stream_blobs</code></p>
+<p><code>soTimeout</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific parameter.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Socket blocking timeout in milliseconds.
+Only has effect on Type 4 (pure Java) connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>connectTimeout</code><br>
+<code>connect_timeout</code>, <code>isc_dpb_connect_timeout</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connect timeout in seconds (<em class="since">Jaybird 2.2.2</em>).
+For the Java wire protocol the connect timeout will detect unreachable hosts.
+In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
+This means that – for the native protocol – the connect timeout will not detect unreachable hosts within the timeout.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>columnLabelForName</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 2.2.1</em>).
+Boolean property.
+Set property to <code>true</code> for backwards compatible behaviour (<code>getColumnName()</code> returns the column label).
+Don&#8217;t set the property or set it to <code>false</code> for JDBC-compliant behaviour (recommended).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>useStreamBlobs</code><br>
+<code>use_stream_blobs</code>, <code>isc_dpb_use_stream_blobs</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
 Tells the driver to create stream BLOBs.
 By default segmented BLOBs are created.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_paranoia_mode</code><br>
-<code>paranoia_mode</code></p>
+<p><code>octetsAsBytes</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific parameter.
-Tells the driver to throw exception in the situation not covered by the specification.
-For example, the JDBC specification does not say whether it is allowed to call the <code>close()</code> method twice.
-In "paranoia mode" Jaybird will throw an exception while in normal mode it will simply ignore the second call.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
+Unused since Jaybird 3, will be removed in Jaybird 4.
+Makes <code>ResultSet.getObject</code> for <code>(VAR)CHAR CHARACTER SET OCTETS</code> return <code>byte[]</code> instead of <code>String</code>.
+Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC <code>(VAR)BINARY</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>isc_dpb_use_standard_udf</code><br>
-<code>use_standard_udf</code></p>
+<p><code>useStandarUdf</code><br>
+<code>use_standard_udf</code>, <code>isc_dpb_use_standard_udf</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific parameter.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls.
-See "<a href="#jdbcescape">Supported JDBC Scalar Functions</a>" for more details.</p></td>
+With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
+See <a href="#jdbcescape">Supported JDBC Scalar Functions</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>timestampUsesLocalTimezone</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
+Changes how <code>getTime</code>/<code>getTimestamp</code> methods accepting a <code>java.util.Calendar</code> apply the calendar offset in calculations.
+<strong>TODO</strong>: Improve documentation on exact effect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>set_db_readonly</code><br>
+<code>isc_dpb_set_db_readonly</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean property.
+Set the database into read-only state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>set_db_sql_dialect</code><br>
+ <code>isc_dpb_set_db_sql_dialect</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the SQL dialect of the database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>set_db_charset</code><br>
+<code>isc_dpb_set_db_charset</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the default character set of the database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>paranoia_mode</code><br>
+<code>isc_dpb_paranoia_mode</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
+Unused since Jaybird 2.2.
+Tells the driver to throw exception in situations not covered by the specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>noResultSetTracking</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Boolean property.
+Unused since at least Jaybird 2.2, will be removed in Jaybird 4.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>useTranslation</code><br>
+<code>mapping_path</code>, <code>isc_dpb_mapping_path</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Deprecated, will be removed in Jaybird 4.
+This allows mapping of characters to be overridden (see <code>translation/hpux.properties</code> in Jaybird jar for example).
+Value is the path to a mapping properties file.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird&#8217;s <code>org.firebirdsql.gds.ISCConstants</code>).
+The current Firebird API has almost 90 DPB parameters, however only few of them are interesting for regular users.
+If a DPB item called <code>isc_dpb_XXX</code> exists, then Jaybird allows these to be specified as <code>isc_dpb_XXX</code> and <code>XXX</code>.
+By default properties are mapped as string DPB items.
+If a DPB item requires another type, it will need to be explicitly defined in Jaybird.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -9196,7 +9349,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-01-05 12:38:04 UTC
+Last updated 2019-01-05 14:22:47 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
