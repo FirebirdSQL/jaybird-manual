@@ -1,7 +1,8 @@
 [[ref-generatedkeys]]
 === Generated keys retrieval
 
-[.since]_Jaybird 2.2_
+[.since]_Jaybird 2.2_ +
+[.since]_Firebird 2.0_
 
 Jaybird 2.2 added support for the `getGeneratedKeys()` JDBC feature for `Statement` and `PreparedStatement`.
 This feature can be used to retrieve the generated ids (and other columns) from DML statements.

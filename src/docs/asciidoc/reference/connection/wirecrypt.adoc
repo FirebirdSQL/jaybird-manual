@@ -1,7 +1,8 @@
 [[ref-wirecrypt]]
 === Wire encryption support
 
-[.since]_Jaybird 3.0.4_
+[.since]_Jaybird 3.0.4_ +
+[.since]_Firebird 3_
 
 Firebird 3 and higher have support for encrypting the data sent over the network.
 This _wire encryption_ is configured using the connection property `wireCrypt`, with the following (case-insensitive) values:

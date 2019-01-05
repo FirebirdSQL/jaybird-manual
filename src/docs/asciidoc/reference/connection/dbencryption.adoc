@@ -1,7 +1,8 @@
 [[ref-dbcrypt]]
 === Database encryption support
 
-[.since]_Jaybird 3.0.4_
+[.since]_Jaybird 3.0.4_ +
+[.since]_Firebird 3_
 
 Jaybird 3.0.4 added support for Firebird 3 database encryption callbacks in the pure Java implementation of the version 13 protocol. 
 
