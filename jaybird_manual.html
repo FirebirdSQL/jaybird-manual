@@ -496,7 +496,7 @@ em.since::before{content:"Since: ";font-weight:bold;}
 <li><a href="#_jdbc_transactions">6.1. JDBC transactions</a></li>
 <li><a href="#_auto_commit_mode">6.2. Auto-commit mode</a></li>
 <li><a href="#_read_only_transactions">6.3. Read-only Transactions</a></li>
-<li><a href="#_transaction_isolation_levels">6.4. Transaction Isolation Levels</a></li>
+<li><a href="#transactions-isolation-levels">6.4. Transaction Isolation Levels</a></li>
 <li><a href="#transactions-savepoints">6.5. Savepoints</a></li>
 <li><a href="#transactions-tpb">6.6. Transaction Parameter Buffer</a></li>
 <li><a href="#transactions-table-reservation">6.7. Table Reservation</a></li>
@@ -540,7 +540,11 @@ em.since::before{content:"Since: ";font-weight:bold;}
 </li>
 <li><a href="#_appendices">Appendices</a>
 <ul class="sectlevel1">
-<li><a href="#connectionproperties">Appendix A: Extended connection properties</a></li>
+<li><a href="#connectionproperties">Appendix A: Extended connection properties</a>
+<ul class="sectlevel2">
+<li><a href="#connectionproperties-isolation-levels">A.1. Transaction isolation levels</a></li>
+</ul>
+</li>
 <li><a href="#datatypeconversion">Appendix B: Data Type Conversion Table</a>
 <ul class="sectlevel2">
 <li><a href="#_mapping_between_jdbc_firebird_and_java_types">B.1. Mapping between JDBC, Firebird and Java Types</a></li>
@@ -4228,7 +4232,7 @@ read-only.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_transaction_isolation_levels"><a class="anchor" href="#_transaction_isolation_levels"></a>6.4. Transaction Isolation Levels</h3>
+<h3 id="transactions-isolation-levels"><a class="anchor" href="#transactions-isolation-levels"></a>6.4. Transaction Isolation Levels</h3>
 <div class="paragraph">
 <p>The ANSI/ISO SQL standard defines four such levels, each next one weaker
 than the previous. These isolation levels are also used in the JDBC
@@ -6838,7 +6842,8 @@ Support for generated key retrieval with batch execution was introduced in Jaybi
 The properties listed below are usable as JDBC connection properties.</p>
 </div>
 <div class="paragraph">
-<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code> or <code>false</code>, but also without a value, or with an empty value.
+<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, but also without a value, or with an empty value.
+The default for these properties is always <code>false</code>.
 For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value <code>true</code>.</p>
 </div>
 <div class="paragraph">
@@ -6876,9 +6881,12 @@ When using data sources, unexposed properties can be set using <code>setNonStand
 <p><code>encoding</code><br>
 <code>lc_ctype</code>, <code>isc_dpb_lc_ctype</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Character encoding for the connection using the Firebird character set name.
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
-For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.</p></td>
+For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.<br>
+Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
@@ -6888,15 +6896,6 @@ For a list of the available encodings see <a href="#_available_encodings">Availa
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Character set for the connection using Java character set name.
 Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><code>num_buffers</code><br>
-<code>isc_dpb_num_buffers</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of database pages that will be cached.
-Overrides server or database default for this specific connection.
-Use with care to avoid using an excessive amount of memory.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
@@ -6910,7 +6909,10 @@ Use with care to avoid using an excessive amount of memory.</p></td>
 <p><code>sqlDialect</code><br>
 <code>dialect</code> (<em class="since">Jaybird 3</em>), <code>sql_dialect</code>, <code>isc_dpb_sql_dialect</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL dialect, by default 3, can be 1, 2 and 3.</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>SQL dialect, can be 1, 2 and 3.<br>
+Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
@@ -6925,10 +6927,13 @@ Specifies the list of authentication plugins to try.
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><code>wireCrypt</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
-Allowed values: <code>DEFAULT</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DISABLED</code>.
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
+Allowed values: <code>DEFAULT</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DISABLED</code> (case insensitive).
 Configures Firebird 3 wire encryption behaviour.
-See <a href="#ref-wirecrypt">Wire encryption support</a> for more information.</p></td>
+See <a href="#ref-wirecrypt">Wire encryption support</a> for more information.<br>
+Default: <code>DEFAULT</code>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
@@ -6981,6 +6986,19 @@ See <a href="#ref-firebirdautocommit">Firebird auto commit mode (experimental)</
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em>).
 Configure generated keys support behaviour.
 <strong>TODO</strong> Improve documentation (define reference section based on Jaybird 4 release notes)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>isolation</code><br>
+<code>defaultIsolation</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Jaybird specific property.
+Specify the default transaction isolation level.
+Accepted values are: <code>TRANSACTION_NONE</code>, <code>TRANSACTION_READ_UNCOMMITTED</code>, <code>TRANSACTION_READ_COMMITTED</code>, <code>TRANSACTION_REPEATABLE_READ</code>, <code>TRANSACTION_SERIALIZABLE</code> (case sensitive).
+Although <code>TRANSACTION_NONE</code> and <code>TRANSACTION_READ_UNCOMMITTED</code> are allowed values, these behave the same as <code>TRANSACTION_READ_COMMITTED</code>.<br>
+Default: <code>TRANSACTION_READ_COMMITTED</code></p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
@@ -7069,6 +7087,15 @@ Changes how <code>getTime</code>/<code>getTimestamp</code> methods accepting a <
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>num_buffers</code><br>
+<code>isc_dpb_num_buffers</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of database pages that will be cached.
+Overrides server or database default for this specific connection.
+Use with care to avoid using an excessive amount of memory.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><code>set_db_readonly</code><br>
 <code>isc_dpb_set_db_readonly</code></p>
 </div></div></td>
@@ -7125,6 +7152,53 @@ The current Firebird API has almost 90 DPB parameters, however only few of them 
 If a DPB item called <code>isc_dpb_XXX</code> exists, then Jaybird allows these to be specified as <code>isc_dpb_XXX</code> and <code>XXX</code>.
 By default properties are mapped as string DPB items.
 If a DPB item requires another type, it will need to be explicitly defined in Jaybird.</p>
+</div>
+<div class="sect2">
+<h3 id="connectionproperties-isolation-levels"><a class="anchor" href="#connectionproperties-isolation-levels"></a>A.1. Transaction isolation levels</h3>
+<div class="paragraph">
+<p>It is possible to redefine the transaction isolation levels through connection properties.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Connection property</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>TRANSACTION_READ_COMMITTED</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specify the definition of transaction isolation level <code>READ_COMMITTED</code>.<br>
+Default: <code>isc_tpb_read_committed,isc_tpb_rec_version,isc_tpb_write,isc_tpb_wait</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>TRANSACTION_REPEATABLE_READ</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specify the definition of transaction isolation level <code>REPEATABLE_READ</code>.<br>
+Default: <code>isc_tpb_concurrency,isc_tpb_write,isc_tpb_wait</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>TRANSACTION_SERIALIZABLE</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specify the definition of transaction isolation level <code>TRANSACTION_SERIALIZABLE</code>.<br>
+Default: <code>isc_tpb_consistency,isc_tpb_write,isc_tpb_wait</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For data sources, this feature is exposed using a definition properties file and the <code>setTpbMapping</code> property.
+See <a href="#transactions-isolation-levels">Transaction Isolation Levels</a> for more information.</p>
+</div>
 </div>
 </div>
 </div>
@@ -9349,7 +9423,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-01-05 14:22:47 UTC
+Last updated 2019-01-05 17:33:07 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
