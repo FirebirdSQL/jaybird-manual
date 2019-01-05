@@ -1,6 +1,7 @@
 = Jaybird 3.0 JDBC Driver Java Programmer's Manual
 Roman Rokytskyy;Mark Rotteveel
 :doctype: book
+:sectanchors:
 :forceinclude: true
 :keywords: jaybird, firebird, jdbc, sql, database, java
 :source-highlighter: prettify
