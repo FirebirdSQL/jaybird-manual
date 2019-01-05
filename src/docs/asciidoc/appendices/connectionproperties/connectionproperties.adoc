@@ -2,90 +2,195 @@
 [appendix]
 == Extended connection properties
 
-*TODO* List is not complete and may miss some aliases
+Jaybird has a number of connection properties that can be used to configure a connection.
 
-Jaybird allows using arbitrary Database Parameters Block entries. The
-current Firebird API has almost 70 DPB parameters, however only few of
-them are interesting for regular users. This chapter provides a list of
-most useful DPB parameters and short explanation to each of them.
+This appendix provides a list of most connection properties and a short explanation to each of them.
+The properties listed below are usable as JDBC connection properties.
+
+The properties marked as _boolean property_ can be included in the JDBC URL with values `true` or `false`, but also without a value, or with an empty value.
+For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value `true`.
+
+A subset of these properties is also exposed in the `javax.sql.DataSource` implementations in Jaybird.
+When using data sources, unexposed properties can be set using `setNonStandardProperty`.
 
 [cols="1,2",options="header",]
 |=======================================================================
-|DPB Parameter + alias(es) |Explanation
+|Connection property (+ aliases) 
+|Explanation
 
-a|`isc_dpb_user_name` +
-`user_name`, `user` 
+a|`user` +
+`userName`, `user_name`, `isc_dpb_user_name`
 |Name of the user for the connection.
 
-a|`isc_dpb_password` +
-`password` 
+a|`password` +
+`isc_dpb_password`
 |Password corresponding to the specified user.
 
-a|`isc_dpb_lc_ctype` +
-`lc_ctype`, `encoding`
-|Character encoding for the connection.
+a|`encoding` +
+`lc_ctype`, `isc_dpb_lc_ctype`
+|Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
 For a list of the available encodings see <<Available Encodings>>.
 
 a|`charSet` +
 `localEncoding`
-|Character set for the connection.
-Similar to the previous property, however instead of Firebird-specific name allows using standard Java encoding name.
+|Jaybird specific property.
+Character set for the connection using Java character set name.
+Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
 
-a|`isc_dpb_num_buffers` +
-`num_buffers`
+a|`num_buffers` +
+`isc_dpb_num_buffers`
 |Number of database pages that will be cached.
-Default values are 75 for ClassicServer and 2048 for SuperServer.
+Overrides server or database default for this specific connection.
+Use with care to avoid using an excessive amount of memory.
 
-a|`isc_dpb_sql_role_name` +
-`sql_role_name`
+a|`roleName` +
+`sqlRole`, `sql_role_name`, `isc_dpb_sql_role_name`
 |Name of the SQL role for the specified connection.
 
-a|`isc_dpb_sql_dialect` +
-`sql_dialect`
+a|`sqlDialect` +
+`dialect` ([.since]_Jaybird 3_), `sql_dialect`, `isc_dpb_sql_dialect`
 |SQL dialect, by default 3, can be 1, 2 and 3.
 
-a|`isc_dpb_set_db_readonly` +
-`set_db_readonly` 
-|Set the database into read-only state.
+a|`authPlugins` +
+`auth_plugin_list`
+|Jaybird specific property ([.since]_Jaybird 4_).
+Specifies the list of authentication plugins to try.
+**TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
 
-a|`isc_dpb_set_db_sql_dialect` +
-`set_db_sql_dialect` 
-|Set the SQL dialect of the database.
+a|`wireCrypt`
+|Jaybird specific property ([.since]_Jaybird 3.0.4_).
+Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED`.
+Configures Firebird 3 wire encryption behaviour.
+See <<ref-wirecrypt>> for more information.
 
-a|`isc_dpb_set_db_charset` +
-`set_db_charset` 
-|Set the default character set of the database.
+a|`dbCryptConfig`
+|Jaybird specific property ([.since]_Jaybird 3.0.4_).
+Configures Firebird 3 database encryption support.
+See <<ref-dbcrypt>> for more information.
 
-a|`isc_dpb_socket_buffer_size` +
-`socket_buffer_size` 
-|Jaybird specific parameter. 
+a|`process_id` +
+`processId` ([.since]_Jaybird 3_), `isc_dpb_process_id`
+|Specifies the process id reported to Firebird.
+See <<ref-processinfo>> for more information.
+
+a|`process_name` +
+`processName` ([.since]_Jaybird 3_), `isc_dpb_process_name`
+|Specifies the process name reported to Firebird.
+See <<ref-processinfo>> for more information.
+
+a|`defaultHoldable` +
+`defaultResultSetHoldable`
+|Jaybird specific property.
+Boolean property.
+Set result sets to be holdable by default.
+A workaround for applications with incorrect assumptions on result sets in auto-commit mode.
+See <<ref-defaultholdable>> for more information.
+
+a|`useFirebirdAutocommit`
+|Jaybird specific property ([.since]_Jaybird 2.2.9_).
+Boolean property.
+Enable experimental feature to use Firebird auto-commit for JDBC auto-commit mode.
+See <<ref-firebirdautocommit>> for more information.
+
+a|`generatedKeysEnabled`
+|Jaybird specific property ([.since]_Jaybird 4_).
+Configure generated keys support behaviour.
+**TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
+
+a|`socketBufferSize` +
+`socket_buffer_size`, `isc_dpb_socket_buffer_size`
+|Jaybird specific property. 
 Tells Jaybird Type 4 driver the size of the socket buffer.
 Should be used on the systems where default socket buffer provided by JVM is not correct.
 
-a|`isc_dpb_blob_buffer_size` +
-`blob_buffer_size` 
-|Jaybird specific parameter. 
+a|`blobBufferSize` +
+`blob_buffer_size`, `isc_dpb_blob_buffer_size`
+|Jaybird specific property. 
 Tells the driver the size of the buffer that is used to transfer BLOB content.
 It is recommended to keep the value equal to `n * <database page size>` (and preferably also socket buffer size).
 
-a|`isc_dpb_use_stream_blobs` +
-`use_stream_blobs` 
-|Jaybird specific parameter. 
+a|`soTimeout`
+|Jaybird specific property.
+Socket blocking timeout in milliseconds.
+Only has effect on Type 4 (pure Java) connections.
+
+a|`connectTimeout` +
+`connect_timeout`, `isc_dpb_connect_timeout`
+|Connect timeout in seconds ([.since]_Jaybird 2.2.2_).
+For the Java wire protocol the connect timeout will detect unreachable hosts. 
+In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol. 
+This means that – for the native protocol – the connect timeout will not detect unreachable hosts within the timeout.
+
+a|`columnLabelForName`
+|Jaybird specific property ([.since]_Jaybird 2.2.1_).
+Boolean property.
+Set property to `true` for backwards compatible behaviour (`getColumnName()` returns the column label). 
+Don't set the property or set it to `false` for JDBC-compliant behaviour (recommended).
+
+a|`useStreamBlobs` +
+`use_stream_blobs`, `isc_dpb_use_stream_blobs` 
+|Jaybird specific property. 
+Boolean property.
 Tells the driver to create stream BLOBs. 
 By default segmented BLOBs are created.
 
-a|`isc_dpb_paranoia_mode` +
-`paranoia_mode` 
-|Jaybird specific parameter.
-Tells the driver to throw exception in the situation not covered by the specification.
-For example, the JDBC specification does not say whether it is allowed to call the `close()` method twice.
-In "paranoia mode" Jaybird will throw an exception while in normal mode it will simply ignore the second call.
+a|`octetsAsBytes`
+|Jaybird specific property.
+Boolean property.
+Unused since Jaybird 3, will be removed in Jaybird 4.
+Makes `ResultSet.getObject` for `(VAR)CHAR CHARACTER SET OCTETS` return `byte[]` instead of `String`.
+Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC `(VAR)BINARY`).
 
-a|`isc_dpb_use_standard_udf` +
-`use_standard_udf` 
-|Jaybird specific parameter. 
+a|`useStandarUdf` +
+`use_standard_udf`, `isc_dpb_use_standard_udf`
+|Jaybird specific property.
+Boolean property. 
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
-See "<<Supported JDBC Scalar Functions>>" for more details.
+With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
+See <<jdbcescape>> for more information.
+
+a|`timestampUsesLocalTimezone` 
+|Jaybird specific property.
+Boolean property.
+Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations. 
+**TODO**: Improve documentation on exact effect
+
+a|`set_db_readonly` +
+`isc_dpb_set_db_readonly`
+|Boolean property.
+Set the database into read-only state.
+
+a|`set_db_sql_dialect` +
+ `isc_dpb_set_db_sql_dialect`
+|Set the SQL dialect of the database.
+
+a|`set_db_charset` +
+`isc_dpb_set_db_charset`
+|Set the default character set of the database.
+
+a|`paranoia_mode` +
+`isc_dpb_paranoia_mode`
+|Jaybird specific property. 
+Boolean property.
+Unused since Jaybird 2.2.
+Tells the driver to throw exception in situations not covered by the specification.
+
+a|`noResultSetTracking`
+|Jaybird specific property.
+Boolean property.
+Unused since at least Jaybird 2.2, will be removed in Jaybird 4.
+
+a|`useTranslation` +
+`mapping_path`, `isc_dpb_mapping_path`
+|Jaybird specific property.
+Deprecated, will be removed in Jaybird 4.
+This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
+Value is the path to a mapping properties file.
 |=======================================================================
 
+In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `org.firebirdsql.gds.ISCConstants`).
+The current Firebird API has almost 90 DPB parameters, however only few of them are interesting for regular users.
+If a DPB item called `isc_dpb_XXX` exists, then Jaybird allows these to be specified as `isc_dpb_XXX` and `XXX`. 
+By default properties are mapped as string DPB items. 
+If a DPB item requires another type, it will need to be explicitly defined in Jaybird.

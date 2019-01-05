@@ -33,8 +33,8 @@ This is the preferred method because you only need to specify it once.
 
 It is also possible to specify the process information through connection properties:
 
-`process_id`:: Process id
-`process_name`:: Process name
+`process_id`:: Process id (alias: `processId` ([.since]_Jaybird 3_))
+`process_name`:: Process name (alias: `processName` ([.since]_Jaybird 3_))
 
 These properties are not exposed on the data sources.
 To set on data sources, use `setNonStandardProperty`.
