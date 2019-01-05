@@ -524,6 +524,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#ref-dbcrypt">9.2. Database encryption support</a></li>
 <li><a href="#ref-defaultholdable">9.3. Default holdable result sets</a></li>
 <li><a href="#ref-firebirdautocommit">9.4. Firebird auto commit mode (experimental)</a></li>
+<li><a href="#ref-processinfo">9.5. Process information</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -6077,7 +6078,8 @@ System.out.println(
 <div class="sect2">
 <h3 id="ref-wirecrypt">9.1. Wire encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em></p>
+<p><em class="since">Jaybird 3.0.4</em><br>
+<em class="since">Firebird 3</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3 and higher have support for encrypting the data sent over the network.
@@ -6152,7 +6154,8 @@ If you want to develop such a plugin, contact us on the Firebird-Java mailing li
 <div class="sect2">
 <h3 id="ref-dbcrypt">9.2. Database encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em></p>
+<p><em class="since">Jaybird 3.0.4</em><br>
+<em class="since">Firebird 3</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 3.0.4 added support for Firebird 3 database encryption callbacks in the pure Java implementation of the version 13 protocol.</p>
@@ -6309,6 +6312,84 @@ Note that any open blobs will be closed client- and server-side (until this is i
 Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-processinfo">9.5. Process information</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.1.6</em><br>
+<em class="since">Firebird 2.1</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 2.1 introduced the <code>MON$ATTACHMENTS</code> table.
+This table includes the columns <code>MON$REMOTE_PID</code> and <code>MON$REMOTE_PROCESS</code> which report the process id and process name of the connected process.</p>
+</div>
+<div class="paragraph">
+<p>By default, Jaybird does not provide this information.
+This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just 'java' (or similar), which is not very useful.</p>
+</div>
+<div class="paragraph">
+<p>Since Firebird 3, the <code>MON$ATTACHMENTS</code> table also includes the column <code>MON$CLIENT_VERSION</code>.
+Jaybird (<em class="since">Jaybird 3.0</em>) will report its full version (eg <code>Jaybird 3.0.5-JDK_1.8</code>).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Do not use this information for security decisions.
+Treat it as informational only, as clients can report fake information.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>It is possible to specify the process name and process id in two ways:</p>
+</div>
+<div class="sect3">
+<h4 id="ref-processinfo-systemprop">9.5.1. System properties for process information</h4>
+<div class="paragraph">
+<p>It is possible to specify the process information through Java system properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.pid</code></dt>
+<dd>
+<p>Process id</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.processName</code></dt>
+<dd>
+<p>Process name</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This is the preferred method because you only need to specify it once.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-processinfo-connprops">9.5.2. Connection properties for process information</h4>
+<div class="paragraph">
+<p>It is also possible to specify the process information through connection properties:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>process_id</code></dt>
+<dd>
+<p>Process id</p>
+</dd>
+<dt class="hdlist1"><code>process_name</code></dt>
+<dd>
+<p>Process name</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These properties are not exposed on the data sources.
+To set on data sources, use <code>setNonStandardProperty</code>.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6317,7 +6398,8 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 <div class="sect2">
 <h3 id="ref-generatedkeys">10.1. Generated keys retrieval</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 2.2</em></p>
+<p><em class="since">Jaybird 2.2</em><br>
+<em class="since">Firebird 2.0</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 2.2 added support for the <code>getGeneratedKeys()</code> JDBC feature for <code>Statement</code> and <code>PreparedStatement</code>.
@@ -8881,7 +8963,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-12-08 18:43:16 UTC
+Last updated 2019-01-05 10:07:31 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
