@@ -7,7 +7,8 @@ Jaybird has a number of connection properties that can be used to configure a co
 This appendix provides a list of most connection properties and a short explanation to each of them.
 The properties listed below are usable as JDBC connection properties.
 
-The properties marked as _boolean property_ can be included in the JDBC URL with values `true` or `false`, but also without a value, or with an empty value.
+The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, but also without a value, or with an empty value.
+The default for these properties is always `false`.
 For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value `true`.
 
 A subset of these properties is also exposed in the `javax.sql.DataSource` implementations in Jaybird.
@@ -28,9 +29,10 @@ a|`password` +
 
 a|`encoding` +
 `lc_ctype`, `isc_dpb_lc_ctype`
-|Character encoding for the connection using the Firebird character set name.
+a|Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
-For a list of the available encodings see <<Available Encodings>>.
+For a list of the available encodings see <<Available Encodings>>. +
+Default: `NONE` (unless `charSet` is specified).
 
 a|`charSet` +
 `localEncoding`
@@ -38,19 +40,14 @@ a|`charSet` +
 Character set for the connection using Java character set name.
 Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
 
-a|`num_buffers` +
-`isc_dpb_num_buffers`
-|Number of database pages that will be cached.
-Overrides server or database default for this specific connection.
-Use with care to avoid using an excessive amount of memory.
-
 a|`roleName` +
 `sqlRole`, `sql_role_name`, `isc_dpb_sql_role_name`
 |Name of the SQL role for the specified connection.
 
 a|`sqlDialect` +
 `dialect` ([.since]_Jaybird 3_), `sql_dialect`, `isc_dpb_sql_dialect`
-|SQL dialect, by default 3, can be 1, 2 and 3.
+a|SQL dialect, can be 1, 2 and 3. +
+Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)
 
 a|`authPlugins` +
 `auth_plugin_list`
@@ -59,10 +56,11 @@ Specifies the list of authentication plugins to try.
 **TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
 
 a|`wireCrypt`
-|Jaybird specific property ([.since]_Jaybird 3.0.4_).
+a|Jaybird specific property ([.since]_Jaybird 3.0.4_).
 Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED`.
 Configures Firebird 3 wire encryption behaviour.
-See <<ref-wirecrypt>> for more information.
+See <<ref-wirecrypt>> for more information. +
+Default: `DEFAULT`.
 
 a|`dbCryptConfig`
 |Jaybird specific property ([.since]_Jaybird 3.0.4_).
@@ -155,6 +153,12 @@ a|`timestampUsesLocalTimezone`
 Boolean property.
 Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations. 
 **TODO**: Improve documentation on exact effect
+
+a|`num_buffers` +
+`isc_dpb_num_buffers`
+|Number of database pages that will be cached.
+Overrides server or database default for this specific connection.
+Use with care to avoid using an excessive amount of memory.
 
 a|`set_db_readonly` +
 `isc_dpb_set_db_readonly`
