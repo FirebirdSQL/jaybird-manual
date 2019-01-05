@@ -1,0 +1,40 @@
+[[ref-processinfo]]
+=== Process information
+
+[.since]_Jaybird 2.1.6_ +
+[.since]_Firebird 2.1_
+
+Firebird 2.1 introduced the `MON$ATTACHMENTS` table.
+This table includes the columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` which report the process id and process name of the connected process.
+
+By default, Jaybird does not provide this information.
+This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just 'java' (or similar), which is not very useful.
+
+Since Firebird 3, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`. 
+Jaybird ([.since]_Jaybird 3.0_) will report its full version (eg `Jaybird 3.0.5-JDK_1.8`).
+
+WARNING: Do not use this information for security decisions. 
+Treat it as informational only, as clients can report fake information.
+
+It is possible to specify the process name and process id in two ways:
+
+[[ref-processinfo-systemprop]]
+==== System properties for process information
+
+It is possible to specify the process information through Java system properties:
+
+`org.firebirdsql.jdbc.pid`:: Process id
+`org.firebirdsql.jdbc.processName`:: Process name
+
+This is the preferred method because you only need to specify it once.
+
+[[ref-processinfo-connprops]]
+==== Connection properties for process information
+
+It is also possible to specify the process information through connection properties:
+
+`process_id`:: Process id
+`process_name`:: Process name
+
+These properties are not exposed on the data sources.
+To set on data sources, use `setNonStandardProperty`.

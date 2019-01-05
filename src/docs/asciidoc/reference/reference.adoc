@@ -12,6 +12,8 @@ include::connection/defaultholdable.adoc[]
 
 include::connection/firebirdautocommit.adoc[]
 
+include::connection/processinfo.adoc[]
+
 // TODO client-info
 
 [[ref-statement]]
