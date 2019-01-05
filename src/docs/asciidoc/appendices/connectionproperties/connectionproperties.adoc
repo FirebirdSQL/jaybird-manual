@@ -57,7 +57,7 @@ Specifies the list of authentication plugins to try.
 
 a|`wireCrypt`
 a|Jaybird specific property ([.since]_Jaybird 3.0.4_).
-Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED`.
+Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED` (case insensitive).
 Configures Firebird 3 wire encryption behaviour.
 See <<ref-wirecrypt>> for more information. +
 Default: `DEFAULT`.
@@ -95,6 +95,14 @@ a|`generatedKeysEnabled`
 |Jaybird specific property ([.since]_Jaybird 4_).
 Configure generated keys support behaviour.
 **TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
+
+a|`isolation` +
+`defaultIsolation`
+a|Jaybird specific property.
+Specify the default transaction isolation level.
+Accepted values are: `TRANSACTION_NONE`, `TRANSACTION_READ_UNCOMMITTED`, `TRANSACTION_READ_COMMITTED`, `TRANSACTION_REPEATABLE_READ`, `TRANSACTION_SERIALIZABLE` (case sensitive). 
+Although `TRANSACTION_NONE` and `TRANSACTION_READ_UNCOMMITTED` are allowed values, these behave the same as `TRANSACTION_READ_COMMITTED`. +
+Default: `TRANSACTION_READ_COMMITTED`
 
 a|`socketBufferSize` +
 `socket_buffer_size`, `isc_dpb_socket_buffer_size`
@@ -198,3 +206,29 @@ The current Firebird API has almost 90 DPB parameters, however only few of them 
 If a DPB item called `isc_dpb_XXX` exists, then Jaybird allows these to be specified as `isc_dpb_XXX` and `XXX`. 
 By default properties are mapped as string DPB items. 
 If a DPB item requires another type, it will need to be explicitly defined in Jaybird.
+
+[[connectionproperties-isolation-levels]]
+=== Transaction isolation levels
+
+It is possible to redefine the transaction isolation levels through connection properties.
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Connection property
+|Explanation
+
+a|`TRANSACTION_READ_COMMITTED`
+a|Specify the definition of transaction isolation level `READ_COMMITTED`. +
+Default: `isc_tpb_read_committed,isc_tpb_rec_version,isc_tpb_write,isc_tpb_wait`
+
+a|`TRANSACTION_REPEATABLE_READ`
+|Specify the definition of transaction isolation level `REPEATABLE_READ`. +
+Default: `isc_tpb_concurrency,isc_tpb_write,isc_tpb_wait`
+
+a|`TRANSACTION_SERIALIZABLE`
+|Specify the definition of transaction isolation level `TRANSACTION_SERIALIZABLE`. +
+Default: `isc_tpb_consistency,isc_tpb_write,isc_tpb_wait`
+|=======================================================================
+
+For data sources, this feature is exposed using a definition properties file and the `setTpbMapping` property.
+See <<transactions-isolation-levels>> for more information.

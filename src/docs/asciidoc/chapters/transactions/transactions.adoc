@@ -204,6 +204,7 @@ the transaction, use the `setReadOnly` method of the
 `java.sql.Connection` object to tell the server that the transaction is
 read-only.
 
+[[transactions-isolation-levels]]
 === Transaction Isolation Levels
 
 The ANSI/ISO SQL standard defines four such levels, each next one weaker
@@ -280,6 +281,8 @@ is placed on the whole table. See section "<<transactions-table-reservation>>" f
 The default mapping is specified in the `isc_tpb_mapping.properties` file that
 can be found in the Jaybird archive and can be overridden via the
 connection properties
+
+// TODO tpbMapping doesn't seem to be exposed in JDBC connection properties
 
 * via the `tpbMapping` property that specifies the path to the
 `PropertiesResourceBundle` with the new mapping of the isolation level;
