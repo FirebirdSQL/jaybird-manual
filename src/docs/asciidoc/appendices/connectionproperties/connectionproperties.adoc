@@ -141,6 +141,12 @@ Boolean property.
 Tells the driver to create stream BLOBs. 
 By default segmented BLOBs are created.
 
+a|`ignoreProcedureType`
+|Jaybird specific property ([.since]_Jaybird 3.0.6_).
+Boolean property.
+Set property to `true` to disable usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
+**TODO** Improve documentation (define reference section based on Jaybird 3.0.6 release notes)
+
 a|`octetsAsBytes`
 |Jaybird specific property.
 Boolean property.
