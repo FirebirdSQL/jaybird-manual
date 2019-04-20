@@ -15,7 +15,7 @@ contact(s): roman@rokytskyy.de).
 
 Contributor(s): Mark Rotteveel.
 
-Portions created by Mark Rotteveel are Copyright (C) 2014-2018. All
+Portions created by Mark Rotteveel are Copyright (C) 2014-2019. All
 Rights Reserved. (Contributor contact(s):
 mrotteveel@users.sourceforge.net).
 
