@@ -430,6 +430,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <style>
 em.since{font-size:smaller;}
 em.since::before{content:"Since: ";font-weight:bold;}
+em.until{font-size:smaller;}
+em.until::before{content:"Removed in: ";font-weight:bold;}
 </style>
 </head>
 <body class="book toc2 toc-left">
@@ -545,43 +547,51 @@ em.since::before{content:"Since: ";font-weight:bold;}
 <li><a href="#connectionproperties-isolation-levels">A.1. Transaction isolation levels</a></li>
 </ul>
 </li>
-<li><a href="#datatypeconversion">Appendix B: Data Type Conversion Table</a>
+<li><a href="#systemproperties">Appendix B: System properties</a>
 <ul class="sectlevel2">
-<li><a href="#_mapping_between_jdbc_firebird_and_java_types">B.1. Mapping between JDBC, Firebird and Java Types</a></li>
-<li><a href="#_data_type_conversions">B.2. Data Type Conversions</a></li>
+<li><a href="#systemproperties-logging">B.1. Logging</a></li>
+<li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
+<li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
+<li><a href="#systemproperties-other">B.4. Other properties</a></li>
 </ul>
 </li>
-<li><a href="#poolproperties">Appendix C: Connection Pool Properties</a>
+<li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
 <ul class="sectlevel2">
-<li><a href="#_standard_jdbc_properties">C.1. Standard JDBC Properties</a></li>
-<li><a href="#_pool_properties">C.2. Pool Properties</a></li>
-<li><a href="#_runtime_pool_properties">C.3. Runtime Pool Properties</a></li>
-<li><a href="#_firebird_specific_properties">C.4. Firebird-specific Properties</a></li>
-<li><a href="#_non_standard_parameters">C.5. Non-standard parameters</a></li>
+<li><a href="#_mapping_between_jdbc_firebird_and_java_types">C.1. Mapping between JDBC, Firebird and Java Types</a></li>
+<li><a href="#_data_type_conversions">C.2. Data Type Conversions</a></li>
 </ul>
 </li>
-<li><a href="#characterencoding">Appendix D: Character Encodings</a>
+<li><a href="#poolproperties">Appendix D: Connection Pool Properties</a>
 <ul class="sectlevel2">
-<li><a href="#_encodings_types">D.1. Encodings Types</a></li>
-<li><a href="#_encodings_in_java">D.2. Encodings in Java</a></li>
-<li><a href="#_available_encodings">D.3. Available Encodings</a></li>
+<li><a href="#_standard_jdbc_properties">D.1. Standard JDBC Properties</a></li>
+<li><a href="#_pool_properties">D.2. Pool Properties</a></li>
+<li><a href="#_runtime_pool_properties">D.3. Runtime Pool Properties</a></li>
+<li><a href="#_firebird_specific_properties">D.4. Firebird-specific Properties</a></li>
+<li><a href="#_non_standard_parameters">D.5. Non-standard parameters</a></li>
 </ul>
 </li>
-<li><a href="#jdbcescape">Appendix E: Supported JDBC Scalar Functions</a>
+<li><a href="#characterencoding">Appendix E: Character Encodings</a>
 <ul class="sectlevel2">
-<li><a href="#_numeric_functions">E.1. Numeric Functions</a></li>
-<li><a href="#_string_functions">E.2. String Functions</a></li>
-<li><a href="#_time_and_date_functions">E.3. Time and Date Functions</a></li>
-<li><a href="#_system_functions">E.4. System Functions</a></li>
-<li><a href="#_conversion_functions">E.5. Conversion Functions</a></li>
+<li><a href="#_encodings_types">E.1. Encodings Types</a></li>
+<li><a href="#_encodings_in_java">E.2. Encodings in Java</a></li>
+<li><a href="#_available_encodings">E.3. Available Encodings</a></li>
 </ul>
 </li>
-<li><a href="#jaybirdversions">Appendix F: Jaybird versions</a>
+<li><a href="#jdbcescape">Appendix F: Supported JDBC Scalar Functions</a>
 <ul class="sectlevel2">
-<li><a href="#jb22">F.1. Jaybird 2.2</a></li>
+<li><a href="#_numeric_functions">F.1. Numeric Functions</a></li>
+<li><a href="#_string_functions">F.2. String Functions</a></li>
+<li><a href="#_time_and_date_functions">F.3. Time and Date Functions</a></li>
+<li><a href="#_system_functions">F.4. System Functions</a></li>
+<li><a href="#_conversion_functions">F.5. Conversion Functions</a></li>
 </ul>
 </li>
-<li><a href="#license">Appendix G: License</a></li>
+<li><a href="#jaybirdversions">Appendix G: Jaybird versions</a>
+<ul class="sectlevel2">
+<li><a href="#jb22">G.1. Jaybird 2.2</a></li>
+</ul>
+</li>
+<li><a href="#license">Appendix H: License</a></li>
 </ul>
 </li>
 </ul>
@@ -1117,10 +1127,9 @@ the documentation of Firebird server.</p>
 <p>The format of the path depends on the platform of the Firebird server.</p>
 </div>
 <div class="paragraph">
-<p>On Windows, the path must include the drive letter and path, for example <code>c:/database/employee.fdb</code>, which
-points to the employee database that can be found in a root directory of drive C:. Java (and
-Firebird) allows you to use either <code>/</code> or <code>\</code> (escaped as <code>\\</code>) as path separator on the Windows
-platform. On Unix and Linux platform, you can use only <code>/</code> as the path separator.</p>
+<p>On Windows, the path must include the drive letter and path, for example <code>c:/database/employee.fdb</code>, which points to the employee database that can be found in the <code>database</code> directory of drive <code>C:`</code>.
+Java (and Firebird) supports either <code>/</code> or <code>\</code> (escaped as <code>\\</code>) as path separator on the Windows platform.
+On Unix and Linux platform, you can use only <code>/</code> as the path separator.</p>
 </div>
 <div class="paragraph">
 <p>On Unix platforms the path must include the root, as the path is otherwise interpreted relative to
@@ -1136,9 +1145,8 @@ and instead use an alias.</p>
 <div class="sect3">
 <h4 id="_specifying_extended_properties"><a class="anchor" href="#_specifying_extended_properties"></a>2.1.1. Specifying extended properties</h4>
 <div class="paragraph">
-<p>What if we want to specify additional connection parameters, for example a client
-encoding? The JDBC API provides a method that allows one to specify additional connection
-properties:</p>
+<p>What if we want to specify additional connection parameters, for example a client encoding?
+The JDBC API provides a method to specify additional connection properties:</p>
 </div>
 <div class="listingblock">
 <div class="title">Obtaining JDBC connection with additional connection properties</div>
@@ -7212,10 +7220,137 @@ See <a href="#transactions-isolation-levels">Transaction Isolation Levels</a> fo
 </div>
 </div>
 <div class="sect1">
-<h2 id="datatypeconversion"><a class="anchor" href="#datatypeconversion"></a>Appendix B: Data Type Conversion Table</h2>
+<h2 id="systemproperties"><a class="anchor" href="#systemproperties"></a>Appendix B: System properties</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Jaybird provides a number of system properties to control global behaviour of Jaybird.</p>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-logging"><a class="anchor" href="#systemproperties-logging"></a>B.1. Logging</h3>
+<div class="paragraph">
+<p>To configure logging, the following system properties are available</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.fallbackConsoleLogger</code></dt>
+<dd>
+<p><em class="until">Jaybird 3</em>
+Set to true for fallback to log to console if log4j is not used</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.useLog4j</code></dt>
+<dd>
+<p><em class="until">Jaybird 3</em>
+Set to true to attempt to use log4j (if on classpath) for logging</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.forceConsoleLogger</code></dt>
+<dd>
+<p><em class="since">Jaybird 3</em>
+Set to true to force logging to console (<code>System.out</code> for info, <code>System.err</code> for warn, error and fatal) instead of default <code>java.util.logging</code></p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.disableLogging</code></dt>
+<dd>
+<p><em class="since">Jaybird 3</em>
+Set to true to disable logging</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.loggerImplementation</code></dt>
+<dd>
+<p><em class="since">Jaybird 3</em>
+Fully-qualified name of <code>org.firebirdsql.logging.Logger</code> implementation to use for logging</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These properties need to be set before Jaybird is loaded and used.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-processinfo"><a class="anchor" href="#systemproperties-processinfo"></a>B.2. Process information</h3>
+<div class="paragraph">
+<p>For Firebird 2.1 and higher, Jaybird can provide Firebird with process information.
+This information can be specified in connection properties, or globally using the following system properties.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.processName</code></dt>
+<dd>
+<p><em class="since">Jaybird 2.2</em>
+Process name to send to Firebird</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.pid</code></dt>
+<dd>
+<p><em class="since">Jaybird 2.2</em>
+PID to send to Firebird (must be a valid integer)</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The property values are read for each connect, so the value can be changed at any time.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-charset"><a class="anchor" href="#systemproperties-charset"></a>B.3. Character set defaults</h3>
+<div class="paragraph">
+<p>The following system properties control character set behaviour for connections.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultConnectionEncoding</code></dt>
+<dd>
+<p><em class="since">Jaybird 3</em>
+Firebird character set name to use as connection character set when no explicit connection character set is configured (defaults to <code>NONE</code> when not set)</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.requireConnectionEncoding</code></dt>
+<dd>
+<p><em class="since">Jaybird 3.0.2</em>
+Set to true to disallow connections without an explicit connection character set.
+This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectionEncoding</code> has been set.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The property values are read for each connect, so the value can be changed at any time.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.4. Other properties</h3>
+<div class="paragraph">
+<p>The following system properties control other global behaviour of Jaybird.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jna.syncWrapNativeLibrary</code></dt>
+<dd>
+<p><em class="since">Jaybird 3</em>
+Set to true to add a synchronization proxy around the native client library.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.datatypeCoderCacheSize</code></dt>
+<dd>
+<p><em class="since">Jaybird 4</em>
+Integer value for the number of encoding specific data type coders cached (default and minimum is 1).
+Setting to a higher value may improve performance, most common use case is connection character set <code>NONE</code> with a database that uses more than one character set for its columns.
+Jaybird will log a warning (<em>"Cleared encoding specific datatype coder cache [..]"</em>) when the cache size was exceeded.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.nativeResourceShutdownDisabled</code></dt>
+<dd>
+<p><em class="since">Jaybird 4</em>
+Set to true to disable automatic shutdown and unload of native libraries and other native resources.
+Normally you should only use this if the automatic shutdown misbehaves and causes application errors.
+If you need to set this to true, we&#8217;d appreciate it if you post a message to the Firebird-Java list with details on why you needed to enable this, so we can improve or fix this feature.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These properties need to be set before Jaybird is loaded and used.
+Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, but a native library will usually be loaded once.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="datatypeconversion"><a class="anchor" href="#datatypeconversion"></a>Appendix C: Data Type Conversion Table</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_mapping_between_jdbc_firebird_and_java_types"><a class="anchor" href="#_mapping_between_jdbc_firebird_and_java_types"></a>B.1. Mapping between JDBC, Firebird and Java Types</h3>
+<h3 id="_mapping_between_jdbc_firebird_and_java_types"><a class="anchor" href="#_mapping_between_jdbc_firebird_and_java_types"></a>C.1. Mapping between JDBC, Firebird and Java Types</h3>
 <div class="paragraph">
 <p>The below table describes a mapping of the JDBC data types defined in
 <code>java.sql.Types</code> class to the Firebird data types. Also, for each JDBC
@@ -7320,7 +7455,7 @@ method is provided.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_data_type_conversions"><a class="anchor" href="#_data_type_conversions"></a>B.2. Data Type Conversions</h3>
+<h3 id="_data_type_conversions"><a class="anchor" href="#_data_type_conversions"></a>C.2. Data Type Conversions</h3>
 <div class="paragraph">
 <p>This table specifies the compatible conversions between the Firebird and
 Java types.</p>
@@ -7601,7 +7736,7 @@ Java types.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="poolproperties"><a class="anchor" href="#poolproperties"></a>Appendix C: Connection Pool Properties</h2>
+<h2 id="poolproperties"><a class="anchor" href="#poolproperties"></a>Appendix D: Connection Pool Properties</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This chapter contains the list of properties of the
@@ -7627,7 +7762,7 @@ Either use the connection pool provided by your application server, or use a thi
 </table>
 </div>
 <div class="sect2">
-<h3 id="_standard_jdbc_properties"><a class="anchor" href="#_standard_jdbc_properties"></a>C.1. Standard JDBC Properties</h3>
+<h3 id="_standard_jdbc_properties"><a class="anchor" href="#_standard_jdbc_properties"></a>D.1. Standard JDBC Properties</h3>
 <div class="paragraph">
 <p>This group contains properties defined in the JDBC specification and
 should be standard to all connection pools.</p>
@@ -7667,7 +7802,7 @@ When the application requests more statements than can be kept in the pool, Jayb
 </table>
 </div>
 <div class="sect2">
-<h3 id="_pool_properties"><a class="anchor" href="#_pool_properties"></a>C.2. Pool Properties</h3>
+<h3 id="_pool_properties"><a class="anchor" href="#_pool_properties"></a>D.2. Pool Properties</h3>
 <div class="paragraph">
 <p>This group of properties are specific to the Jaybird implementation of
 the connection pooling classes.</p>
@@ -7741,7 +7876,7 @@ One of:</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_runtime_pool_properties"><a class="anchor" href="#_runtime_pool_properties"></a>C.3. Runtime Pool Properties</h3>
+<h3 id="_runtime_pool_properties"><a class="anchor" href="#_runtime_pool_properties"></a>D.3. Runtime Pool Properties</h3>
 <div class="paragraph">
 <p>This group contains read-only properties that provide information about the state of the pool.</p>
 </div>
@@ -7775,7 +7910,7 @@ At the pool creation – 0, after obtaining first connection – between <code>m
 </table>
 </div>
 <div class="sect2">
-<h3 id="_firebird_specific_properties"><a class="anchor" href="#_firebird_specific_properties"></a>C.4. Firebird-specific Properties</h3>
+<h3 id="_firebird_specific_properties"><a class="anchor" href="#_firebird_specific_properties"></a>D.4. Firebird-specific Properties</h3>
 <div class="paragraph">
 <p>This group contains properties that specify parameters of the
 connections that are obtained from this data source. Commonly used
@@ -7861,7 +7996,7 @@ See Firebird documentation for more information.</p></td>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_non_standard_parameters"><a class="anchor" href="#_non_standard_parameters"></a>C.5. Non-standard parameters</h3>
+<h3 id="_non_standard_parameters"><a class="anchor" href="#_non_standard_parameters"></a>D.5. Non-standard parameters</h3>
 <div class="paragraph">
 <p>Many of the above mentioned Firebird parameters have have a
 corresponding DPB entry. However, not every DPB entry has a
@@ -7945,7 +8080,7 @@ sql_dialect=3</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="characterencoding"><a class="anchor" href="#characterencoding"></a>Appendix D: Character Encodings</h2>
+<h2 id="characterencoding"><a class="anchor" href="#characterencoding"></a>Appendix E: Character Encodings</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Character encodings and their correct use with Firebird RDBMS from Java
@@ -7954,7 +8089,7 @@ can be formulated by just a few rules. This appendix provides
 information on this topic.</p>
 </div>
 <div class="sect2">
-<h3 id="_encodings_types"><a class="anchor" href="#_encodings_types"></a>D.1. Encodings Types</h3>
+<h3 id="_encodings_types"><a class="anchor" href="#_encodings_types"></a>E.1. Encodings Types</h3>
 <div class="paragraph">
 <p>Firebird uses character encodings in two different areas:</p>
 </div>
@@ -8014,7 +8149,7 @@ these two rules for translation.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_encodings_in_java"><a class="anchor" href="#_encodings_in_java"></a>D.2. Encodings in Java</h3>
+<h3 id="_encodings_in_java"><a class="anchor" href="#_encodings_in_java"></a>E.2. Encodings in Java</h3>
 <div class="paragraph">
 <p>Java programming language is based on the Unicode character set and uses
 the UTF-16 encoding, in which each character is represented by one or
@@ -8044,7 +8179,7 @@ driver properly supports Firebird 2.0 since version
 2.1.0<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnote_21" title="View footnote.">21</a>]</sup>.</p>
 </div>
 <div class="sect3">
-<h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>D.2.1. The UTF8 character set</h4>
+<h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
 <div class="paragraph">
 <p>Software developer must ensure two things to enable use of Unicode
 characters in the database and the application:</p>
@@ -8123,7 +8258,7 @@ roudtrips to the server to fetch data.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_none_character_set"><a class="anchor" href="#_the_none_character_set"></a>D.2.2. The NONE character set</h4>
+<h4 id="_the_none_character_set"><a class="anchor" href="#_the_none_character_set"></a>E.2.2. The NONE character set</h4>
 <div class="paragraph">
 <p><strong>TODO</strong> Document changes in behavior introduced in Jaybird 3</p>
 </div>
@@ -8209,7 +8344,7 @@ when used incorrectly, one can easily trash the content of the database.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_available_encodings"><a class="anchor" href="#_available_encodings"></a>D.3. Available Encodings</h3>
+<h3 id="_available_encodings"><a class="anchor" href="#_available_encodings"></a>E.3. Available Encodings</h3>
 <div class="paragraph">
 <p>The below table lists the available character encodings in the default
 Firebird distribution and their mapping to the Java ones:</p>
@@ -8484,7 +8619,7 @@ since FB 2.0)</p></td>
 </div>
 </div>
 <div class="sect1">
-<h2 id="jdbcescape"><a class="anchor" href="#jdbcescape"></a>Appendix E: Supported JDBC Scalar Functions</h2>
+<h2 id="jdbcescape"><a class="anchor" href="#jdbcescape"></a>Appendix F: Supported JDBC Scalar Functions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>TODO</strong> Needs updating with support improved in Jaybird 3 and 4</p>
@@ -8511,7 +8646,7 @@ JDBC function calls into the corresponding calls of the UDF functions.</p>
 corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 </div>
 <div class="sect2">
-<h3 id="_numeric_functions"><a class="anchor" href="#_numeric_functions"></a>E.1. Numeric Functions</h3>
+<h3 id="_numeric_functions"><a class="anchor" href="#_numeric_functions"></a>F.1. Numeric Functions</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 25%;">
@@ -8681,7 +8816,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_string_functions"><a class="anchor" href="#_string_functions"></a>E.2. String Functions</h3>
+<h3 id="_string_functions"><a class="anchor" href="#_string_functions"></a>F.2. String Functions</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 25%;">
@@ -8837,7 +8972,7 @@ uppercase.</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_time_and_date_functions"><a class="anchor" href="#_time_and_date_functions"></a>E.3. Time and Date Functions</h3>
+<h3 id="_time_and_date_functions"><a class="anchor" href="#_time_and_date_functions"></a>F.3. Time and Date Functions</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 25%;">
@@ -8979,7 +9114,7 @@ the year in <code>date</code></p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_system_functions"><a class="anchor" href="#_system_functions"></a>E.4. System Functions</h3>
+<h3 id="_system_functions"><a class="anchor" href="#_system_functions"></a>F.4. System Functions</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 25%;">
@@ -9022,7 +9157,7 @@ the year in <code>date</code></p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_conversion_functions"><a class="anchor" href="#_conversion_functions"></a>E.5. Conversion Functions</h3>
+<h3 id="_conversion_functions"><a class="anchor" href="#_conversion_functions"></a>F.5. Conversion Functions</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 25%;">
@@ -9097,15 +9232,15 @@ following SQL types:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="jaybirdversions"><a class="anchor" href="#jaybirdversions"></a>Appendix F: Jaybird versions</h2>
+<h2 id="jaybirdversions"><a class="anchor" href="#jaybirdversions"></a>Appendix G: Jaybird versions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This appendix lists the distribution files and supported specifications of earlier Jaybird versions.</p>
 </div>
 <div class="sect2">
-<h3 id="jb22"><a class="anchor" href="#jb22"></a>F.1. Jaybird 2.2</h3>
+<h3 id="jb22"><a class="anchor" href="#jb22"></a>G.1. Jaybird 2.2</h3>
 <div class="sect3">
-<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>F.1.1. Java support</h4>
+<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>G.1.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Java 6 (JDBC 4.0), Java 7 (JDBC 4.1) and Java 8 (JDBC 4.2).
 Java 5 support was dropped in Jaybird 2.2.8.</p>
@@ -9116,7 +9251,7 @@ This guarantees a stable module name for Jaybird, and allows for future modulari
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>F.1.2. Firebird support</h4>
+<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>G.1.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Firebird 1.0 and higher, but is only tested with Firebird 2.5 and 3.0.</p>
 </div>
@@ -9134,7 +9269,7 @@ Precompiled JNI binaries for Windows and Linux platforms are shipped in the defa
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>F.1.3. Supported Specifications</h4>
+<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>G.1.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports the following specifications:</p>
 </div>
@@ -9178,7 +9313,7 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>F.1.4. Distribution</h4>
+<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>G.1.4. Distribution</h4>
 <div class="paragraph">
 <p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
 Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.</p>
@@ -9321,7 +9456,7 @@ dependency:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="license"><a class="anchor" href="#license"></a>Appendix G: License</h2>
+<h2 id="license"><a class="anchor" href="#license"></a>Appendix H: License</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The contents of this Documentation are subject to the Public
@@ -9432,7 +9567,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-06 15:35:10 UTC
+Last updated 2019-04-20 18:52:35 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
