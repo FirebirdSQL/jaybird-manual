@@ -117,10 +117,9 @@ the documentation of Firebird server.
 
 The format of the path depends on the platform of the Firebird server. 
 
-On Windows, the path must include the drive letter and path, for example `c:/database/employee.fdb`, which
-points to the employee database that can be found in a root directory of drive C:. Java (and 
-Firebird) allows you to use either `/` or `\` (escaped as `\\`) as path separator on the Windows 
-platform. On Unix and Linux platform, you can use only `/` as the path separator.
+On Windows, the path must include the drive letter and path, for example `c:/database/employee.fdb`, which points to the employee database that can be found in the `database` directory of drive `C:``. 
+Java (and Firebird) supports either `/` or `\` (escaped as `\\`) as path separator on the Windows platform. 
+On Unix and Linux platform, you can use only `/` as the path separator.
 
 On Unix platforms the path must include the root, as the path is otherwise interpreted relative to
 a server-dependent folder. Having to include the root has the effect that a database in
@@ -133,9 +132,8 @@ and instead use an alias.
 
 ==== Specifying extended properties
 
-What if we want to specify additional connection parameters, for example a client
-encoding? The JDBC API provides a method that allows one to specify additional connection 
-properties:
+What if we want to specify additional connection parameters, for example a client encoding? 
+The JDBC API provides a method to specify additional connection properties:
 
 [source,java]
 .Obtaining JDBC connection with additional connection properties
