@@ -448,12 +448,10 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <ul class="sectlevel2">
 <li><a href="#_history">1.1. History</a></li>
 <li><a href="#_jaybird_architecture">1.2. Jaybird Architecture</a></li>
-<li><a href="#_supported_servers">1.3. Supported Servers</a></li>
-<li><a href="#_supported_specifications">1.4. Supported Specifications</a></li>
-<li><a href="#distribution">1.5. Distribution</a></li>
-<li><a href="#_quality_assurance">1.6. Quality Assurance</a></li>
-<li><a href="#_useful_resources">1.7. Useful resources</a></li>
-<li><a href="#_contributing">1.8. Contributing</a></li>
+<li><a href="#distribution">1.3. Jaybird Distribution</a></li>
+<li><a href="#_quality_assurance">1.4. Quality Assurance</a></li>
+<li><a href="#_useful_resources">1.5. Useful resources</a></li>
+<li><a href="#_contributing">1.6. Contributing</a></li>
 </ul>
 </li>
 <li><a href="#user-manual">User Manual</a>
@@ -588,7 +586,8 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 </li>
 <li><a href="#jaybirdversions">Appendix G: Jaybird versions</a>
 <ul class="sectlevel2">
-<li><a href="#jb22">G.1. Jaybird 2.2</a></li>
+<li><a href="#jb3">G.1. Jaybird 3</a></li>
+<li><a href="#jb22">G.2. Jaybird 2.2</a></li>
 </ul>
 </li>
 <li><a href="#license">Appendix H: License</a></li>
@@ -638,7 +637,7 @@ driver supplies only the connection functionality.</p>
 <p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.</p>
 </div>
 <div class="paragraph">
-<p>This manual covers Jaybird 3.0 and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.</p>
+<p>This manual covers Jaybird 3 and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.</p>
 </div>
 <div class="sect2">
 <h3 id="_history"><a class="anchor" href="#_history"></a>1.1. History</h3>
@@ -688,108 +687,25 @@ backup/restore, user management, statistics gathering, etc.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_supported_servers"><a class="anchor" href="#_supported_servers"></a>1.3. Supported Servers</h3>
+<h3 id="distribution"><a class="anchor" href="#distribution"></a>1.3. Jaybird Distribution</h3>
 <div class="paragraph">
-<p>Jaybird 3.0 supports Firebird 2.0 and higher.</p>
+<p>Jaybird 3 supports Firebird 2.0 and higher.
+See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_supported_specifications"><a class="anchor" href="#_supported_specifications"></a>1.4. Supported Specifications</h3>
-<div class="paragraph">
-<p>Jaybird supports the following specifications:</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Specification</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JCA 1.5</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird provides an implementation of <code>javax.resource.spi.ManagedConnectionFactory</code> and related
-interfaces. CCI interfaces are not supported.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The driver provides an implementation of the <code>javax.transaction.xa.XAResource</code> interface via the JCA
-framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="distribution"><a class="anchor" href="#distribution"></a>1.5. Distribution</h3>
-<div class="paragraph">
-<p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. Additionally, if the antlr-runtime classes are found in the class path, it is possible to use
-generated key retrieval.</p>
-</div>
-<div class="sect3">
-<h4 id="distribution-package"><a class="anchor" href="#distribution-package"></a>1.5.1. Distribution package</h4>
 <div class="paragraph">
 <p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
 </div>
-<div class="paragraph">
-<p>The following files can be found in the distribution package:</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 28.5714%;">
-<col style="width: 71.4286%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">File name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.5.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
-management classes.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.5.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/antlr-runtime-4.7.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use <code>getGeneratedKeys</code> support</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/connector-api-1.5.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Required dependency; part of <code>jaybird-full</code>, not necessary when deploying to a Java EE application server</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-4.4.0.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, local or embedded protocols</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <div class="sect3">
-<h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.5.2. Maven</h4>
+<h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.3.1. Maven</h4>
 <div class="paragraph">
-<p>Alternatively, you can use maven to automatically download Jaybird and its
-dependencies.</p>
+<p>Alternatively, you can use maven to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 3.0 is available from Maven central:</p>
+<p>Jaybird 3 is available from Maven central:</p>
 </div>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
-Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
+Artifactid: <code>jaybird-XXX</code> (where <code>XXX</code> is <code>jdk17</code> or <code>jdk18</code>).<br>
 Version: <code>3.0.5</code></p>
 </div>
 <div class="paragraph">
@@ -853,7 +769,7 @@ releases, and provide Firebird client libraries as Maven dependencies as well.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_assurance"><a class="anchor" href="#_quality_assurance"></a>1.6. Quality Assurance</h3>
+<h3 id="_quality_assurance"><a class="anchor" href="#_quality_assurance"></a>1.4. Quality Assurance</h3>
 <div class="paragraph">
 <p>The Jaybird team uses JUnit test cases to assure the quality of the released
 driver. Also during development unit tests are extensively used. It is not
@@ -865,15 +781,15 @@ most of the driver code.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_useful_resources"><a class="anchor" href="#_useful_resources"></a>1.7. Useful resources</h3>
+<h3 id="_useful_resources"><a class="anchor" href="#_useful_resources"></a>1.5. Useful resources</h3>
 <div class="sect3">
-<h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.7.1. JDBC</h4>
+<h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.5.1. JDBC</h4>
 <div class="paragraph">
 <p>For JDBC documentation, see <a href="http://www.oracle.com/technetwork/java/javase/jdbc/index.html" class="bare" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/jdbc/index.html</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.7.2. Firebird</h4>
+<h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.5.2. Firebird</h4>
 <div class="paragraph">
 <p>General information about the Firebird database is available from the Firebird web site (<a href="https://www.firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/</a>).</p>
 </div>
@@ -884,7 +800,7 @@ of the Firebird web site.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jaybird_support"><a class="anchor" href="#_jaybird_support"></a>1.7.3. Jaybird Support</h4>
+<h4 id="_jaybird_support"><a class="anchor" href="#_jaybird_support"></a>1.5.3. Jaybird Support</h4>
 <div class="paragraph">
 <p>Support for Jaybird is available through the following channels:</p>
 </div>
@@ -917,7 +833,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributing"><a class="anchor" href="#_contributing"></a>1.8. Contributing</h3>
+<h3 id="_contributing"><a class="anchor" href="#_contributing"></a>1.6. Contributing</h3>
 <div class="paragraph">
 <p>There are several ways you can contribute to Jaybird or Firebird in general:</p>
 </div>
@@ -942,7 +858,7 @@ Firebird-devel mailing list)</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.8.1. Reporting Bugs</h4>
+<h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.6.1. Reporting Bugs</h4>
 <div class="paragraph">
 <p>The developers follow the <a href="mailto:firebird-java@yahoogroups.com">firebird-java@yahoogroups.com</a> list. Join the list and post information
 about suspected bugs. List members may be able to help out to determine if it is an actual bug,
@@ -9235,12 +9151,221 @@ following SQL types:</p>
 <h2 id="jaybirdversions"><a class="anchor" href="#jaybirdversions"></a>Appendix G: Jaybird versions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This appendix lists the distribution files and supported specifications of earlier Jaybird versions.</p>
+<p>This appendix lists the distribution files and supported specifications of recent Jaybird versions.</p>
 </div>
 <div class="sect2">
-<h3 id="jb22"><a class="anchor" href="#jb22"></a>G.1. Jaybird 2.2</h3>
+<h3 id="jb3"><a class="anchor" href="#jb3"></a>G.1. Jaybird 3</h3>
 <div class="sect3">
-<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>G.1.1. Java support</h4>
+<h4 id="jb3-java"><a class="anchor" href="#jb3-java"></a>G.1.1. Java support</h4>
+<div class="paragraph">
+<p>Jaybird 3 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 - 11 (JDBC 4.3).</p>
+</div>
+<div class="paragraph">
+<p>There are no Java 9+ specific builds, the Java 8 builds have the same source and all JDBC 4.3 related functionality.</p>
+</div>
+<div class="paragraph">
+<p>Given the limited support period for Java 9 and higher versions, we may limit support on those versions to the most recent LTS version and the latest release.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3.0 is not modularized, but since Jaybird 3.0.3, it declares the automatic module name <code>org.firebirdsql.jaybird</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jb3-firebird"><a class="anchor" href="#jb3-firebird"></a>G.1.2. Firebird support</h4>
+<div class="paragraph">
+<p>Jaybird 2.2 supports Firebird 2.0 and higher, but is only tested with Firebird 2.5, 3.0 and 4.0.</p>
+</div>
+<div class="paragraph">
+<p>Formal support for Firebird 1.x has been dropped (although in general we expect the driver to work).
+The Type 2 and embedded server JDBC drivers use JNA to access the Firebird client or embedded library.</p>
+</div>
+<div class="sect4">
+<h5 id="jb3-firebird3"><a class="anchor" href="#jb3-firebird3"></a>Notes on Firebird 3 support</h5>
+<div class="paragraph">
+<p>Jaybird 3.0.4 added support for wire protocol encryption and database encryption.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3.0 does not support the Firebird 3 zlib compression.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="jb3-firebird4"><a class="anchor" href="#jb3-firebird4"></a>Notes on Firebird 4 support</h5>
+<div class="paragraph">
+<p>Jaybird 3.0 can connect and query Firebird 4.
+Longer object names are supported.</p>
+</div>
+<div class="paragraph">
+<p>The new data types introduced in Firebird 4 are not supported.
+Support for data types like <code>DECFLOAT</code> and <code>NUMERIC</code>/<code>DECIMAL</code> with precision higher than 18 will be introduced in Jaybird 4.</p>
+</div>
+<div class="paragraph">
+<p>The Srp256 authentication plugin is supported (<em class="since">Jaybird 3.0.5</em>), but the other SrpNNN plugins are not.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3 does not support the Firebird 4 zlib compression.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jb3-spec"><a class="anchor" href="#jb3-spec"></a>G.1.3. Supported Specifications</h4>
+<div class="paragraph">
+<p>Jaybird supports the following specifications:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Specification</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird.
+It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JCA 1.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird provides an implementation of <code>javax.resource.spi.ManagedConnectionFactory</code> and related
+interfaces. CCI interfaces are not supported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The driver provides an implementation of the <code>javax.transaction.xa.XAResource</code> interface via the JCA
+framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="jb3-distribution"><a class="anchor" href="#jb3-distribution"></a>G.1.4. Distribution</h4>
+<div class="paragraph">
+<p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
+Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.</p>
+</div>
+<div class="sect4">
+<h5 id="jb3-distribution-package"><a class="anchor" href="#jb3-distribution-package"></a>Distribution package</h5>
+<div class="paragraph">
+<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
+</div>
+<div class="paragraph">
+<p>The following files can be found in the distribution package:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.5.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
+management classes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.5.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/antlr-runtime-4.7.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use <code>getGeneratedKeys</code> support</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/connector-api-1.5.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required dependency; part of <code>jaybird-full</code>, not necessary when deploying to a Java EE application server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-4.4.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, local or embedded protocols</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="jb3-distribution-maven"><a class="anchor" href="#jb3-distribution-maven"></a>Maven</h5>
+<div class="paragraph">
+<p>Alternatively, you can use maven to automatically download Jaybird and its
+dependencies.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3 is available from Maven central:</p>
+</div>
+<div class="paragraph">
+<p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
+Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
+Version: <code>3.0.5</code></p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
+  &lt;version&gt;3.0.5&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Maven definition of Jaybird depends on antlr-runtime by default.</p>
+</div>
+<div class="paragraph">
+<p>If your application is deployed to a Java EE application server, you will need to
+exclude the <code>javax.resource:connector-api</code> dependency, and add it as a provided
+dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
+  &lt;version&gt;3.0.5&lt;/version&gt;
+  &lt;exclusions&gt;
+    &lt;exclusion&gt;
+      &lt;groupId&gt;javax.resource&lt;/groupId&gt;
+      &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
+    &lt;/exclusion&gt;
+  &lt;/exclusions&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;javax.resource&lt;/groupId&gt;
+  &lt;artifactId&gt;connector-api&lt;/artifactId&gt;
+  &lt;version&gt;1.5&lt;/version&gt;
+  &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want to use Type 2 support (native, local or embedded), you need to
+explicitly include JNA as a dependency, where the version (4.4.0) is already specified by
+the Jaybird dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
+  &lt;artifactId&gt;jna&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jb22"><a class="anchor" href="#jb22"></a>G.2. Jaybird 2.2</h3>
+<div class="sect3">
+<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>G.2.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Java 6 (JDBC 4.0), Java 7 (JDBC 4.1) and Java 8 (JDBC 4.2).
 Java 5 support was dropped in Jaybird 2.2.8.</p>
@@ -9251,7 +9376,7 @@ This guarantees a stable module name for Jaybird, and allows for future modulari
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>G.1.2. Firebird support</h4>
+<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>G.2.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Firebird 1.0 and higher, but is only tested with Firebird 2.5 and 3.0.</p>
 </div>
@@ -9269,7 +9394,7 @@ Precompiled JNI binaries for Windows and Linux platforms are shipped in the defa
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>G.1.3. Supported Specifications</h4>
+<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>G.2.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports the following specifications:</p>
 </div>
@@ -9313,7 +9438,7 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>G.1.4. Distribution</h4>
+<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>G.2.4. Distribution</h4>
 <div class="paragraph">
 <p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
 Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.</p>
@@ -9339,12 +9464,12 @@ Additionally, if the antlr-runtime classes are found in the class path, it is po
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-2.2.14.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-2.2.15.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-2.2.14.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-2.2.15.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
 </tr>
 <tr>
@@ -9407,7 +9532,7 @@ x64: http://www.microsoft.com/download/en/details.aspx?id=13523</pre>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>16</code>, <code>17</code> or <code>18</code>).<br>
-Version: <code>2.2.14</code></p>
+Version: <code>2.2.15</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -9417,7 +9542,7 @@ Version: <code>2.2.14</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;2.2.14&lt;/version&gt;
+  &lt;version&gt;2.2.15&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -9434,7 +9559,7 @@ dependency:</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;2.2.14&lt;/version&gt;
+  &lt;version&gt;2.2.15&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -9475,7 +9600,7 @@ contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
 <p>Contributor(s): Mark Rotteveel.</p>
 </div>
 <div class="paragraph">
-<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2018. All
+<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2019. All
 Rights Reserved. (Contributor contact(s):
 <a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
 </div>
@@ -9567,7 +9692,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-20 18:52:35 UTC
+Last updated 2019-04-20 19:30:13 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
