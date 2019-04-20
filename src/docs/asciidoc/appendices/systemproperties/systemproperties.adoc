@@ -1,0 +1,68 @@
+[[systemproperties]]
+[appendix]
+== System properties
+
+Jaybird provides a number of system properties to control global behaviour of Jaybird.
+
+[[systemproperties-logging]]
+=== Logging
+
+To configure logging, the following system properties are available
+
+`org.firebirdsql.jdbc.fallbackConsoleLogger`:: [.until]_Jaybird 3_ 
+Set to true for fallback to log to console if log4j is not used
+`org.firebirdsql.jdbc.useLog4j`:: [.until]_Jaybird 3_ 
+Set to true to attempt to use log4j (if on classpath) for logging
+`org.firebirdsql.jdbc.forceConsoleLogger`:: [.since]_Jaybird 3_ 
+Set to true to force logging to console (`System.out` for info, `System.err` for warn, error and fatal) instead of default `java.util.logging`
+`org.firebirdsql.jdbc.disableLogging`:: [.since]_Jaybird 3_ 
+Set to true to disable logging
+`org.firebirdsql.jdbc.loggerImplementation`:: [.since]_Jaybird 3_ 
+Fully-qualified name of `org.firebirdsql.logging.Logger` implementation to use for logging
+
+These properties need to be set before Jaybird is loaded and used.
+
+[[systemproperties-processinfo]]
+=== Process information
+
+For Firebird 2.1 and higher, Jaybird can provide Firebird with process information.
+This information can be specified in connection properties, or globally using the following system properties.
+
+`org.firebirdsql.jdbc.processName`:: [.since]_Jaybird 2.2_ 
+Process name to send to Firebird
+`org.firebirdsql.jdbc.pid`:: [.since]_Jaybird 2.2_ 
+PID to send to Firebird (must be a valid integer)
+
+The property values are read for each connect, so the value can be changed at any time.
+
+[[systemproperties-charset]]
+=== Character set defaults
+
+The following system properties control character set behaviour for connections.
+
+`org.firebirdsql.jdbc.defaultConnectionEncoding`:: [.since]_Jaybird 3_ 
+Firebird character set name to use as connection character set when no explicit connection character set is configured (defaults to `NONE` when not set)
+`org.firebirdsql.jdbc.requireConnectionEncoding`:: [.since]_Jaybird 3.0.2_ 
+Set to true to disallow connections without an explicit connection character set.
+This property will have no effect if `org.firebirdsql.jdbc.defaultConnectionEncoding` has been set.
+
+The property values are read for each connect, so the value can be changed at any time.
+
+[[systemproperties-other]]
+=== Other properties
+
+The following system properties control other global behaviour of Jaybird.
+
+`org.firebirdsql.jna.syncWrapNativeLibrary`:: [.since]_Jaybird 3_ 
+Set to true to add a synchronization proxy around the native client library.
+`org.firebirdsql.datatypeCoderCacheSize`:: [.since]_Jaybird 4_ 
+Integer value for the number of encoding specific data type coders cached (default and minimum is 1). 
+Setting to a higher value may improve performance, most common use case is connection character set `NONE` with a database that uses more than one character set for its columns. 
+Jaybird will log a warning (_"Cleared encoding specific datatype coder cache [..]"_) when the cache size was exceeded.
+`org.firebirdsql.nativeResourceShutdownDisabled`:: [.since]_Jaybird 4_ 
+Set to true to disable automatic shutdown and unload of native libraries and other native resources.
+Normally you should only use this if the automatic shutdown misbehaves and causes application errors. 
+If you need to set this to true, we'd appreciate it if you post a message to the Firebird-Java list with details on why you needed to enable this, so we can improve or fix this feature.
+
+These properties need to be set before Jaybird is loaded and used.
+Technically, `org.firebirdsql.jna.syncWrapNativeLibrary` is dynamic, but a native library will usually be loaded once.
