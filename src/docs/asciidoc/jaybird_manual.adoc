@@ -11,7 +11,7 @@ Roman Rokytskyy;Mark Rotteveel
 :icons: font
 :jaybird-version: 3.0
 :jaybird-full-version: 3.0.5
-:jaybird22-full-version: 2.2.14
+:jaybird22-full-version: 2.2.15
 :min-support-firebird: 2.0
 :jna-version: 4.4.0
 :antlr-version: 4.7
