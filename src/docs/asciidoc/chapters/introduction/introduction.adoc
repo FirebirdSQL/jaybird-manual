@@ -46,75 +46,23 @@ that utilizes the Services API. Currently only calls to create and drop database
 are available in the Manager component, other class provide features for database 
 backup/restore, user management, statistics gathering, etc.
 
-=== Supported Servers
+[[distribution]]
+=== Jaybird Distribution
 
 Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher.
-
-=== Supported Specifications
-
-Jaybird supports the following specifications:
-
-[width="100%",cols="1,3",options="header",]
-|=======================================================================
-|Specification |Details
-|JDBC 4.3 
-|Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird. 
-It is not officially JDBC compliant, because we currently don't have access to the TCK.
-
-|JCA 1.5 
-|Jaybird provides an implementation of `javax.resource.spi.ManagedConnectionFactory` and related 
-interfaces. CCI interfaces are not supported.
-
-|JTA
-|The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via the JCA 
-framework and a `javax.sql.XADataSource` implementation.
-
-|=======================================================================
-
-[[distribution]]
-=== Distribution
-
-The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. Additionally, if the antlr-runtime classes are found in the class path, it is possible to use 
-generated key retrieval.
-
-[[distribution-package]]
-==== Distribution package
+See <<jaybirdversions>> for detailed information on supported Java and Firebird versions per Jaybird version.
 
 The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
-
-The following files can be found in the distribution package:
-
-[cols="2,5",options="header",]
-|=======================================================================
-|File name |Description
-| `jaybird-{jaybird-full-version}.jar` 
-| An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
-management classes.
-
-| `jaybird-full-{jaybird-full-version}.jar` 
-| Same as above, but including the JCA 1.5 dependency.
-
-| `lib/antlr-runtime-{antlr-version}.jar`
-| Optional dependency, required if you want to use `getGeneratedKeys` support
-
-| `lib/connector-api-1.5.jar`
-| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
-
-| `lib/jna-{jna-version}.jar`
-| Optional dependency, required if you want to use Type 2 native, local or embedded protocols
-
-|=======================================================================
 
 [[distribution-maven]]
 ==== Maven
 
-Alternatively, you can use maven to automatically download Jaybird and its 
-dependencies.
+Alternatively, you can use maven to automatically download Jaybird and its dependencies.
 
 Jaybird {jaybird-version} is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird-jdkXX` (where `XX` is `17` or `18`). +
+Artifactid: `jaybird-XXX` (where `XXX` is `jdk17` or `jdk18`). +
 Version: `{jaybird-full-version}`
 
 For example:

@@ -9,8 +9,9 @@ Roman Rokytskyy;Mark Rotteveel
 :toc: left
 :imagesdir: images
 :icons: font
-:jaybird-version: 3.0
+:jaybird-version: 3
 :jaybird-full-version: 3.0.5
+:jaybird3-full-version: 3.0.5
 :jaybird22-full-version: 2.2.15
 :min-support-firebird: 2.0
 :jna-version: 4.4.0
