@@ -69,3 +69,14 @@ If you need to set this to true, we'd appreciate it if you post a message to the
 
 These properties need to be set before Jaybird is loaded and used.
 Technically, `org.firebirdsql.jna.syncWrapNativeLibrary` is dynamic, but a native library will usually be loaded once.
+
+[[systemproperties-java]]
+=== Useful Java system properties
+
+The following Java system properties are relevant for Jaybird.
+
+`jdk.net.useFastTcpLoopback`:: [.since]_Firebird 3.0.2_ [.since]_Jave 8 update 60_ [.since]_Windows 8 / Windows Server 2012_
+Set to true on Windows to enable "TCP Loopback Fast Path" (`SIO_LOOPBACK_FAST_PATH` socket option). 
+"TCP Loopback Fast Path" can improve performance for localhost connections. +
+Java only has an 'all-or-nothing' support for the "TCP Loopback Fast Path", so Jaybird cannot enable this for you: you must specify this property on JVM startup. 
+This has the benefit that this works for all Jaybird versions, as long as you use Java 8 update 60 or higher (and Firebird 3.0.2 or higher).
