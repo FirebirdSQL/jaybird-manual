@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="keywords" content="jaybird, firebird, jdbc, sql, database, java">
 <meta name="author" content="Roman Rokytskyy, Mark Rotteveel">
-<title>Jaybird 3.0 JDBC Driver Java Programmer&#8217;s Manual</title>
+<title>Jaybird JDBC Driver Java Programmer&#8217;s Manual</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -436,7 +436,7 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>Jaybird 3.0 JDBC Driver Java Programmer&#8217;s Manual</h1>
+<h1>Jaybird JDBC Driver Java Programmer&#8217;s Manual</h1>
 <div class="details">
 <span id="author" class="author">Roman Rokytskyy</span><br>
 <span id="author2" class="author">Mark Rotteveel</span><br>
@@ -446,12 +446,13 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <ul class="sectlevel1">
 <li><a href="#introduction">1. Introduction</a>
 <ul class="sectlevel2">
-<li><a href="#_history">1.1. History</a></li>
-<li><a href="#_jaybird_architecture">1.2. Jaybird Architecture</a></li>
-<li><a href="#distribution">1.3. Jaybird Distribution</a></li>
-<li><a href="#_quality_assurance">1.4. Quality Assurance</a></li>
-<li><a href="#_useful_resources">1.5. Useful resources</a></li>
-<li><a href="#_contributing">1.6. Contributing</a></li>
+<li><a href="#_this_manual">1.1. This manual</a></li>
+<li><a href="#_history">1.2. History</a></li>
+<li><a href="#_jaybird_architecture">1.3. Jaybird Architecture</a></li>
+<li><a href="#distribution">1.4. Jaybird Distribution</a></li>
+<li><a href="#_quality_assurance">1.5. Quality Assurance</a></li>
+<li><a href="#_useful_resources">1.6. Useful resources</a></li>
+<li><a href="#_contributing">1.7. Contributing</a></li>
 </ul>
 </li>
 <li><a href="#user-manual">User Manual</a>
@@ -536,6 +537,11 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <li><a href="#ref-generatedkeys">10.1. Generated keys retrieval</a></li>
 </ul>
 </li>
+<li><a href="#ref-general">11. General</a>
+<ul class="sectlevel2">
+<li><a href="#ref-logging">11.1. Logging</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_appendices">Appendices</a>
@@ -551,6 +557,7 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
 <li><a href="#systemproperties-other">B.4. Other properties</a></li>
+<li><a href="#systemproperties-java">B.5. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -634,13 +641,24 @@ server manages transactions, security, and resource pooling, and the
 driver supplies only the connection functionality.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.</p>
-</div>
-<div class="paragraph">
-<p>This manual covers Jaybird 3 and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.</p>
+<p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
+The type 2 driver includes support for Firebird Embedded.</p>
 </div>
 <div class="sect2">
-<h3 id="_history"><a class="anchor" href="#_history"></a>1.1. History</h3>
+<h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
+<div class="paragraph">
+<p>This manual covers Jaybird 3 and may use Java 8 and Firebird 3 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.</p>
+</div>
+<div class="paragraph">
+<p>New or removed features are tagged with the version that introduced a feature (eg <em class="since">Jaybird 3</em>) or removed  feature (eg <em class="until">Jaybird 3</em>).
+This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3 or later, and for features available in Java/JDBC versions 8/4.2 or later.</p>
+</div>
+<div class="paragraph">
+<p>This manual may include documentation of features of Jaybird versions later than 3 to simplify manual maintenance and versioning.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_history"><a class="anchor" href="#_history"></a>1.2. History</h3>
 <div class="paragraph">
 <p>When Borland released an open-source version of the InterBase RDBMS, it included sources for a type 3 JDBC driver called InterClient.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup>
 However due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end.
@@ -649,7 +667,7 @@ This implementation became the basis for Jaybird, a pure Java driver for Firebir
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jaybird_architecture"><a class="anchor" href="#_jaybird_architecture"></a>1.2. Jaybird Architecture</h3>
+<h3 id="_jaybird_architecture"><a class="anchor" href="#_jaybird_architecture"></a>1.3. Jaybird Architecture</h3>
 <div class="paragraph">
 <p>The Jaybird driver consists of three layers, each of which is
 responsible for its part of the functionality.</p>
@@ -687,16 +705,16 @@ backup/restore, user management, statistics gathering, etc.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="distribution"><a class="anchor" href="#distribution"></a>1.3. Jaybird Distribution</h3>
+<h3 id="distribution"><a class="anchor" href="#distribution"></a>1.4. Jaybird Distribution</h3>
 <div class="paragraph">
 <p>Jaybird 3 supports Firebird 2.0 and higher.
 See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
 <div class="paragraph">
-<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
+<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/jdbc-driver/</a></p>
 </div>
 <div class="sect3">
-<h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.3.1. Maven</h4>
+<h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.4.1. Maven</h4>
 <div class="paragraph">
 <p>Alternatively, you can use maven to automatically download Jaybird and its dependencies.</p>
 </div>
@@ -769,38 +787,35 @@ releases, and provide Firebird client libraries as Maven dependencies as well.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quality_assurance"><a class="anchor" href="#_quality_assurance"></a>1.4. Quality Assurance</h3>
+<h3 id="_quality_assurance"><a class="anchor" href="#_quality_assurance"></a>1.5. Quality Assurance</h3>
 <div class="paragraph">
-<p>The Jaybird team uses JUnit test cases to assure the quality of the released
-driver. Also during development unit tests are extensively used. It is not
-allowed to commit a code to the source control until it passes all existing unit
-tests. Also each reproducible bug usually gets its own test case. This guarantees
-that a clean check out can be compiled and will not contain any previously
-discovered and fixed bug. Currently there are more than 3800 test cases covering
-most of the driver code.</p>
+<p>The Jaybird team uses JUnit test cases to assure the quality of the released driver.
+During development unit tests are extensively used.
+Committing a code change to the source control is not allowed until it passes all existing unit tests.
+Each reproducible bug usually gets its own test case.
+This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.
+Currently there are more than 3900 test cases covering most of the driver code.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_useful_resources"><a class="anchor" href="#_useful_resources"></a>1.5. Useful resources</h3>
+<h3 id="_useful_resources"><a class="anchor" href="#_useful_resources"></a>1.6. Useful resources</h3>
 <div class="sect3">
-<h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.5.1. JDBC</h4>
+<h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.6.1. JDBC</h4>
 <div class="paragraph">
 <p>For JDBC documentation, see <a href="http://www.oracle.com/technetwork/java/javase/jdbc/index.html" class="bare" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/jdbc/index.html</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.5.2. Firebird</h4>
+<h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.6.2. Firebird</h4>
 <div class="paragraph">
 <p>General information about the Firebird database is available from the Firebird web site (<a href="https://www.firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/</a>).</p>
 </div>
 <div class="paragraph">
-<p>Information about using SQL in Firebird, see the <a href="https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html" target="_blank" rel="noopener">Firebird 2.5 Language Reference</a>
-and other documents, that are available from the <a href="https://www.firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section
-of the Firebird web site.</p>
+<p>For information about using SQL in Firebird, see the <a href="https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html" target="_blank" rel="noopener">Firebird 2.5 Language Reference</a> and other documents available from the <a href="https://www.firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird web site.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_jaybird_support"><a class="anchor" href="#_jaybird_support"></a>1.5.3. Jaybird Support</h4>
+<h4 id="_jaybird_support"><a class="anchor" href="#_jaybird_support"></a>1.6.3. Jaybird Support</h4>
 <div class="paragraph">
 <p>Support for Jaybird is available through the following channels:</p>
 </div>
@@ -812,6 +827,9 @@ list <a href="mailto:firebird-java@yahoogroups.com">firebird-java@yahoogroups.co
 <div class="paragraph">
 <p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java-subscribe@yahoogroups.com">firebird-java-subscribe@yahoogroups.com</a></p>
 </div>
+</li>
+<li>
+<p>On <a href="https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html" target="_blank" rel="noopener">Jaybird Frequently Asked Questions</a>.</p>
 </li>
 <li>
 <p>On <a href="https://github.com/FirebirdSQL/jaybird/wiki/" target="_blank" rel="noopener">Jaybird wiki</a>.</p>
@@ -833,7 +851,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 </div>
 </div>
 <div class="sect2">
-<h3 id="_contributing"><a class="anchor" href="#_contributing"></a>1.6. Contributing</h3>
+<h3 id="_contributing"><a class="anchor" href="#_contributing"></a>1.7. Contributing</h3>
 <div class="paragraph">
 <p>There are several ways you can contribute to Jaybird or Firebird in general:</p>
 </div>
@@ -858,7 +876,7 @@ Firebird-devel mailing list)</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.6.1. Reporting Bugs</h4>
+<h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.7.1. Reporting Bugs</h4>
 <div class="paragraph">
 <p>The developers follow the <a href="mailto:firebird-java@yahoogroups.com">firebird-java@yahoogroups.com</a> list. Join the list and post information
 about suspected bugs. List members may be able to help out to determine if it is an actual bug,
@@ -6754,6 +6772,185 @@ Support for generated key retrieval with batch execution was introduced in Jaybi
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="ref-general"><a class="anchor" href="#ref-general"></a>11. General</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="ref-logging"><a class="anchor" href="#ref-logging"></a>11.1. Logging</h3>
+<div class="paragraph">
+<p>Jaybird logs a variety of information during its work.</p>
+</div>
+<div class="paragraph">
+<p>For logging, jaybird uses the following log levels:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Jaybird log level</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>trace</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">low-level debug information</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>debug</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debug information</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>info</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">informational messages</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>warn</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warnings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>error</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">errors</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>fatal</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">severe/fatal errors (though in general, level <em>error</em> will be used instead of <em>fatal</em>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="ref-logging-jul"><a class="anchor" href="#ref-logging-jul"></a>11.1.1. java.util.logging</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 3, logging will use <code>java.util.logging</code> by default.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird applies the following mapping for its log levels:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Jaybird log level</th>
+<th class="tableblock halign-left valign-top"><em>jul</em> log level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.trace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.FINER</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.debug</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.FINE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.info</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.INFO</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.warn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.WARNING</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.SEVERE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Logger.fatal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Level.SEVERE</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="ref-logging-disable"><a class="anchor" href="#ref-logging-disable"></a>11.1.2. Disable logging</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>To disable logging, specify system property <code>org.firebirdsql.jdbc.disableLogging</code> with value <code>true</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-logging-console"><a class="anchor" href="#ref-logging-console"></a>11.1.3. Console logging</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.2.8</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird can write its logging to the <code>System.out</code> for <em>info</em> and lower and <code>System.err</code> for <em>warn</em> and above.
+Levels <em>debug</em> and <em>trace</em> are disabled in the implementation.</p>
+</div>
+<div class="paragraph">
+<p>To enable logging console, you can set system property <code>org.firebirdsql.jdbc.forceConsoleLogger</code> (<em class="since">Jaybird 3</em>) or <code>org.firebirdsql.jdbc.fallbackConsoleLogger</code> (<em class="since">Jaybird 2.2.8</em> <em class="until">Jaybird 3</em>) to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>The Jaybird 2.2.8 <code>org.firebirdsql.jdbc.fallbackConsoleLogger</code> only logs to console if Log4j logging is not enabled or Log4j is not on the classpath.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-logging-custom"><a class="anchor" href="#ref-logging-custom"></a>11.1.4. Custom logging implementation</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 3, you can provide your own logging implementation if you don&#8217;t want to use <code>java.util.logging</code> or console logging.</p>
+</div>
+<div class="paragraph">
+<p>To provide a custom logging implementation, you need to implement interface <code>org.firebirdsql.logging.Logger</code>.
+This implementation must be public and must have a public constructor with a single String argument for the logger name.</p>
+</div>
+<div class="paragraph">
+<p>Set system property <code>org.firebirdsql.jdbc.loggerImplementation</code> with the fully-qualified name of your implementation.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">package org.example.jaybird.logging;
+
+public class CustomLogger implements org.firebirdsql.logging.Logger {
+    public CustomLogger(String name) {
+        // create the logger
+    }
+    // implementation of org.firebirdsql.logging.Logger interface
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On the Java command line, specify:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-logging-log4j1"><a class="anchor" href="#ref-logging-log4j1"></a>11.1.5. Log4j 1.x</h4>
+<div class="paragraph">
+<p><em class="until">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 2.2 and earlier can log to Log4J 1.x.
+This requires the log4j 1.x library on the classpath and system property <code>FBLog4j</code> (or <em class="since">Jaybird 2.2.8</em> <code>org.firebirdsql.jdbc.useLog4j</code>) set to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use Log4j 1.x with Jaybird 3 or higher, you will need to create your own logger implementation (see <a href="#ref-logging-custom">Custom logging implementation</a>).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 <h1 id="_appendices" class="sect0"><a class="anchor" href="#_appendices"></a>Appendices</h1>
 <div class="sect1">
 <h2 id="connectionproperties"><a class="anchor" href="#connectionproperties"></a>Appendix A: Extended connection properties</h2>
@@ -7144,19 +7341,25 @@ See <a href="#transactions-isolation-levels">Transaction Isolation Levels</a> fo
 <div class="sect2">
 <h3 id="systemproperties-logging"><a class="anchor" href="#systemproperties-logging"></a>B.1. Logging</h3>
 <div class="paragraph">
-<p>To configure logging, the following system properties are available</p>
+<p>To configure logging, the following system properties are available.
+See <a href="#ref-logging">Logging</a> for details.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.fallbackConsoleLogger</code></dt>
 <dd>
-<p><em class="until">Jaybird 3</em>
-Set to true for fallback to log to console if log4j is not used</p>
+<p><em class="since">Jaybird 2.2.8</em> <em class="until">Jaybird 3</em>
+Set to true for fallback to log to console if log4j is not used or not available</p>
 </dd>
-<dt class="hdlist1"><code>org.firebirdsql.jdbc.useLog4j</code></dt>
+<dt class="hdlist1"><code>FBLog4j</code></dt>
 <dd>
 <p><em class="until">Jaybird 3</em>
 Set to true to attempt to use log4j (if on classpath) for logging</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.useLog4j</code></dt>
+<dd>
+<p><em class="since">Jaybird 2.2.8</em> <em class="until">Jaybird 3</em>
+Alias for <code>FBLog4j</code></p>
 </dd>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.forceConsoleLogger</code></dt>
 <dd>
@@ -7258,6 +7461,24 @@ If you need to set this to true, we&#8217;d appreciate it if you post a message 
 <div class="paragraph">
 <p>These properties need to be set before Jaybird is loaded and used.
 Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, but a native library will usually be loaded once.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.5. Useful Java system properties</h3>
+<div class="paragraph">
+<p>The following Java system properties are relevant for Jaybird.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>jdk.net.useFastTcpLoopback</code></dt>
+<dd>
+<p><em class="since">Firebird 3.0.2</em> <em class="since">Jave 8 update 60</em> <em class="since">Windows 8 / Windows Server 2012</em>
+Set to true on Windows to enable "TCP Loopback Fast Path" (<code>SIO_LOOPBACK_FAST_PATH</code> socket option).
+"TCP Loopback Fast Path" can improve performance for localhost connections.<br>
+Java only has an 'all-or-nothing' support for the "TCP Loopback Fast Path", so Jaybird cannot enable this for you: you must specify this property on JVM startup.
+This has the benefit that this works for all Jaybird versions, as long as you use Java 8 update 60 or higher (and Firebird 3.0.2 or higher).</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -9692,7 +9913,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-20 19:30:13 UTC
+Last updated 2019-04-21 11:59:23 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
