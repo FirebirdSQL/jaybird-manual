@@ -12,8 +12,16 @@ server manages transactions, security, and resource pooling, and the
 driver supplies only the connection functionality.
 
 Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
+The type 2 driver includes support for Firebird Embedded.
 
-This manual covers Jaybird {jaybird-version} and may use Java 8 and Firebird 3 specific features, but most examples and information also applies to previous versions of the driver and of Java.
+=== This manual
+
+This manual covers Jaybird {jaybird-version} and may use Java 8 and Firebird 3 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
+
+New or removed features are tagged with the version that introduced a feature (eg [.since]_Jaybird 3_) or removed  feature (eg [.until]_Jaybird 3_).
+This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3 or later, and for features available in Java/JDBC versions 8/4.2 or later.
+
+This manual may include documentation of features of Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
 
 === History
 
@@ -52,7 +60,7 @@ backup/restore, user management, statistics gathering, etc.
 Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher.
 See <<jaybirdversions>> for detailed information on supported Java and Firebird versions per Jaybird version.
 
-The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/[^]
 
 [[distribution-maven]]
 ==== Maven

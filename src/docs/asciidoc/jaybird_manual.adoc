@@ -1,4 +1,4 @@
-= Jaybird 3.0 JDBC Driver Java Programmer's Manual
+= Jaybird JDBC Driver Java Programmer's Manual
 Roman Rokytskyy;Mark Rotteveel
 :doctype: book
 :docinfo:
