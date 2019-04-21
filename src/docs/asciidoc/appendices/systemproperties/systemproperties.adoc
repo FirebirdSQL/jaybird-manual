@@ -7,12 +7,15 @@ Jaybird provides a number of system properties to control global behaviour of Ja
 [[systemproperties-logging]]
 === Logging
 
-To configure logging, the following system properties are available
+To configure logging, the following system properties are available. 
+See <<ref-logging>> for details.
 
-`org.firebirdsql.jdbc.fallbackConsoleLogger`:: [.until]_Jaybird 3_ 
-Set to true for fallback to log to console if log4j is not used
-`org.firebirdsql.jdbc.useLog4j`:: [.until]_Jaybird 3_ 
+`org.firebirdsql.jdbc.fallbackConsoleLogger`:: [.since]_Jaybird 2.2.8_ [.until]_Jaybird 3_ 
+Set to true for fallback to log to console if log4j is not used or not available
+`FBLog4j`:: [.until]_Jaybird 3_
 Set to true to attempt to use log4j (if on classpath) for logging
+`org.firebirdsql.jdbc.useLog4j`:: [.since]_Jaybird 2.2.8_ [.until]_Jaybird 3_ 
+Alias for `FBLog4j`
 `org.firebirdsql.jdbc.forceConsoleLogger`:: [.since]_Jaybird 3_ 
 Set to true to force logging to console (`System.out` for info, `System.err` for warn, error and fatal) instead of default `java.util.logging`
 `org.firebirdsql.jdbc.disableLogging`:: [.since]_Jaybird 3_ 

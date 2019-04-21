@@ -28,3 +28,8 @@ include::statement/generatedkeys.adoc[]
 == Services reference
 
 ////
+
+[[ref-general]]
+== General
+
+include::general/logging.adoc[]

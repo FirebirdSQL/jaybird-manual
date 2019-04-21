@@ -1,0 +1,118 @@
+[[ref-logging]]
+=== Logging
+
+Jaybird logs a variety of information during its work.
+
+For logging, jaybird uses the following log levels:
+
+|===
+|Jaybird log level |Description
+
+|_trace_
+|low-level debug information
+
+|_debug_
+|debug information
+
+|_info_
+|informational messages
+
+|_warn_
+|warnings
+
+|_error_
+|errors
+
+|_fatal_
+|severe/fatal errors (though in general, level _error_ will be used instead of _fatal_)
+|===
+
+[[ref-logging-jul]]
+==== java.util.logging
+
+[.since]_Jaybird 3_
+
+Since Jaybird 3, logging will use `java.util.logging` by default.
+
+Jaybird applies the following mapping for its log levels:
+
+|===
+|Jaybird log level |_jul_ log level
+
+| `Logger.trace`
+| `Level.FINER`
+
+| `Logger.debug`
+| `Level.FINE`
+
+| `Logger.info`
+| `Level.INFO`
+
+| `Logger.warn`
+| `Level.WARNING`
+
+| `Logger.error`
+| `Level.SEVERE`
+
+| `Logger.fatal`
+| `Level.SEVERE`
+|===
+
+[[ref-logging-disable]]
+==== Disable logging
+
+[.since]_Jaybird 3_
+
+To disable logging, specify system property `org.firebirdsql.jdbc.disableLogging` with value `true`.
+
+[[ref-logging-console]]
+==== Console logging
+
+[.since]_Jaybird 2.2.8_
+
+Jaybird can write its logging to the `System.out` for _info_ and lower and `System.err` for _warn_ and above. 
+Levels _debug_ and _trace_ are disabled in the implementation.
+
+To enable logging console, you can set system property `org.firebirdsql.jdbc.forceConsoleLogger` ([.since]_Jaybird 3_) or `org.firebirdsql.jdbc.fallbackConsoleLogger` ([.since]_Jaybird 2.2.8_ [.until]_Jaybird 3_) to `true`.
+
+The Jaybird 2.2.8 `org.firebirdsql.jdbc.fallbackConsoleLogger` only logs to console if Log4j logging is not enabled or Log4j is not on the classpath.
+
+[[ref-logging-custom]]
+==== Custom logging implementation
+
+[.since]_Jaybird 3_
+
+Since Jaybird 3, you can provide your own logging implementation if you don't want to use `java.util.logging` or console logging.
+
+To provide a custom logging implementation, you need to implement interface `org.firebirdsql.logging.Logger`.
+This implementation must be public and must have a public constructor with a single String argument for the logger name.
+
+Set system property `org.firebirdsql.jdbc.loggerImplementation` with the fully-qualified name of your implementation.
+
+For example:
+
+[source,java]
+----
+package org.example.jaybird.logging;
+
+public class CustomLogger implements org.firebirdsql.logging.Logger {
+    public CustomLogger(String name) {
+        // create the logger    
+    }
+    // implementation of org.firebirdsql.logging.Logger interface
+}
+----
+
+On the Java command line, specify:
+
+ -Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger
+
+[[ref-logging-log4j1]]
+==== Log4j 1.x
+
+[.until]_Jaybird 3_
+
+Jaybird 2.2 and earlier can log to Log4J 1.x. 
+This requires the log4j 1.x library on the classpath and system property `FBLog4j` (or [.since]_Jaybird 2.2.8_ `org.firebirdsql.jdbc.useLog4j`) set to `true`.
+
+If you want to use Log4j 1.x with Jaybird 3 or higher, you will need to create your own logger implementation (see <<ref-logging-custom>>).
