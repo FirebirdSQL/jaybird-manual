@@ -86,8 +86,9 @@ Since Jaybird 3, you can provide your own logging implementation if you don't wa
 
 To provide a custom logging implementation, you need to implement interface `org.firebirdsql.logging.Logger`.
 This implementation must be public and must have a public constructor with a single String argument for the logger name.
-
 Set system property `org.firebirdsql.jdbc.loggerImplementation` with the fully-qualified name of your implementation.
+
+The `org.firebirdsql.logging.Logger` interface should be considered volatile and might change in minor releases (but not point/bugfix releases).
 
 For example:
 
