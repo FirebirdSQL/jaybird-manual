@@ -128,13 +128,12 @@ releases, and provide Firebird client libraries as Maven dependencies as well.
 
 === Quality Assurance
 
-The Jaybird team uses JUnit test cases to assure the quality of the released 
-driver. Also during development unit tests are extensively used. It is not 
-allowed to commit a code to the source control until it passes all existing unit
-tests. Also each reproducible bug usually gets its own test case. This guarantees
-that a clean check out can be compiled and will not contain any previously 
-discovered and fixed bug. Currently there are more than 3800 test cases covering 
-most of the driver code.
+The Jaybird team uses JUnit test cases to assure the quality of the released driver. 
+During development unit tests are extensively used. 
+Committing a code change to the source control is not allowed until it passes all existing unit tests. 
+Each reproducible bug usually gets its own test case. 
+This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs. 
+Currently there are more than 3900 test cases covering most of the driver code.
 
 === Useful resources
 
@@ -146,9 +145,7 @@ For JDBC documentation, see http://www.oracle.com/technetwork/java/javase/jdbc/i
 
 General information about the Firebird database is available from the Firebird web site (https://www.firebirdsql.org/[^]).
 
-Information about using SQL in Firebird, see the https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html[Firebird 2.5 Language Reference^] 
-and other documents, that are available from the https://www.firebirdsql.org/en/reference-manuals/[Reference Manuals^] section 
-of the Firebird web site.
+For information about using SQL in Firebird, see the https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html[Firebird 2.5 Language Reference^] and other documents available from the https://www.firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird web site.
 
 ==== Jaybird Support
 
@@ -158,6 +155,7 @@ Support for Jaybird is available through the following channels:
 list firebird-java@yahoogroups.com
 +
 You can subscribe to the mailing list by sending an email to firebird-java-subscribe@yahoogroups.com
+* On https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html[Jaybird Frequently Asked Questions^].
 * On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
 +
 This is a place where the community shares information about different aspects of Jaybird usage,
