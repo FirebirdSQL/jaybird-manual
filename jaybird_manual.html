@@ -6906,10 +6906,11 @@ Levels <em>debug</em> and <em>trace</em> are disabled in the implementation.</p>
 </div>
 <div class="paragraph">
 <p>To provide a custom logging implementation, you need to implement interface <code>org.firebirdsql.logging.Logger</code>.
-This implementation must be public and must have a public constructor with a single String argument for the logger name.</p>
+This implementation must be public and must have a public constructor with a single String argument for the logger name.
+Set system property <code>org.firebirdsql.jdbc.loggerImplementation</code> with the fully-qualified name of your implementation.</p>
 </div>
 <div class="paragraph">
-<p>Set system property <code>org.firebirdsql.jdbc.loggerImplementation</code> with the fully-qualified name of your implementation.</p>
+<p>The <code>org.firebirdsql.logging.Logger</code> interface should be considered volatile and might change in minor releases (but not point/bugfix releases).</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -9913,7 +9914,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-21 11:59:23 UTC
+Last updated 2019-04-21 13:13:47 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
