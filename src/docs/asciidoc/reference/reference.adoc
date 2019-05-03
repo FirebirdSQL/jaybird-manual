@@ -33,3 +33,11 @@ include::statement/generatedkeys.adoc[]
 == General
 
 include::general/logging.adoc[]
+
+[[ref-types]]
+== Datatype reference
+
+NOTE: This section documents non-standard datatypes supported by Jaybird, or behaviour deviating from standard JDBC expectations.
+It does not provide full documentation for all supported datatypes.
+
+include::types/binary.adoc[]

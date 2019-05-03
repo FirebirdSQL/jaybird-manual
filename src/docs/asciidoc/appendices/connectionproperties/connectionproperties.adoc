@@ -148,11 +148,12 @@ Set property to `true` to disable usage of procedure type metadata to decide to 
 **TODO** Improve documentation (define reference section based on Jaybird 3.0.6 release notes)
 
 a|`octetsAsBytes`
-|Jaybird specific property.
+|Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
 Boolean property.
 Unused since Jaybird 3, will be removed in Jaybird 4.
 Makes `ResultSet.getObject` for `(VAR)CHAR CHARACTER SET OCTETS` return `byte[]` instead of `String`.
 Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC `(VAR)BINARY`).
+See <<ref-binary>> for more information.
 
 a|`useStandarUdf` +
 `use_standard_udf`, `isc_dpb_use_standard_udf`
