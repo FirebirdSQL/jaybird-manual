@@ -155,6 +155,11 @@ Makes `ResultSet.getObject` for `(VAR)CHAR CHARACTER SET OCTETS` return `byte[]`
 Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC `(VAR)BINARY`).
 See <<ref-binary>> for more information.
 
+a|`decfloatBind`
+|Instructs Firebird to convert columns and parameters of type `DECFLOAT` to a different type. ([.since]_Jaybird 3.0.6_ [.since]_Firebird 4_)
+Accepted values are: `native`, `char` or `character`, `double precision`, `bigint, n` where `n` is the target scale to convert to a `NUMERIC(18,n)`.
+See <<ref-decfloat-prop-decfloat-bind>> for more information.
+
 a|`useStandarUdf` +
 `use_standard_udf`, `isc_dpb_use_standard_udf`
 |Jaybird specific property.

@@ -41,3 +41,4 @@ NOTE: This section documents non-standard datatypes supported by Jaybird, or beh
 It does not provide full documentation for all supported datatypes.
 
 include::types/binary.adoc[]
+include::types/decfloat.adoc[]
