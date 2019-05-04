@@ -547,6 +547,12 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <li><a href="#ref-logging">11.1. Logging</a></li>
 </ul>
 </li>
+<li><a href="#ref-types">12. Datatype reference</a>
+<ul class="sectlevel2">
+<li><a href="#ref-binary">12.1. BINARY/VARBINARY</a></li>
+<li><a href="#ref-decfloat">12.2. DECFLOAT</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_appendices">Appendices</a>
@@ -6957,6 +6963,519 @@ This requires the log4j 1.x library on the classpath and system property <code>F
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="ref-types"><a class="anchor" href="#ref-types"></a>12. Datatype reference</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This section documents non-standard datatypes supported by Jaybird, or behaviour deviating from standard JDBC expectations.
+It does not provide full documentation for all supported datatypes.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="ref-binary"><a class="anchor" href="#ref-binary"></a>12.1. BINARY/VARBINARY</h3>
+<div class="paragraph">
+<p>The JDBC (and SQL standard) types <code>BINARY</code> and <code>VARBINARY</code> are called <code>CHAR(n) CHARACTER SET OCTETS</code> and <code>VARCHAR(n) CHARACTER SET OCTETS</code> in Firebird.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Firebird 4</em> Firebird 4 introduces the names <code>BINARY</code> and <code>VARBINARY</code>/<code>BINARY VARYING</code> as aliases for <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Java binary and varbinary are usually handled with byte arrays and <code>InputStream</code>/<code>OutputStream</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="ref-binary-octets-as-bytes"><a class="anchor" href="#ref-binary-octets-as-bytes"></a>12.1.1. Connection property octetsAsBytes</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.1.1</em><br>
+<em class="until">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 2.2 and earlier, the default for <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code> is to handle columns and parameters of this type as a string.
+That is, <code>getObject(int/String)</code> returns <code>String</code>, and metadata reports <code>(VAR)CHAR</code> type information.
+The bytes are converted to string using the default encoding or the connection encoding.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 2.1.1 introduced the boolean connection property <code>octetsAsBytes</code>.
+When set, <code>getObject(int/String)</code> will return <code>byte[]</code>, but otherwise columns or parameters will behave as normal string fields.
+Metadata information from sources like <code>DatabaseMetaData</code>, <code>ParameterMetaData</code>, and <code>ResultSetMetaData</code>, will report information as if it is a <code>String</code> (<code>(VAR)CHAR</code>) based field.
+<em class="since">Jaybird 2.2.9</em> <code>ResultSetMetaData</code> reports <code>(VAR)BINARY</code> type information.</p>
+</div>
+<div class="paragraph">
+<p>This approach was changed in Jaybird 3, see the next section</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-binary-always"><a class="anchor" href="#ref-binary-always"></a>12.1.2. Always BINARY/VARBINARY</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3 and higher no longer handle <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code> as JDBC types <code>CHAR</code>/<code>VARCHAR</code>, but always as <code>BINARY</code>/<code>VARBINARY</code>.
+This closer matches their intended usage.
+The connection property <code>octetsAsBytes</code> is no longer supported.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird will report the JDBC <code>BINARY</code>/<code>VARBINARY</code> type information in all metadata (<code>DatabaseMetaData</code>, <code>ResultSetMetaData</code>, <code>ParameterMetaData</code>) for columns and parameters of type <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code>, and <code>getObject(int/String)</code> will always return <code>byte[]</code>.</p>
+</div>
+<div class="paragraph">
+<p>The getters (on result set/callable statement), setters (prepared/callable statement), and update methods (result set) for columns of this type are restricted to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>set/get/updateNull</code></p>
+</li>
+<li>
+<p><code>get/set/updateBytes</code></p>
+</li>
+<li>
+<p><code>get/set/updateBinaryStream</code></p>
+</li>
+<li>
+<p><code>get/set/updateAsciiStream</code></p>
+</li>
+<li>
+<p><code>get/set/updateString</code> (using the default encoding or connection encoding)</p>
+</li>
+<li>
+<p><code>get/set/updateCharacterStream</code> (using the default encoding or connection encoding)</p>
+</li>
+<li>
+<p><code>get/set/updateObject</code> (with <code>String</code>, <code>byte[]</code>, <code>InputStream</code>, <code>Reader</code>)</p>
+</li>
+<li>
+<p><code>get/setObject</code> with a <code>java.sql.RowId</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>get/setRowId</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other getters/setters/updaters or object types supported for 'normal' <code>(VAR)CHAR</code> fields are not available.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.2. DECFLOAT</h3>
+<div class="paragraph">
+<p><em class="since">Firebird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 4 introduces the SQL:2016 <code>DECFLOAT</code> datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
+See the Firebird 4 documentation for details on this datatype.</p>
+</div>
+<div class="sect3">
+<h4 id="ref-decfloat-jb4"><a class="anchor" href="#ref-decfloat-jb4"></a>12.2.1. Decfloat support in Jaybird 4 and higher</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 introduces support for the <code>DECFLOAT</code> datatype mapping to <code>java.math.BigDecimal</code>.
+For more information, see <a href="#ref-decfloat-support">DECFLOAT support</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-decfloat-jb3"><a class="anchor" href="#ref-decfloat-jb3"></a>12.2.2. Workarounds for Jaybird 3</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.6</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3 does not support <code>DECFLOAT</code>, but starting with Jaybird 3.0.6, the connection property <code>decfloatBind</code> can be used to convert to a datatype that is supported by Jaybird.
+For earlier Jaybird 3 versions, see <a href="#ref-decfloat-jb22">Workarounds for Jaybird 2.2 and earlier</a>.</p>
+</div>
+<div class="paragraph">
+<p>We recommend either <code>decfloatBind=char</code> or <code>decfloatBind=double precision</code>.
+Option <code>char</code> has our preference as it is able to support the full range of values of the <code>DECFLOAT</code> types.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a> for details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.2.3. Workarounds for Jaybird 2.2 and earlier</h4>
+<div class="paragraph">
+<p>Jaybird 2.2 and earlier do not support <code>DECFLOAT</code>.
+As a workaround, you can use the <code>SET DECFLOAT BIND &lt;bind-type&gt;</code> statement to configure your connection to map <code>DECFLOAT</code> to a different datatype.
+When set, Firebird will present columns or parameters of <code>DECFLOAT</code> as the specified type, allowing clients without support for <code>DECFLOAT</code> to read or set values.</p>
+</div>
+<div class="paragraph">
+<p>The available options are the same as documented in <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a></p>
+</div>
+<div class="paragraph">
+<p>For example</p>
+</div>
+<div id="source" class="listingblock">
+<div class="content">
+<pre>try (Connection connection = DriverManager.getConnection(..);
+     Statement stmt = connection.createStatement()) {
+    stmt.execute("SET DECFLOAT BIND char");
+    // DECFLOAT will now be mapped to a CHAR datatype
+}</pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The effect of the <code>SET DECFLOAT BIND</code> statement will be reset to the default when <code>ALTER SESSION RESET</code> is executed.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.2.4. Connection property decfloatBind</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.6</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 3.0.6 add the connection property <code>decfloatBind</code> to configure conversion of <code>DECFLOAT</code> to a different datatype.
+When set Firebird will present columns or parameters of <code>DECFLOAT</code> as the specified type, allowing clients without support for <code>DECFLOAT</code> to read or set values.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+This property is also available in Jaybird 4, but we recommend to not use this property in Jaybird 4 and instead rely on the default behaviour (<code>native</code>) and support for <code>DECFLOAT</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1481 or later).
+It will be ignored in earlier builds as the necessary database parameter buffer item does not exist in earlier versions.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>decfloatBind</code> (alias: <code>decfloat_bind</code>) connection property has the following valid values:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>native</code></dt>
+<dd>
+<p>(default) produces the normal <code>DECFLOAT</code> values (not supported by Jaybird 3)</p>
+</dd>
+<dt class="hdlist1"><code>char</code>/<code>character</code></dt>
+<dd>
+<p>converts the <code>DECFLOAT</code> values to an equivalent string using scientific notation (eg 6.573820132214283E+283).</p>
+</dd>
+<dt class="hdlist1"><code>double precision</code></dt>
+<dd>
+<p>converts the <code>DECFLOAT</code> values to an equivalent <code>double precision</code>.
+This may lose precision, and this option cannot support the full range of values of <code>DECFLOAT(34)</code> and can result on errors on overflow.</p>
+</dd>
+<dt class="hdlist1"><code>bigint, n</code></dt>
+<dd>
+<p>where <code>n</code> is the target scale to convert to a <code>NUMERIC(18,n)</code>.
+This option cannot support the full range of values of <code>DECFLOAT</code> and can result on errors on overflow.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These properties can be used as connection properties with <code>DriverManager</code>.
+For Jaybird data sources, the properties must be set using <code>setNonStandardProperty</code> as corresponding setters have not been defined.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The value set using connection property <code>decfloatBind</code> will be the default reverted to by <code>ALTER SESSION RESET</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-decfloat-support"><a class="anchor" href="#ref-decfloat-support"></a>12.2.5. DECFLOAT support</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 introduces support for the <code>DECFLOAT</code> datatype.
+The 'default' object type for <code>DECFLOAT</code> is a <code>java.math.BigDecimal</code>, but conversion from and to the following datatypes is supported:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.math.BigDecimal</code> (see note <a href="#decfloat-note-1">1</a>)</p>
+</li>
+<li>
+<p><code>byte</code> (valid range -128 to 127(!); see notes <a href="#decfloat-note-2">2</a>, <a href="#decfloat-note-3">3</a>)</p>
+</li>
+<li>
+<p><code>short</code> (valid range -32768 to 32767; see note <a href="#decfloat-note-3">3</a>)</p>
+</li>
+<li>
+<p><code>int</code> (valid range -2<sup>31</sup> to 2<sup>31</sup>-1; see note <a href="#decfloat-note-3">3</a>)</p>
+</li>
+<li>
+<p><code>long</code> (valid range -2<sup>63</sup> to 2<sup>63</sup>-1; see notes <a href="#decfloat-note-3">3</a>, <a href="#decfloat-note-4">4</a>)</p>
+</li>
+<li>
+<p><code>float</code> (valid range -1 * Float.MAX_VALUE to Float.MAX_VALUE; see notes <a href="#decfloat-note-5">5</a>, <a href="#decfloat-note-6">6</a>, <a href="#decfloat-note-7">7</a>, <a href="#decfloat-note-8">8</a>, <a href="#decfloat-note-9">9</a>)</p>
+</li>
+<li>
+<p><code>double</code> (valid range -1 * Double.MAX_VALUE to Double.MAX_VALUE; see notes <a href="#decfloat-note-6">6</a>, <a href="#decfloat-note-7">7</a>, <a href="#decfloat-note-8">8</a>, <a href="#decfloat-note-9">9</a>)</p>
+</li>
+<li>
+<p><code>boolean</code> (see notes <a href="#decfloat-note-10">10</a>, <a href="#decfloat-note-11">11</a>)</p>
+</li>
+<li>
+<p><code>java.lang.String</code> (see notes <a href="#decfloat-note-12">12</a>, <a href="#decfloat-note-13">13</a>, <a href="#decfloat-note-14">14</a>)</p>
+</li>
+<li>
+<p><code>java.math.BigInteger</code> (see notes <a href="#decfloat-note-15">15</a>, <a href="#decfloat-note-16">16</a>)</p>
+</li>
+<li>
+<p><code>org.firebirdsql.extern.decimal.Decimal32/64/128</code> (see notes <a href="#decfloat-note-17">17</a>, <a href="#decfloat-note-18">18</a>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>DECFLOAT</code> type is not yet defined in the JDBC specification.
+For the time being, Jaybird defines a Jaybird specific type code with value <code>-6001</code>.
+This value is available through constant <code>org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT</code>, or - for JDBC 4.2 and higher - <code>org.firebirdsql.jdbc.JaybirdType.DECFLOAT</code>, which is an enum implementing <code>java.sql.SQLType</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you need to use the type code, we suggest you use these constants.
+If a <code>DECFLOAT</code> type constant gets added to the JDBC standard, we will update the value.
+The enum value will be deprecated when that version of JDBC has been released.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird uses a local copy of the <a href="https://github.com/FirebirdSQL/decimal-java" target="_blank" rel="noopener">FirebirdSQL/decimal-java</a> library, with a custom package <code>org.firebirdsql.extern.decimal</code>.
+This to avoid additional dependencies.</p>
+</div>
+<div class="sect4">
+<h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
+<div class="paragraph">
+<p>The <code>DECFLOAT</code> datatype supports values with a precision of 16 or 34 decimal digits, and an exponent
+<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup>
+between -398 and 369 (<code>DECFLOAT(16)</code>), or between -6176 and 6111 (<code>DECFLOAT(34)</code>), so the minimum and maximum values are:</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Min/max value</th>
+<th class="tableblock halign-left valign-top">Smallest (non-zero) value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT(16)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+/-9.9..9E+384 (16 digits)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+/-1E-398 (1 digit)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT(34)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+/-9.9..9E+6144 (34 digits)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+/-1E-6176 (1 digit)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When converting values from Java types to <code>DECFLOAT</code> and retrieving <code>DECFLOAT</code> values as <code>Decimal32</code> or <code>Decimal64</code>, the following rules are applied:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Zero values can have a non-zero exponent, and if the exponent is out of range, the exponent value is 'clamped' to the minimum or maximum exponent supported.
+This behavior is subject to change, and future releases may 'round' to exact <code>0</code> (or <code>0E0</code>)</p>
+</li>
+<li>
+<p>Values with a precision larger than the target precision are rounded to the target precision using <code>RoundingMode.HALF_EVEN</code></p>
+</li>
+<li>
+<p>If the magnitude (or exponent) is too low, then the following steps are applied:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Precision is reduced applying <code>RoundingMode.HALF_EVEN</code>, increasing the exponent by the reduction of precision.</p>
+<div class="paragraph">
+<p>An example: a <code>DECFLOAT(16)</code> stores values as an integral coefficient of 16 digits and an exponent between <code>-398</code> and <code>+369</code>.
+The value <code>1.234567890123456E-394</code> or <code>1234567890123456E-409</code> is coefficient <code>1234567890123456</code> and exponent <code>-409</code>.
+The coefficient is 16 digits, but the exponent is too low by 11.</p>
+</div>
+<div class="paragraph">
+<p>If we sacrifice least-significant digits, we can increase the exponent, this is achieved by dividing the coefficient by 10<sup>11</sup> (and rounding) and increasing the exponent by 11.
+We get exponent = round(1234567890123456 / 10<sup>11</sup>) = 12346 and exponent = -409 + 11 = -398.</p>
+</div>
+<div class="paragraph">
+<p>The resulting value is now <code>12346E-398</code> or <code>1.2346E-394</code>, or in other words, we sacrificed precision to make the value fit.</p>
+</div>
+</li>
+<li>
+<p>If after the previous step, the magnitude is still too low, we have what is called an underflow, and the value is truncated to 0 with the minimum exponent and preserving sign, eg for <code>DECFLOAT(16)</code>, the value will become +0E+398 or -0E-398 (see note <a href="#decfloat-note-19">19</a>).
+Technically, this is just a special case of the previous step.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>If the magnitude (or exponent) is too high, then the following steps are applied:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If the precision is less than maximum precision, and the difference between maximum precision and actual precision is larger than or equal to the difference between the actual exponent and the maximum exponent, then the precision is increased by adding zeroes as least-significant digits and decreasing the exponent by the number of zeroes added.</p>
+<div class="paragraph">
+<p>An example: a <code>DECFLOAT(16)</code> stores values as an integral coefficient of 16 digits and an exponent between <code>-398</code> and <code>+369</code>.
+The value <code>1E+384</code> is coefficient <code>1</code> with exponent <code>384</code>.
+This is too large for the maximum exponent, however, we have a value with a single digit, leaving us with 15 'unused' most-significant digits.</p>
+</div>
+<div class="paragraph">
+<p>If we multiply the coefficient by 10<sup>15</sup> and subtract 15 from the exponent we get: coefficient = 1 * 10<sup>15</sup> = 1000000000000000 and exponent = 384 - 15 = 369.
+And these values for coefficient and exponent are in range of the storage requirements.</p>
+</div>
+<div class="paragraph">
+<p>The resulting value is now <code>1000000000000000E+369</code> or <code>1.000000000000000E+384</code>, or in other words, we 'increased' precision by adding zeroes as least-significant digits to make the value fit.</p>
+</div>
+</li>
+<li>
+<p>Otherwise, we have what is called an overflow, and an <code>SQLException</code> is thrown as the value is out of range.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you need other rounding and overflow behavior, make sure you round the values appropriately before you set them.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-decfloat-notes"><a class="anchor" href="#ref-decfloat-notes"></a>Notes</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="decfloat-note-1"></a><code>java.math.BigDecimal</code> is capable of representing numbers with larger precisions than <code>DECFLOAT</code>, and numbers that are out of range (too large or too small).
+When performing calculations in Java, use <code>MathContext.DECIMAL64</code> (for <code>DECFLOAT(16)</code>) or <code>MathContext.DECIMAL128</code> (for <code>DECFLOAT(34)</code>) to achieve similar results in calculations as in Firebird.
+Be aware there might still be differences in rounding, and the result of calculations may be out of range.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>Firebird 4 snapshots currently allow storing NaN and Infinity values, retrieval of these values will result in a <code>SQLException</code>, with a  <code>DecimalInconvertibleException</code> cause with details on the special.
+The support for these special values is currently under discussion and may be removed in future Firebird 4 snapshots.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><a id="decfloat-note-2"></a><code>byte</code> in Java is signed, and historically Jaybird has preserved sign when storing byte values, and it considers values outside -128 and +127 out of range.</p>
+</li>
+<li>
+<p><a id="decfloat-note-3"></a>All integral values are - if within range - first converted to <code>long</code> using <code>BigDecimal.longValue()</code>, which discards any fractional parts (rounding by truncation).</p>
+</li>
+<li>
+<p><a id="decfloat-note-4"></a>When storing a <code>long</code> in <code>DECFLOAT(16)</code>, rounding will be applied using <code>RoundingMode.HALF_EVEN</code> for values larger than <code>9999999999999999L</code> or smaller than <code>-9999999999999999L</code>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-5"></a><code>float</code> values are first converted to (or from) double, this may lead to small rounding differences</p>
+</li>
+<li>
+<p><a id="decfloat-note-6"></a><code>float</code> and <code>double</code> can be fully stored in <code>DECFLOAT(16)</code> and <code>DECLOAT(34)</code>, with minor rounding differences.</p>
+</li>
+<li>
+<p><a id="decfloat-note-7"></a>When reading <code>DECFLOAT</code> values as <code>double</code> or <code>float</code>, rounding will be applied as binary floating point types are inexact, and have a smaller precision.</p>
+</li>
+<li>
+<p><a id="decfloat-note-8"></a>If the magnitude of the <code>DECFLOAT</code> value is too great to be represented in <code>float</code> or <code>double</code>, +Infinity or -Infinity may be returned (see <code>BigDecimal.doubleValue()</code>).
+This behavior is subject to change, future releases may throw a <code>SQLException</code> instead, see also related note <a href="#decfloat-note-9">9</a>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-9"></a>Storing and retrieving values NaN, +Infinity and -Infinity are currently supported, but this may change as this doesn&#8217;t seem to be allowed by the SQL:2016 standard.</p>
+<div class="paragraph">
+<p>It is possible that Jaybird or Firebird will disallow storing and retrieving NaN and Infinity values in future releases, causing Jaybird to throw an <code>SQLException</code> instead.
+We strongly suggest not to rely on this support for special values.</p>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>Firebird <code>DECFLOAT</code> currently discerns four different NaNs (+/-NaN and +/-signaling-NaN).
+These are all mapped to <code>Double.NaN</code> (or <code>Float.NaN</code>), Java NaN values are mapped to +NaN in Firebird.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><a id="decfloat-note-10"></a>Setting <code>boolean</code> values will set <code>0</code> (or <code>0E+0</code>) for <code>false</code> and <code>1</code> (or <code>1E+0</code>) for <code>true</code>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-11"></a>Retrieving as <code>boolean</code> will return <code>true</code> for <code>1</code> (exactly <code>1E+0</code>) and <code>false</code> for <strong>all other values</strong>.
+Be aware that this means that <code>1.0E+0</code> (or <code>10E-1</code>) etc will be <strong><code>false</code></strong> (<em>this may change before Jaybird 4 final to <code>getLong() == 1L</code> or similar, which truncates the value</em>).</p>
+<div class="paragraph">
+<p>This behavior may change in the future and only allow <code>0</code> for <code>false</code> and exactly <code>1</code> for <code>true</code> and throw an <code>SQLException</code> for all other values, or maybe <code>true</code> for everything other than <code>0</code>.
+In general we advise to not use numerical types for boolean values, and especially not to retrieve the result of a calculation as a boolean value.
+Instead, use a real <code>BOOLEAN</code>.</p>
+</div>
+</li>
+<li>
+<p><a id="decfloat-note-12"></a>Setting values as <code>String</code> is supported following the format rules of <code>new BigDecimal(String)</code>, with extra support for special values <code>+NaN</code>, <code>-NaN</code>, <code>+sNaN</code>, <code>-sNaN</code>, <code>+Infinity</code> and <code>-Infinity</code> (case insensitive).
+Other non-numerical strings throw an <code>SQLException</code> with a <code>NumberFormatException</code> as cause.
+Out of range values are handled as described in <a href="#ref-decfloat-precision-range">Precision and range</a>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-13"></a>Getting values as <code>String</code> will be equivalent to <code>BigDecimal.toString()</code>, with extra support for the special values mentioned in the previous note.</p>
+</li>
+<li>
+<p><a id="decfloat-note-14"></a>As mentioned in earlier notes, support for the special values is under discussion, and may be removed in the final Jaybird 4 or Firebird 4 release, or might change in future versions.</p>
+</li>
+<li>
+<p><a id="decfloat-note-15"></a>Getting as <code>BigInteger</code> will behave as <code>BigDecimal.toBigInteger()</code>, which discards the fractional part (rounding by truncation), and may add <code>(-1 * scale - precision)</code> least-significant zeroes if the scale exceeds precision.
+Be aware that use of <code>BigInteger</code> for large values may result in significant memory consumption.</p>
+</li>
+<li>
+<p><a id="decfloat-note-16"></a>Setting as <code>BigInteger</code> will lose precision for values with more digits than the target type.
+It applies the rules described in <a href="#ref-decfloat-precision-range">Precision and range</a>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-17"></a>Values can also be set and retrieved as types <code>Decimal32</code>, <code>Decimal64</code> and <code>Decimal128</code> from the <code>org.firebirdsql.extern.decimal</code> package.
+Where <code>Decimal64</code> exactly matches the <code>DECFLOAT(16)</code> protocol format, and <code>Decimal128</code> the <code>DECFLOAT(34)</code> protocol format.
+Be aware that this is an implementation detail that might change in future Jaybird versions (both in terms of support for these types, and in terms of the interface (API) of these types).</p>
+</li>
+<li>
+<p><a id="decfloat-note-18"></a>Setting a <code>Decimal128</code> on a <code>DECFLOAT(16)</code>, or a <code>Decimal32</code> on a <code>DECFLOAT(16)</code> or <code>DECFLOAT(34)</code>, or retrieving a <code>Decimal32</code> from a <code>DECFLOAT(16)</code> or <code>DECFLOAT(34)</code>, or a <code>Decimal64</code> from a <code>DECFLOAT(34)</code> will apply the rules described in <a href="#ref-decfloat-precision-range">Precision and range</a>.</p>
+</li>
+<li>
+<p><a id="decfloat-note-19"></a>Zero values can have a sign (eg <code>-0</code> vs <code>0</code> (<code>+0</code>)), this can only be set or retrieved using <code>String</code> or the <code>DecimalXX</code> types, or the result of rounding.
+This behaviour is subject to change, and future releases may 'round' to <code>0</code> (aka <code>+0</code>).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <h1 id="_appendices" class="sect0"><a class="anchor" href="#_appendices"></a>Appendices</h1>
 <div class="sect1">
 <h2 id="connectionproperties"><a class="anchor" href="#connectionproperties"></a>Appendix A: Extended connection properties</h2>
@@ -7195,11 +7714,20 @@ Set property to <code>true</code> to disable usage of procedure type metadata to
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>octetsAsBytes</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property. (<em class="since">Jaybird 2.1.1</em> <em class="until">Jaybird 3</em>)
 Boolean property.
 Unused since Jaybird 3, will be removed in Jaybird 4.
 Makes <code>ResultSet.getObject</code> for <code>(VAR)CHAR CHARACTER SET OCTETS</code> return <code>byte[]</code> instead of <code>String</code>.
-Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC <code>(VAR)BINARY</code>).</p></td>
+Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC <code>(VAR)BINARY</code>).
+See <a href="#ref-binary">BINARY/VARBINARY</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>decfloatBind</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs Firebird to convert columns and parameters of type <code>DECFLOAT</code> to a different type. (<em class="since">Jaybird 3.0.6</em> <em class="since">Firebird 4</em>)
+Accepted values are: <code>native</code>, <code>char</code> or <code>character</code>, <code>double precision</code>, <code>bigint, n</code> where <code>n</code> is the target scale to convert to a <code>NUMERIC(18,n)</code>.
+See <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8256,7 +8784,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -8305,7 +8833,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -8319,7 +8847,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -8342,7 +8870,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -8778,7 +9306,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -8912,7 +9440,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -9031,7 +9559,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -9896,30 +10424,33 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnotedef_19">
-<a href="#_footnoteref_19">19</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_19">19</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_20">20</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_21">21</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_22">22</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_23">23</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_24">24</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_25">25</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_26">
+<a href="#_footnoteref_26">26</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-03 12:22:00 UTC
+Last updated 2019-05-04 09:25:26 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
