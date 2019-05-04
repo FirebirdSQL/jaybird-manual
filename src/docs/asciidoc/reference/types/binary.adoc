@@ -1,5 +1,5 @@
 [[ref-binary]]
-=== BINARY/VARBINARY
+=== Binary types BINARY/VARBINARY
 
 The JDBC (and SQL standard) types `BINARY` and `VARBINARY` are called `CHAR(n) CHARACTER SET OCTETS` and `VARCHAR(n) CHARACTER SET OCTETS` in Firebird.
 

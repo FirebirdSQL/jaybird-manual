@@ -1,5 +1,5 @@
 [[ref-decfloat]]
-=== DECFLOAT
+=== Decimal floating point type DECFLOAT
 
 [.since]_Firebird 4_
 
