@@ -42,3 +42,4 @@ It does not provide full documentation for all supported datatypes.
 
 include::types/binary.adoc[]
 include::types/decfloat.adoc[]
+include::types/decimal.adoc[]
