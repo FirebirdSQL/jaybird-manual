@@ -437,6 +437,7 @@ em.since{font-size:smaller;}
 em.since::before{content:"Since: ";font-weight:bold;}
 em.until{font-size:smaller;}
 em.until::before{content:"Removed in: ";font-weight:bold;}
+table.wide-table{font-size:xx-small}
 </style>
 </head>
 <body class="book toc2 toc-left">
@@ -550,8 +551,9 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <li><a href="#ref-types">12. Datatype reference</a>
 <ul class="sectlevel2">
 <li><a href="#ref-binary">12.1. Binary types BINARY/VARBINARY</a></li>
-<li><a href="#ref-decfloat">12.2. Decimal floating point type DECFLOAT</a></li>
-<li><a href="#ref-decimal">12.3. Exact numeric types DECIMAL/NUMERIC</a></li>
+<li><a href="#ref-boolean">12.2. Type BOOLEAN</a></li>
+<li><a href="#ref-decfloat">12.3. Decimal floating point type DECFLOAT</a></li>
+<li><a href="#ref-decimal">12.4. Exact numeric types DECIMAL/NUMERIC</a></li>
 </ul>
 </li>
 </ul>
@@ -7065,7 +7067,160 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.2. Decimal floating point type DECFLOAT</h3>
+<h3 id="ref-boolean"><a class="anchor" href="#ref-boolean"></a>12.2. Type BOOLEAN</h3>
+<div class="paragraph">
+<p><em class="since">Firebird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 3 introduced the SQL standard type <code>BOOLEAN</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="ref-boolean-support"><a class="anchor" href="#ref-boolean-support"></a>12.2.1. Support for BOOLEAN</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 2.2</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 2.2 introduced support for <code>BOOLEAN</code>.</p>
+</div>
+<div class="paragraph">
+<p>On parameters of type <code>BOOLEAN</code>, Jaybird supports most of the other Java types, using the following mapping:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top"><code>setXXX</code></th>
+<th class="tableblock halign-left valign-top"><code>getXXX</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"true"</code>/<code>"Y"</code>/<code>"T"</code>/<code>"1"</code> sets true, everything else sets false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>"true"</code>, false is <code>"false"</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code> sets false, everything else sets true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1</code>, false is <code>0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0f</code>, false is <code>0.0f</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0</code>, false is <code>0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BigDecimal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code> (<code>ZERO</code>) (using <code>compareTo</code>) sets false, everything else sets true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1</code> (<code>ONE</code>), false is <code>0</code> (<code>ZERO</code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We recommend to avoid the <code>float</code>, <code>double</code> and <code>BigDecimal</code> options.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-boolean-workaround"><a class="anchor" href="#ref-boolean-workaround"></a>12.2.2. Workarounds for booleans</h4>
+<div class="paragraph">
+<p>Firebird 2.5 and earlier do not support <code>BOOLEAN</code>, but support for booleans can be simulated</p>
+</div>
+<div class="paragraph">
+<p>The following options are recommended:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use <code>SMALLINT</code> with values <code>0</code> and <code>1</code></p>
+</li>
+<li>
+<p>Use <code>CHAR(1)</code> (or <code>VARCHAR(1)</code>) with values <code>'Y'</code> and <code>'N'</code></p>
+</li>
+<li>
+<p>Use <code>CHAR</code> or <code>VARCHAR</code> with length 5 or longer with values <code>'true'</code> and <code>'false'</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We recommend creating a domain for 'simulated' booleans with a check constraint to restrict the possible values.
+If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid the name <code>BOOLEAN</code> to prevent problems when upgrading to Firebird 3.</p>
+</div>
+<div class="paragraph">
+<p>For non-boolean types, Jaybird supports the following conversions with <code>setBoolean</code> and <code>getBoolean</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top"><code>getBoolean</code></th>
+<th class="tableblock halign-left valign-top"><code>setBoolean</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(VAR)CHAR(&lt;5)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'Y'</code>/<code>'T'</code>/<code>'1'</code>/<code>'true'</code> is true (case insensitive), everything else is false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>'Y'</code>, false sets <code>'N'</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(VAR)CHAR(&gt;=5)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'Y'</code>/<code>'T'</code>/<code>'1'</code>/<code>'true'</code> is true (case insensitive), everything else is false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>'true'</code>, false sets <code>'false'</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE TEXT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'Y'</code>/<code>'T'</code>/<code>'1'</code>/<code>'true'</code> is true (case insensitive), everything else is false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>'true'</code>, false sets <code>'false'</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code>/<code>INTEGER</code>/<code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1</code> is true, everything else is false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1</code>, false sets <code>0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL</code>/<code>NUMERIC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Truncated integral value <code>1</code> is true, everything else is false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1</code>, false sets <code>0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code>/<code>FLOAT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0f</code>, false sets <code>0.0f</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0</code>, false sets <code>0.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1E0</code>, false sets <code>0E0</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We recommend to avoid the <code>DECIMAL</code>, <code>NUMERIC</code>, <code>REAL</code>/<code>FLOAT</code>, <code>DOUBLE PRECISION</code> or <code>DECFLOAT</code> options.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.3. Decimal floating point type DECFLOAT</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em></p>
 </div>
@@ -7074,7 +7229,7 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 See the Firebird 4 documentation for details on this datatype.</p>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb4"><a class="anchor" href="#ref-decfloat-jb4"></a>12.2.1. Decfloat support in Jaybird 4 and higher</h4>
+<h4 id="ref-decfloat-jb4"><a class="anchor" href="#ref-decfloat-jb4"></a>12.3.1. Decfloat support in Jaybird 4 and higher</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 4</em></p>
 </div>
@@ -7084,7 +7239,7 @@ For more information, see <a href="#ref-decfloat-support">DECFLOAT support</a>.<
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb3"><a class="anchor" href="#ref-decfloat-jb3"></a>12.2.2. Workarounds for Jaybird 3</h4>
+<h4 id="ref-decfloat-jb3"><a class="anchor" href="#ref-decfloat-jb3"></a>12.3.2. Workarounds for Jaybird 3</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
@@ -7101,7 +7256,7 @@ Option <code>char</code> has our preference as it is able to support the full ra
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.2.3. Workarounds for Jaybird 2.2 and earlier</h4>
+<h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.3.3. Workarounds for Jaybird 2.2 and earlier</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 and earlier do not support <code>DECFLOAT</code>.
 As a workaround, you can use the <code>SET DECFLOAT BIND &lt;bind-type&gt;</code> statement to configure your connection to map <code>DECFLOAT</code> to a different datatype.
@@ -7136,7 +7291,7 @@ The effect of the <code>SET DECFLOAT BIND</code> statement will be reset to the 
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.2.4. Connection property decfloatBind</h4>
+<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.3.4. Connection property decfloatBind</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
@@ -7212,7 +7367,7 @@ The value set using connection property <code>decfloatBind</code> will be the de
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-support"><a class="anchor" href="#ref-decfloat-support"></a>12.2.5. DECFLOAT support</h4>
+<h4 id="ref-decfloat-support"><a class="anchor" href="#ref-decfloat-support"></a>12.3.5. DECFLOAT support</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 4</em></p>
 </div>
@@ -7275,7 +7430,7 @@ This to avoid additional dependencies.</p>
 <h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
 <div class="paragraph">
 <p>The <code>DECFLOAT</code> datatype supports values with a precision of 16 or 34 decimal digits, and an exponent
-<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup>
+<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup>
 between -398 and 369 (<code>DECFLOAT(16)</code>), or between -6176 and 6111 (<code>DECFLOAT(34)</code>), so the minimum and maximum values are:</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content">
@@ -7476,7 +7631,7 @@ This behaviour is subject to change, and future releases may 'round' to <code>0<
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-decimal"><a class="anchor" href="#ref-decimal"></a>12.3. Exact numeric types DECIMAL/NUMERIC</h3>
+<h3 id="ref-decimal"><a class="anchor" href="#ref-decimal"></a>12.4. Exact numeric types DECIMAL/NUMERIC</h3>
 <div class="paragraph">
 <p>The JDBC types <code>DECIMAL</code> and <code>NUMERIC</code> are supported by Firebird and Jaybird and map to <code>java.math.BigDecimal</code>.</p>
 </div>
@@ -7494,9 +7649,9 @@ The precision specified is the minimum precison, not the exact precision.
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.3.1. Precision and range</h4>
+<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.4.1. Precision and range</h4>
 <div class="paragraph">
-<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
+<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 34.
@@ -8159,6 +8314,16 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE &lt; 0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Blob</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code> (<em class="since">Jaybird 2.2</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code> (<em class="since">Firebird 3</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(not defined) (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -8168,25 +8333,27 @@ method is provided.</p>
 <p>This table specifies the compatible conversions between the Firebird and
 Java types.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
+<table class="tableblock frame-all grid-all stretch wide-table">
 <colgroup>
-<col style="width: 23.8095%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.7619%;">
-<col style="width: 4.762%;">
+<col style="width: 21.7391%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3478%;">
+<col style="width: 4.3483%;">
 </colgroup>
 <thead>
 <tr>
@@ -8207,6 +8374,8 @@ Java types.</p>
 <th class="tableblock halign-left valign-top"><code>DATE</code></th>
 <th class="tableblock halign-left valign-top"><code>TIME</code></th>
 <th class="tableblock halign-left valign-top"><code>TIMESTAMP</code></th>
+<th class="tableblock halign-left valign-top"><code>BOOLEAN</code></th>
+<th class="tableblock halign-left valign-top"><code>DECFLOAT</code></th>
 </tr>
 </thead>
 <tbody>
@@ -8228,9 +8397,11 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BigDecimal</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
@@ -8247,6 +8418,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
@@ -8266,6 +8439,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Integer</code></p></td>
@@ -8285,6 +8460,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Long</code></p></td>
@@ -8304,6 +8481,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Float</code></p></td>
@@ -8323,6 +8502,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Double</code></p></td>
@@ -8342,6 +8523,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
@@ -8358,6 +8541,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -8380,6 +8565,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Date</code></p></td>
@@ -8399,6 +8586,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Time</code></p></td>
@@ -8417,6 +8606,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -8437,6 +8628,8 @@ Java types.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
@@ -8821,7 +9014,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -8870,7 +9063,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -8884,7 +9077,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -8907,7 +9100,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -9343,7 +9536,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -9477,7 +9670,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -9596,7 +9789,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -10461,36 +10654,45 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnotedef_19">
-<a href="#_footnoteref_19">19</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
+<a href="#_footnoteref_19">19</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
+<a href="#_footnoteref_20">20</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_22">22</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_23">23</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_24">24</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_25">25</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_26">26</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_27">
-<a href="#_footnoteref_27">27</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_27">27</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+</div>
+<div class="footnote" id="_footnotedef_28">
+<a href="#_footnoteref_28">28</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+</div>
+<div class="footnote" id="_footnotedef_29">
+<a href="#_footnoteref_29">29</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_30">
+<a href="#_footnoteref_30">30</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-04 10:59:03 UTC
+Last updated 2019-05-04 12:43:55 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
