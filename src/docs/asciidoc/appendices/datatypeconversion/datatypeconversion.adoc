@@ -75,6 +75,14 @@ method is provided.
 |`BLOB` 
 |`BLOB SUB_TYPE < 0` 
 |`java.sql.Blob`
+
+|`BOOLEAN` ([.since]_Jaybird 2.2_)
+|`BOOLEAN` ([.since]_Firebird 3_)
+|`java.lang.Boolean`
+
+|(not defined) ([.since]_Jaybird 4_)
+|`DECFLOAT` ([.since]_Firebird 4_)
+|`java.math.BigDecimal`
 |================================================
 
 === Data Type Conversions
@@ -82,32 +90,32 @@ method is provided.
 This table specifies the compatible conversions between the Firebird and
 Java types.
 
-[cols="5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",options="header",]
+[.wide-table,cols="5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",options="header",]
 |=======================================================================
-| |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL` |`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0` |`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP`
+| |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL` |`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0` |`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP` | `BOOLEAN` | `DECFLOAT`
 
-|`String` |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X
+|`String` |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X
 
-|`java.math.BigDecimal` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`BigDecimal` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X 
 
-|`Boolean` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`Boolean` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X
 
-|`Integer` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`Integer` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X
 
-|`Long` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`Long` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X
 
-|`Float` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`Float` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X
 
-|`Double` |X |X |X |X |X |X |X |X |X |X | | | | | | 
+|`Double` |X |X |X |X |X |X |X |X |X |X | | | | | | |X |X
 
-|`byte[]` | | | | | | | | | | |X |X |X | | | 
+|`byte[]` | | | | | | | | | | |X |X |X | | | | |
 
-|`Blob` | | | | | | | | | | |X |X |X | | | 
+|`Blob` | | | | | | | | | | |X |X |X | | | | |
 
-|`Date` | | | | | | | | | | | | | |X | |X 
+|`Date` | | | | | | | | | | | | | |X | |X | |
 
-|`Time` | | | | | | | | | | | | | | |X | 
+|`Time` | | | | | | | | | | | | | | |X | | |
 
-|`Timestamp` | | | | | | | | | | | | | |X | |X
+|`Timestamp` | | | | | | | | | | | | | |X | |X | |
 |=======================================================================
 
