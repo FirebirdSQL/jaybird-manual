@@ -549,8 +549,8 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 </li>
 <li><a href="#ref-types">12. Datatype reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-binary">12.1. BINARY/VARBINARY</a></li>
-<li><a href="#ref-decfloat">12.2. DECFLOAT</a></li>
+<li><a href="#ref-binary">12.1. Binary types BINARY/VARBINARY</a></li>
+<li><a href="#ref-decfloat">12.2. Decimal floating point type DECFLOAT</a></li>
 </ul>
 </li>
 </ul>
@@ -6980,7 +6980,7 @@ It does not provide full documentation for all supported datatypes.
 </table>
 </div>
 <div class="sect2">
-<h3 id="ref-binary"><a class="anchor" href="#ref-binary"></a>12.1. BINARY/VARBINARY</h3>
+<h3 id="ref-binary"><a class="anchor" href="#ref-binary"></a>12.1. Binary types BINARY/VARBINARY</h3>
 <div class="paragraph">
 <p>The JDBC (and SQL standard) types <code>BINARY</code> and <code>VARBINARY</code> are called <code>CHAR(n) CHARACTER SET OCTETS</code> and <code>VARCHAR(n) CHARACTER SET OCTETS</code> in Firebird.</p>
 </div>
@@ -7064,7 +7064,7 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.2. DECFLOAT</h3>
+<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.2. Decimal floating point type DECFLOAT</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em></p>
 </div>
@@ -7468,9 +7468,45 @@ Be aware that this is an implementation detail that might change in future Jaybi
 <li>
 <p><a id="decfloat-note-19"></a>Zero values can have a sign (eg <code>-0</code> vs <code>0</code> (<code>+0</code>)), this can only be set or retrieved using <code>String</code> or the <code>DecimalXX</code> types, or the result of rounding.
 This behaviour is subject to change, and future releases may 'round' to <code>0</code> (aka <code>+0</code>).</p>
+<div id="ref-decimal" class="paragraph">
+<p>=== Exact numeric types DECIMAL/NUMERIC</p>
+</div>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>The JDBC types <code>DECIMAL</code> and <code>NUMERIC</code> are supported by Firebird and Jaybird and map to <code>java.math.BigDecimal</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Behaviour in Firebird of <code>NUMERIC</code> is closer to the SQL standard <code>DECIMAL</code> behaviour.
+The precision specified is the minimum precison, not the exact precision.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.2.6. Precision and range</h4>
+<div class="paragraph">
+<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 34.
+Any <code>NUMERIC</code> or <code>DECIMAL</code> with a precision between 19 and 34 will allow storage up to a precision of 34.</p>
+</div>
+<div class="paragraph">
+<p>In the implementation in Firebird, this extended precision is backed by a IEEE-754 Decimal128 which is also used for <code>DECFLOAT</code> support.</p>
+</div>
+<div class="paragraph">
+<p>Values set on a field or parameter will be rounded to the target scale of the field using <code>RoundingMode.HALF_EVEN</code>.
+Values exceeding a precision of 34 after rounding will be rejected with a <code>TypeConversionException</code>.</p>
 </div>
 </div>
 </div>
@@ -7719,7 +7755,7 @@ Boolean property.
 Unused since Jaybird 3, will be removed in Jaybird 4.
 Makes <code>ResultSet.getObject</code> for <code>(VAR)CHAR CHARACTER SET OCTETS</code> return <code>byte[]</code> instead of <code>String</code>.
 Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC <code>(VAR)BINARY</code>).
-See <a href="#ref-binary">BINARY/VARBINARY</a> for more information.</p></td>
+See <a href="#ref-binary">Binary types BINARY/VARBINARY</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8784,7 +8820,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -8833,7 +8869,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -8847,7 +8883,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -8870,7 +8906,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -9306,7 +9342,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -9440,7 +9476,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -9559,7 +9595,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -10427,30 +10463,33 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_19">19</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_20">20</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_21">21</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_22">22</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_23">23</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_24">24</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_25">25</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_26">26</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_27">
+<a href="#_footnoteref_27">27</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-04 09:25:26 UTC
+Last updated 2019-05-04 10:52:58 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
