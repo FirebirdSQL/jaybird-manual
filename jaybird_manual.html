@@ -551,6 +551,7 @@ em.until::before{content:"Removed in: ";font-weight:bold;}
 <ul class="sectlevel2">
 <li><a href="#ref-binary">12.1. Binary types BINARY/VARBINARY</a></li>
 <li><a href="#ref-decfloat">12.2. Decimal floating point type DECFLOAT</a></li>
+<li><a href="#ref-decimal">12.3. Exact numeric types DECIMAL/NUMERIC</a></li>
 </ul>
 </li>
 </ul>
@@ -7468,12 +7469,14 @@ Be aware that this is an implementation detail that might change in future Jaybi
 <li>
 <p><a id="decfloat-note-19"></a>Zero values can have a sign (eg <code>-0</code> vs <code>0</code> (<code>+0</code>)), this can only be set or retrieved using <code>String</code> or the <code>DecimalXX</code> types, or the result of rounding.
 This behaviour is subject to change, and future releases may 'round' to <code>0</code> (aka <code>+0</code>).</p>
-<div id="ref-decimal" class="paragraph">
-<p>=== Exact numeric types DECIMAL/NUMERIC</p>
-</div>
 </li>
 </ol>
 </div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-decimal"><a class="anchor" href="#ref-decimal"></a>12.3. Exact numeric types DECIMAL/NUMERIC</h3>
 <div class="paragraph">
 <p>The JDBC types <code>DECIMAL</code> and <code>NUMERIC</code> are supported by Firebird and Jaybird and map to <code>java.math.BigDecimal</code>.</p>
 </div>
@@ -7490,10 +7493,8 @@ The precision specified is the minimum precison, not the exact precision.
 </tr>
 </table>
 </div>
-</div>
-</div>
 <div class="sect3">
-<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.2.6. Precision and range</h4>
+<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.3.1. Precision and range</h4>
 <div class="paragraph">
 <p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
 </div>
@@ -10489,7 +10490,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-04 10:52:58 UTC
+Last updated 2019-05-04 10:59:03 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
