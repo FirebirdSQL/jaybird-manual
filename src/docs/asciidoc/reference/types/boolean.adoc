@@ -1,0 +1,97 @@
+[[ref-boolean]]
+=== Type BOOLEAN
+
+[.since]_Firebird 3_
+
+Firebird 3 introduced the SQL standard type `BOOLEAN`.
+
+[[ref-boolean-support]]
+==== Support for BOOLEAN
+
+[.since]_Jaybird 2.2_
+
+Jaybird 2.2 introduced support for `BOOLEAN`.
+
+On parameters of type `BOOLEAN`, Jaybird supports most of the other Java types, using the following mapping:
+
+[cols="2,3,3"]
+|===
+|Type | `setXXX` | `getXXX`
+
+|`String`
+|`"true"`/`"Y"`/`"T"`/`"1"` sets true, everything else sets false
+|true is `"true"`, false is `"false"`
+
+|integer types
+|`0` sets false, everything else sets true
+|true is `1`, false is `0`
+
+|`float`
+|Exact `0.0f` sets false, everything else sets true footnote:boolean-set-float[This behaviour may change in a future version to the equivalent of `setLong((long) value)`]
+|true is `1.0f`, false is `0.0f`
+
+|`double`
+|Exact `0.0` sets false, everything else sets true footnote:boolean-set-float[]
+|true is `1.0`, false is `0.0`
+
+|`BigDecimal`
+|`0` (`ZERO`) (using `compareTo`) sets false, everything else sets true
+|true is `1` (`ONE`), false is `0` (`ZERO`)
+|===
+
+We recommend to avoid the `float`, `double` and `BigDecimal` options.
+
+[[ref-boolean-workaround]]
+==== Workarounds for booleans
+
+Firebird 2.5 and earlier do not support `BOOLEAN`, but support for booleans can be simulated
+
+The following options are recommended:
+
+* Use `SMALLINT` with values `0` and `1`
+* Use `CHAR(1)` (or `VARCHAR(1)`) with values `'Y'` and `'N'`
+* Use `CHAR` or `VARCHAR` with length 5 or longer with values `'true'` and `'false'`
+
+We recommend creating a domain for 'simulated' booleans with a check constraint to restrict the possible values.
+If you do this, name the domain something like `D_BOOLEAN`, and avoid the name `BOOLEAN` to prevent problems when upgrading to Firebird 3.
+
+For non-boolean types, Jaybird supports the following conversions with `setBoolean` and `getBoolean`:
+
+[cols="2,3,3"]
+|===
+|Type | `getBoolean` | `setBoolean`
+
+|`(VAR)CHAR(<5)`
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|true sets `'Y'`, false sets `'N'`
+
+|`(VAR)CHAR(>=5)`
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|true sets `'true'`, false sets `'false'`
+
+|`BLOB SUB_TYPE TEXT`
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|true sets `'true'`, false sets `'false'`
+
+|`SMALLINT`/`INTEGER`/`BIGINT`
+|`1` is true, everything else is false
+|true sets `1`, false sets `0`
+
+|`DECIMAL`/`NUMERIC`
+|Truncated integral value `1` is true, everything else is false
+|true sets `1`, false sets `0`
+
+|`REAL`/`FLOAT`
+|Exact `1.0f` is true, everything else is false footnote:boolean-get-float[This behaviour may change in a future version to the equivalent of `getLong(..) == 1L`]
+|true sets `1.0f`, false sets `0.0f`
+
+|`DOUBLE PRECISION`
+|Exact `1.0` is true, everything else is false footnote:boolean-get-float[]
+|true sets `1.0`, false sets `0.0`
+
+|`DECFLOAT`
+|Exact `1E0` is true, everything else is false (including `1.0E0`!) footnote:[This behaviour may change in a future version to use `compareTo` or the equivalent of `getLong(..) == 1L` instead]
+|true sets `1E0`, false sets `0E0`
+|===
+
+We recommend to avoid the `DECIMAL`, `NUMERIC`, `REAL`/`FLOAT`, `DOUBLE PRECISION` or `DECFLOAT` options.
