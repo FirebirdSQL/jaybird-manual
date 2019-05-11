@@ -54,7 +54,7 @@ WARNING: The effect of the `SET DECFLOAT BIND` statement will be reset to the de
 
 [.since]_Jaybird 3.0.6_
 
-Jaybird 3.0.6 add the connection property `decfloatBind` to configure conversion of `DECFLOAT` to a different datatype.
+Jaybird 3.0.6 added the connection property `decfloatBind` to configure conversion of `DECFLOAT` to a different datatype.
 When set Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
 
 TIP: This property is also available in Jaybird 4, but we recommend to not use this property in Jaybird 4 and instead rely on the default behaviour (`native`) and support for `DECFLOAT`.
@@ -68,7 +68,7 @@ The `decfloatBind` (alias: `decfloat_bind`) connection property has the followin
 `native`:: (default) produces the normal `DECFLOAT` values (not supported by Jaybird 3)
 `char`/`character`:: converts the `DECFLOAT` values to an equivalent string using scientific notation (eg 6.573820132214283E+283).
 `double precision`:: converts the `DECFLOAT` values to an equivalent `double precision`. 
-This may lose precision, and this option cannot support the full range of values of `DECFLOAT(34)` and can result on errors on overflow.
+This may lose precision, and this option cannot support the full range of values of `DECFLOAT(34)` and can result in errors on overflow.
 `bigint, n`:: where `n` is the target scale to convert to a `NUMERIC(18,n)`.
 This option cannot support the full range of values of `DECFLOAT` and can result on errors on overflow.
 
