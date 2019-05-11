@@ -112,14 +112,14 @@ dependency:
 ----
 
 If you want to use Type 2 support (native, local or embedded), you need to 
-explicitly include JNA as a dependency, where the version ({jna-version}) is already specified by
-the Jaybird dependency:
+explicitly include JNA {jna-version} as a dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
   <groupId>net.java.dev.jna</groupId>
   <artifactId>jna</artifactId>
+  <version>{jna-version}</version>
 </dependency>
 ----
 
