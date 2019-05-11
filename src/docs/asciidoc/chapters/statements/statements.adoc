@@ -659,9 +659,10 @@ BEGIN
     IF (counter = 0) THEN
       temp = 1;
     ELSE
-      temp = temp * row_num;
+      temp = temp * counter;
     counter = counter + 1;
   END
+  factorial = temp;
 END
 ----
 
@@ -682,7 +683,7 @@ Now let's modify this procedure to return each intermediate result to the client
 [source,sql]
 .Modified procedure that returns each intermediate result
 ----
-CREATE PROCEDURE factorial(
+CREATE PROCEDURE factorial_selectable(
   max_value INTEGER
 ) RETURNS (
   row_num INTEGER,
@@ -697,7 +698,7 @@ BEGIN
     IF (row_num = 0) THEN
       temp = 1;
     ELSE
-      temp = temp * row_num;
+      temp = temp * counter;
     factorial = temp;
     row_num = counter;
     counter = counter + 1;
@@ -707,12 +708,12 @@ END
 ----
 
 If you create this procedure using the isql command line tool and then
-issue the `"SELECT * FROM test_selectable(5)"` statement, the output
+issue the `"SELECT * FROM factorial_selectable(5)"` statement, the output
 will be like this:
 
 .Output of the modified procedure
 ....
-SQL> SELECT * FROM factorial(5);
+SQL> SELECT * FROM factorial_selectable(5);
 
      ROW_NUM    FACTORIAL
 ============ ============
