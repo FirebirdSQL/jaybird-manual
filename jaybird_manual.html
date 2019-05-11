@@ -3021,9 +3021,10 @@ BEGIN
     IF (counter = 0) THEN
       temp = 1;
     ELSE
-      temp = temp * row_num;
+      temp = temp * counter;
     counter = counter + 1;
   END
+  factorial = temp;
 END</code></pre>
 </div>
 </div>
@@ -3047,7 +3048,7 @@ is done in isql, the output looks as follow</p>
 <div class="listingblock">
 <div class="title">Modified procedure that returns each intermediate result</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">CREATE PROCEDURE factorial(
+<pre class="prettyprint highlight"><code class="language-sql" data-lang="sql">CREATE PROCEDURE factorial_selectable(
   max_value INTEGER
 ) RETURNS (
   row_num INTEGER,
@@ -3062,7 +3063,7 @@ BEGIN
     IF (row_num = 0) THEN
       temp = 1;
     ELSE
-      temp = temp * row_num;
+      temp = temp * counter;
     factorial = temp;
     row_num = counter;
     counter = counter + 1;
@@ -3073,13 +3074,13 @@ END</code></pre>
 </div>
 <div class="paragraph">
 <p>If you create this procedure using the isql command line tool and then
-issue the <code>"SELECT * FROM test_selectable(5)"</code> statement, the output
+issue the <code>"SELECT * FROM factorial_selectable(5)"</code> statement, the output
 will be like this:</p>
 </div>
 <div class="literalblock">
 <div class="title">Output of the modified procedure</div>
 <div class="content">
-<pre>SQL&gt; SELECT * FROM factorial(5);
+<pre>SQL&gt; SELECT * FROM factorial_selectable(5);
 
      ROW_NUM    FACTORIAL
 ============ ============
@@ -7296,7 +7297,7 @@ The effect of the <code>SET DECFLOAT BIND</code> statement will be reset to the 
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
 <div class="paragraph">
-<p>Jaybird 3.0.6 add the connection property <code>decfloatBind</code> to configure conversion of <code>DECFLOAT</code> to a different datatype.
+<p>Jaybird 3.0.6 added the connection property <code>decfloatBind</code> to configure conversion of <code>DECFLOAT</code> to a different datatype.
 When set Firebird will present columns or parameters of <code>DECFLOAT</code> as the specified type, allowing clients without support for <code>DECFLOAT</code> to read or set values.</p>
 </div>
 <div class="admonitionblock tip">
@@ -7340,7 +7341,7 @@ It will be ignored in earlier builds as the necessary database parameter buffer 
 <dt class="hdlist1"><code>double precision</code></dt>
 <dd>
 <p>converts the <code>DECFLOAT</code> values to an equivalent <code>double precision</code>.
-This may lose precision, and this option cannot support the full range of values of <code>DECFLOAT(34)</code> and can result on errors on overflow.</p>
+This may lose precision, and this option cannot support the full range of values of <code>DECFLOAT(34)</code> and can result in errors on overflow.</p>
 </dd>
 <dt class="hdlist1"><code>bigint, n</code></dt>
 <dd>
@@ -10692,7 +10693,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-04 12:43:55 UTC
+Last updated 2019-05-11 11:03:57 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
