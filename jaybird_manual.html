@@ -783,14 +783,14 @@ dependency:</p>
 </div>
 <div class="paragraph">
 <p>If you want to use Type 2 support (native, local or embedded), you need to
-explicitly include JNA as a dependency, where the version (4.4.0) is already specified by
-the Jaybird dependency:</p>
+explicitly include JNA 4.4.0 as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
   &lt;artifactId&gt;jna&lt;/artifactId&gt;
+  &lt;version&gt;4.4.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1322,7 +1322,33 @@ should use following:</p>
 needs to be on the classpath.</p>
 </div>
 <div class="sect4">
+<h5 id="driver-native-maven"><a class="anchor" href="#driver-native-maven"></a>Maven dependency for native client</h5>
+<div class="paragraph">
+<p>When using Jaybird 3 and later, you can use a library to provide the Firebird client library for the <code>native</code> and <code>local</code> protocol.
+For Windows and Linux, you can add the <code>org.firebirdsql.jdbc:fbclient</code> dependency on your classpath.
+This dependency does not support the <code>embedded</code> protocol.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+    &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
+    &lt;version&gt;3.0.4.0&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also download the library (see <a href="https://github.com/mrotteveel/jaybird-fbclient#download">mrotteveel/jaybird-fbclient</a> for download link) and add it your classpath.</p>
+</div>
+<div class="paragraph">
+<p>See next sections for other solutions.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="driver-native-windows"><a class="anchor" href="#driver-native-windows"></a>Windows</h5>
+<div class="paragraph">
+<p>For Jaybird 3 and later, we recommend using the solution documented in <a href="#driver-native-maven">Maven dependency for native client</a>.</p>
+</div>
 <div class="paragraph">
 <p>On Windows, you need to make sure that <code>fbclient.dll</code> is located on the
 <code>PATH</code> environment variable. Alternatively you can specify the directory
@@ -1343,6 +1369,9 @@ the following command to start Java:</p>
 </div>
 <div class="sect4">
 <h5 id="driver-native-linux"><a class="anchor" href="#driver-native-linux"></a>Linux</h5>
+<div class="paragraph">
+<p>For Jaybird 3 and later, we recommend using the solution documented in <a href="#driver-native-maven">Maven dependency for native client</a>.</p>
+</div>
 <div class="paragraph">
 <p>On Linux, you need to make sure that <code>libfbclient.so</code> is available through
 the <code>LD_PATH</code> environment variable.</p>
@@ -10334,14 +10363,14 @@ dependency:</p>
 </div>
 <div class="paragraph">
 <p>If you want to use Type 2 support (native, local or embedded), you need to
-explicitly include JNA as a dependency, where the version (4.4.0) is already specified by
-the Jaybird dependency:</p>
+explicitly include JNA as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
   &lt;artifactId&gt;jna&lt;/artifactId&gt;
+  &lt;version&gt;4.4.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -10693,7 +10722,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-05-11 11:03:57 UTC
+Last updated 2019-05-11 15:27:23 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
