@@ -1,46 +1,41 @@
-[[jb3]]
-=== Jaybird 3
+[[jb4]]
+=== Jaybird 4
 
-[[jb3-java]]
+[[jb4-java]]
 ==== Java support
 
-Jaybird 3 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 - 11 (JDBC 4.3). 
+Jaybird 4 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).
 
-There are no Java 9+ specific builds, the Java 8 builds have the same source and all JDBC 4.3 related functionality.
+Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the most recent LTS version and the latest release.
+Currently that means we support Java 11 and Java 12.
 
-Given the limited support period for Java 9 and higher versions, we may limit support on those versions to the most recent LTS version and the latest release.
+Jaybird 4 provides libraries for Java 7, Java 8 and Java 11.
+The Java 8 builds have the same source and all JDBC 4.3 related functionality and can be used on Java 9 and higher as well.
 
-Jaybird 3.0 is not modularized, but since Jaybird 3.0.3, it declares the automatic module name `org.firebirdsql.jaybird`.
+Jaybird 4 is not modularized, but all versions declare the automatic module name `org.firebirdsql.jaybird`.
 
-[[jb3-firebird]]
+[[jb4-firebird]]
 ==== Firebird support
 
-Jaybird 3 supports Firebird 2.0 and higher, but is only tested with Firebird 2.5, 3.0 and 4.0. 
+Jaybird 4 supports Firebird 2.5 and higher.
 
-Formal support for Firebird 1.x has been dropped (although in general we expect the driver to work). 
+Formal support for Firebird 2.0 and 2.1 has been dropped (although in general we expect the driver to work).
 The Type 2 and embedded server JDBC drivers use JNA to access the Firebird client or embedded library.
 
-[[jb3-firebird3]]
+[[jb4-firebird3]]
 ===== Notes on Firebird 3 support
 
-Jaybird 3.0.4 added support for wire protocol encryption and database encryption.
+Jaybird 4 does not (yet) support the Firebird 3 zlib compression.
 
-Jaybird 3.0 does not support the Firebird 3 zlib compression.
-
-[[jb3-firebird4]]
+[[jb4-firebird4]]
 ===== Notes on Firebird 4 support
 
-Jaybird 3.0 can connect and query Firebird 4. 
-Longer object names are supported. 
+Jaybird 4 does not support the protocol improvements of Firebird 4 like statement and session timeouts.
+Nor does it implement the new batch protocol.
 
-The new data types introduced in Firebird 4 are not supported. 
-Support for data types like `DECFLOAT` and `NUMERIC`/`DECIMAL` with precision higher than 18 will be introduced in Jaybird 4.
+Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1481 or later for the `timeZoneBind` onnection property.
 
-The Srp256 authentication plugin is supported ([.since]_Jaybird 3.0.5_), but the other SrpNNN plugins are not.
-
-Jaybird 3 does not support the Firebird 4 zlib compression.
-
-[[jb3-spec]]
+[[jb4-spec]]
 ==== Supported Specifications
 
 Jaybird supports the following specifications:
@@ -62,13 +57,13 @@ framework and a `javax.sql.XADataSource` implementation.
 
 |=======================================================================
 
-[[jb3-distribution]]
+[[jb4-distribution]]
 ==== Distribution
 
 The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. 
 Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.
 
-[[jb3-distribution-package]]
+[[jb4-distribution-package]]
 ===== Distribution package
 
 The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
@@ -78,34 +73,34 @@ The following files can be found in the distribution package:
 [cols="2,5",options="header",]
 |=======================================================================
 |File name |Description
-| `jaybird-{jaybird3-full-version}.jar` 
+| `jaybird-{jaybird4-full-version}.jar` 
 | An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
 management classes.
 
-| `jaybird-full-{jaybird3-full-version}.jar` 
+| `jaybird-full-{jaybird4-full-version}.jar` 
 | Same as above, but including the JCA 1.5 dependency.
 
-| `lib/antlr-runtime-4.7.jar`
+| `lib/antlr-runtime-4.7.2.jar`
 | Optional dependency, required if you want to use `getGeneratedKeys` support
 
 | `lib/connector-api-1.5.jar`
 | Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
 
-| `lib/jna-4.4.0.jar`
+| `lib/jna-5.3.0.jar`
 | Optional dependency, required if you want to use Type 2 native, local or embedded protocols
 
 |=======================================================================
 
-[[jb3-distribution-maven]]
+[[jb4-distribution-maven]]
 ===== Maven
 
 Alternatively, you can use maven to automatically download Jaybird and its dependencies.
 
-Jaybird 3 is available from Maven central:
+Jaybird 4 is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird-jdkXX` (where `XX` is `17` or `18`). +
-Version: `{jaybird3-full-version}`
+Artifactid: `jaybird-XX` (where `XX` is `jdk17`, `jdk18` or `java11`). +
+Version: `{jaybird4-full-version}`
 
 For example:
 
@@ -114,7 +109,7 @@ For example:
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
   <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird3-full-version}</version>
+  <version>{jaybird4-full-version}</version>
 </dependency>
 ----
 
@@ -127,7 +122,7 @@ If your application is deployed to a Java EE application server, you will need t
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
   <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird3-full-version}</version>
+  <version>{jaybird4-full-version}</version>
   <exclusions>
     <exclusion>
       <groupId>javax.resource</groupId>
@@ -143,15 +138,14 @@ If your application is deployed to a Java EE application server, you will need t
 </dependency>
 ----
 
-If you want to use Type 2 support (native, local or embedded), you need to 
-explicitly include JNA as a dependency:
+If you want to use Type 2 support (native, local or embedded), you need to explicitly include JNA as a dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
   <groupId>net.java.dev.jna</groupId>
   <artifactId>jna</artifactId>
-  <version>4.4.0</version>
+  <version>5.3.0</version>
 </dependency>
 ----
 

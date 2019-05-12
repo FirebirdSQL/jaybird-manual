@@ -11,10 +11,11 @@ Roman Rokytskyy;Mark Rotteveel
 :icons: font
 :jaybird-version: 3
 :jaybird-full-version: 3.0.5
+:jna-version: 4.4.0
+:jaybird4-full-version: 4.0.0-beta-1
 :jaybird3-full-version: 3.0.5
 :jaybird22-full-version: 2.2.15
 :min-support-firebird: 2.0
-:jna-version: 4.4.0
 :antlr-version: 4.7
 :is-snapshot:
 
