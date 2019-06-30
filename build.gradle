@@ -1,16 +1,8 @@
-defaultTasks 'clean', 'asciidoctor'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.6.1'
-    }
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '2.2.0'
 }
 
-apply plugin: 'org.asciidoctor.convert'
+defaultTasks 'clean', 'asciidoctor'
 
 repositories {
     jcenter()
@@ -21,6 +13,7 @@ asciidoctorj {
 }
 
 asciidoctor {
+    baseDirFollowsSourceDir()
     sources {
         include 'jaybird_manual.adoc'
     }
