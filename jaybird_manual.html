@@ -562,7 +562,9 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel1">
 <li><a href="#connectionproperties">Appendix A: Extended connection properties</a>
 <ul class="sectlevel2">
-<li><a href="#connectionproperties-isolation-levels">A.1. Transaction isolation levels</a></li>
+<li><a href="#connectionproperties-auth">A.1. Authentication and security properties</a></li>
+<li><a href="#connectionproperties-other">A.2. Other properties</a></li>
+<li><a href="#connectionproperties-isolation-levels">A.3. Transaction isolation levels</a></li>
 </ul>
 </li>
 <li><a href="#systemproperties">Appendix B: System properties</a>
@@ -7064,7 +7066,7 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>set/get/updateNull</code></p>
+<p><code>get/set/updateNull</code></p>
 </li>
 <li>
 <p><code>get/set/updateBytes</code></p>
@@ -7719,6 +7721,8 @@ For readability we suggest that you only specify these properties explicitly whe
 <p>A subset of these properties is also exposed in the <code>javax.sql.DataSource</code> implementations in Jaybird.
 When using data sources, unexposed properties can be set using <code>setNonStandardProperty</code>.</p>
 </div>
+<div class="sect2">
+<h3 id="connectionproperties-auth"><a class="anchor" href="#connectionproperties-auth"></a>A.1. Authentication and security properties</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -7747,41 +7751,10 @@ When using data sources, unexposed properties can be set using <code>setNonStand
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>encoding</code><br>
-<code>lc_ctype</code>, <code>isc_dpb_lc_ctype</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Character encoding for the connection using the Firebird character set name.
-This property tells the database server the encoding in which it expects character content.
-For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.<br>
-Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>charSet</code><br>
-<code>localEncoding</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
-Character set for the connection using Java character set name.
-Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>roleName</code><br>
 <code>sqlRole</code>, <code>sql_role_name</code>, <code>isc_dpb_sql_role_name</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the SQL role for the specified connection.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>sqlDialect</code><br>
-<code>dialect</code> (<em class="since">Jaybird 3</em>), <code>sql_dialect</code>, <code>isc_dpb_sql_dialect</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>SQL dialect, can be 1, 2 and 3.<br>
-Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)</p>
-</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -7827,6 +7800,54 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the process name reported to Firebird.
 See <a href="#ref-processinfo">Process information</a> for more information.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="connectionproperties-other"><a class="anchor" href="#connectionproperties-other"></a>A.2. Other properties</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Connection property (+ aliases)</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>encoding</code><br>
+<code>lc_ctype</code>, <code>isc_dpb_lc_ctype</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Character encoding for the connection using the Firebird character set name.
+This property tells the database server the encoding in which it expects character content.
+For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.<br>
+Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>charSet</code><br>
+<code>localEncoding</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Character set for the connection using Java character set name.
+Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>sqlDialect</code><br>
+<code>dialect</code> (<em class="since">Jaybird 3</em>), <code>sql_dialect</code>, <code>isc_dpb_sql_dialect</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>SQL dialect, can be 1, 2 and 3.<br>
+Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8040,8 +8061,9 @@ If a DPB item called <code>isc_dpb_XXX</code> exists, then Jaybird allows these 
 By default properties are mapped as string DPB items.
 If a DPB item requires another type, it will need to be explicitly defined in Jaybird.</p>
 </div>
+</div>
 <div class="sect2">
-<h3 id="connectionproperties-isolation-levels"><a class="anchor" href="#connectionproperties-isolation-levels"></a>A.1. Transaction isolation levels</h3>
+<h3 id="connectionproperties-isolation-levels"><a class="anchor" href="#connectionproperties-isolation-levels"></a>A.3. Transaction isolation levels</h3>
 <div class="paragraph">
 <p>It is possible to redefine the transaction isolation levels through connection properties.</p>
 </div>
@@ -8277,7 +8299,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LONGVARCHAR</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE 1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE TEXT</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 </tr>
 <tr>
@@ -8307,7 +8329,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Float</code></p></td>
 </tr>
 <tr>
@@ -8322,7 +8344,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LONGVARBINARY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE 0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE BINARY</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
 </tr>
 <tr>
@@ -8351,7 +8373,7 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(not defined) (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -9045,7 +9067,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -9094,7 +9116,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -9108,7 +9130,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -9131,7 +9153,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -9567,7 +9589,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -9701,7 +9723,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -9820,7 +9842,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -10902,30 +10924,36 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_23">23</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_24">24</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_25">25</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_26">26</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_27">
-<a href="#_footnoteref_27">27</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_27">27</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_28">
-<a href="#_footnoteref_28">28</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_28">28</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_29">
-<a href="#_footnoteref_29">29</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_29">29</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_30">
-<a href="#_footnoteref_30">30</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_30">30</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+</div>
+<div class="footnote" id="_footnotedef_31">
+<a href="#_footnoteref_31">31</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_32">
+<a href="#_footnoteref_32">32</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-06-30 09:19:11 UTC
+Last updated 2019-07-13 14:36:24 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
