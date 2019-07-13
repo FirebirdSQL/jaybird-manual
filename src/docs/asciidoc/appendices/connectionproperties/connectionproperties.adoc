@@ -117,13 +117,13 @@ Although `TRANSACTION_NONE` and `TRANSACTION_READ_UNCOMMITTED` are allowed value
 Default: `TRANSACTION_READ_COMMITTED`
 
 a|`socketBufferSize` +
-`socket_buffer_size`, `isc_dpb_socket_buffer_size`
+`socket_buffer_size`
 |Jaybird specific property. 
 Tells Jaybird Type 4 driver the size of the socket buffer.
 Should be used on the systems where default socket buffer provided by JVM is not correct.
 
 a|`blobBufferSize` +
-`blob_buffer_size`, `isc_dpb_blob_buffer_size`
+`blob_buffer_size`
 |Jaybird specific property. 
 Tells the driver the size of the buffer that is used to transfer BLOB content.
 It is recommended to keep the value equal to `n * <database page size>` (and preferably also socket buffer size).
@@ -147,7 +147,7 @@ Set property to `true` for backwards compatible behaviour (`getColumnName()` ret
 Don't set the property or set it to `false` for JDBC-compliant behaviour (recommended).
 
 a|`useStreamBlobs` +
-`use_stream_blobs`, `isc_dpb_use_stream_blobs` 
+`use_stream_blobs`
 |Jaybird specific property. 
 Boolean property.
 Tells the driver to create stream BLOBs. 
@@ -173,7 +173,7 @@ Accepted values are: `native`, `char` or `character`, `double precision`, `bigin
 See <<ref-decfloat-prop-decfloat-bind>> for more information.
 
 a|`useStandarUdf` +
-`use_standard_udf`, `isc_dpb_use_standard_udf`
+`use_standard_udf`
 |Jaybird specific property.
 Boolean property. 
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
@@ -218,7 +218,7 @@ Boolean property.
 Unused since at least Jaybird 2.2, will be removed in Jaybird 4.
 
 a|`useTranslation` +
-`mapping_path`, `isc_dpb_mapping_path`
+`mapping_path`
 |Jaybird specific property.
 Deprecated, will be removed in Jaybird 4.
 This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
