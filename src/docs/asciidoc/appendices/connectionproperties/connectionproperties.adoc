@@ -205,8 +205,7 @@ a|`set_db_charset` +
 `isc_dpb_set_db_charset`
 |Set the default character set of the database.
 
-a|`paranoia_mode` +
-`isc_dpb_paranoia_mode`
+a|`paranoia_mode`
 |Jaybird specific property. 
 Boolean property.
 Unused since Jaybird 2.2.
