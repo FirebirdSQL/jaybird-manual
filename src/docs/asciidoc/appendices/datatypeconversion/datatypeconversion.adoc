@@ -21,7 +21,7 @@ method is provided.
 |`String`
 
 |`LONGVARCHAR` 
-|`BLOB SUB_TYPE 1` 
+|`BLOB SUB_TYPE TEXT`
 |`String`
 
 |`NUMERIC` 
@@ -45,7 +45,7 @@ method is provided.
 |`java.lang.Long`
 
 |`REAL` 
-|-footnote:[In Firebird `REAL` is an alias for `FLOAT`]
+|footnote:[A Firebird `REAL` is an alias for `FLOAT` and by default handled as `java.sql.Types.FLOAT`]
 |`java.lang.Float`
 
 |`FLOAT` 
@@ -57,7 +57,7 @@ method is provided.
 |`java.lang.Double`
 
 |`LONGVARBINARY` 
-|`BLOB SUB_TYPE 0` 
+|`BLOB SUB_TYPE BINARY`
 |`byte[]`
 
 |`DATE` 
@@ -80,7 +80,7 @@ method is provided.
 |`BOOLEAN` ([.since]_Firebird 3_)
 |`java.lang.Boolean`
 
-|(not defined) ([.since]_Jaybird 4_)
+|`JaybirdTypeCodes.DECFLOAT` ([.since]_Jaybird 4_)footnote:[JDBC does not yet define a `java.sql.Types` code for `DECFLOAT`]
 |`DECFLOAT` ([.since]_Firebird 4_)
 |`java.math.BigDecimal`
 |================================================
