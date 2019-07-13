@@ -14,6 +14,9 @@ For readability we suggest that you only specify these properties explicitly whe
 A subset of these properties is also exposed in the `javax.sql.DataSource` implementations in Jaybird.
 When using data sources, unexposed properties can be set using `setNonStandardProperty`.
 
+[[connectionproperties-auth]]
+=== Authentication and security properties
+
 [cols="1,2",options="header",]
 |=======================================================================
 |Connection property (+ aliases) 
@@ -27,27 +30,9 @@ a|`password` +
 `isc_dpb_password`
 |Password corresponding to the specified user.
 
-a|`encoding` +
-`lc_ctype`, `isc_dpb_lc_ctype`
-a|Character encoding for the connection using the Firebird character set name.
-This property tells the database server the encoding in which it expects character content.
-For a list of the available encodings see <<Available Encodings>>. +
-Default: `NONE` (unless `charSet` is specified).
-
-a|`charSet` +
-`localEncoding`
-|Jaybird specific property.
-Character set for the connection using Java character set name.
-Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
-
 a|`roleName` +
 `sqlRole`, `sql_role_name`, `isc_dpb_sql_role_name`
 |Name of the SQL role for the specified connection.
-
-a|`sqlDialect` +
-`dialect` ([.since]_Jaybird 3_), `sql_dialect`, `isc_dpb_sql_dialect`
-a|SQL dialect, can be 1, 2 and 3. +
-Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)
 
 a|`authPlugins` +
 `auth_plugin_list`
@@ -76,6 +61,33 @@ a|`process_name` +
 `processName` ([.since]_Jaybird 3_), `isc_dpb_process_name`
 |Specifies the process name reported to Firebird.
 See <<ref-processinfo>> for more information.
+|=======================================================================
+
+[[connectionproperties-other]]
+=== Other properties
+
+[cols="1,2",options="header",]
+|=======================================================================
+|Connection property (+ aliases) 
+|Explanation
+
+a|`encoding` +
+`lc_ctype`, `isc_dpb_lc_ctype`
+a|Character encoding for the connection using the Firebird character set name.
+This property tells the database server the encoding in which it expects character content.
+For a list of the available encodings see <<Available Encodings>>. +
+Default: `NONE` (unless `charSet` is specified).
+
+a|`charSet` +
+`localEncoding`
+|Jaybird specific property.
+Character set for the connection using Java character set name.
+Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
+
+a|`sqlDialect` +
+`dialect` ([.since]_Jaybird 3_), `sql_dialect`, `isc_dpb_sql_dialect`
+a|SQL dialect, can be 1, 2 and 3. +
+Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)
 
 a|`defaultHoldable` +
 `defaultResultSetHoldable`
