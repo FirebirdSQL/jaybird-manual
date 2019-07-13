@@ -45,7 +45,7 @@ method is provided.
 |`java.lang.Long`
 
 |`REAL` 
-|`REAL` 
+|-footnote:[In Firebird `REAL` is an alias for `FLOAT`]
 |`java.lang.Float`
 
 |`FLOAT` 
