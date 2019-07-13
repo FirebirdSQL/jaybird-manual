@@ -37,7 +37,7 @@ Jaybird will report the JDBC `BINARY`/`VARBINARY` type information in all metada
 
 The getters (on result set/callable statement), setters (prepared/callable statement), and update methods (result set) for columns of this type are restricted to:
 
-* `set/get/updateNull`
+* `get/set/updateNull`
 * `get/set/updateBytes`
 * `get/set/updateBinaryStream`
 * `get/set/updateAsciiStream`
