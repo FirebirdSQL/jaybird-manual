@@ -250,12 +250,9 @@ After using the statement object, an application should close it. Two
 different possibilities exist: to close the result set object
 associated with the statement handle and to close the statement completely.
 
-If, for example, we want to reuse the statement object for another
-query, it is not necessary to completely release the allocated
-structures. Jaybird is required only to compile a new statement before
-using it, in other words we can skip step 1. This saves us one
-round-trip to the server over the network, which might improve the
-application performance.
+If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
+Jaybird is required only to compile a new statement before using it, in other words we can skip step 1 (allocating a new statement handle).
+This saves us one round-trip to the server over the network, which might improve the application performance.
 
 If we close the statement completely, the allocated statement handle is
 no longer usable. Jaybird could allocate a new statement handle, however
@@ -264,8 +261,7 @@ the JDBC specification does not allow use of a `Statement` object after
 
 ==== Statement lifetime and DDL
 
-Step 2 in the previous section is probably the most important, and
-usually, most expensive part of the statement execution life cycle.
+Step 2 (compiling the SQL statement) in the previous section is probably the most important, and usually, most expensive part of the statement execution life cycle.
 
 When Firebird server receives the "prepare
 statement" call, it parses the SQL statement and converts it into the
@@ -289,10 +285,8 @@ procedure or trigger definition while another one is accessing those
 objects, the first application will receive an error 335544453 "object
 is in use".
 
-Therefore it is strongly recommended to close the statement as soon as
-it is no longer needed. This invalidates the BLR and release all
-references to the database objects, making them available for the
-modification.
+To avoid this problem, it is strongly recommended to close the statement as soon as it is no longer needed.
+This invalidates the BLR and release all references to the database objects, making them available for the modification.
 
 Special care should be taken when the statement pooling is used. In that case statements are not 
 released even if the `close()` method is called. The only possibility to close the pooled
@@ -380,17 +374,12 @@ cause by SQL injection can be avoided. Second of all, the driver handles convers
 types to the correct format for the target datatype in Firebird: you don't need to convert a Java
 value to the correct string literal format for Firebirds SQL dialect.
 
-And to address some of the identified problems, we can redesign our application
-to prepare those statements before calling that code (for example in a
-constructor) and close them when application is shut down. In this case
-the code is even more compact (see the next example). Unfortunately the
-application is now responsible for prepared statement management. When
-a connection is closed, the prepared statement object will be invalidated,
-but the application will not be notified. Also, if the
-application uses similar statements in different parts of the
-application, the refactoring might affect many classes, possibly
-destabilizing the code. So, the refactoring on this example is not
-something we want to do.
+To address some of the identified problems, we can redesign our application to prepare those statements before calling that code (for example in a constructor) and close them when the application ends.
+In that case the code can be more compact (see the next example). 
+Unfortunately, the application is now responsible for prepared statement management.
+When a connection is closed, the prepared statement object will be invalidated, but the application will not be notified.
+And when the application uses similar statements in different parts of the application, the refactoring might affect many classes, possibly destabilizing the code. 
+So, the refactoring on this example is not something we want to do.
 
 [source,java]
 .Rewritten example to let application manage prepared statements
