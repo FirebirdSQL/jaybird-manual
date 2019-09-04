@@ -184,7 +184,7 @@ The developers follow the firebird-java@yahoogroups.com list. Join the list and 
 about suspected bugs. List members may be able to help out to determine if it is an actual bug, 
 provide a workaround and get you going again, whereas bug fixes might take awhile.
 
-You can report bugs in the Firebird bug tracker, project http://tracker.firebirdsql.org/browse/JDBC["Java Client (Jaybird)"^]
+You can report bugs in the Firebird bug tracker, project http://tracker.firebirdsql.org/browse/JDBC["Jaybird JCA/JDBC Driver"^]
 
 When reporting bugs, please provide a minimal, but complete reproduction, including databases and 
 source code to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is 
