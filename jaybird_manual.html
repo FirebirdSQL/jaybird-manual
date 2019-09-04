@@ -900,7 +900,7 @@ about suspected bugs. List members may be able to help out to determine if it is
 provide a workaround and get you going again, whereas bug fixes might take awhile.</p>
 </div>
 <div class="paragraph">
-<p>You can report bugs in the Firebird bug tracker, project <a href="http://tracker.firebirdsql.org/browse/JDBC" target="_blank" rel="noopener">"Java Client (Jaybird)"</a></p>
+<p>You can report bugs in the Firebird bug tracker, project <a href="http://tracker.firebirdsql.org/browse/JDBC" target="_blank" rel="noopener">"Jaybird JCA/JDBC Driver"</a></p>
 </div>
 <div class="paragraph">
 <p>When reporting bugs, please provide a minimal, but complete reproduction, including databases and
@@ -1032,20 +1032,15 @@ loaded dynamically, through a different classloader, etc).</p>
 </div>
 </li>
 <li>
-<p>The JDBC driver is listed in the <code>jdbc.drivers</code> system property. For example in your
-<code>~/.hotjava/properties</code> file you can specify following line: (<strong>TODO</strong>: is ~/.hotjava/properties  still valid?)</p>
-<div class="literalblock">
-<div class="content">
-<pre>jdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver</pre>
-</div>
-</div>
+<p>The JDBC driver name is listed in the <code>jdbc.drivers</code> system property.
+Multiple drivers can be separated using a colon (<code>:</code>).</p>
 <div class="paragraph">
-<p>Alternatively you can specify the value of this property during JVM startup:</p>
+<p>You can specify the value of this property during JVM startup:</p>
 </div>
 <div class="literalblock">
 <div class="content">
 <pre>java\
-  -Djdbc.drivers=org.firebirdsql.jdbc.FBDriver\
+  -Djdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver\
   -classpath jaybird-full-{jaybird-full-version}.jar;C:/myproject/classes\
   my.company.SomeJavaExample</pre>
 </div>
@@ -1078,7 +1073,7 @@ the documentation of Firebird server.</p>
 <p>The format of the path depends on the platform of the Firebird server.</p>
 </div>
 <div class="paragraph">
-<p>On Windows, the path must include the drive letter and path, for example <code>c:/database/employee.fdb</code>, which points to the employee database that can be found in the <code>database</code> directory of drive <code>C:`</code>.
+<p>On Windows, the path must include the drive letter and path, for example <code>c:/database/employee.fdb</code>, which points to the employee database that can be found in the <code>database</code> directory of drive <code>C:</code>.
 Java (and Firebird) supports either <code>/</code> or <code>\</code> (escaped as <code>\\</code>) as path separator on the Windows platform.
 On Unix and Linux platform, you can use only <code>/</code> as the path separator.</p>
 </div>
@@ -2727,12 +2722,9 @@ different possibilities exist: to close the result set object
 associated with the statement handle and to close the statement completely.</p>
 </div>
 <div class="paragraph">
-<p>If, for example, we want to reuse the statement object for another
-query, it is not necessary to completely release the allocated
-structures. Jaybird is required only to compile a new statement before
-using it, in other words we can skip step 1. This saves us one
-round-trip to the server over the network, which might improve the
-application performance.</p>
+<p>If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
+Jaybird is required only to compile a new statement before using it, in other words we can skip step 1 (allocating a new statement handle).
+This saves us one round-trip to the server over the network, which might improve the application performance.</p>
 </div>
 <div class="paragraph">
 <p>If we close the statement completely, the allocated statement handle is
@@ -2744,8 +2736,7 @@ the JDBC specification does not allow use of a <code>Statement</code> object aft
 <div class="sect3">
 <h4 id="_statement_lifetime_and_ddl"><a class="anchor" href="#_statement_lifetime_and_ddl"></a>4.2.2. Statement lifetime and DDL</h4>
 <div class="paragraph">
-<p>Step 2 in the previous section is probably the most important, and
-usually, most expensive part of the statement execution life cycle.</p>
+<p>Step 2 (compiling the SQL statement) in the previous section is probably the most important, and usually, most expensive part of the statement execution life cycle.</p>
 </div>
 <div class="paragraph">
 <p>When Firebird server receives the "prepare
@@ -2773,10 +2764,8 @@ objects, the first application will receive an error 335544453 "object
 is in use".</p>
 </div>
 <div class="paragraph">
-<p>Therefore it is strongly recommended to close the statement as soon as
-it is no longer needed. This invalidates the BLR and release all
-references to the database objects, making them available for the
-modification.</p>
+<p>To avoid this problem, it is strongly recommended to close the statement as soon as it is no longer needed.
+This invalidates the BLR and release all references to the database objects, making them available for the modification.</p>
 </div>
 <div class="paragraph">
 <p>Special care should be taken when the statement pooling is used. In that case statements are not
@@ -2882,17 +2871,12 @@ types to the correct format for the target datatype in Firebird: you don&#8217;t
 value to the correct string literal format for Firebirds SQL dialect.</p>
 </div>
 <div class="paragraph">
-<p>And to address some of the identified problems, we can redesign our application
-to prepare those statements before calling that code (for example in a
-constructor) and close them when application is shut down. In this case
-the code is even more compact (see the next example). Unfortunately the
-application is now responsible for prepared statement management. When
-a connection is closed, the prepared statement object will be invalidated,
-but the application will not be notified. Also, if the
-application uses similar statements in different parts of the
-application, the refactoring might affect many classes, possibly
-destabilizing the code. So, the refactoring on this example is not
-something we want to do.</p>
+<p>To address some of the identified problems, we can redesign our application to prepare those statements before calling that code (for example in a constructor) and close them when the application ends.
+In that case the code can be more compact (see the next example).
+Unfortunately, the application is now responsible for prepared statement management.
+When a connection is closed, the prepared statement object will be invalidated, but the application will not be notified.
+And when the application uses similar statements in different parts of the application, the refactoring might affect many classes, possibly destabilizing the code.
+So, the refactoring on this example is not something we want to do.</p>
 </div>
 <div class="listingblock">
 <div class="title">Rewritten example to let application manage prepared statements</div>
@@ -10231,7 +10215,7 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 Nor does it implement the new batch protocol.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1481 or later for the <code>timeZoneBind</code> onnection property.</p>
+<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1481 or later for the <code>timeZoneBind</code> connection property.</p>
 </div>
 </div>
 </div>
@@ -10952,7 +10936,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-07-13 14:49:26 UTC
+Last updated 2019-09-04 12:27:24 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
