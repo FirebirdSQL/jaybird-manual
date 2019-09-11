@@ -6065,8 +6065,8 @@ System.out.println(
 <div class="sect2">
 <h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.1. Authentication plugins</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3</em><br>
-<em class="since">Jaybird 3</em></p>
+<p><em class="since">Jaybird 3</em><br>
+<em class="since">Firebird 3</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3 introduced authentication plugins together with a new authentication model.
@@ -6643,7 +6643,7 @@ The required ANTLR runtime version depends on the Jaybird version, check the rel
 <div class="paragraph">
 <p>Generated keys retrieval modifies the statement to add a <code>RETURNING</code>-clause.
 Currently Firebird only supports <code>RETURNING</code> for DML operations that affect a single row.
-Attempting to use generated keys retrieval with a statement that affects multiple rows will yield an error.</p>
+Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error <em>"multiple rows in singleton select"</em>.</p>
 </div>
 </td>
 </tr>
@@ -6689,7 +6689,7 @@ Attempting to use generated keys retrieval with a statement that affects multipl
 <p>When <code>NO_GENERATED_KEYS</code> is passed, the query will be executed as a normal query.</p>
 </div>
 <div class="paragraph">
-<p>When <code>RETURN_GENERATED_KEYS</code> is passed, the driver will return <em>*all*</em> columns of the table as generated keys.
+<p>When <code>RETURN_GENERATED_KEYS</code> is passed, the driver will return <em>all</em> columns of the table as generated keys.
 The columns are ordered by ordinal position (as reported in the JDBC metadata of the table).
 It is advisable to retrieve the values from the <code>getGeneratedKeys()</code> result set by column name.</p>
 </div>
@@ -6818,9 +6818,26 @@ This makes sense if you consider that once prepared, the statement can be reused
 </ul>
 </div>
 <div class="paragraph">
-<p>The values in the <code>int[]</code> parameter are the ordinal positions of the columns as specified in the (JDBC) metadata of the table.
-For a null or empty array the statement is processed as is.
-Invalid ordinal positions are ignored and silently dropped (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future)</p>
+<p>The values in the <code>int[]</code> parameter are the ordinal positions of the columns as specified in the (JDBC) metadata of the table.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
+In Jaybird 4, this behaviour has changed and instead will throw an exception with message <em>"Generated keys array columnIndexes was empty or null. A non-empty array is required."</em></p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even though we don&#8217;t have sixth column.
+In Jaybird 4, this behavior has changed and instead will throw an exception with message <em>"Generated keys column position &lt;position&gt; does not exist for table &lt;tablename&gt;. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values."</em></p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="ref-generatedkeys-examples-column-index"><a class="anchor" href="#ref-generatedkeys-examples-column-index"></a>Example using column indexes</h5>
@@ -6899,8 +6916,9 @@ As this is the second column, it is retrieved from the result set by <code>2</co
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Invalid ordinal positions are currently ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even though we don&#8217;t have sixth column.
-This behavior may change in future Jaybird versions</p>
+<p>In Jaybird 3 and earlier, the array of indices is sorted in ascending order before use: passing <code>new int[] { 4, 1, 3 }</code> will yield columns in order <code>ID</code>, <code>LASTNAME</code>, <code>BIRTHDATE</code>.
+In Jaybird 4, this sort is no longer applied, so columns will be in the order specified by the array: <code>BIRTHDATE</code>, <code>ID</code>, <code>LASTNAME</code>.
+To avoid issues, we recommend specifying the columns in ascending order, or always retrieve them by name.</p>
 </div>
 </td>
 </tr>
@@ -6934,6 +6952,21 @@ This behavior may change in future Jaybird versions</p>
 The column names provided are processed as is and are not checked for validity or the need of quoting.
 Providing non-existent or incorrectly (un)quoted columns will result in an exception when the statement is processed by Firebird (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future).
 This method is the fastest as it does not retrieve metadata from the server.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
+In Jaybird 4, this behaviour has changed and instead will throw an exception with message <em>"Generated keys array columnNames was empty or null. A non-empty array is required."</em></p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="ref-generatedkeys-examples-column-name"><a class="anchor" href="#ref-generatedkeys-examples-column-name"></a>Example using column names</h5>
@@ -6991,7 +7024,107 @@ Quoting the column names would then be done by Jaybird.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-limitations"><a class="anchor" href="#ref-generatedkeys-limitations"></a>10.1.4. Limitations</h4>
+<h4 id="ref-generatedkeys-config"><a class="anchor" href="#ref-generatedkeys-config"></a>10.1.4. Configuring generated keys support</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>The connection property <code>generatedKeysEnabled</code> (alias <code>generated_keys_enabled</code>) allows the behaviour of generated keys support to be configured.
+This property is also available on data sources.</p>
+</div>
+<div class="paragraph">
+<p>This property supports the following values (case insensitive):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>default</code>: default behaviour to enable generated keys for statement types with <code>RETURNING</code> clause in the connected Firebird version.
+Absence of this property, <code>null</code> or empty string implies <code>default</code>.</p>
+</li>
+<li>
+<p><code>disabled</code>: disable support.
+Attempts to use generated keys methods other than using <code>Statement.NO_GENERATED_KEYS</code> will throw a <code>SQLFeatureNotSupportedException</code>.</p>
+</li>
+<li>
+<p><code>ignored</code>: ignore generated keys support.
+Attempts to use generated keys methods will not attempt to detect generated keys support and execute as if the statement generates no keys.
+The <code>Statement.getGeneratedKeys()</code> method will always return an empty result set.
+This behaviour is equivalent to using the non-generated keys methods.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A comma-separated list of statement types to enable.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For <code>disabled</code> and <code>ignored</code>, <code>DatabaseMetaData.supportsGetGeneratedKeys</code> will report <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>Because of the behaviour specified in the next section, typos in property values will behave as <code>ignored</code> (eg using <code>generatedKeysEnabled=disable</code> instead of <code>disabled</code> will behave as <code>ignored</code>).</p>
+</div>
+<div class="sect4">
+<h5 id="ref-generatedkeys-config-stmt-types"><a class="anchor" href="#ref-generatedkeys-config-stmt-types"></a>Selectively enable statement types</h5>
+<div class="paragraph">
+<p>This last option allows you to selectively enable support for generated keys.
+For example, <code>generatedKeysEnabled=insert</code> will only enable it for <code>insert</code> while ignoring it for all other statement types.
+Statement types that are not enabled will behave as if they generate no keys and will execute normally.
+For these statement types, <code>Statement.getGeneratedKeys()</code> will return an empty result set.</p>
+</div>
+<div class="paragraph">
+<p>Possible statement type values (case insensitive) are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>insert</code></p>
+</li>
+<li>
+<p><code>update</code></p>
+</li>
+<li>
+<p><code>delete</code></p>
+</li>
+<li>
+<p><code>update_or_insert</code></p>
+</li>
+<li>
+<p><code>merge</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Invalid values will be ignored.
+If none of he specified statement types are supported by Firebird, it will behave as <code>ignored</code>.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>Some examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert</code> will only enable insert support</p>
+</li>
+<li>
+<p><code>jdbc:firebird://localhost/testdb?generatedKeysEnabled=merge</code> will only enable merge support.
+But only on Firebird 3 and higher, for Firebird 2.5 this will behave as <code>ignored</code> given the lack of <code>RETURNING</code> support for merge.</p>
+</li>
+<li>
+<p><code>jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert,update</code> will only enable insert and update support</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This feature can be used to circumvent issues with frameworks or tools that always use generated keys methods for prepare or execution.
+For example with <code>UPDATE</code> statements that touch multiple records and - given the Firebird limitations for <code>RETURNING</code> - produce the error <em>"multiple rows in singleton select"</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-generatedkeys-limitations"><a class="anchor" href="#ref-generatedkeys-limitations"></a>10.1.5. Limitations</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 does not support generated keys retrieval for batch execution of prepared statements.
 Support for generated key retrieval with batch execution was introduced in Jaybird 3.0.</p>
@@ -7325,12 +7458,12 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0f</code>, false is <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0</code>, false is <code>0.0</code></p></td>
 </tr>
 <tr>
@@ -7413,17 +7546,17 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code>/<code>FLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0f</code>, false sets <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0</code>, false sets <code>0.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1E0</code>, false sets <code>0E0</code></p></td>
 </tr>
 </tbody>
@@ -7644,7 +7777,7 @@ This to avoid additional dependencies.</p>
 <h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
 <div class="paragraph">
 <p>The <code>DECFLOAT</code> datatype supports values with a precision of 16 or 34 decimal digits, and an exponent
-<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>
+<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>
 between -398 and 369 (<code>DECFLOAT(16)</code>), or between -6176 and 6111 (<code>DECFLOAT(34)</code>), so the minimum and maximum values are:</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content">
@@ -7865,7 +7998,7 @@ The precision specified is the minimum precison, not the exact precision.
 <div class="sect3">
 <h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.4.1. Precision and range</h4>
 <div class="paragraph">
-<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p>
+<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 34.
@@ -8057,7 +8190,7 @@ See <a href="#ref-firebirdautocommit">Firebird auto commit mode (experimental)</
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em>).
 Configure generated keys support behaviour.
-<strong>TODO</strong> Improve documentation (define reference section based on Jaybird 4 release notes)</p></td>
+See <a href="#ref-generatedkeys-config">Configuring generated keys support</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8510,7 +8643,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Float</code></p></td>
 </tr>
 <tr>
@@ -8554,7 +8687,7 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -9248,7 +9381,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -9297,7 +9430,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -9311,7 +9444,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -9334,7 +9467,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -9770,7 +9903,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -9904,7 +10037,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -10023,7 +10156,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -11093,51 +11226,54 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_19">19</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="http://tracker.firebirdsql.org/browse/CORE-5788" target="_blank" rel="noopener">CORE-5788</a>).
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
+<a href="#_footnoteref_20">20</a>. This is not the case for the unsupported Firebird 1.0 and 1.5 versions. There this will behave similar to <code>disabled</code>, and you will need to explicitly specify <code>ignored</code> instead to get this behaviour.
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
+<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
+<a href="#_footnoteref_22">22</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
+<a href="#_footnoteref_23">23</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
+<a href="#_footnoteref_24">24</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
+<a href="#_footnoteref_25">25</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
+<a href="#_footnoteref_26">26</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_27">
-<a href="#_footnoteref_27">27</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_27">27</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_28">
-<a href="#_footnoteref_28">28</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_28">28</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_29">
-<a href="#_footnoteref_29">29</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_29">29</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_30">
-<a href="#_footnoteref_30">30</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_30">30</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_31">
-<a href="#_footnoteref_31">31</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_31">31</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_32">
-<a href="#_footnoteref_32">32</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_32">32</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_33">
-<a href="#_footnoteref_33">33</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_33">33</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_34">
+<a href="#_footnoteref_34">34</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-11 09:53:25 UTC
+Last updated 2019-09-11 10:52:09 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
