@@ -23,6 +23,8 @@ include::connection/processinfo.adoc[]
 
 include::statement/generatedkeys.adoc[]
 
+include::statement/ignoreproceduretype.adoc[]
+
 // TODO: Document closeOnCompletion support?
 
 ////

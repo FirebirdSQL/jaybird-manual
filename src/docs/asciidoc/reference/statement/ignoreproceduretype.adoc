@@ -1,0 +1,20 @@
+[[ref-callable-ignore-proctype]]
+=== Connection property ignoreProcedureType
+
+// TODO Maybe should be part of a callable statement reference page
+
+[.since]_Jaybird 3.0.6_
+
+On Firebird 2.1 and higher, Jaybird will use the procedure type information from the database metadata to decide how to execute `CallableStatement`.
+When a procedure is selectable, Jaybird will automatically transform a call-escape or `EXECUTE PROCEDURE` statement to a `SELECT`.
+
+In some cases this automatic transformation to use a `SELECT` leads to problems.
+You can explicitly set `FirebirdCallableStatement.setSelectableProcedure(false)` to fix most of these issues, but this is not always an option.
+For example spring-data-jpa's `@Procedure` will not work correctly with selectable procedures, but you can't call `setSelectableProcedure`.
+
+To disable this automatic usage of procedure type information, set connection property `ignoreProcedureType=true`.
+When necessary you can use `FirebirdCallableStatement.setSelectableProcedure(true)` to execute a procedure using `SELECT`.
+
+Be aware though, when `EXECUTE PROCEDURE` is used with a selectable procedure, it is executed only up to the first `SUSPEND`, and the rest of the stored procedure is not executed.
+
+For Firebird 2.0 and lower this property has no effect, as there the procedure type information is not available.

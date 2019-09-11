@@ -158,7 +158,7 @@ a|`ignoreProcedureType`
 |Jaybird specific property ([.since]_Jaybird 3.0.6_).
 Boolean property.
 Set property to `true` to disable usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
-**TODO** Improve documentation (define reference section based on Jaybird 3.0.6 release notes)
+See <<ref-callable-ignore-proctype>> for more information.
 
 a|`octetsAsBytes`
 |Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
