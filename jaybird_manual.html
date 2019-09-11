@@ -554,8 +554,9 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel2">
 <li><a href="#ref-binary">12.1. Binary types BINARY/VARBINARY</a></li>
 <li><a href="#ref-boolean">12.2. Type BOOLEAN</a></li>
-<li><a href="#ref-decfloat">12.3. Decimal floating point type DECFLOAT</a></li>
-<li><a href="#ref-decimal">12.4. Exact numeric types DECIMAL/NUMERIC</a></li>
+<li><a href="#ref-datetime">12.3. Date/time types</a></li>
+<li><a href="#ref-decfloat">12.4. Decimal floating point type DECFLOAT</a></li>
+<li><a href="#ref-decimal">12.5. Exact numeric types DECIMAL/NUMERIC</a></li>
 </ul>
 </li>
 </ul>
@@ -7349,7 +7350,7 @@ This requires the log4j 1.x library on the classpath and system property <code>F
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This section documents non-standard datatypes supported by Jaybird, or behaviour deviating from standard JDBC expectations.
+This section documents non-standard datatypes supported by Jaybird, behaviour deviating from standard JDBC expectations, or recently introduced features.
 It does not provide full documentation for all supported datatypes.
 </td>
 </tr>
@@ -7593,7 +7594,402 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.3. Decimal floating point type DECFLOAT</h3>
+<h3 id="ref-datetime"><a class="anchor" href="#ref-datetime"></a>12.3. Date/time types</h3>
+<div class="sect3">
+<h4 id="ref-datetime-tz"><a class="anchor" href="#ref-datetime-tz"></a>12.3.1. Time zones</h4>
+<div class="paragraph">
+<p><em class="since">Firebird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 4 introduced time zone types, with types <code>TIME WITH TIME ZONE</code> and <code>TIMESTAMP WITH TIME ZONE</code>.
+See the Firebird 4 release notes and <code>doc/sql.extensions/README.time_zone.md</code> in the Firebird installation for details on these types.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.6</em><br>
+Since Jaybird 3.0.6, two connection properties, <code>timeZoneBind</code> and <code>sessionTimeZone</code>, are available to provide limited support for these types.
+See <a href="#ref-datetime-timezonebind">Time zone bind configuration</a> and <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for details.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em><br>
+Since Jaybird 4, the time zone types are supported under Java 8 and higher, using the Java 8 (or higher) version of Jaybird.
+Time zone types are not supported under Java 7, and you will need to enable legacy time zone bind to use these types.
+With legacy time zone bind, Firebird will convert to the equivalent <code>TIME</code> and <code>TIMESTAMP</code> (<code>WITHOUT TIME ZONE</code>) types using the session time zone.
+Time zone bind can be configured with connection property <code>timeZoneBind</code>, for more information see <a href="#ref-datetime-timezonebind">Time zone bind configuration</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="ref-datetime-tz-scope"><a class="anchor" href="#ref-datetime-tz-scope"></a>Scope of time zone support</h5>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>JDBC 4.2 introduced support for time zones, and maps these types to <code>java.time.OffsetTime</code> and <code>java.time.OffsetDateTime</code>.
+JDBC does not define explicit setters for these types.
+Use <code>setObject(index, value)</code>, <code>updateObject(index, value)</code>, <code>getObject(index/name)</code> or <code>getObject(index/name, classType)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Firebird 4 supports both offset and named time zones.
+Given the definition in JDBC, Jaybird only supports offset time zones.
+On retrieval of a value with a named zone, Jaybird will make a best effort to convert to the equivalent offset using Java&#8217;s time zone information.
+If no mapping is available the time will be returned at UTC (offset zero).</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 supports the following Java types on fields of time zone types (those marked with * are not defined in JDBC)</p>
+</div>
+<div class="paragraph">
+<p><code>TIME WITH TIME ZONE</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.time.OffsetTime</code> (default for <code>getObject</code>)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get, if the value is a named zone, it will derive the offset using the current date</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.time.OffsetDateTime</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get the current date is added</p>
+</li>
+<li>
+<p>On set the date information is removed</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.lang.String</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get applies <code>OffsetTime.toString()</code> (eg <code>13:25:13.1+01:00</code>)</p>
+</li>
+<li>
+<p>On set tries the default parse format of either <code>OffsetTime</code> or <code>OffsetDateTime</code> (eg <code>13:25:13.1+01:00</code> or <code>2019-03-10T13:25:13+01:00</code>) and then sets as that type</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.sql.Time</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get obtains <code>java.time.OffsetDateTime</code>, converts this to epoch milliseconds and uses <code>new java.sql.Time(millis)</code></p>
+</li>
+<li>
+<p>On set applies <code>toLocalTime()</code>, combines this with <code>LocalDate.now()</code> and then derives the offset time for the default JVM time zone</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.sql.Timestamp</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get obtains <code>java.time.OffsetDateTime</code>, converts this to epoch milliseconds and uses <code>new java.sql.Timestamp(millis)</code></p>
+</li>
+<li>
+<p>On set applies <code>toLocalDateTime()</code> and derives the offset time for the default JVM time zone</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>TIMESTAMP WITH TIME ZONE</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.time.OffsetDateTime</code> (default for <code>getObject</code>)</p>
+</li>
+<li>
+<p><code>java.time.OffsetTime</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get, the date information is removed</p>
+</li>
+<li>
+<p>On set, the current date is added</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.lang.String</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get applies <code>OffsetDateTime.toString()</code> (eg <code>2019-03-10T13:25:13.1+01:00</code>)</p>
+</li>
+<li>
+<p>On set tries the default parse format of either <code>OffsetTime</code> or <code>OffsetDateTime</code> (eg <code>13:25:13.1+01:00</code> or <code>2019-03-10T13:25:13+01:00</code>) and then sets as that type</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.sql.Time</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get obtains <code>java.time.OffsetDateTime</code>, converts this to epoch milliseconds and uses <code>new java.sql.Time(millis)</code></p>
+</li>
+<li>
+<p>On set applies <code>toLocalTime()</code>, combines this with <code>LocalDate.now()</code> and then derives the offset date time for the default JVM time zone</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.sql.Timestamp</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get obtains <code>java.time.OffsetDateTime</code>, converts this to epoch milliseconds and uses <code>new java.sql.Timestamp(millis)</code></p>
+</li>
+<li>
+<p>On set applies <code>toLocalDateTime()</code> and derives the offset date time for the default JVM time zone</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>java.sql.Date</code> (*)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>On get obtains <code>java.time.OffsetDateTime</code>, converts this to epoch milliseconds and uses <code>new java.sql.Date(millis)</code></p>
+</li>
+<li>
+<p>On set applies <code>toLocalDate()</code> at start of day and derives the offset date  time for the default JVM time zone</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect5">
+<h6 id="ref-datetime-tz-scope-legacy"><a class="anchor" href="#ref-datetime-tz-scope-legacy"></a>Support for legacy JDBC date/time types</h6>
+<div class="paragraph">
+<p>For the <code>WITH TIME ZONE</code> types, JDBC does not define support for the legacy JDBC types (<code>java.sql.Time</code>, <code>java.sql.Timestamp</code> and <code>java.sql.Date</code>).
+To ease the transition and potential compatibility with tools and libraries, Jaybird does provide support.
+However, we strongly recommend to avoid using these types.</p>
+</div>
+<div class="paragraph">
+<p>Compared to the <code>WITHOUT TIME ZONE</code> types, there may be small discrepancies in values as Jaybird uses 1970-01-01 for <code>WITHOUT TIME ZONE</code>, while for <code>WITH TIME ZONE</code> it uses the current date.
+If this is problematic, then either apply the necessary conversions yourself, enable legacy time zone bind, or define or cast your columns to <code>TIME</code> or <code>TIMESTAMP</code>.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="ref-datetime-tz-scope-javatime"><a class="anchor" href="#ref-datetime-tz-scope-javatime"></a>No support for other java.time types</h6>
+<div class="paragraph">
+<p>The types <code>java.time.LocalTime</code>, <code>java.time.LocalDateTime</code> and <code>java.time.LocalDate</code> are not supported for the time zone types.
+Supporting these types would be ambiguous.
+If you need to use these, then either apply the necessary conversions yourself, enable legacy time zone bind, or define or cast your columns as <code>TIME</code> or <code>TIMESTAMP</code>.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird also does not support non-standard extensions like <code>java.time.Instant</code>, or <code>java.time.ZonedDateTime</code>.
+If there is interest, we may add them in the future.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-datetime-timezonebind"><a class="anchor" href="#ref-datetime-timezonebind"></a>Time zone bind configuration</h5>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.6</em></p>
+</div>
+<div class="paragraph">
+<p>The connection property <code>timeZoneBind</code> (alias <code>time_zone_bind</code>) is a connection property to configure the time zone bind (see also <code>SET TIME ZONE BIND</code> in the Firebird 4 release notes).</p>
+</div>
+<div class="paragraph">
+<p>This property needs to be explicitly set if you are using Jaybird 4 on Java 7 or Jaybird 3 (on any Java version), and need to handle the <code>WITH TIME ZONE</code> types.
+It can also be used for tools or applications that expect <code>java.sql.Time</code>/<code>Timestamp</code> types and cannot use the <code>java.time.OffsetTime</code>/<code>OffsetDateTime</code> types returned for the <code>WITH TIME ZONE</code> types.</p>
+</div>
+<div class="paragraph">
+<p>Possible values (case insensitive):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>legacy</code></p>
+<div class="paragraph">
+<p>Firebird will convert a <code>WITH TIME ZONE</code> type to the equivalent <code>WITHOUT TIME ZONE</code> type using the session time zone to derive the value.</p>
+</div>
+<div class="paragraph">
+<p>Result set columns and parameters on prepared statements will behave as the equivalent <code>WITHOUT TIME ZONE</code> types.
+This conversion is not applied to the database metadata which will always report <code>WITH TIME ZONE</code> information.</p>
+</div>
+</li>
+<li>
+<p><code>native</code></p>
+<div class="paragraph">
+<p>Behaves as default (<code>WITH TIME ZONE</code> types supported), but value will be explicitly set.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Any other value will result in error <code>isc_time_zone_bind</code> (code 335545255, message <em>"Invalid time zone bind mode &lt;value&gt;"</em>) on connect.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1481 or later).
+It will be ignored in earlier builds as the necessary database parameter buffer item does not exist in earlier versions.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-datetime-sessiontimezone"><a class="anchor" href="#ref-datetime-sessiontimezone"></a>Connection property sessionTimeZone</h5>
+<div class="paragraph">
+<p>The connection property <code>sessionTimeZone</code> (alias <code>session_time_zone</code>) does two things:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>specifies the Firebird 4 session time zone (<em class="since">Jaybird 3.0.6</em>),</p>
+</li>
+<li>
+<p>specifies the time zone to use when converting values of without time zone types to the legacy JDBC datetime types on all Firebird versions (<em class="since">Jaybird 4</em>).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See <a href="#ref-datetime-sessiontimezone-fb">Firebird 4 session time zone</a> for information on the effects of <code>sessionTimeZone</code> on the server-side.</p>
+</div>
+<div class="paragraph">
+<p>Valid values are time zone names known by Firebird, we recommend to use the long names (eg <code>Europe/Amsterdam</code>) and not the ambiguous short IDs (eg <code>CET</code>).
+Although not required, we recommend to use time zone names that are known by Firebird and Java (see <a href="#ref-datetime-sessiontimezone-convert">Session time zone for conversion</a> for caveats).</p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 3, <code>sessionTimeZone</code> will only configure the server-side session time zone.
+Client-side, Jaybird will continue to use the JVM default time zone for parsing the without time zone values to the <code>java.sql.Time/Timestamp/Date</code> types.
+Setting <code>sessionTimeZone</code> to the JVM default time zone will yield the best (ie correct) values, but not setting it (and thus using the server default) will retain behaviour that is backwards compatible with behaviour of previous versions of Jaybird.
+In Jaybird 4, this property also configures client-side parsing of values to these legacy types.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>On Jaybird 3, we recommend not setting this property, or setting it to the default JVM time zone.
+If you set it to a different time zone, then we recommend that you do not use the legacy <code>java.sql.Time/Timestamp/Date</code> types, but instead use <code>java.time.LocalTime/LocalDateTime/LocalDate</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The remainder of this section only applies to Jaybird 4 and higher.</p>
+</div>
+<div class="paragraph">
+<p>By default, Jaybird 4 and higher will use the JVM default time zone as reported by <code>java.util.TimeZone.getDefault().getID()</code> as the session time zone.
+Using the JVM default time zone as the default is the best option in the light of JDBC requirements with regard to <code>java.sql.Time</code> and <code>java.sql.Timestamp</code> using the JVM default time zone.</p>
+</div>
+<div class="paragraph">
+<p>To use the default server time zone and the Jaybird 3 and earlier behaviour to use the JVM default time zone, set the connection property to <code>server</code>.
+This will result in the conversion behaviour of Jaybird 3 and earlier.
+Be aware that this is inconsistent if Firebird and Java are in different time zones.</p>
+</div>
+<div class="sect5">
+<h6 id="ref-datetime-sessiontimezone-fb"><a class="anchor" href="#ref-datetime-sessiontimezone-fb"></a>Firebird 4 session time zone</h6>
+<div class="paragraph">
+<p>The session time zone is used for conversion between <code>WITH TIME ZONE</code> values and <code>WITHOUT TIME ZONE</code> values (ie using cast or with legacy time zone bind), and for the value of <code>LOCALTIME</code>, <code>LOCALTIMESTAMP</code>, <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code>, and other uses of the session time zone as documented in the Firebird 4 documentation.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>sessionTimeZone</code> must be supported by Firebird 4.
+It is possible that time zone identifiers used by Java are not supported by Firebird.
+If Firebird does not know the session time zone, error (<code>Invalid time zone region: &lt;zone name&gt;</code>) is reported on connect.</p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 4 and higher, Jaybird will apply the JVM default time zone as the default session time zone.
+The use of the JVM default time zone as the default session time zone will result in subtly different behaviour compared to previous versions of Jaybird and - even with Jaybird 4 - Firebird 3 or earlier, as current time values like <code>LOCALTIMESTAMP</code> (etc) will now reflect the time in the JVM time zone, and not the server time zone rebased on the JVM default time zone.</p>
+</div>
+<div class="paragraph">
+<p>As an example, with a Firebird in Europe/London and a Java application in Europe/Amsterdam with Firebird time 12:00, in Jaybird 3, the Java application will report this time as 12:00, in Jaybird 4 with Firebird 4, this will now report 13:00, as that is the time in Amsterdam if it is 12:00 in London (ignoring potential DST start/end differences).</p>
+</div>
+<div class="paragraph">
+<p>Other examples include values generated in triggers and default value clauses.</p>
+</div>
+</div>
+<div class="sect5">
+<h6 id="ref-datetime-sessiontimezone-convert"><a class="anchor" href="#ref-datetime-sessiontimezone-convert"></a>Session time zone for conversion</h6>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>For <code>WITHOUT TIME ZONE</code> types, the session time zone will be used to derive the <code>java.sql.Time</code>, <code>java.sql.Timestamp</code> and <code>java.sql.Date</code> values.
+This is also done for Firebird 3 and earlier.</p>
+</div>
+<div class="paragraph">
+<p>If Java does not know the session time zone, no error is reported, but when retrieving <code>java.sql.Time</code>, <code>java.sql.Timestamp</code> or <code>java.sql.Date</code> a warning is logged and conversion will happen in GMT, which might yield unexpected values.</p>
+</div>
+<div class="paragraph">
+<p>We strongly suggest that you use <code>java.time.LocalTime</code>, <code>java.time.LocalDateTime</code> and <code>java.time.LocalDate</code> types instead of these legacy datetime types.</p>
+</div>
+<div class="paragraph">
+<p>For <code>WITH TIME ZONE</code> types, the session time zone has no effect on the conversion to the legacy JDBC date/time types: the offset date/time is converted to epoch milliseconds and used to construct these legacy types directly.</p>
+</div>
+<div class="paragraph">
+<p>Executing <code>SET TIME ZONE &lt;zone name&gt;</code> statements after connect will change the session time zone on the server, but Jaybird will continue to use the session time zone set in the connection property for these conversions.</p>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-datetime-tz-convert"><a class="anchor" href="#ref-datetime-tz-convert"></a>Time zone support for CONVERT</h5>
+<div class="paragraph">
+<p>Although not defined in JDBC (or ODBC), Jaybird has added a non-standard extension to the <code>CONVERT</code> JDBC escape to allow conversion to the time zone types.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the standard-defined types, it also supports the type names <code>TIME_WITH_TIME_ZONE</code>, <code>TIME_WITH_TIMEZONE</code>, <code>TIMESTAMP_WITH_TIME_ZONE</code> and <code>TIMESTAMP_WITH_TIMEZONE</code> (and the same with the <code>SQL_</code> prefix).</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-datetime-tz-caveats"><a class="anchor" href="#ref-datetime-tz-caveats"></a>Caveats for time zone types</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Time zone fields do not support <code>java.time.LocalDate</code>, <code>java.time.LocalTime</code>, <code>java.time.LocalDateTime</code>.</p>
+</li>
+<li>
+<p>Firebird 4 redefines <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code> to return a <code>WITH TIME ZONE</code> type.
+Use <code>LOCALTIME</code> and <code>LOCALTIMESTAMP</code> (introduced in Firebird 3.0.4) if you want to ensure a <code>WITHOUT TIME ZONE</code> type is used.</p>
+</li>
+<li>
+<p>The database metadata will always return JDBC 4.2 compatible information on time zone types, even on Java 7, and even when legacy time zone bind is set.
+For Java 7 compatibility the JDBC 4.2 <code>java.sql.Types</code> constants <code>TIME_WITH_TIMEZONE</code> and <code>TIMESTAMP_WITH_TIMEZONE</code> are also defined in <code>org.firebirdsql.jdbc.JaybirdTypeCodes</code>.</p>
+</li>
+<li>
+<p>([.since]_Jaybird 4) The default <code>sessionTimeZone</code> is set to the JVM default time zone, this may result in different application behavior for <code>DATE</code>, <code>TIME</code> and <code>TIMESTAMP</code>, including values generated in triggers and default value clauses.
+To prevent this, either switch those types to a <code>WITH TIME ZONE</code> type, or set the <code>sessionTimeZone</code> to <code>server</code> or to the actual time zone of the Firebird server.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.4. Decimal floating point type DECFLOAT</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em></p>
 </div>
@@ -7602,7 +7998,7 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 See the Firebird 4 documentation for details on this datatype.</p>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb4"><a class="anchor" href="#ref-decfloat-jb4"></a>12.3.1. Decfloat support in Jaybird 4 and higher</h4>
+<h4 id="ref-decfloat-jb4"><a class="anchor" href="#ref-decfloat-jb4"></a>12.4.1. Decfloat support in Jaybird 4 and higher</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 4</em></p>
 </div>
@@ -7612,7 +8008,7 @@ For more information, see <a href="#ref-decfloat-support">DECFLOAT support</a>.<
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb3"><a class="anchor" href="#ref-decfloat-jb3"></a>12.3.2. Workarounds for Jaybird 3</h4>
+<h4 id="ref-decfloat-jb3"><a class="anchor" href="#ref-decfloat-jb3"></a>12.4.2. Workarounds for Jaybird 3</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
@@ -7629,7 +8025,7 @@ Option <code>char</code> has our preference as it is able to support the full ra
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.3.3. Workarounds for Jaybird 2.2 and earlier</h4>
+<h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.4.3. Workarounds for Jaybird 2.2 and earlier</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 and earlier do not support <code>DECFLOAT</code>.
 As a workaround, you can use the <code>SET DECFLOAT BIND &lt;bind-type&gt;</code> statement to configure your connection to map <code>DECFLOAT</code> to a different datatype.
@@ -7664,7 +8060,7 @@ The effect of the <code>SET DECFLOAT BIND</code> statement will be reset to the 
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.3.4. Connection property decfloatBind</h4>
+<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.4.4. Connection property decfloatBind</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
@@ -7740,7 +8136,7 @@ The value set using connection property <code>decfloatBind</code> will be the de
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-support"><a class="anchor" href="#ref-decfloat-support"></a>12.3.5. DECFLOAT support</h4>
+<h4 id="ref-decfloat-support"><a class="anchor" href="#ref-decfloat-support"></a>12.4.5. DECFLOAT support</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 4</em></p>
 </div>
@@ -8004,7 +8400,7 @@ This behaviour is subject to change, and future releases may 'round' to <code>0<
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-decimal"><a class="anchor" href="#ref-decimal"></a>12.4. Exact numeric types DECIMAL/NUMERIC</h3>
+<h3 id="ref-decimal"><a class="anchor" href="#ref-decimal"></a>12.5. Exact numeric types DECIMAL/NUMERIC</h3>
 <div class="paragraph">
 <p>The JDBC types <code>DECIMAL</code> and <code>NUMERIC</code> are supported by Firebird and Jaybird and map to <code>java.math.BigDecimal</code>.</p>
 </div>
@@ -8022,7 +8418,7 @@ The precision specified is the minimum precison, not the exact precision.
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.4.1. Precision and range</h4>
+<h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.5.1. Precision and range</h4>
 <div class="paragraph">
 <p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p>
 </div>
@@ -8301,7 +8697,7 @@ See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureT
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property. (<em class="since">Jaybird 2.1.1</em> <em class="until">Jaybird 3</em>)
 Boolean property.
-Unused since Jaybird 3, will be removed in Jaybird 4.
+Unused since Jaybird 3, removed in Jaybird 4.
 Makes <code>ResultSet.getObject</code> for <code>(VAR)CHAR CHARACTER SET OCTETS</code> return <code>byte[]</code> instead of <code>String</code>.
 Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC <code>(VAR)BINARY</code>).
 See <a href="#ref-binary">Binary types BINARY/VARBINARY</a> for more information.</p></td>
@@ -8313,6 +8709,24 @@ See <a href="#ref-binary">Binary types BINARY/VARBINARY</a> for more information
 <td class="tableblock halign-left valign-top"><p class="tableblock">Instructs Firebird to convert columns and parameters of type <code>DECFLOAT</code> to a different type. (<em class="since">Jaybird 3.0.6</em> <em class="since">Firebird 4</em>)
 Accepted values are: <code>native</code>, <code>char</code> or <code>character</code>, <code>double precision</code>, <code>bigint, n</code> where <code>n</code> is the target scale to convert to a <code>NUMERIC(18,n)</code>.
 See <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>timeZoneBind</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs Firebird to convert columns and parameters of type <code>TIME WITH TIME ZONE</code> and <code>TIMESTAMP WITH TIME ZONE</code> to a different type. (<em class="since">Jaybird 3.0.6</em> <em class="since">Firebird 4</em>)
+Accepted values are: <code>native</code>, <code>legacy</code>.
+See <a href="#ref-datetime-timezonebind">Time zone bind configuration</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>sessionTimeZone</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures the session time zone. (<em class="since">Jaybird 3.0.6</em>)
+In Jaybird 3, only configures the Firebird 4 server-side session time zone.
+In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
+See <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for more information.<br>
+Default: not set (Jaybird 3 and earlier), or the JVM default time zone (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -11299,7 +11713,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-11 13:12:11 UTC
+Last updated 2019-09-11 14:40:41 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
