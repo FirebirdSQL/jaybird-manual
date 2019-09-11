@@ -1,8 +1,8 @@
 [[ref-auth-plugins]]
 === Authentication plugins
 
-[.since]_Firebird 3_ +
-[.since]_Jaybird 3_
+[.since]_Jaybird 3_ +
+[.since]_Firebird 3_
 
 Firebird 3 introduced authentication plugins together with a new authentication model.
 By default, Firebird 3 uses the authentication plugin `Srp` (_Secure remote password_).
