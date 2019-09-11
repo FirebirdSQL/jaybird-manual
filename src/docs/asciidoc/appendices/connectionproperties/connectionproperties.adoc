@@ -37,8 +37,9 @@ a|`roleName` +
 a|`authPlugins` +
 `auth_plugin_list`
 |Jaybird specific property ([.since]_Jaybird 4_).
-Specifies the list of authentication plugins to try.
-**TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
+The comma-separated list of authentication plugins to try.
+See <<ref-auth-plugins>> for more information. +
+Default: `Srp256,Srp`
 
 a|`wireCrypt`
 a|Jaybird specific property ([.since]_Jaybird 3.0.4_).
