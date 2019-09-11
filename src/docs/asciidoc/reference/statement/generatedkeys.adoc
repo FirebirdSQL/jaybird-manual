@@ -59,7 +59,7 @@ This form of generated keys execution involves the following methods:
 
 When `NO_GENERATED_KEYS` is passed, the query will be executed as a normal query.
 
-When `RETURN_GENERATED_KEYS` is passed, the driver will return _*all*_ columns of the table as generated keys.
+When `RETURN_GENERATED_KEYS` is passed, the driver will return _all_ columns of the table as generated keys.
 The columns are ordered by ordinal position (as reported in the JDBC metadata of the table).
 It is advisable to retrieve the values from the `getGeneratedKeys()` result set by column name.
 
