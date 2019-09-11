@@ -531,11 +531,12 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel1">
 <li><a href="#ref-connection">9. Connection reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-wirecrypt">9.1. Wire encryption support</a></li>
-<li><a href="#ref-dbcrypt">9.2. Database encryption support</a></li>
-<li><a href="#ref-defaultholdable">9.3. Default holdable result sets</a></li>
-<li><a href="#ref-firebirdautocommit">9.4. Firebird auto commit mode (experimental)</a></li>
-<li><a href="#ref-processinfo">9.5. Process information</a></li>
+<li><a href="#ref-auth-plugins">9.1. Authentication plugins</a></li>
+<li><a href="#ref-wirecrypt">9.2. Wire encryption support</a></li>
+<li><a href="#ref-dbcrypt">9.3. Database encryption support</a></li>
+<li><a href="#ref-defaultholdable">9.4. Default holdable result sets</a></li>
+<li><a href="#ref-firebirdautocommit">9.5. Firebird auto commit mode (experimental)</a></li>
+<li><a href="#ref-processinfo">9.6. Process information</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -6062,7 +6063,203 @@ System.out.println(
 <h2 id="ref-connection"><a class="anchor" href="#ref-connection"></a>9. Connection reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.1. Wire encryption support</h3>
+<h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.1. Authentication plugins</h3>
+<div class="paragraph">
+<p><em class="since">Firebird 3</em><br>
+<em class="since">Jaybird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 3 introduced authentication plugins together with a new authentication model.
+By default, Firebird 3 uses the authentication plugin <code>Srp</code> (<em>Secure remote password</em>).
+It also includes plugins <code>Legacy_Auth</code> that supports the pre-Firebird-3 authentication mechanism, and - <em class="since">Firebird 3.0.4</em> - <code>Srp256</code>.
+Firebird 4 introduced the plugins <code>Srp224</code>, <code>Srp384</code> and <code>Srp512</code>.</p>
+</div>
+<div class="paragraph">
+<p>The original <code>Srp</code> plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Support for these plugins depends on support of these hash algorithms in the JVM.
+For example, SHA-224 is not supported in Oracle Java 7 by default and may require additional JCE libraries.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.1.1. Default authentication plugins</h4>
+<div class="sect4">
+<h5 id="ref-auth-plugins-default-jb3"><a class="anchor" href="#ref-auth-plugins-default-jb3"></a>Jaybird 3</h5>
+<div class="paragraph">
+<p>Jaybird 3 will try - in order - <code>Srp</code> and <code>Legacy_Auth</code>, or - <em class="since">Jaybird 3.0.5</em> - <code>Srp256</code>, <code>Srp</code> and <code>Legacy_Auth</code>.
+It is not possible to specify a different configuration in Jaybird 3.</p>
+</div>
+<div class="paragraph">
+<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-auth-plugins-default-jb4"><a class="anchor" href="#ref-auth-plugins-default-jb4"></a>Jaybird 4</h5>
+<div class="paragraph">
+<p>The default plugins applied by Jaybird 4 are - in order - <code>Srp256</code> and <code>Srp</code>.
+This applies only for the pure Java protocol and only when connecting to Firebird 3 or higher.
+The native implementation will use its own default or the value configured through its <code>firebird.conf</code>.</p>
+</div>
+<div class="paragraph">
+<p>When connecting to Firebird 3 or higher, the pure Java protocol in Jaybird 4 will no longer try the <code>Legacy_Auth</code> plugin by default as it is an unsafe authentication mechanism.
+We strongly suggest to use SRP users only, but if you really need to use legacy authentication, you can specify connection property <code>authPlugins=Legacy_Auth</code>, see <a href="#ref-auth-plugins-config">Configure authentication plugins</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>When connecting to Firebird 3 versions earlier than 3.0.4, or if <code>Srp256</code> has been removed from the <code>AuthServer</code> setting in Firebird, this might result in slightly slower authentication because more roundtrips to the server are needed.
+After an attempt to use <code>Srp256</code> fails, authentication continues with <code>Srp</code>.</p>
+</div>
+<div class="paragraph">
+<p>To avoid this, consider explicitly configuring the authentication plugins to use, see <a href="#ref-auth-plugins-config">Configure authentication plugins</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-auth-plugins-config"><a class="anchor" href="#ref-auth-plugins-config"></a>9.1.2. Configure authentication plugins</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 introduces the connection property <code>authPlugins</code> (alias <code>auth_plugin_list</code>) to specify the authentication plugins to try when connecting.
+The value of this property is a comma-separated list with the plugin names.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>authPlugins</code> values can be separated by comma, space, tab, or semi-colon.
+We recommend using comma as the separator.
+The semi-colon should not be used in a JDBC URL as there the semi-colon is a separator between connection properties.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Unknown or unsupported plugins will be logged and skipped.
+When no known plugins are specified, Jaybird will throw an exception with:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For pure Java</p>
+<div class="paragraph">
+<p><em>Cannot authenticate. No known authentication plugins, requested plugins: [&lt;plugin-names&gt;] [SQLState:28000, ISC error code:337248287]</em></p>
+</div>
+</li>
+<li>
+<p>For native</p>
+<div class="paragraph">
+<p><em>Error occurred during login, please check server firebird.log for details [SQLState:08006, ISC error code:335545106]</em></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>authPlugins</code> property only affects connecting to Firebird 3 or later.
+It will be ignored when connecting to Firebird 2.5 or earlier.
+The setting will also be ignored for native connections when using a fbclient library of version 2.5 or earlier.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JDBC URL to connect using <code>Srp256</code> only:</p>
+<div class="listingblock">
+<div class="content">
+<pre>jdbc:firebirdsql://localhost/employee?authPlugins=Srp256</pre>
+</div>
+</div>
+</li>
+<li>
+<p>JDBC URL to connect using <code>Legacy_Auth</code> only (this is unsafe!)</p>
+<div class="listingblock">
+<div class="content">
+<pre>jdbc:firebirdsql://localhost/employee?authPlugins=Legacy_Auth</pre>
+</div>
+</div>
+</li>
+<li>
+<p>JDBC URL to try <code>Legacy_Auth</code> before <code>Srp512</code> (this order is unsafe!)</p>
+<div class="listingblock">
+<div class="content">
+<pre>jdbc:firebirdsql://localhost/employee?authPlugins=Legacy_Auth,Srp512</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The property is also supported by the data sources, service managers and event manager.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-auth-plugins-external"><a class="anchor" href="#ref-auth-plugins-external"></a>9.1.3. External authentication plugin support (experimental)</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em></p>
+</div>
+<div class="paragraph">
+<p>If you develop your own Firebird authentication plugin (or use a third-party authentication plugin), it is possible - for pure Java only - to add your own authentication plugin by implementing the interfaces</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi</code></p>
+</li>
+<li>
+<p><code>org.firebirdsql.gds.ng.wire.auth.AuthenticationPlugin</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The SPI implementation needs to be listed in <code>META-INF/services/org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi</code> in your jar.</p>
+</div>
+<div class="paragraph">
+<p>This support is experimental and comes with a number of caveats:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We haven&#8217;t tested this extensively (except for loading Jaybird&#8217;s own plugins internally)</p>
+</li>
+<li>
+<p>The authentication plugin (and provider) interfaces should be considered unstable;
+they may change with point-releases (although we will try to avoid that)</p>
+</li>
+<li>
+<p>For now it will be necessary for the jar containing the authentication plugin to be loaded by the same class loader as Jaybird itself</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you implement a custom authentication plugin and run into problems, contact us on the Firebird-Java mailing list.</p>
+</div>
+<div class="paragraph">
+<p>If you use a native connection, check the Firebird documentation how to add third-party authentication plugins to fbclient.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.2. Wire encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.4</em><br>
 <em class="since">Firebird 3</em></p>
@@ -6138,7 +6335,7 @@ If you want to develop such a plugin, contact us on the Firebird-Java mailing li
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.2. Database encryption support</h3>
+<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.3. Database encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.4</em><br>
 <em class="since">Firebird 3</em></p>
@@ -6221,7 +6418,7 @@ Support for the version 15 wire protocol will be added in a future version.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.3. Default holdable result sets</h3>
+<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.4. Default holdable result sets</h3>
 <div class="paragraph">
 <p>This connection property enables a connection to create holdable result sets by default.
 This propery can be used as a workaround for applications that expect a result to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
@@ -6264,7 +6461,7 @@ The memory occupied by this result set will be released when the statement that 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.4. Firebird auto commit mode (experimental)</h3>
+<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.5. Firebird auto commit mode (experimental)</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 2.2.9</em></p>
 </div>
@@ -6299,7 +6496,7 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.5. Process information</h3>
+<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.6. Process information</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 2.1.6</em><br>
 <em class="since">Firebird 2.1</em></p>
@@ -6333,7 +6530,7 @@ Treat it as informational only, as clients can report fake information.
 <p>It is possible to specify the process name and process id in two ways:</p>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.5.1. System properties for process information</h4>
+<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.6.1. System properties for process information</h4>
 <div class="paragraph">
 <p>It is possible to specify the process information through Java system properties:</p>
 </div>
@@ -6354,7 +6551,7 @@ Treat it as informational only, as clients can report fake information.
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.5.2. Connection properties for process information</h4>
+<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.6.2. Connection properties for process information</h4>
 <div class="paragraph">
 <p>It is also possible to specify the process information through connection properties:</p>
 </div>
@@ -7128,12 +7325,12 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0f</code>, false is <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0</code>, false is <code>0.0</code></p></td>
 </tr>
 <tr>
@@ -7216,17 +7413,17 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code>/<code>FLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0f</code>, false sets <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0</code>, false sets <code>0.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1E0</code>, false sets <code>0E0</code></p></td>
 </tr>
 </tbody>
@@ -7447,7 +7644,7 @@ This to avoid additional dependencies.</p>
 <h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
 <div class="paragraph">
 <p>The <code>DECFLOAT</code> datatype supports values with a precision of 16 or 34 decimal digits, and an exponent
-<sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup>
+<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>
 between -398 and 369 (<code>DECFLOAT(16)</code>), or between -6176 and 6111 (<code>DECFLOAT(34)</code>), so the minimum and maximum values are:</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content">
@@ -7668,7 +7865,7 @@ The precision specified is the minimum precison, not the exact precision.
 <div class="sect3">
 <h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.4.1. Precision and range</h4>
 <div class="paragraph">
-<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup></p>
+<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 34.
@@ -7746,8 +7943,9 @@ When using data sources, unexposed properties can be set using <code>setNonStand
 <code>auth_plugin_list</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em>).
-Specifies the list of authentication plugins to try.
-<strong>TODO</strong> Improve documentation (define reference section based on Jaybird 4 release notes)</p></td>
+The comma-separated list of authentication plugins to try.
+See <a href="#ref-auth-plugins">Authentication plugins</a> for more information.<br>
+Default: <code>Srp256,Srp</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -8312,7 +8510,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Float</code></p></td>
 </tr>
 <tr>
@@ -8356,7 +8554,7 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -9050,7 +9248,7 @@ might not match the database default encoding.</p>
 <p>The Firebird RDBMS performs translation between character sets of the
 client connection and the character set of the content. The list of
 allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup>
+are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup>
 located in the <code>intl/</code> directory of the Firebird installation. There is
 also a special character set NONE that tells RDBMS not to interpret the
 contents of the character field.</p>
@@ -9099,7 +9297,7 @@ character set of the client application.</p>
 </div>
 <div class="paragraph">
 <p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup> character set UTF8,
+Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup> character set UTF8,
 another when Firebird database was created without specifying the
 character set (i.e. character set NONE).</p>
 </div>
@@ -9113,7 +9311,7 @@ moment nothing prevents developers from using Unicode in the database
 and on the client side, which greatly simplifies the
 internationalization and localization of the applications. Jaybird JDBC
 driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>.</p>
+2.1.0<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup>.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
@@ -9136,7 +9334,7 @@ appropriate parameter to the JDBC URL (see the first example). Another
 possibility is to use appropriate method of the <code>DriverManager</code> class
 (see the second example). The applications that use <code>DataSource</code>
 interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup>.</p>
+<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup>.</p>
 </li>
 </ul>
 </div>
@@ -9572,7 +9770,7 @@ necessary UDF declarations.</p>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding
 built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup> shipped
+library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup> shipped
 with Firebird. Jaybird provides a connection parameter
 <code>use_standard_udf</code> telling the driver to assume that functions from that
 UDF are available in the database. In this case Jaybird will convert all
@@ -9706,7 +9904,7 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -9825,7 +10023,7 @@ lowercase</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
@@ -10892,51 +11090,54 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnotedef_19">
-<a href="#_footnoteref_19">19</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
+<a href="#_footnoteref_19">19</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="http://tracker.firebirdsql.org/browse/CORE-5788" target="_blank" rel="noopener">CORE-5788</a>).
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
+<a href="#_footnoteref_20">20</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
+<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
+<a href="#_footnoteref_22">22</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
+<a href="#_footnoteref_23">23</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
+<a href="#_footnoteref_24">24</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
+<a href="#_footnoteref_25">25</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_26">26</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_27">
-<a href="#_footnoteref_27">27</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_27">27</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_28">
-<a href="#_footnoteref_28">28</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_28">28</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_29">
-<a href="#_footnoteref_29">29</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_29">29</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
 </div>
 <div class="footnote" id="_footnotedef_30">
-<a href="#_footnoteref_30">30</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_30">30</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_31">
-<a href="#_footnoteref_31">31</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_31">31</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_32">
-<a href="#_footnoteref_32">32</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_32">32</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+</div>
+<div class="footnote" id="_footnotedef_33">
+<a href="#_footnoteref_33">33</a>. The trailing blanks are also counted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-04 12:27:24 UTC
+Last updated 2019-09-11 09:53:25 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
