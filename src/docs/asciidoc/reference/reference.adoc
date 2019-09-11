@@ -41,12 +41,14 @@ include::general/logging.adoc[]
 [[ref-types]]
 == Datatype reference
 
-NOTE: This section documents non-standard datatypes supported by Jaybird, or behaviour deviating from standard JDBC expectations.
+NOTE: This section documents non-standard datatypes supported by Jaybird, behaviour deviating from standard JDBC expectations, or recently introduced features.
 It does not provide full documentation for all supported datatypes.
 
 include::types/binary.adoc[]
 
 include::types/boolean.adoc[]
+
+include::types/datetime.adoc[]
 
 include::types/decfloat.adoc[]
 

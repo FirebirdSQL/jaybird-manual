@@ -163,7 +163,7 @@ See <<ref-callable-ignore-proctype>> for more information.
 a|`octetsAsBytes`
 |Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
 Boolean property.
-Unused since Jaybird 3, will be removed in Jaybird 4.
+Unused since Jaybird 3, removed in Jaybird 4.
 Makes `ResultSet.getObject` for `(VAR)CHAR CHARACTER SET OCTETS` return `byte[]` instead of `String`.
 Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC `(VAR)BINARY`).
 See <<ref-binary>> for more information.
@@ -172,6 +172,18 @@ a|`decfloatBind`
 |Instructs Firebird to convert columns and parameters of type `DECFLOAT` to a different type. ([.since]_Jaybird 3.0.6_ [.since]_Firebird 4_)
 Accepted values are: `native`, `char` or `character`, `double precision`, `bigint, n` where `n` is the target scale to convert to a `NUMERIC(18,n)`.
 See <<ref-decfloat-prop-decfloat-bind>> for more information.
+
+a|`timeZoneBind`
+|Instructs Firebird to convert columns and parameters of type `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE` to a different type. ([.since]_Jaybird 3.0.6_ [.since]_Firebird 4_)
+Accepted values are: `native`, `legacy`.
+See <<ref-datetime-timezonebind>> for more information.
+
+a|`sessionTimeZone`
+| Configures the session time zone. ([.since]_Jaybird 3.0.6_)
+In Jaybird 3, only configures the Firebird 4 server-side session time zone.
+In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
+See <<ref-datetime-sessiontimezone>> for more information. +
+Default: not set (Jaybird 3 and earlier), or the JVM default time zone ([.since]_Jaybird 4_)
 
 a|`useStandarUdf` +
 `use_standard_udf`
