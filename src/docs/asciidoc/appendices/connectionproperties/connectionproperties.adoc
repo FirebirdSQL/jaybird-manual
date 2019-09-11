@@ -107,7 +107,7 @@ See <<ref-firebirdautocommit>> for more information.
 a|`generatedKeysEnabled`
 |Jaybird specific property ([.since]_Jaybird 4_).
 Configure generated keys support behaviour.
-**TODO** Improve documentation (define reference section based on Jaybird 4 release notes)
+See <<ref-generatedkeys-config>> for more information.
 
 a|`isolation` +
 `defaultIsolation`

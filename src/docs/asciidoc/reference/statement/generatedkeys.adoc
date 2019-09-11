@@ -30,8 +30,7 @@ This functionality is available for `INSERT` ([.since]_Firebird 2.0_), for `UPDA
 ====
 Generated keys retrieval modifies the statement to add a `RETURNING`-clause.
 Currently Firebird only supports `RETURNING` for DML operations that affect a single row.
-Attempting to use generated keys retrieval with a statement that affects multiple rows will yield an error. 
-// TODO: include error
+Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error _"multiple rows in singleton select"_. 
 ====
 
 The examples in this section use the following (Firebird 3) table:
@@ -144,8 +143,15 @@ This form of generated keys execution involves the following methods:
 * `Statement.executeLargeUpdate(String sql, int[] columnIndexes)` ([.since]_JDBC 4.2_)
 
 The values in the `int[]` parameter are the ordinal positions of the columns as specified in the (JDBC) metadata of the table.
-For a null or empty array the statement is processed as is. 
-Invalid ordinal positions are ignored and silently dropped (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future)
+
+[WARNING]
+====
+In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
+In Jaybird 4, this behaviour has changed and instead will throw an exception with message _"Generated keys array columnIndexes was empty or null. A non-empty array is required."_
+
+In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing `new int[] { 1, 5, 6 }` will work, even though we don't have sixth column.
+In Jaybird 4, this behavior has changed and instead will throw an exception with message _"Generated keys column position <position> does not exist for table <tablename>. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values."_
+====
 
 [[ref-generatedkeys-examples-column-index]]
 ===== Example using column indexes
@@ -191,8 +197,9 @@ As this is the second column, it is retrieved from the result set by `2`.
 
 [WARNING]
 ====
-Invalid ordinal positions are currently ignored and silently dropped: passing `new int[] { 1, 5, 6 }` will work, even though we don't have sixth column.
-This behavior may change in future Jaybird versions
+In Jaybird 3 and earlier, the array of indices is sorted in ascending order before use: passing `new int[] { 4, 1, 3 }` will yield columns in order `ID`, `LASTNAME`, `BIRTHDATE`.
+In Jaybird 4, this sort is no longer applied, so columns will be in the order specified by the array: `BIRTHDATE`, `ID`, `LASTNAME`.
+To avoid issues, we recommend specifying the columns in ascending order, or always retrieve them by name.
 ====
 
 [[ref-generatedkeys-column-name]]
@@ -209,6 +216,12 @@ The values in the `String[]` are the column names to be returned.
 The column names provided are processed as is and are not checked for validity or the need of quoting.
 Providing non-existent or incorrectly (un)quoted columns will result in an exception when the statement is processed by Firebird (be aware: the JDBC specification is not entirely clear if this is valid behavior, so this might change in the future).
 This method is the fastest as it does not retrieve metadata from the server.
+
+[WARNING]
+====
+In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
+In Jaybird 4, this behaviour has changed and instead will throw an exception with message _"Generated keys array columnNames was empty or null. A non-empty array is required."_
+====
 
 [[ref-generatedkeys-examples-column-name]]
 ===== Example using column names
@@ -246,6 +259,59 @@ Quoting the column names would then be done by Jaybird.
 
 When this changes, a connection property for backwards compatibility will be provided.
 ====
+
+[[ref-generatedkeys-config]]
+==== Configuring generated keys support
+
+[.since]_Jaybird 4_
+
+The connection property `generatedKeysEnabled` (alias `generated_keys_enabled`) allows the behaviour of generated keys support to be configured.
+This property is also available on data sources.
+
+This property supports the following values (case insensitive):
+
+* `default`: default behaviour to enable generated keys for statement types with `RETURNING` clause in the connected Firebird version.
+Absence of this property, `null` or empty string implies `default`.
+* `disabled`: disable support.
+Attempts to use generated keys methods other than using `Statement.NO_GENERATED_KEYS` will throw a `SQLFeatureNotSupportedException`.
+* `ignored`: ignore generated keys support.
+Attempts to use generated keys methods will not attempt to detect generated keys support and execute as if the statement generates no keys.
+The `Statement.getGeneratedKeys()` method will always return an empty result set.
+This behaviour is equivalent to using the non-generated keys methods.
+- A comma-separated list of statement types to enable.
+
+For `disabled` and `ignored`, `DatabaseMetaData.supportsGetGeneratedKeys` will report `false`.
+
+Because of the behaviour specified in the next section, typos in property values will behave as `ignored` (eg using `generatedKeysEnabled=disable` instead of `disabled` will behave as `ignored`).
+
+[[ref-generatedkeys-config-stmt-types]]
+===== Selectively enable statement types
+
+This last option allows you to selectively enable support for generated keys.
+For example, `generatedKeysEnabled=insert` will only enable it for `insert` while ignoring it for all other statement types.
+Statement types that are not enabled will behave as if they generate no keys and will execute normally.
+For these statement types, `Statement.getGeneratedKeys()` will return an empty result set.
+
+Possible statement type values (case insensitive) are:
+
+* `insert`
+* `update`
+* `delete`
+* `update_or_insert`
+* `merge`
+
+Invalid values will be ignored.
+If none of he specified statement types are supported by Firebird, it will behave as `ignored`.footnote:[This is not the case for the unsupported Firebird 1.0 and 1.5 versions. There this will behave similar to `disabled`, and you will need to explicitly specify `ignored` instead to get this behaviour.]
+
+Some examples:
+
+* `jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert` will only enable insert support
+* `jdbc:firebird://localhost/testdb?generatedKeysEnabled=merge` will only enable merge support.
+But only on Firebird 3 and higher, for Firebird 2.5 this will behave as `ignored` given the lack of `RETURNING` support for merge.
+* `jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert,update` will only enable insert and update support
+
+This feature can be used to circumvent issues with frameworks or tools that always use generated keys methods for prepare or execution.
+For example with `UPDATE` statements that touch multiple records and - given the Firebird limitations for `RETURNING` - produce the error _"multiple rows in singleton select"_.
 
 [[ref-generatedkeys-limitations]]
 ==== Limitations
