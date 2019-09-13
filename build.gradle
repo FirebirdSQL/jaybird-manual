@@ -40,3 +40,19 @@ asciidoctorPdf {
     attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress'
     theme 'jaybird'
 }
+
+// Create the HTML and PDF output and copy them to the build/pages folder
+// Primarily intended for the travis-ci build to deploy to GitHub pages
+task makePages {
+    dependsOn asciidoctor, asciidoctorPdf
+    doLast {
+        copy {
+            from asciidoctor.outputs
+            into "$buildDir/pages"
+        }
+        copy {
+            from asciidoctorPdf.outputs
+            into "$buildDir/pages"
+        }
+    }
+}
