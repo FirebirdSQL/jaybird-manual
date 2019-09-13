@@ -6,9 +6,10 @@ Manual for [Jaybird](https://github.com/FirebirdSQL/jaybird), the Firebird JDBC 
 Snapshot build of manual
 ========================
 
-You can see the latest snapshot build of the manual on https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
+You can see the latest snapshot build of the manual on https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html.
+We also provide a print-friendly PDF on https://firebirdsql.github.io/jaybird-manual/jaybird_manual.pdf.
 
-This is automatically built for each change on master.
+These documents are automatically built for each change on master.
 
 Latest release
 ==============
@@ -17,6 +18,8 @@ The latest published version of this manual is [Jaybird 2.1 JDBC driver Java Pro
 
 This version was created from the old ODT version; its rendering doesn't match
 the rendering of the current asciidoc version.
+
+We recommend using the snapshot instead.
 
 Style
 =====
