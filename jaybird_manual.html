@@ -744,7 +744,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-XXX</code> (where <code>XXX</code> is <code>jdk17</code> or <code>jdk18</code>).<br>
-Version: <code>3.0.5</code></p>
+Version: <code>3.0.6</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -754,7 +754,7 @@ Version: <code>3.0.5</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.5&lt;/version&gt;
+  &lt;version&gt;3.0.6&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -771,7 +771,7 @@ dependency:</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.5&lt;/version&gt;
+  &lt;version&gt;3.0.6&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -11010,6 +11010,18 @@ With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
 </div>
 <div class="sect2">
 <h3 id="jb4"><a class="anchor" href="#jb4"></a>G.1. Jaybird 4</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Jaybird 4 is not yet released
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="jb4-java"><a class="anchor" href="#jb4-java"></a>G.1.1. Java support</h4>
 <div class="paragraph">
@@ -11115,13 +11127,15 @@ Additionally, if the antlr-runtime classes are found in the class path, it is po
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.0-beta-1.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-&lt;java&gt;-4.0.0-beta-1.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
-management classes.</p></td>
+management classes.
+Where <code>&lt;java&gt;</code> is either <code>jdk17</code>, <code>jdk18</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.0-beta-1.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-&lt;java&gt;-4.0.0-beta-1.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.
+Where <code>&lt;java&gt;</code> is either <code>jdk17</code>, <code>jdk18</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/antlr-runtime-4.7.2.jar</code></p></td>
@@ -11324,12 +11338,12 @@ Additionally, if the antlr-runtime classes are found in the class path, it is po
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.5.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.6.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.5.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.6.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
 </tr>
 <tr>
@@ -11358,7 +11372,7 @@ management classes.</p></td>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
-Version: <code>3.0.5</code></p>
+Version: <code>3.0.6</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -11368,7 +11382,7 @@ Version: <code>3.0.5</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.5&lt;/version&gt;
+  &lt;version&gt;3.0.6&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11383,7 +11397,7 @@ Version: <code>3.0.5</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.5&lt;/version&gt;
+  &lt;version&gt;3.0.6&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -11421,6 +11435,19 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 </div>
 <div class="sect2">
 <h3 id="jb22"><a class="anchor" href="#jb22"></a>G.3. Jaybird 2.2</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Jaybird 2.2 is end-of-life and will not receive further updates.
+We recommend to upgrade to Jaybird 3.
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>G.3.1. Java support</h4>
 <div class="paragraph">
@@ -11797,7 +11824,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-13 11:25:16 UTC
+Last updated 2019-09-13 11:42:20 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
