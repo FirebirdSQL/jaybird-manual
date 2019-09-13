@@ -457,7 +457,7 @@ metadata in certain cases to allow OpenOffice.org and LibreOffice to function co
 
 [NOTE]
 ====
-This only describes connecting to Firebird using Jaybird from OpenOffice.org/LibreOffice,
+This only describes connecting to Firebird using Jaybird from OpenOffice.org or LibreOffice,
 it is not about the Firebird embedded use that has been introduced in recent LibreOffice versions.
 ====
 
