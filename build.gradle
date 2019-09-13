@@ -1,5 +1,6 @@
 plugins {
     id 'org.asciidoctor.jvm.convert' version '2.3.0'
+    id 'org.asciidoctor.jvm.pdf' version '2.3.0'
 }
 
 defaultTasks 'clean', 'asciidoctor'
@@ -9,7 +10,11 @@ repositories {
 }
 
 asciidoctorj {
-    // To override default version of asciidoctorj use: version = '1.x.y'
+    modules {
+        pdf {
+            version '1.5.0-beta.4'
+        }
+    }
 }
 
 asciidoctor {
@@ -18,4 +23,20 @@ asciidoctor {
         include 'jaybird_manual.adoc'
     }
     attributes 'revnumber': null
+}
+
+pdfThemes {
+    local 'jaybird', {
+        styleDir = file('src/docs/theme/jaybird-pdf')
+        styleName = 'jaybird'
+    }
+}
+
+asciidoctorPdf {
+    baseDirFollowsSourceDir()
+    sources {
+        include 'jaybird_manual.adoc'
+    }
+    attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress'
+    theme 'jaybird'
 }
