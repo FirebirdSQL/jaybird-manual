@@ -1,6 +1,8 @@
 [[jb4]]
 === Jaybird 4
 
+WARNING: Jaybird 4 is not yet released
+
 [[jb4-java]]
 ==== Java support
 
@@ -73,12 +75,14 @@ The following files can be found in the distribution package:
 [cols="2,5",options="header",]
 |=======================================================================
 |File name |Description
-| `jaybird-{jaybird4-full-version}.jar` 
+| `jaybird-<java>-{jaybird4-full-version}.jar` 
 | An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
 management classes.
+Where `<java>` is either `jdk17`, `jdk18` or `java11`.
 
-| `jaybird-full-{jaybird4-full-version}.jar` 
+| `jaybird-full-<java>-{jaybird4-full-version}.jar` 
 | Same as above, but including the JCA 1.5 dependency.
+Where `<java>` is either `jdk17`, `jdk18` or `java11`.
 
 | `lib/antlr-runtime-4.7.2.jar`
 | Optional dependency, required if you want to use `getGeneratedKeys` support

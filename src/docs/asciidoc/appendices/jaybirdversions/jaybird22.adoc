@@ -1,6 +1,9 @@
 [[jb22]]
 === Jaybird 2.2
 
+NOTE: Jaybird 2.2 is end-of-life and will not receive further updates.
+We recommend to upgrade to Jaybird 3.
+
 [[jb22-java]]
 ==== Java support
 
