@@ -9791,10 +9791,8 @@ sql_dialect=3</pre>
 <h2 id="characterencoding"><a class="anchor" href="#characterencoding"></a>Appendix E: Character Encodings</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Character encodings and their correct use with Firebird RDBMS from Java
-is an important topic, that initially seems to be complex, but in fact
-can be formulated by just a few rules. This appendix provides
-information on this topic.</p>
+<p>Character encodings and their correct use with Firebird from Java is an important topic, that initially seems to be complex, but in fact can be formulated by just a few rules.
+This appendix provides information on this topic.</p>
 </div>
 <div class="sect2">
 <h3 id="_encodings_types"><a class="anchor" href="#_encodings_types"></a>E.1. Encodings Types</h3>
@@ -9804,27 +9802,20 @@ information on this topic.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The database encoding defines a character set in which all <code>CHAR</code>,
-<code>VARCHAR</code> and <code>BLOB SUB_TYPE 1</code> fields are physically stored on the disk.
-There is a default database encoding that is specified during database
-creation. It is also possible to specify character sets on per column
-basis.</p>
+<p>The database encoding defines the character set in which <code>CHAR</code>, <code>VARCHAR</code> and <code>BLOB SUB_TYPE TEXT</code> fields are physically stored on the disk.
+There is a default database encoding that is specified during database creation.
+It is also possible to specify character sets on a per column basis.</p>
 </li>
 <li>
-<p>The client connection encoding defines a character set in which client
-will send and expects to receive character data. This encoding might or
-might not match the database default encoding.</p>
+<p>The client connection encoding defines a character set in which client will send and expects to receive character data.
+This encoding might or might not match the database default encoding.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The Firebird RDBMS performs translation between character sets of the
-client connection and the character set of the content. The list of
-allowed character sets as well as the allowed translations between them
-are specified in the <code>fbintl</code> shared library<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>
-located in the <code>intl/</code> directory of the Firebird installation. There is
-also a special character set NONE that tells RDBMS not to interpret the
-contents of the character field.</p>
+<p>Firebird performs translation between character sets of the client connection and the character set of the content.
+The list of allowed character sets as well as the allowed translations between them are specified in the <code>fbintl</code> shared library located in the <code>intl/</code> directory of the Firebird installation.<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>
+There is also a special character set NONE that tells Firebird not to interpret the contents of the character field.</p>
 </div>
 <div class="paragraph">
 <p>Firebird uses the following algorithm when performing translations:</p>
@@ -9835,20 +9826,17 @@ contents of the character field.</p>
 <p>If source and target character sets match, send the content unchanged.</p>
 </li>
 <li>
-<p>If the target character set is "NONE", send source content unchanged.</p>
+<p>If the target character set is <code>NONE</code>, send source content unchanged.</p>
 </li>
 <li>
-<p>If the source character set is "NONE", send source content unchanged.</p>
+<p>If the source character set is <code>NONE</code>, send source content unchanged.</p>
 </li>
 <li>
-<p>If there is a direct translation rule between source and target
-character sets, use that rule.</p>
+<p>If there is a direct translation rule between source and target character sets, use that rule.</p>
 </li>
 <li>
-<p>If there is no direct translation rule, check if there is rule to
-translate the source character set into the UTF8 character set and a
-rule to translate from UTF8 into the target character set. If yes, use
-these two rules for translation.</p>
+<p>If there is no direct translation rule, check if there is rule to translate the source character set into the UTF8 character set and a rule to translate from <code>UTF8</code> into the target character set.
+If yes, use these two rules for translation.</p>
 </li>
 <li>
 <p>If no suitable translation rule can be found, throw an exception.</p>
@@ -9859,64 +9847,41 @@ these two rules for translation.</p>
 <div class="sect2">
 <h3 id="_encodings_in_java"><a class="anchor" href="#_encodings_in_java"></a>E.2. Encodings in Java</h3>
 <div class="paragraph">
-<p>Java programming language is based on the Unicode character set and uses
-the UTF-16 encoding, in which each character is represented by one or
-two 16-bit units. The Firebird, on the other side, is not based on
-Unicode and allows different character sets to be assigned to different
-database objects. Additionally, Firebird requires a connection character
-set to be specified in connection options, which forces Firebird to
-convert data from the character set of the database object into the
-character set of the client application.</p>
+<p>The Java programming language is based on the Unicode character set and uses the UTF-16 encoding, in which each character is represented by one or two 16-bit units.
+Firebird, on the other side, is not based on Unicode and allows different character sets to be assigned to different database objects.
+Additionally, Firebird requires a connection character set to be specified in connection options, which forces Firebird to convert data from the character set of the database object into the character set of the client application.</p>
 </div>
 <div class="paragraph">
-<p>There are two boundary cases that we will consider here, one when
-Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup> character set UTF8,
-another when Firebird database was created without specifying the
-character set (i.e. character set NONE).</p>
+<p>There are two boundary cases that we will consider here, one when Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup> character set <code>UTF8</code>, another when the Firebird database was created without specifying the character set (i.e. character set <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
-<p>The UTF8 in Firebird 2.0 is a Unicode character set that uses UTF-8
-encoding and occupies from one to four 8-bit units. Firebird supported
-Unicode character set for a long time, however its implementation was
-deficient – it did not support proper uppercasing and correct sorting.
-These issues were addressed in the Firebird 2.0 release and at the
-moment nothing prevents developers from using Unicode in the database
-and on the client side, which greatly simplifies the
-internationalization and localization of the applications. Jaybird JDBC
-driver properly supports Firebird 2.0 since version
-2.1.0<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup>.</p>
+<p>The character set <code>UTF8</code> in Firebird 2.0 and higher is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
+Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earleir – it did not support proper uppercasing and correct sorting.
+These issues were addressed in Firebird 2.0 and at the moment nothing prevents developers from using Unicode in the database and on the client side, which greatly simplifies the internationalization and localization of the applications.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_utf8_character_set"><a class="anchor" href="#_the_utf8_character_set"></a>E.2.1. The UTF8 character set</h4>
 <div class="paragraph">
-<p>Software developer must ensure two things to enable use of Unicode
-characters in the database and the application:</p>
+<p>A developer must ensure two things to enable use of Unicode characters in the database and the application:</p>
 </div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>the database objects must be defined with the UTF8 character set; this
-can be done by either creating database with default UTF8 character set
-or by adding <code>CHARACTER SET UTF8</code> clause to the column or domain
-definitions.</p>
+<p>The database objects must be defined with the <code>UTF8</code> character set;
+this can be done by either creating database with default <code>UTF8</code> character set or by adding <code>CHARACTER SET UTF8</code> clause to the column or domain definitions.</p>
 </li>
 <li>
-<p>the <code>encoding</code> connection property in the JDBC driver has to be set to
-UTF8; this can be done several ways: the easiest one is to add the
-appropriate parameter to the JDBC URL (see the first example). Another
-possibility is to use appropriate method of the <code>DriverManager</code> class
-(see the second example). The applications that use <code>DataSource</code>
-interface to obtain the database connections also have access to the
-<code>encoding</code> property<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup>.</p>
+<p>The <code>encoding</code> connection property in the JDBC driver has to be set to <code>UTF8</code>;
+this can be done in several ways: the easiest one is to add the appropriate parameter to the JDBC URL (see the first example), another possibility is to use appropriate method of the <code>DriverManager</code> class (see the second example).
+Applications that use <code>DataSource</code> interface to obtain the database connections also have access to the
+<code>encoding</code> property.<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup></p>
 </li>
-</ul>
+</ol>
 </div>
 <div class="listingblock">
 <div class="title">Specifying the connection encoding in JDBC URL</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Class.forName("org.firebirdsql.jdbc.FBDriver");
-
-Connection connection = DriverManager.getConnection(
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Connection connection = DriverManager.getConnection(
     "jdbc:firebirdsql:localhost/3050:employee?encoding=UTF8",
     "SYSDBA", "masterkey");</code></pre>
 </div>
@@ -9924,9 +9889,7 @@ Connection connection = DriverManager.getConnection(
 <div class="listingblock">
 <div class="title">Specifying connection encoding in the connection properties</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Class.forName("org.firebirdsql.jdbc.FBDriver");
-
-Properties props = new Properties();
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
 
 props.setProperty("user", "SYSDBA");
 props.setProperty("password", "masterkey");
@@ -9937,110 +9900,78 @@ Connection connection = DriverManager.getConnection(
 </div>
 </div>
 <div class="paragraph">
-<p>There are few limitations related to using the UTF8 character set:</p>
+<p>There are a few limitations related to using the <code>UTF8</code> character set:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>it is not possible to create Unicode columns longer than 8191 Unicode
-characters; this limitation is caused by the fact that the longest
-possible <code>VARCHAR</code> column can occupy 32765 bytes (32767 for <code>CHAR</code> columns)
-and a single UTF8 character can occupy up to four bytes.</p>
+<p>It is not possible to create Unicode columns longer than 8191 Unicode characters;
+this limitation is caused by the fact that the longest possible <code>VARCHAR</code> column can occupy 32765 bytes (32767 for <code>CHAR</code> columns) and a single <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 <li>
-<p>it is not possible to index Unicode columns longer than 1023
-characters; this limitation is caused by the fact that the longest index
-key cannot be longer than a quarter of the database page, which in
-Firebird 2.0 can be maximum 16k and the before mentioned fact that each
-UTF8 character can occupy up to four bytes.</p>
+<p>It is not possible to index Unicode columns longer than 1023 characters;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup>
+this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which in Firebird 2.0 and higher can be maximum 16k and the before mentioned fact that each <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Also it should be mentioned, that using Unicode character set might
-cause noticeable performance degradation when database is used over the
-wide-area networks. This mainly applies to the cases when Cyrillic
-characters are stored in the database, since each character would occupy
-two bytes of the network packet, which in turn might cause additional
-roudtrips to the server to fetch data.</p>
+<p>It should be mentioned that using Unicode character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
+This mainly applies to the cases when non-latin characters are stored in the database, as those characters will require two or more bytes, which in turn might cause additional roudtrips to the server to fetch data.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_the_none_character_set"><a class="anchor" href="#_the_none_character_set"></a>E.2.2. The NONE character set</h4>
 <div class="paragraph">
-<p><strong>TODO</strong> Document changes in behavior introduced in Jaybird 3</p>
+<p>Java introduces additional complexity when the <code>NONE</code> character set is used.
+The reason for this is that Java internally stores all strings in Unicode format, and the application must define the character encoding for the byte contents to the JVM.
+When the <code>NONE</code> character set is used, Jaybird does not know how to interpret the received data.
+The only choice that is left to Jaybird is to construct a string using the default character set of the JVM, which usually matches the regional settings of the operating system and can be accessed from within the JVM through the <code>file.encoding</code> system property.</p>
 </div>
 <div class="paragraph">
-<p>Java introduces additional complexity when the NONE character set is
-used. The reason for this is that Java internally stores all strings in
-Unicode format, and the application must define the character encoding
-for the byte contents to the JVM. When the NONE character set is used,
-the driver does not know how to interpret the received data. The only
-choice that is left to the driver is to construct a string using the
-default character set of the JVM, which usually matches the regional
-settings of the operating system and can be accessed from within the JVM
-through the <code>file.encoding</code> system property.</p>
+<p>(<em class="since">Jaybird 3</em>) Starting with Jaybird 3, with connection character set <code>NONE</code>, Jaybird will use the explicit character set of <code>CHAR</code>, <code>VARCHAR</code> and <code>BLOB SUB_TYPE TEXT</code> columns for the conversion.
+This addresses most of the problems described in this paragraph, except for columns without an explicit character set (ie their character set is <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
-<p>It is clear that the conversion using default character set that happens
-inside the JVM can lead to errors when the same content is accessed from
-two or more different Java Virtual Machines that have different
-configuration. One application running on the computer with, for
-example, Russian regional settings saves the Russian text (the default
-character set of the JVM is Cp1251) and another application running on
-computer with German regional settings (default character set is Cp1252)
-will read in such case some special or accented characters. However,
-when all client applications run same OS with the same regional settings
-in most cases will not have any severe consequences (except probably
-wrong sorting order or uppercasing on the server side).</p>
+<p>It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
+One application running on the computer with, for example, Russian regional settings saves the Russian text (the default character set of the JVM is Cp1251) and another application running on computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
+However, when all client applications run same OS with the same regional settings in most cases will not have any severe consequences (except probably wrong sorting order or uppercasing on the server side).</p>
 </div>
 <div class="paragraph">
-<p>On Linux and other Unix platforms it might have more severe consequences
-as it is very common that regional settings are not configured and that
-the default "C" locale is used and the non-ASCII characters will be
-replaced with question marks ("?").</p>
+<p>On Linux and other Unix platforms it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").</p>
 </div>
 <div class="paragraph">
-<p>Therefore, application should use NONE character encoding as an encoding
-for a database and a connection only when at least one of the following
-is met:</p>
+<p>Therefore, application should use <code>NONE</code> character encoding as an encoding for a database and a connection only when at least one of the following is met:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Database will contain only ASCII characters</p>
+<p>Database will contain only ASCII characters,</p>
 </li>
 <li>
-<p>It is guaranteed that all Java Virtual Machines accessing the database
-will have the same default encoding that can correctly handle all
-characters stored in the database.</p>
+<p>It is guaranteed that all Java Virtual Machines accessing the database will have the same default encoding that can correctly handle all characters stored in the database,</p>
+</li>
+<li>
+<p>(<em class="since">Jaybird 3</em>) All columns have an explicit character set.
+When columns have an explicit character set (other than <code>NONE</code>) and connection character set <code>NONE</code> is used, Firebird will send an identifier of the character set of each column, and Jaybird will use that character set for the conversion.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>As a partial workaround one can specify the encoding that should be used
-to interpret bytes coming from the server in the <code>charSet</code> connection
-property. The following rules are used when interpreting the <code>encoding</code>
-and <code>charSet</code> properties:</p>
+<p>As a partial workaround, you can specify the encoding that should be used to interpret bytes coming from the server in the <code>charSet</code> connection property.
+The following rules are used when interpreting the <code>encoding</code> and <code>charSet</code> properties:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>When only <code>encoding</code> property specified, driver uses the default
-mapping between server and Java encodings. When <code>encoding</code> property is
-not set or set to NONE and <code>charSet</code> property is not set, the default
-JVM encoding is used to interpret bytes coming from the server.</p>
+<p>When only <code>encoding</code> property specified, Jaybird uses the default mapping between server and Java encodings.
+When <code>encoding</code> property is not set or set to <code>NONE</code> and <code>charSet</code> property is not set, the default JVM encoding is used to interpret bytes coming from the server.</p>
 </li>
 <li>
-<p>When only <code>charSet</code> property is specified, driver uses the reverse
-mapping to specify the connection encoding for the server and interprets
-byte stream according to the value of the property.</p>
+<p>When only <code>charSet</code> property is specified, Jaybird uses the reverse mapping to specify the connection encoding for the server and interprets byte stream according to the value of the property.</p>
 </li>
 <li>
-<p>When both <code>encoding</code> and <code>charSet</code> property are specified, driver sets
-the connection encoding according to the value of the <code>encoding</code>
-property, but interprets the byte stream according to the <code>charSet</code>
-property.</p>
+<p>When both <code>encoding</code> and <code>charSet</code> property are specified, Jaybird sets the connection encoding according to the value of the <code>encoding</code> property, but interprets the byte stream according to the <code>charSet</code> property.
+(<em class="since">Jaybird 3</em>) With Jaybird 3 and higher, this option has limitations when <code>encoding=NONE</code>: the conversion using <code>charSet</code> will only be applied for columns that don&#8217;t have an explicit character set, otherwise that explicit character set is used for the conversion.</p>
 </li>
 </ul>
 </div>
@@ -10054,8 +9985,7 @@ when used incorrectly, one can easily trash the content of the database.</p>
 <div class="sect2">
 <h3 id="_available_encodings"><a class="anchor" href="#_available_encodings"></a>E.3. Available Encodings</h3>
 <div class="paragraph">
-<p>The below table lists the available character encodings in the default
-Firebird distribution and their mapping to the Java ones:</p>
+<p>The below table lists the available character encodings in the default Firebird distribution and their mapping to the Java ones:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -10330,192 +10260,184 @@ since FB 2.0)</p></td>
 <h2 id="jdbcescape"><a class="anchor" href="#jdbcescape"></a>Appendix F: Supported JDBC Scalar Functions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>TODO</strong> Needs updating with support improved in Jaybird 3 and 4</p>
+<p>The JDBC API has an escaped syntax for numeric, string, time, date, system and conversion functions.
+Jaybird will try to provide an equivalent of the JDBC function using the built-in capabilities of the Firebird database.
+When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.</p>
 </div>
 <div class="paragraph">
-<p>The JDBC API supports the escaped syntax for numeric, string, time,
-date, system and conversion functions. Jaybird will try to provide an
-equivalent of the JDBC function using the built-in capabilities of the
-Firebird database. When no equivalent is available, Jaybird will pass
-the function call "as is" to the database assuming that it contains all
-necessary UDF declarations.</p>
+<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup> shipped with Firebird.
+Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database.
+In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
 <div class="paragraph">
-<p>Not all functions described in the JDBC specification have corresponding
-built-in functions in Firebird, but are available in the standard UDF
-library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup> shipped
-with Firebird. Jaybird provides a connection parameter
-<code>use_standard_udf</code> telling the driver to assume that functions from that
-UDF are available in the database. In this case Jaybird will convert all
-JDBC function calls into the corresponding calls of the UDF functions.</p>
+<p>(<em class="since">Jaybird 3</em>) In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
+Using the <code>use_standard_udf</code> is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.</p>
 </div>
 <div class="paragraph">
-<p>Below you will find the list of JDBC functions and whether they have a
-corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
+<p>Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 </div>
 <div class="sect2">
 <h3 id="_numeric_functions"><a class="anchor" href="#_numeric_functions"></a>F.1. Numeric Functions</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">JDBC</th>
-<th class="tableblock halign-left valign-top">built-in</th>
-<th class="tableblock halign-left valign-top">UDF mode</th>
+<th class="tableblock halign-center valign-top">built-in</th>
+<th class="tableblock halign-center valign-top">UDF mode</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ABS(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Absolute value of <code>number</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ACOS(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Arccosine, in radians, of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ASIN(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Arcsine, in radians, of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ATAN(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Arctangent, in radians, of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ATAN2(float1, float2)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Arctangent, in radians, of <code>float2</code> /
-<code>float1</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arctangent, in radians, of <code>float2</code> / <code>float1</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CEILING(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Smallest integer &gt;= <code>number</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>COS(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cosine of <code>float</code> radians</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>COT(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cotangent of <code>float</code> radians</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEGREES(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Degrees in <code>number</code> radians</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Degrees in <code>number</code> radians (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EXP(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Exponential function of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FLOOR(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Largest integer &#8656; <code>number</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOG(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Base e logarithm of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOG10(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Base 10 logarithm of <code>float</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MOD(integer1, integer2)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Remainder for <code>integer1</code> / <code>integer2</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PI()</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The constant pi</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POWER(number, power)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code> raised to (integer) <code>power</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RADIANS(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Radians in <code>number</code> degrees</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Radians in <code>number</code> degrees (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND()</code>&#8288;<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ROUND(number, places)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code> rounded to <code>places</code> places</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SIGN(number)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1 to indicate <code>number</code> is &lt; 0; 0 to indicate
 <code>number</code> is = 0; 1 to indicate <code>number</code> is &gt; 0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SIN(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sine of <code>float</code> radians</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SQRT(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Square root of float</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TAN(float)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tangent of <code>float</code> radians</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TRUNCATE(number, places)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code> truncated to <code>places</code> places</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code> truncated to <code>places</code> places (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -10527,151 +10449,181 @@ corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
 <h3 id="_string_functions"><a class="anchor" href="#_string_functions"></a>F.2. String Functions</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">JDBC</th>
-<th class="tableblock halign-left valign-top">built-in</th>
-<th class="tableblock halign-left valign-top">UDF mode</th>
+<th class="tableblock halign-center valign-top">built-in</th>
+<th class="tableblock halign-center valign-top">UDF mode</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ASCII(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Integer representing the ASCII code value of the
 leftmost character in <code>string</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR(code)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Character with ASCII code value <code>code</code>, where <code>code</code>
 is between 0 and 255</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR_LENGTH(string [,CHARACTERS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in characters of the string expression</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR_LENGTH(string, OCTETS)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8, alias for <code>OCTET_LENGTH</code> (<em class="since">Jaybird 4</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER_LENGTH( string [,CHARACTERS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>CHAR_LENGTH</code> (<em class="since">Jaybird 3</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER_LENGTH(string, OCTETS)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>CHAR_LENGTH</code>, <code>OCTET_LENGTH</code> (<em class="since">Jaybird 4</em>)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONCAT(string1, string2)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Character string formed by appending
-<code>string2</code> to <code>string1</code>; if a string is null, the result is
-DBMS-dependent</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Character string formed by appending <code>string2</code> to <code>string1</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DIFFERENCE(string1, string2)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Integer indicating the difference
-between the values returned by the function <code>SOUNDEX</code> for <code>string1</code> and
-<code>string2</code></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer indicating the difference between the values returned by the function <code>SOUNDEX</code> for <code>string1</code> and <code>string2</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>INSERT(string1, start, length, string2)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string
-formed by deleting <code>length</code> characters from <code>string1</code> beginning at
-<code>start</code>, and inserting <code>string2</code> into <code>string1</code> at <code>start</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string formed by deleting <code>length</code> characters from <code>string1</code> beginning at <code>start</code>, and inserting <code>string2</code> into <code>string1</code> at <code>start</code> (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LCASE(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Converts all uppercase characters in <code>string</code> to
-lowercase</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Converts all uppercase characters in <code>string</code> to lowercase (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LEFT(string, count)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>count</code> leftmost characters from
-<code>string</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>count</code> leftmost characters from <code>string</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string [,CHARACTERS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_36" class="footnote" href="#_footnotedef_36" title="View footnote.">36</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_37" class="footnote" href="#_footnotedef_37" title="View footnote.">37</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks (built-in <em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOCATE(string1, string2[, start])</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Position in <code>string2</code> of the
-first occurrence of <code>string1</code>, searching from the beginning of
-<code>string2</code>; if <code>start</code> is specified, the search begins from position
-<code>start</code>. 0 is returned if <code>string2</code> does not contain <code>string1</code>. Position
-1 is the first character in <code>string2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string, OCTETS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_38" class="footnote" href="#_footnotedef_38" title="View footnote.">38</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks (<em class="since">Jaybird 4</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOCATE(string1, string2 [,start])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Position in <code>string2</code> of the first occurrence of <code>string1</code>, searching from the beginning of <code>string2</code>;
+if <code>start</code> is specified, the search begins from position <code>start</code>.
+0 is returned if <code>string2</code> does not contain <code>string1</code>.
+Position 1 is the first character in <code>string2</code> (<em class="since">Jaybird 3</em> with <code>start</code> required, <em class="since">Jaybird 4</em> with <code>start</code> optional)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LTRIM(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Characters of <code>string</code> with leading blank spaces
-removed.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Characters of <code>string</code> with leading blank spaces removed (<em class="since">Jaybird 3</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OCTET_LENGTH(string)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string [,CHARACTERS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (<em class="since">Jaybird 3</em> without <code>CHARACTERS</code>, <em class="since">Jaybird 4</em> with optional <code>CHARACTERS</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string, OCTETS)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (<em class="since">Jaybird 4</em> with caveat)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REPEAT(string, count)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string formed by repeating
-<code>string</code> <code>count</code> times</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string formed by repeating <code>string</code> <code>count</code> times (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REPLACE(string1, string2, string3)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Replaces all occurrences of
-<code>string2</code> in <code>string1</code> with <code>string3</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replaces all occurrences of <code>string2</code> in <code>string1</code> with <code>string3</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RIGHT(string, count)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>count</code> rightmost characters in
-<code>string</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>count</code> rightmost characters in <code>string</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RTRIM(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The characters of <code>string</code> with no trailing
-blanks.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The characters of <code>string</code> with no trailing blanks (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SOUNDEX(string)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string, which is data
-source-dependent, representing the sound of the words in <code>string</code>; this
-could be a four-digit SOUNDEX code, a phonetic representation of each
-word, etc</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string, which is data source-dependent, representing the sound of the words in <code>string</code>;
+this could be a four-digit SOUNDEX code, a phonetic representation of each word, etc</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPACE(count)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string consisting of <code>count</code> spaces.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string consisting of <code>count</code> spaces (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SUBSTRING(string, start, length)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string formed by
-extracting <code>length</code> characters from <code>string</code> beginning at <code>start</code>.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string formed by extracting <code>length</code> characters from <code>string</code> beginning at <code>start</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>UCASE(string)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Converts all lowercase characters in <code>string</code> to
-uppercase.</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Converts all lowercase characters in <code>string</code> to uppercase</p></td>
 </tr>
 </tbody>
 </table>
@@ -10683,137 +10635,152 @@ uppercase.</p></td>
 <h3 id="_time_and_date_functions"><a class="anchor" href="#_time_and_date_functions"></a>F.3. Time and Date Functions</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">JDBC</th>
-<th class="tableblock halign-left valign-top">built-in</th>
-<th class="tableblock halign-left valign-top">UDF mode</th>
+<th class="tableblock halign-center valign-top">built-in</th>
+<th class="tableblock halign-center valign-top">UDF mode</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CURRENT_DATE[()]</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synonym for <code>CURDATE()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CURRENT_TIME[()]</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synonym for <code>CURTIME()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CURRENT_TIMESTAMP[()]</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synonym for <code>NOW()</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CURDATE()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The current date as a date value</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CURTIME()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The current local time as a time value</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYNAME(date)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component
-of <code>date</code>; the name for the day is specific to the data source</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>;
+the name for the day is specific to the data source</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYOFMONTH(date)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 31 representing the day
-of the month in <code>date</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 31 representing the day of the month in <code>date</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYOFWEEK(date)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 7 representing the day of
-the week in <code>date</code>; 1 represents Sunday</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 7 representing the day of the week in <code>date</code>;
+1 represents Sunday (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYOFYEAR(date)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 366 representing the day of
-the year in <code>date</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 366 representing the day of the year in <code>date</code> (<em class="since">Jaybird 3</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EXTRACT(field FROM source)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extract the field portion from the source.
+The source is a datetime value.
+The value for field may be one of the following: <code>YEAR</code>, <code>MONTH</code>, <code>DAY</code>, <code>HOUR</code>, <code>MINUTE</code>, <code>SECOND</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>HOUR(time)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 23 representing the hour
-component of <code>time</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 23 representing the hour component of <code>time</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MINUTE(time)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 59 representing the minute
-component of <code>time</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 59 representing the minute component of <code>time</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTH(date)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 12 representing the month
-component of <code>date</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 12 representing the month component of <code>date</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTHNAME(date)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month
 component of <code>date</code>; the name for the month is specific to the data
 source</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOW()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A timestamp value representing the current date and time</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>QUARTER(date)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 4 representing the quarter in
-<code>date</code>; 1 represents January 1 through March 31</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 4 representing the quarter in <code>date</code>;
+1 represents January 1 through March 31 (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SECOND(time)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 59 representing the second
-component of <code>time</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 0 to 59 representing the second component of <code>time</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMPADD( interval, count, timestamp)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A timestamp calculated
-by adding <code>count</code> number of <code>interval</code>(s) to <code>timestamp</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A timestamp calculated by adding <code>count</code> number of <code>interval</code>(s) to <code>timestamp</code> (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMPDIFF( interval, timestamp1, timestamp2)</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer
-representing the number of <code>interval</code> by which <code>timestamp2</code> is greater
-than <code>timestamp1</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer representing the number of <code>interval</code> by which <code>timestamp2</code> is greater than <code>timestamp1</code> (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>WEEK(date)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 53 representing the week of
-the year in <code>date</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer from 1 to 53 representing the week of the year in <code>date</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>YEAR(date)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An integer representing the year component of
-<code>date</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer representing the year component of <code>date</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -10825,38 +10792,38 @@ the year in <code>date</code></p></td>
 <h3 id="_system_functions"><a class="anchor" href="#_system_functions"></a>F.4. System Functions</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">JDBC</th>
-<th class="tableblock halign-left valign-top">built-in</th>
-<th class="tableblock halign-left valign-top">UDF mode</th>
+<th class="tableblock halign-center valign-top">built-in</th>
+<th class="tableblock halign-center valign-top">UDF mode</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE()</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IFNULL(expression, value)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>value</code> if <code>expression</code> is null;
 <code>expression</code> if <code>expression</code> is not null</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>USER()</code></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">User name in the DBMS</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name in the DBMS (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -10868,27 +10835,26 @@ the year in <code>date</code></p></td>
 <h3 id="_conversion_functions"><a class="anchor" href="#_conversion_functions"></a>F.5. Conversion Functions</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 30%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">JDBC</th>
-<th class="tableblock halign-left valign-top">built-in</th>
-<th class="tableblock halign-left valign-top">UDF mode</th>
+<th class="tableblock halign-center valign-top">built-in</th>
+<th class="tableblock halign-center valign-top">UDF mode</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CONVERT(value, SQL type)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONVERT(value, SQLtype)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>value</code> converted to <code>SQL type</code> where <code>SQL type</code> may be one of the
-following SQL types:</p>
+<p><code>value</code> converted to <code>SQLtype</code> where <code>SQLtype</code> may be one of the following SQL types:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -10896,22 +10862,55 @@ following SQL types:</p>
 <p><code>BIGINT</code></p>
 </li>
 <li>
+<p><code>BINARY</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>BLOB</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
 <p><code>CHAR</code></p>
+</li>
+<li>
+<p><code>CLOB</code> (<em class="since">Jaybird 4</em>)</p>
 </li>
 <li>
 <p><code>DATE</code></p>
 </li>
 <li>
+<p><code>DECFLOAT</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
 <p><code>DECIMAL</code></p>
 </li>
 <li>
-<p><code>OUBLE PRECISION</code></p>
+<p><code>DOUBLE</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>DOUBLE PRECISION</code></p>
 </li>
 <li>
 <p><code>FLOAT</code></p>
 </li>
 <li>
 <p><code>INTEGER</code></p>
+</li>
+<li>
+<p><code>LONGNVARCHAR</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>LONGVARBINARY</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>LONGVARCHAR</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>NCHAR</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>NCLOB</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>NVARCHAR</code> (<em class="since">Jaybird 4</em>)</p>
 </li>
 <li>
 <p><code>REAL</code></p>
@@ -10923,18 +10922,82 @@ following SQL types:</p>
 <p><code>TIME</code></p>
 </li>
 <li>
+<p><code>TIME_WITH_TIMEZONE</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>TIME_WITH_TIME_ZONE</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
 <p><code>TIMESTAMP</code></p>
+</li>
+<li>
+<p><code>TIMESTAMP_WITH_TIMEZONE</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>TIMESTAMP_WITH_TIME_ZONE</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>TINYINT</code> (<em class="since">Jaybird 4</em>)</p>
+</li>
+<li>
+<p><code>VARBINARY</code> (<em class="since">Jaybird 4</em>)</p>
 </li>
 <li>
 <p><code>VARCHAR</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 4, these type names can also be prefixed with <code>SQL_</code>.</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>Legend: X – available in this mode.</p>
+</div>
+<div class="paragraph">
+<p>(<em class="since">Jaybird 4</em>) The following improvements where added to <code>CONVERT</code> support in Jaybird 4:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Both the <code>SQL_&lt;datatype&gt;</code> and <code>&lt;datatype&gt;</code> mapping is now supported</p>
+</li>
+<li>
+<p>Contrary to the JDBC specification, we allow explicit length or precision and scale parameters</p>
+</li>
+<li>
+<p><code>(SQL_)VARCHAR</code>, <code>(SQL_)NVARCHAR</code> (and <em>value</em> not a parameter (<code>?</code>)) without explicit length is converted using <code>TRIM(TRAILING FROM value)</code>, which means the result is <code>VARCHAR</code> except for blobs where this will result in a blob;
+national character set will be lost.
+If <em>value</em> is a parameter (<code>?</code>), and no length is specified, then a length of 50 will be applied (cast to <code>(N)VARCHAR(50)</code>).</p>
+</li>
+<li>
+<p><code>(SQL_)CHAR</code>, <code>(SQL_)NCHAR</code> without explicit length will be cast to <code>(N)CHAR(50)</code></p>
+</li>
+<li>
+<p><code>(SQL_)BINARY</code>, and <code>(SQL_)VARBINARY</code> without explicit length will be cast to <code>(VAR)CHAR(50) CHARACTER SET OCTETS</code>.
+With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
+</li>
+<li>
+<p><code>(SQL_)LONGVARCHAR</code>, <code>(SQL_)LONGNVARCHAR</code>, <code>(SQL_)CLOB</code>, <code>(SQL_)NCLOB</code> will be cast to <code>BLOB SUB_TYPE TEXT</code>, national character set will be lost</p>
+</li>
+<li>
+<p><code>(SQL_)LONGVARBINARY</code>, <code>(SQL_)BLOB</code> will be cast to <code>BLOB SUB_TYPE BINARY</code></p>
+</li>
+<li>
+<p><code>(SQL_)TINYINT</code> is mapped to <code>SMALLINT</code></p>
+</li>
+<li>
+<p><code>(SQL_)ROWID</code> is not supported as length of <code>DB_KEY</code> values depend on the context</p>
+</li>
+<li>
+<p><code>(SQL_)DECIMAL</code> and <code>(SQL_)NUMERIC</code> without precision and scale are passed as is, in current Firebird versions, this means the value will be equivalent to <code>DECIMAL(9,0)</code> (which is equivalent to <code>INTEGER</code>)</p>
+</li>
+<li>
+<p>Unsupported/unknown <em>SQLtype</em> values (or invalid length or precision and scale) are passed as is to cast, resulting in an error from the Firebird engine if the resulting cast is invalid</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -11690,30 +11753,51 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_27">27</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_28">
-<a href="#_footnoteref_28">28</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>.
+<a href="#_footnoteref_28">28</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>
 </div>
 <div class="footnote" id="_footnotedef_29">
 <a href="#_footnoteref_29">29</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_30">
-<a href="#_footnoteref_30">30</a>. Jaybird provided character set conversion from the very beginning, however Jaybird versions prior to 2.1.0 know nothing about improved Unicode support in Firebird 2.0 because Jaybird 2.0.0 was released almost a year before Firebird 2.0 was released.
+<a href="#_footnoteref_30">30</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_31">
-<a href="#_footnoteref_31">31</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_31">31</a>. 2047 characters in Firebird 4 with a page size of 32 kilobytes
 </div>
 <div class="footnote" id="_footnotedef_32">
 <a href="#_footnoteref_32">32</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_33">
-<a href="#_footnoteref_33">33</a>. Standard UDF library provides <code>RAND()</code> function taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_33">33</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
 </div>
 <div class="footnote" id="_footnotedef_34">
-<a href="#_footnoteref_34">34</a>. The trailing blanks are also counted.
+<a href="#_footnoteref_34">34</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+</div>
+<div class="footnote" id="_footnotedef_35">
+<a href="#_footnoteref_35">35</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+</div>
+<div class="footnote" id="_footnotedef_36">
+<a href="#_footnoteref_36">36</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+</div>
+<div class="footnote" id="_footnotedef_37">
+<a href="#_footnoteref_37">37</a>. The trailing blanks are also counted, only works if second parameter is omitted
+</div>
+<div class="footnote" id="_footnotedef_38">
+<a href="#_footnoteref_38">38</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+</div>
+<div class="footnote" id="_footnotedef_39">
+<a href="#_footnoteref_39">39</a>. In Jaybird 3, start is required, start is optional since Jaybird 4
+</div>
+<div class="footnote" id="_footnotedef_40">
+<a href="#_footnoteref_40">40</a>. In Jaybird 3 and earlier only supported without the <code>CHARACTERS</code> parameter
+</div>
+<div class="footnote" id="_footnotedef_41">
+<a href="#_footnoteref_41">41</a>. Parameter <code>OCTETS</code> is ignored
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-11 14:40:41 UTC
+Last updated 2019-09-13 11:25:16 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
