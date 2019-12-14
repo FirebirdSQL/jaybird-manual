@@ -35,7 +35,8 @@ Jaybird 4 does not (yet) support the Firebird 3 zlib compression.
 Jaybird 4 does not support the protocol improvements of Firebird 4 like statement and session timeouts.
 Nor does it implement the new batch protocol.
 
-Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1481 or later for the `timeZoneBind` connection property.
+Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436).
+You will need version 4.0.0.1683 or later for the `dataTypeBind` connection property.
 
 [[jb4-spec]]
 ==== Supported Specifications

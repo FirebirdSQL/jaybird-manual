@@ -1,0 +1,44 @@
+[[ref-datatypebind]]
+=== Data type bind support
+
+[.since]_Jaybird 3.0.9_ +
+[.since]_Firebird 4_
+
+Firebird 4 (build 4.0.0.1683 or later) introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.
+This allows you to define data type conversion rules for compatibility or ease of processing data.
+
+This feature is specifically necessary for using the `WITH TIME ZONE` types under Jaybird 3, or Jaybird 4 on Java 7.
+See also <<ref-datetime-timezonebind>>.
+
+In Jaybird this is exposed as connection property `dataTypeBind` (alias `set_bind`).
+The value of this connection property is a semicolon-separated list of data type bind definitions.
+
+A data type bind definition is of the form `<from-type> TO <to-type>`.
+A definition is the same as the second half of a `SET BIND` statement after the `OF`.
+See the Firebird documentation of `SET BIND` for more information.
+Invalid values or impossible mappings will result in an error on connect.
+
+When using the `dataTypeBind` connection property in a JDBC URL, the semicolons of the list need to be encoded as `%3B`, as semicolons in the JDBC URL are an alternative to `&` as the separator between properties.
+
+For example:
+
+[source,java]
+.JDBC url with dataTypeBind and encoded semicolon
+----
+String jdbcUrl = "jdbc:firebirdsql://localhost/database?charSet=utf-8"
+    + "&dataTypeBind=decfloat to varchar%3Btimestamp with time zone to legacy
+----
+
+When the property is set through a `Properties` object or a `DataSource` configuration, encoding the semicolon is not necessary and will result in errors.
+
+For example:
+
+[source,java]
+.Properties object with dataTypeBind
+----
+Properties props = new Properties();
+props.setProperty("dataTypeBind", 
+    "decfloat to varchar;timestamp with time zone to legacy"
+----
+
+Values set through this connection property will be the session default configuration, which means that they are retained (or reverted to) when executing `ALTER SESSION RESET`.

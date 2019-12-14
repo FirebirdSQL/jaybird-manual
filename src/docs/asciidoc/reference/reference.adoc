@@ -16,6 +16,8 @@ include::connection/firebirdautocommit.adoc[]
 
 include::connection/processinfo.adoc[]
 
+include::connection/datatypebind.adoc[]
+
 // TODO client-info
 
 [[ref-statement]]

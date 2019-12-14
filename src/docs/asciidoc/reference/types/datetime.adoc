@@ -11,15 +11,15 @@
 Firebird 4 introduced time zone types, with types `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE`.
 See the Firebird 4 release notes and `doc/sql.extensions/README.time_zone.md` in the Firebird installation for details on these types.
 
-[.since]_Jaybird 3.0.6_ +
-Since Jaybird 3.0.6, two connection properties, `timeZoneBind` and `sessionTimeZone`, are available to provide limited support for these types.
+[.since]_Jaybird 3.0.9_ +
+Since Jaybird 3.0.9, two connection properties, `dataTypeBind` and `sessionTimeZone`, are available to provide limited support for these types.
 See <<ref-datetime-timezonebind>> and <<ref-datetime-sessiontimezone>> for details.
 
 [.since]_Jaybird 4_ +
 Since Jaybird 4, the time zone types are supported under Java 8 and higher, using the Java 8 (or higher) version of Jaybird.
 Time zone types are not supported under Java 7, and you will need to enable legacy time zone bind to use these types.
 With legacy time zone bind, Firebird will convert to the equivalent `TIME` and `TIMESTAMP` (`WITHOUT TIME ZONE`) types using the session time zone.
-Time zone bind can be configured with connection property `timeZoneBind`, for more information see <<ref-datetime-timezonebind>>.
+Time zone binds can be configured with connection property `dataTypeBind`, for more information see <<ref-datetime-timezonebind>>.
 
 [[ref-datetime-tz-scope]]
 ===== Scope of time zone support
@@ -94,31 +94,39 @@ Jaybird also does not support non-standard extensions like `java.time.Instant`, 
 If there is interest, we may add them in the future.
 
 [[ref-datetime-timezonebind]]
-===== Time zone bind configuration
+===== Defining time zone data type bind
 
-[.since]_Jaybird 3.0.6_
+[.since]_Jaybird 3.0.9_
 
-The connection property `timeZoneBind` (alias `time_zone_bind`) is a connection property to configure the time zone bind (see also `SET TIME ZONE BIND` in the Firebird 4 release notes).
+Jaybird 3.0.9 added the connection property `dataTypeBind` to defining data type mappings.
+This can be used to configure conversion of `WITH TIME ZONE` types to a different datatype.
+When configured, Firebird will present columns or parameters of `TIME(STAMP) WITH TIME ZONE` as the specified type, allowing clients without support for `WITH TIME ZONE` to read or set values.
 
 This property needs to be explicitly set if you are using Jaybird 4 on Java 7 or Jaybird 3 (on any Java version), and need to handle the `WITH TIME ZONE` types.
 It can also be used for tools or applications that expect `java.sql.Time`/`Timestamp` types and cannot use the `java.time.OffsetTime`/`OffsetDateTime` types returned for the `WITH TIME ZONE` types.
 
-Possible values (case insensitive):
+To map `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE` to the legacy without time zone types, you can use:
 
-* `legacy`
-+    
+[source,java]
+.Map with time zone types to without time zone types
+----
+Properties props = new Properties();
+props.setProperty("dataTypeBind", 
+    "time with time zone to legacy;timestamp with time zone to legacy"
+----
+
+Instead of `legacy`, you can also explicitly specify `time` and `timestamp` respectively.
+
 Firebird will convert a `WITH TIME ZONE` type to the equivalent `WITHOUT TIME ZONE` type using the session time zone to derive the value.
-+    
+
 Result set columns and parameters on prepared statements will behave as the equivalent `WITHOUT TIME ZONE` types.
 This conversion is not applied to the database metadata which will always report `WITH TIME ZONE` information.
-* `native`
-+
-Behaves as default (`WITH TIME ZONE` types supported), but value will be explicitly set.
 
-Any other value will result in error `isc_time_zone_bind` (code 335545255, message _"Invalid time zone bind mode &lt;value&gt;"_) on connect.
+See also <<ref-datatypebind>>.
 
-NOTE: This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1481 or later). 
-It will be ignored in earlier builds as the necessary database parameter buffer item does not exist in earlier versions.
+// TODO Warning can be removed after Firebird 4 release
+NOTE: This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1683 or later). 
+It will be ignored in builds before 1481 as the necessary database parameter buffer item does not exist, and it will raise an error in versions between 1481 and 1682 as there the DPB item points to the removed DPB item `isc_time_zone_bind`.
 
 [[ref-datetime-sessiontimezone]]
 ===== Connection property sessionTimeZone
