@@ -537,6 +537,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-defaultholdable">9.4. Default holdable result sets</a></li>
 <li><a href="#ref-firebirdautocommit">9.5. Firebird auto commit mode (experimental)</a></li>
 <li><a href="#ref-processinfo">9.6. Process information</a></li>
+<li><a href="#ref-datatypebind">9.7. Data type bind support</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -6575,6 +6576,61 @@ To set on data sources, use <code>setNonStandardProperty</code>.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.7. Data type bind support</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 3.0.9</em><br>
+<em class="since">Firebird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 4 (build 4.0.0.1683 or later) introduced the <code>SET BIND</code> statement and <code>isc_dpb_set_bind</code> DPB item.
+This allows you to define data type conversion rules for compatibility or ease of processing data.</p>
+</div>
+<div class="paragraph">
+<p>This feature is specifically necessary for using the <code>WITH TIME ZONE</code> types under Jaybird 3, or Jaybird 4 on Java 7.
+See also <a href="#ref-datetime-timezonebind">Defining time zone data type bind</a>.</p>
+</div>
+<div class="paragraph">
+<p>In Jaybird this is exposed as connection property <code>dataTypeBind</code> (alias <code>set_bind</code>).
+The value of this connection property is a semicolon-separated list of data type bind definitions.</p>
+</div>
+<div class="paragraph">
+<p>A data type bind definition is of the form <code>&lt;from-type&gt; TO &lt;to-type&gt;</code>.
+A definition is the same as the second half of a <code>SET BIND</code> statement after the <code>OF</code>.
+See the Firebird documentation of <code>SET BIND</code> for more information.
+Invalid values or impossible mappings will result in an error on connect.</p>
+</div>
+<div class="paragraph">
+<p>When using the <code>dataTypeBind</code> connection property in a JDBC URL, the semicolons of the list need to be encoded as <code>%3B</code>, as semicolons in the JDBC URL are an alternative to <code>&amp;</code> as the separator between properties.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="title">JDBC url with dataTypeBind and encoded semicolon</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">String jdbcUrl = "jdbc:firebirdsql://localhost/database?charSet=utf-8"
+    + "&amp;dataTypeBind=decfloat to varchar%3Btimestamp with time zone to legacy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the property is set through a <code>Properties</code> object or a <code>DataSource</code> configuration, encoding the semicolon is not necessary and will result in errors.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="title">Properties object with dataTypeBind</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
+props.setProperty("dataTypeBind",
+    "decfloat to varchar;timestamp with time zone to legacy"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Values set through this connection property will be the session default configuration, which means that they are retained (or reverted to) when executing <code>ALTER SESSION RESET</code>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7605,16 +7661,16 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 See the Firebird 4 release notes and <code>doc/sql.extensions/README.time_zone.md</code> in the Firebird installation for details on these types.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.6</em><br>
-Since Jaybird 3.0.6, two connection properties, <code>timeZoneBind</code> and <code>sessionTimeZone</code>, are available to provide limited support for these types.
-See <a href="#ref-datetime-timezonebind">Time zone bind configuration</a> and <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for details.</p>
+<p><em class="since">Jaybird 3.0.9</em><br>
+Since Jaybird 3.0.9, two connection properties, <code>dataTypeBind</code> and <code>sessionTimeZone</code>, are available to provide limited support for these types.
+See <a href="#ref-datetime-timezonebind">Defining time zone data type bind</a> and <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for details.</p>
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 4</em><br>
 Since Jaybird 4, the time zone types are supported under Java 8 and higher, using the Java 8 (or higher) version of Jaybird.
 Time zone types are not supported under Java 7, and you will need to enable legacy time zone bind to use these types.
 With legacy time zone bind, Firebird will convert to the equivalent <code>TIME</code> and <code>TIMESTAMP</code> (<code>WITHOUT TIME ZONE</code>) types using the session time zone.
-Time zone bind can be configured with connection property <code>timeZoneBind</code>, for more information see <a href="#ref-datetime-timezonebind">Time zone bind configuration</a>.</p>
+Time zone binds can be configured with connection property <code>dataTypeBind</code>, for more information see <a href="#ref-datetime-timezonebind">Defining time zone data type bind</a>.</p>
 </div>
 <div class="sect4">
 <h5 id="ref-datetime-tz-scope"><a class="anchor" href="#ref-datetime-tz-scope"></a>Scope of time zone support</h5>
@@ -7805,24 +7861,33 @@ If there is interest, we may add them in the future.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="ref-datetime-timezonebind"><a class="anchor" href="#ref-datetime-timezonebind"></a>Time zone bind configuration</h5>
+<h5 id="ref-datetime-timezonebind"><a class="anchor" href="#ref-datetime-timezonebind"></a>Defining time zone data type bind</h5>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.6</em></p>
+<p><em class="since">Jaybird 3.0.9</em></p>
 </div>
 <div class="paragraph">
-<p>The connection property <code>timeZoneBind</code> (alias <code>time_zone_bind</code>) is a connection property to configure the time zone bind (see also <code>SET TIME ZONE BIND</code> in the Firebird 4 release notes).</p>
+<p>Jaybird 3.0.9 added the connection property <code>dataTypeBind</code> to defining data type mappings.
+This can be used to configure conversion of <code>WITH TIME ZONE</code> types to a different datatype.
+When configured, Firebird will present columns or parameters of <code>TIME(STAMP) WITH TIME ZONE</code> as the specified type, allowing clients without support for <code>WITH TIME ZONE</code> to read or set values.</p>
 </div>
 <div class="paragraph">
 <p>This property needs to be explicitly set if you are using Jaybird 4 on Java 7 or Jaybird 3 (on any Java version), and need to handle the <code>WITH TIME ZONE</code> types.
 It can also be used for tools or applications that expect <code>java.sql.Time</code>/<code>Timestamp</code> types and cannot use the <code>java.time.OffsetTime</code>/<code>OffsetDateTime</code> types returned for the <code>WITH TIME ZONE</code> types.</p>
 </div>
 <div class="paragraph">
-<p>Possible values (case insensitive):</p>
+<p>To map <code>TIME WITH TIME ZONE</code> and <code>TIMESTAMP WITH TIME ZONE</code> to the legacy without time zone types, you can use:</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>legacy</code></p>
+<div class="listingblock">
+<div class="title">Map with time zone types to without time zone types</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
+props.setProperty("dataTypeBind",
+    "time with time zone to legacy;timestamp with time zone to legacy"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of <code>legacy</code>, you can also explicitly specify <code>time</code> and <code>timestamp</code> respectively.</p>
+</div>
 <div class="paragraph">
 <p>Firebird will convert a <code>WITH TIME ZONE</code> type to the equivalent <code>WITHOUT TIME ZONE</code> type using the session time zone to derive the value.</p>
 </div>
@@ -7830,17 +7895,8 @@ It can also be used for tools or applications that expect <code>java.sql.Time</c
 <p>Result set columns and parameters on prepared statements will behave as the equivalent <code>WITHOUT TIME ZONE</code> types.
 This conversion is not applied to the database metadata which will always report <code>WITH TIME ZONE</code> information.</p>
 </div>
-</li>
-<li>
-<p><code>native</code></p>
 <div class="paragraph">
-<p>Behaves as default (<code>WITH TIME ZONE</code> types supported), but value will be explicitly set.</p>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Any other value will result in error <code>isc_time_zone_bind</code> (code 335545255, message <em>"Invalid time zone bind mode &lt;value&gt;"</em>) on connect.</p>
+<p>See also <a href="#ref-datatypebind">Data type bind support</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -7849,8 +7905,8 @@ This conversion is not applied to the database metadata which will always report
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1481 or later).
-It will be ignored in earlier builds as the necessary database parameter buffer item does not exist in earlier versions.
+This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1683 or later).
+It will be ignored in builds before 1481 as the necessary database parameter buffer item does not exist, and it will raise an error in versions between 1481 and 1682 as there the DPB item points to the removed DPB item <code>isc_time_zone_bind</code>.
 </td>
 </tr>
 </table>
@@ -8013,26 +8069,26 @@ For more information, see <a href="#ref-decfloat-support">DECFLOAT support</a>.<
 <p><em class="since">Jaybird 3.0.6</em></p>
 </div>
 <div class="paragraph">
-<p>Jaybird 3 does not support <code>DECFLOAT</code>, but starting with Jaybird 3.0.6, the connection property <code>decfloatBind</code> can be used to convert to a datatype that is supported by Jaybird.
+<p>Jaybird 3 does not support <code>DECFLOAT</code>, but starting with Jaybird 3.0.9, the connection property <code>dataTypeBind</code> can be used to convert to a datatype that is supported by Jaybird.
 For earlier Jaybird 3 versions, see <a href="#ref-decfloat-jb22">Workarounds for Jaybird 2.2 and earlier</a>.</p>
 </div>
 <div class="paragraph">
-<p>We recommend either <code>decfloatBind=char</code> or <code>decfloatBind=double precision</code>.
-Option <code>char</code> has our preference as it is able to support the full range of values of the <code>DECFLOAT</code> types.</p>
+<p>We recommend either <code>dataTypeBind=decfloat to varchar</code> or <code>dataTypeBind=decfloat to double precision</code>.
+Option <code>varchar</code> has our preference as it is able to support the full range of values of the <code>DECFLOAT</code> types.</p>
 </div>
 <div class="paragraph">
-<p>See <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a> for details.</p>
+<p>See <a href="#ref-decfloat-bind">Defining decfloat data type bind</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="ref-decfloat-jb22"><a class="anchor" href="#ref-decfloat-jb22"></a>12.4.3. Workarounds for Jaybird 2.2 and earlier</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 and earlier do not support <code>DECFLOAT</code>.
-As a workaround, you can use the <code>SET DECFLOAT BIND &lt;bind-type&gt;</code> statement to configure your connection to map <code>DECFLOAT</code> to a different datatype.
+As a workaround, you can use the <code>SET BIND OF DECFLOAT TO &lt;target-type&gt;</code> statement to configure your connection to map <code>DECFLOAT</code> to a different datatype.
 When set, Firebird will present columns or parameters of <code>DECFLOAT</code> as the specified type, allowing clients without support for <code>DECFLOAT</code> to read or set values.</p>
 </div>
 <div class="paragraph">
-<p>The available options are the same as documented in <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a></p>
+<p>The available options are the same as documented in <a href="#ref-decfloat-bind">Defining decfloat data type bind</a></p>
 </div>
 <div class="paragraph">
 <p>For example</p>
@@ -8041,8 +8097,8 @@ When set, Firebird will present columns or parameters of <code>DECFLOAT</code> a
 <div class="content">
 <pre>try (Connection connection = DriverManager.getConnection(..);
      Statement stmt = connection.createStatement()) {
-    stmt.execute("SET DECFLOAT BIND char");
-    // DECFLOAT will now be mapped to a CHAR datatype
+    stmt.execute("SET BIND OF DECFLOAT TO varchar");
+    // DECFLOAT will now be mapped to a VARCHAR datatype
 }</pre>
 </div>
 </div>
@@ -8053,19 +8109,20 @@ When set, Firebird will present columns or parameters of <code>DECFLOAT</code> a
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-The effect of the <code>SET DECFLOAT BIND</code> statement will be reset to the default when <code>ALTER SESSION RESET</code> is executed.
+The effect of the <code>SET BIND</code> statement will be reset to the default when <code>ALTER SESSION RESET</code> is executed.
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-decfloat-prop-decfloat-bind"><a class="anchor" href="#ref-decfloat-prop-decfloat-bind"></a>12.4.4. Connection property decfloatBind</h4>
+<h4 id="ref-decfloat-bind"><a class="anchor" href="#ref-decfloat-bind"></a>12.4.4. Defining decfloat data type bind</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.6</em></p>
+<p><em class="since">Jaybird 3.0.9</em></p>
 </div>
 <div class="paragraph">
-<p>Jaybird 3.0.6 added the connection property <code>decfloatBind</code> to configure conversion of <code>DECFLOAT</code> to a different datatype.
+<p>Jaybird 3.0.9 added the connection property <code>dataTypeBind</code> to defining data type mappings.
+This can be used to configure conversion of <code>DECFLOAT</code> to a different datatype.
 When set Firebird will present columns or parameters of <code>DECFLOAT</code> as the specified type, allowing clients without support for <code>DECFLOAT</code> to read or set values.</p>
 </div>
 <div class="admonitionblock tip">
@@ -8087,52 +8144,44 @@ This property is also available in Jaybird 4, but we recommend to not use this p
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1481 or later).
-It will be ignored in earlier builds as the necessary database parameter buffer item does not exist in earlier versions.
+This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1683 or later).
+It will be ignored in builds before 1481 as the necessary database parameter buffer item does not exist, and it will raise an error in versions between 1481 and 1682 as there the DPB item points to the removed DPB item <code>isc_time_zone_bind</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The <code>decfloatBind</code> (alias: <code>decfloat_bind</code>) connection property has the following valid values:</p>
+<p>To map <code>DECFLOAT(16)</code> and <code>DECFLOAT(34)</code> to a string type, you can use:</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>native</code></dt>
-<dd>
-<p>(default) produces the normal <code>DECFLOAT</code> values (not supported by Jaybird 3)</p>
-</dd>
-<dt class="hdlist1"><code>char</code>/<code>character</code></dt>
-<dd>
-<p>converts the <code>DECFLOAT</code> values to an equivalent string using scientific notation (eg 6.573820132214283E+283).</p>
-</dd>
-<dt class="hdlist1"><code>double precision</code></dt>
-<dd>
-<p>converts the <code>DECFLOAT</code> values to an equivalent <code>double precision</code>.
-This may lose precision, and this option cannot support the full range of values of <code>DECFLOAT(34)</code> and can result in errors on overflow.</p>
-</dd>
-<dt class="hdlist1"><code>bigint, n</code></dt>
-<dd>
-<p>where <code>n</code> is the target scale to convert to a <code>NUMERIC(18,n)</code>.
-This option cannot support the full range of values of <code>DECFLOAT</code> and can result on errors on overflow.</p>
-</dd>
-</dl>
+<div class="listingblock">
+<div class="title">Map all decfloat types to string</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
+props.setProperty("dataTypeBind", "decfloat to varchar"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>These properties can be used as connection properties with <code>DriverManager</code>.
-For Jaybird data sources, the properties must be set using <code>setNonStandardProperty</code> as corresponding setters have not been defined.</p>
+<p>To map <code>DECFLOAT(16)</code> to <code>DOUBLE PRECISION</code> and <code>DECFLOAT(34)</code> to string, you can use:</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The value set using connection property <code>decfloatBind</code> will be the default reverted to by <code>ALTER SESSION RESET</code>.
-</td>
-</tr>
-</table>
+<div class="listingblock">
+<div class="title">Map all decfloat types to string</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
+props.setProperty("dataTypeBind", "decfloat(16) to double precision;decfloat(34) to varchar"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Firebird will convert a <code>DECFLOAT</code> type to the specified type using a cast to derive the value.</p>
+</div>
+<div class="paragraph">
+<p>Result set columns and parameters on prepared statements will behave as the defined type.
+This conversion is not applied to the database metadata which will always report <code>DECFLOAT</code> information.</p>
+</div>
+<div class="paragraph">
+<p>In general, we recommend binding to <code>VARCHAR</code> as this will allow you to get (and set) the full range of DECFLOAT values with precision.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#ref-datatypebind">Data type bind support</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -8704,19 +8753,13 @@ See <a href="#ref-binary">Binary types BINARY/VARBINARY</a> for more information
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>decfloatBind</code></p>
+<p><code>dataTypeBind</code><br>
+<code>set_bind</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs Firebird to convert columns and parameters of type <code>DECFLOAT</code> to a different type. (<em class="since">Jaybird 3.0.6</em> <em class="since">Firebird 4</em>)
-Accepted values are: <code>native</code>, <code>char</code> or <code>character</code>, <code>double precision</code>, <code>bigint, n</code> where <code>n</code> is the target scale to convert to a <code>NUMERIC(18,n)</code>.
-See <a href="#ref-decfloat-prop-decfloat-bind">Connection property decfloatBind</a> for more information.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>timeZoneBind</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Instructs Firebird to convert columns and parameters of type <code>TIME WITH TIME ZONE</code> and <code>TIMESTAMP WITH TIME ZONE</code> to a different type. (<em class="since">Jaybird 3.0.6</em> <em class="since">Firebird 4</em>)
-Accepted values are: <code>native</code>, <code>legacy</code>.
-See <a href="#ref-datetime-timezonebind">Time zone bind configuration</a> for more information.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines data type bind from one type to a different type. (<em class="since">Jaybird 3.0.9</em> <em class="since">Firebird 4</em>)
+Multiple bind definitions are separated by semicolons.
+When used in a JDBC url, the semicolon must be escaped using <code>%3B</code>.
+See <a href="#ref-datatypebind">Data type bind support</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -11061,7 +11104,8 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 Nor does it implement the new batch protocol.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1481 or later for the <code>timeZoneBind</code> connection property.</p>
+<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436).
+You will need version 4.0.0.1683 or later for the <code>dataTypeBind</code> connection property.</p>
 </div>
 </div>
 </div>
@@ -11824,7 +11868,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-09-13 16:43:28 UTC
+Last updated 2019-12-14 09:41:21 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
