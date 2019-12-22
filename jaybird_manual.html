@@ -533,11 +533,12 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel2">
 <li><a href="#ref-auth-plugins">9.1. Authentication plugins</a></li>
 <li><a href="#ref-wirecrypt">9.2. Wire encryption support</a></li>
-<li><a href="#ref-dbcrypt">9.3. Database encryption support</a></li>
-<li><a href="#ref-defaultholdable">9.4. Default holdable result sets</a></li>
-<li><a href="#ref-firebirdautocommit">9.5. Firebird auto commit mode (experimental)</a></li>
-<li><a href="#ref-processinfo">9.6. Process information</a></li>
-<li><a href="#ref-datatypebind">9.7. Data type bind support</a></li>
+<li><a href="#ref-wirecompression">9.3. Wire compression</a></li>
+<li><a href="#ref-dbcrypt">9.4. Database encryption support</a></li>
+<li><a href="#ref-defaultholdable">9.5. Default holdable result sets</a></li>
+<li><a href="#ref-firebirdautocommit">9.6. Firebird auto commit mode (experimental)</a></li>
+<li><a href="#ref-processinfo">9.7. Process information</a></li>
+<li><a href="#ref-datatypebind">9.8. Data type bind support</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -6338,7 +6339,29 @@ If you want to develop such a plugin, contact us on the Firebird-Java mailing li
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.3. Database encryption support</h3>
+<h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.3. Wire compression</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 4</em><br>
+<em class="since">Firebird 3</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 added support for zlib wire compression in the pure Java wire protocol.
+Compression can be enabled using boolean connection property <code>wireCompression</code>.</p>
+</div>
+<div class="paragraph">
+<p>The connection property only has effect for the pure Java wire protocol connections on Firebird 3 and higher, if the server has the zlib library.
+Native connections will follow the <code>WireCompression</code> configuration in the <code>firebird.conf</code> read by the client library, if the zlib library is on the search path.</p>
+</div>
+<div class="paragraph">
+<p>Compression is currently disabled by default.
+This may change in future versions of Jaybird to be enabled by default.</p>
+</div>
+<div class="paragraph">
+<p>The <code>wireCompression</code> property is also available on data sources and the management classes in <code>org.firebirdsql.management</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.4. Database encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.4</em><br>
 <em class="since">Firebird 3</em></p>
@@ -6421,7 +6444,7 @@ Support for the version 15 wire protocol will be added in a future version.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.4. Default holdable result sets</h3>
+<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.5. Default holdable result sets</h3>
 <div class="paragraph">
 <p>This connection property enables a connection to create holdable result sets by default.
 This propery can be used as a workaround for applications that expect a result to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
@@ -6464,7 +6487,7 @@ The memory occupied by this result set will be released when the statement that 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.5. Firebird auto commit mode (experimental)</h3>
+<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.6. Firebird auto commit mode (experimental)</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 2.2.9</em></p>
 </div>
@@ -6499,7 +6522,7 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.6. Process information</h3>
+<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.7. Process information</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 2.1.6</em><br>
 <em class="since">Firebird 2.1</em></p>
@@ -6533,7 +6556,7 @@ Treat it as informational only, as clients can report fake information.
 <p>It is possible to specify the process name and process id in two ways:</p>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.6.1. System properties for process information</h4>
+<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.7.1. System properties for process information</h4>
 <div class="paragraph">
 <p>It is possible to specify the process information through Java system properties:</p>
 </div>
@@ -6554,7 +6577,7 @@ Treat it as informational only, as clients can report fake information.
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.6.2. Connection properties for process information</h4>
+<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.7.2. Connection properties for process information</h4>
 <div class="paragraph">
 <p>It is also possible to specify the process information through connection properties:</p>
 </div>
@@ -6577,7 +6600,7 @@ To set on data sources, use <code>setNonStandardProperty</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.7. Data type bind support</h3>
+<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.8. Data type bind support</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.9</em><br>
 <em class="since">Firebird 4</em></p>
@@ -8711,6 +8734,15 @@ Only has effect on Type 4 (pure Java) connections.</p></td>
 For the Java wire protocol the connect timeout will detect unreachable hosts.
 In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
 This means that – for the native protocol – the connect timeout will not detect unreachable hosts within the timeout.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>wireCompression</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 4</em> <em class="since">Firebird 3</em>).
+Boolean property.
+Set property to <code>true</code> to enable zlib wire compression.
+See <a href="#ref-wirecompression">Wire compression</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -11868,7 +11900,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-14 09:41:21 UTC
+Last updated 2019-12-22 15:14:20 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
