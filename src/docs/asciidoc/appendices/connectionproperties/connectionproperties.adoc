@@ -141,6 +141,12 @@ For the Java wire protocol the connect timeout will detect unreachable hosts.
 In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol. 
 This means that – for the native protocol – the connect timeout will not detect unreachable hosts within the timeout.
 
+a|`wireCompression`
+|Jaybird specific property ([.since]_Jaybird 4_ [.since]_Firebird 3_).
+Boolean property.
+Set property to `true` to enable zlib wire compression.
+See <<ref-wirecompression>> for more information.
+
 a|`columnLabelForName`
 |Jaybird specific property ([.since]_Jaybird 2.2.1_).
 Boolean property.

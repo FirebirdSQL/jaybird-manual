@@ -8,6 +8,8 @@ include::connection/authenticationplugins.adoc[]
 
 include::connection/wirecrypt.adoc[]
 
+include::connection/wirecompression.adoc[]
+
 include::connection/dbencryption.adoc[]
 
 include::connection/defaultholdable.adoc[]

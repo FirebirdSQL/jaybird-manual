@@ -1,0 +1,16 @@
+[[ref-wirecompression]]
+=== Wire compression
+
+[.since]_Jaybird 4_ +
+[.since]_Firebird 3_
+
+Jaybird 4 added support for zlib wire compression in the pure Java wire protocol.
+Compression can be enabled using boolean connection property `wireCompression`.
+
+The connection property only has effect for the pure Java wire protocol connections on Firebird 3 and higher, if the server has the zlib library.
+Native connections will follow the `WireCompression` configuration in the `firebird.conf` read by the client library, if the zlib library is on the search path.
+
+Compression is currently disabled by default.
+This may change in future versions of Jaybird to be enabled by default.
+
+The `wireCompression` property is also available on data sources and the management classes in `org.firebirdsql.management`.
