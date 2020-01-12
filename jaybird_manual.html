@@ -10756,10 +10756,9 @@ this could be a four-digit SOUNDEX code, a phonetic representation of each word,
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYNAME(date)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>;
-the name for the day is specific to the data source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>; the name for the day is specific to the data source (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYOFMONTH(date)</code></p></td>
@@ -10808,11 +10807,9 @@ The value for field may be one of the following: <code>YEAR</code>, <code>MONTH<
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTHNAME(date)</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month
-component of <code>date</code>; the name for the month is specific to the data
-source</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month component of <code>date</code>; the name for the month is specific to the data source (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NOW()</code></p></td>
@@ -10883,9 +10880,9 @@ source</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE()</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_44" class="footnote" href="#_footnotedef_44" title="View footnote.">44</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IFNULL(expression, value)</code></p></td>
@@ -11897,10 +11894,19 @@ hyperlink/alias]).</p>
 <div class="footnote" id="_footnotedef_41">
 <a href="#_footnoteref_41">41</a>. Parameter <code>OCTETS</code> is ignored
 </div>
+<div class="footnote" id="_footnotedef_42">
+<a href="#_footnoteref_42">42</a>. Always returns English full names (eg Sunday)
+</div>
+<div class="footnote" id="_footnotedef_43">
+<a href="#_footnoteref_43">43</a>. Always returns English full names (eg January)
+</div>
+<div class="footnote" id="_footnotedef_44">
+<a href="#_footnoteref_44">44</a>. Either the full path of the database or the alias. See documentation of RDB$GET_CONTEXT('SYSTEM', 'DB_NAME') for details.
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-22 15:14:20 UTC
+Last updated 2020-01-12 14:17:13 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
