@@ -156,8 +156,7 @@ Legend: X – available in this mode.
 
 |CURTIME() |X |X |The current local time as a time value
 
-|DAYNAME(date) | | |A character string representing the day component of `date`;
-the name for the day is specific to the data source
+|DAYNAME(date) |Xfootnote:[Always returns English full names (eg Sunday)] | |A character string representing the day component of `date`; the name for the day is specific to the data source ([.since]_Jaybird 4_)
 
 |DAYOFMONTH(date) |X |X |An integer from 1 to 31 representing the day of the month in `date`
 
@@ -176,9 +175,7 @@ The value for field may be one of the following: `YEAR`, `MONTH`, `DAY`, `HOUR`,
 
 |MONTH(date) |X |X |An integer from 1 to 12 representing the month component of `date`
 
-|MONTHNAME(date) | | |A character string representing the month
-component of `date`; the name for the month is specific to the data
-source
+|MONTHNAME(date) |Xfootnote:[Always returns English full names (eg January)] | |A character string representing the month component of `date`; the name for the month is specific to the data source ([.since]_Jaybird 4_)
 
 |NOW() |X |X |A timestamp value representing the current date and time
 
@@ -204,7 +201,7 @@ Legend: X – available in this mode.
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
 
-|DATABASE() | | |Name of the database
+|DATABASE() |Xfootnote:[Either the full path of the database or the alias. See documentation of RDB$GET_CONTEXT('SYSTEM', 'DB_NAME') for details.] | |Name of the database ([.since]_Jaybird 4_)
 
 |IFNULL(expression, value) |X |X |`value` if `expression` is null;
 `expression` if `expression` is not null
