@@ -201,7 +201,7 @@ Legend: X – available in this mode.
 |=======================================================================
 |JDBC |built-in |UDF mode |Description
 
-|DATABASE() |Xfootnote:[Either the full path of the database or the alias. See documentation of RDB$GET_CONTEXT('SYSTEM', 'DB_NAME') for details.] | |Name of the database ([.since]_Jaybird 4_)
+|DATABASE() |Xfootnote:[Either the full path of the database or the alias. See documentation of `RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')` for details.] | |Name of the database ([.since]_Jaybird 4_)
 
 |IFNULL(expression, value) |X |X |`value` if `expression` is null;
 `expression` if `expression` is not null
