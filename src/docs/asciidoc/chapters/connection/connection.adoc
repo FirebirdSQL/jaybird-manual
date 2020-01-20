@@ -126,6 +126,7 @@ It is possible to specify a relative path, but as this depends on the server
 configuration, this may be confusing or easily lead to errors. We suggest not to use relative paths, 
 and instead use an alias.
 
+[[connection-drivermanager-props]]
 ==== Specifying extended properties
 
 What if we want to specify additional connection parameters, for example a client encoding? 
@@ -183,7 +184,7 @@ the HTTP-like parameter passing scheme: first comes the main part of the
 URL, then `"?"`, then name-value pairs separated with `&` or `;`. This example
 is equivalent to the previous example.
 
-NOTE: Despite the URL-like syntax, Jaybird does not (yet) support URL encoding.
+NOTE: Jaybird only supports URL encoding in Jaybird 4 and higher.
 
 [source,java]
 .Specifying extended properties in the JDBC URL
@@ -197,6 +198,32 @@ Connection connection = DriverManager.getConnection(
     "SYSDBA",
     "masterkey");
 ----
+
+[[connection-drivermanager-props-urlencoding]]
+===== URL encoding in query part of JDBC URL
+
+[.since]_Jaybird 4_
+
+Jaybird 4 and higher support UTF-8 URL encoded values (and keys) in the query part of the JDBC URL.
+
+As a result of this change, the following previously unsupported characters can be used in a connection property value when escaped:
+
+* `;` escaped as `%3B`
+* `&` escaped as `%26`
+
+In addition, the following characters must also be escaped:
+
+* `+` in the query part now means _space_ (0x20), so occurrences of `+` (_plus_) need to be escaped as `%2B`;
+make sure to do this for base64 encoded values of `dbCryptConfig`
+* `%` in the query part now introduces an escape, so occurrences of `%` (_percent_) need to be escaped as `%25`
+
+URL encoding can also be used to encode any unicode character in the query string.
+Jaybird will always use UTF-8 for decoding.
+
+Invalid URL encoded values will throw a `SQLNonTransientConnectionException`.
+
+The support for URL encoding only applies to the JDBC URL part after the first `?`.
+URL encoding should not be applied for connection properties set through `java.util.Properties` or on a `javax.sql.DataSource`.
 
 [[connection-datasource]]
 ==== Obtaining a connection via javax.sql.DataSource
