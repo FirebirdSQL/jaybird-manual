@@ -746,7 +746,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-XXX</code> (where <code>XXX</code> is <code>jdk17</code> or <code>jdk18</code>).<br>
-Version: <code>3.0.6</code></p>
+Version: <code>3.0.8</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -756,7 +756,7 @@ Version: <code>3.0.6</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.6&lt;/version&gt;
+  &lt;version&gt;3.0.8&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -773,7 +773,7 @@ dependency:</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.6&lt;/version&gt;
+  &lt;version&gt;3.0.8&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -1383,7 +1383,7 @@ This dependency does not support the <code>embedded</code> protocol.</p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
-    &lt;version&gt;3.0.4.0&lt;/artifactId&gt;
+    &lt;version&gt;3.0.5.1&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -6676,7 +6676,7 @@ See the Firebird documentation of <code>SET BIND</code> for more information.
 Invalid values or impossible mappings will result in an error on connect.</p>
 </div>
 <div class="paragraph">
-<p>When using the <code>dataTypeBind</code> connection property in a JDBC URL, the semicolons of the list need to be encoded as <code>%3B</code>, as semicolons in the JDBC URL are an alternative to <code>&amp;</code> as the separator between properties.</p>
+<p>When using the <code>dataTypeBind</code> connection property in a JDBC URL, the semicolons of the list need to be encoded as <code>%3B</code>, as unescaped semicolons in the JDBC URL are an alternative to <code>&amp;</code> as the separator between properties.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -11175,18 +11175,18 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 <div class="sect4">
 <h5 id="jb4-firebird3"><a class="anchor" href="#jb4-firebird3"></a>Notes on Firebird 3 support</h5>
 <div class="paragraph">
-<p>Jaybird 4 does not (yet) support the Firebird 3 zlib compression.</p>
+<p>Jaybird 4 supports the Firebird 3 and higher zlib compression.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="jb4-firebird4"><a class="anchor" href="#jb4-firebird4"></a>Notes on Firebird 4 support</h5>
 <div class="paragraph">
-<p>Jaybird 4 does not support the protocol improvements of Firebird 4 like statement and session timeouts.
-Nor does it implement the new batch protocol.</p>
+<p>Jaybird 4 supports the protocol improvements of Firebird 4 like statement and session timeouts.
+It does not implement the new batch protocol.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436).
-You will need version 4.0.0.1683 or later for the <code>dataTypeBind</code> connection property.</p>
+You will need Firebird version 4.0.0.1683 or later for the <code>dataTypeBind</code> connection property.</p>
 </div>
 </div>
 </div>
@@ -11252,15 +11252,15 @@ Additionally, if the antlr-runtime classes are found in the class path, it is po
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-&lt;java&gt;-4.0.0-beta-1.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.0.&lt;java&gt;-beta-2.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.
-Where <code>&lt;java&gt;</code> is either <code>jdk17</code>, <code>jdk18</code> or <code>java11</code>.</p></td>
+Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-&lt;java&gt;-4.0.0-beta-1.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.0.&lt;java&gt;-beta-2.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.
-Where <code>&lt;java&gt;</code> is either <code>jdk17</code>, <code>jdk18</code> or <code>java11</code>.</p></td>
+Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/antlr-runtime-4.7.2.jar</code></p></td>
@@ -11287,8 +11287,8 @@ Where <code>&lt;java&gt;</code> is either <code>jdk17</code>, <code>jdk18</code>
 </div>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
-Artifactid: <code>jaybird-XX</code> (where <code>XX</code> is <code>jdk17</code>, <code>jdk18</code> or <code>java11</code>).<br>
-Version: <code>4.0.0-beta-1</code></p>
+Artifactid: <code>jaybird</code>,<br>
+Version: <code>4.0.0.&lt;java&gt;-beta-2</code> (where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -11297,8 +11297,8 @@ Version: <code>4.0.0-beta-1</code></p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;4.0.0-beta-1&lt;/version&gt;
+  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
+  &lt;version&gt;4.0.0.java8-beta-2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11312,8 +11312,8 @@ Version: <code>4.0.0-beta-1</code></p>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;4.0.0-beta-1&lt;/version&gt;
+  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
+  &lt;version&gt;4.0.0.java8-beta-2&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -11463,12 +11463,12 @@ Additionally, if the antlr-runtime classes are found in the class path, it is po
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.6.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-3.0.8.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.6.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-3.0.8.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.</p></td>
 </tr>
 <tr>
@@ -11497,7 +11497,7 @@ management classes.</p></td>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird-jdkXX</code> (where <code>XX</code> is <code>17</code> or <code>18</code>).<br>
-Version: <code>3.0.6</code></p>
+Version: <code>3.0.8</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -11507,7 +11507,7 @@ Version: <code>3.0.6</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.6&lt;/version&gt;
+  &lt;version&gt;3.0.8&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11522,7 +11522,7 @@ Version: <code>3.0.6</code></p>
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.6&lt;/version&gt;
+  &lt;version&gt;3.0.8&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -11958,7 +11958,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-20 10:17:30 UTC
+Last updated 2020-01-20 10:39:25 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
