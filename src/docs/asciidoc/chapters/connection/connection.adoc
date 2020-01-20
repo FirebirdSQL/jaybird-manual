@@ -358,12 +358,12 @@ When using Jaybird 3 and later, you can use a library to provide the Firebird cl
 For Windows and Linux, you can add the `org.firebirdsql.jdbc:fbclient` dependency on your classpath.
 This dependency does not support the `embedded` protocol.
 
-[source,xml]
+[source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
     <groupId>org.firebirdsql.jdbc</groupId>
     <artifactId>fbclient</artifactId>
-    <version>3.0.4.0</artifactId>
+    <version>{jaybird-fbclient-version}</artifactId>
 </dependency>
 ----
 

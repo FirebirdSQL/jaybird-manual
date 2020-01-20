@@ -18,7 +18,7 @@ A definition is the same as the second half of a `SET BIND` statement after the 
 See the Firebird documentation of `SET BIND` for more information.
 Invalid values or impossible mappings will result in an error on connect.
 
-When using the `dataTypeBind` connection property in a JDBC URL, the semicolons of the list need to be encoded as `%3B`, as semicolons in the JDBC URL are an alternative to `&` as the separator between properties.
+When using the `dataTypeBind` connection property in a JDBC URL, the semicolons of the list need to be encoded as `%3B`, as unescaped semicolons in the JDBC URL are an alternative to `&` as the separator between properties.
 
 For example:
 

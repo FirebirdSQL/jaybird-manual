@@ -27,16 +27,16 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 [[jb4-firebird3]]
 ===== Notes on Firebird 3 support
 
-Jaybird 4 does not (yet) support the Firebird 3 zlib compression.
+Jaybird 4 supports the Firebird 3 and higher zlib compression.
 
 [[jb4-firebird4]]
 ===== Notes on Firebird 4 support
 
-Jaybird 4 does not support the protocol improvements of Firebird 4 like statement and session timeouts.
-Nor does it implement the new batch protocol.
+Jaybird 4 supports the protocol improvements of Firebird 4 like statement and session timeouts.
+It does not implement the new batch protocol.
 
 Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436).
-You will need version 4.0.0.1683 or later for the `dataTypeBind` connection property.
+You will need Firebird version 4.0.0.1683 or later for the `dataTypeBind` connection property.
 
 [[jb4-spec]]
 ==== Supported Specifications
@@ -76,14 +76,14 @@ The following files can be found in the distribution package:
 [cols="2,5",options="header",]
 |=======================================================================
 |File name |Description
-| `jaybird-<java>-{jaybird4-full-version}.jar` 
+| `jaybird-{jaybird4-template-version}.jar` 
 | An archive containing the JDBC driver, the JCA connection manager, the Services API and event 
 management classes.
-Where `<java>` is either `jdk17`, `jdk18` or `java11`.
+Where `<java>` is either `java7`, `java8` or `java11`.
 
-| `jaybird-full-<java>-{jaybird4-full-version}.jar` 
+| `jaybird-full-{jaybird4-template-version}.jar` 
 | Same as above, but including the JCA 1.5 dependency.
-Where `<java>` is either `jdk17`, `jdk18` or `java11`.
+Where `<java>` is either `java7`, `java8` or `java11`.
 
 | `lib/antlr-runtime-4.7.2.jar`
 | Optional dependency, required if you want to use `getGeneratedKeys` support
@@ -104,8 +104,8 @@ Alternatively, you can use maven to automatically download Jaybird and its depen
 Jaybird 4 is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird-XX` (where `XX` is `jdk17`, `jdk18` or `java11`). +
-Version: `{jaybird4-full-version}`
+Artifactid: `jaybird`, +
+Version: `{jaybird4-template-version}` (where `<java>` is either `java7`, `java8` or `java11`)
 
 For example:
 
@@ -113,8 +113,8 @@ For example:
 ----
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
-  <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird4-full-version}</version>
+  <artifactId>jaybird</artifactId>
+  <version>{jaybird4-example-version}</version>
 </dependency>
 ----
 
@@ -126,8 +126,8 @@ If your application is deployed to a Java EE application server, you will need t
 ----
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
-  <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird4-full-version}</version>
+  <artifactId>jaybird</artifactId>
+  <version>{jaybird4-example-version}</version>
   <exclusions>
     <exclusion>
       <groupId>javax.resource</groupId>
