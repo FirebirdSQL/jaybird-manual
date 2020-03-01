@@ -15,16 +15,16 @@ The static response value of the encryption callback can be set through the `dbC
 Data sources and `ServiceManager` implementations have an equivalent property with the same name. 
 This property can be set as follows:
 
-* Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later)
+* Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later).
 * Strings prefixed with `base64:`: rest of the string is decoded as base64 to bytes. 
-The `=` padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length)
-* Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response
+The `=` padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).
+* Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response.
     
 Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with `&` or `;`. 
 Likewise, avoid `:` so that we can support other prefixes similar to `base64:` in the future. 
 If you need these characters, consider using a base64 encoded value instead.
 
-[.since]_Jaybird 4_ Jaybird 4 expects keys and values in the JDBC URL to be URL encoded. 
+[.since]_Jaybird 3.0.9_ Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded. 
 When the base64 encoded value contains `+`, it must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
 For backwards compatibility with Jaybird 3, we can't switch to the URL-safe variant of base64.
 
