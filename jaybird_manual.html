@@ -6431,14 +6431,14 @@ This property can be set as follows:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later)</p>
+<p>Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later).</p>
 </li>
 <li>
 <p>Strings prefixed with <code>base64:</code>: rest of the string is decoded as base64 to bytes.
-The <code>=</code> padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length)</p>
+The <code>=</code> padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).</p>
 </li>
 <li>
-<p>Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response</p>
+<p>Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response.</p>
 </li>
 </ul>
 </div>
@@ -6448,7 +6448,7 @@ Likewise, avoid <code>:</code> so that we can support other prefixes similar to 
 If you need these characters, consider using a base64 encoded value instead.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 4</em> Jaybird 4 expects keys and values in the JDBC URL to be URL encoded.
+<p><em class="since">Jaybird 3.0.9</em> Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded.
 When the base64 encoded value contains <code>+</code>, it must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
 For backwards compatibility with Jaybird 3, we can&#8217;t switch to the URL-safe variant of base64.</p>
 </div>
@@ -11958,7 +11958,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-20 10:41:49 UTC
+Last updated 2020-03-01 12:57:54 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
