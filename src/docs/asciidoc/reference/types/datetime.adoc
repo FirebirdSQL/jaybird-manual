@@ -73,6 +73,12 @@ Jaybird 4 supports the following Java types on fields of time zone types (those 
 ** On get obtains `java.time.OffsetDateTime`, converts this to epoch milliseconds and uses `new java.sql.Date(millis)`
 ** On set applies `toLocalDate()` at start of day and derives the offset date  time for the default JVM time zone
 
+In addition, Firebird 4 has 'bind-only' data types `EXTENDED TIME/TIMESTAMP WITH TIME ZONE`.
+These data types can be set through the data type bind configuration and include an extra offset in its data so clients without access to ICU or other time zone data can use the offset as determined by Firebird.
+
+Jaybird provides minimal support for these types by handling them the same as the normal `WITH TIME ZONE` types.
+That means the extra offset information is ignored and Jaybird will always use the Java time zone information to calculate the offset of a named zone, and if a zone is unknown in Java, Jaybird will fallback to UTC even when the actual offset is available in the 'extended' time zone type.
+
 [[ref-datetime-tz-scope-legacy]]
 ====== Support for legacy JDBC date/time types
 
@@ -121,6 +127,9 @@ Firebird will convert a `WITH TIME ZONE` type to the equivalent `WITHOUT TIME ZO
 
 Result set columns and parameters on prepared statements will behave as the equivalent `WITHOUT TIME ZONE` types.
 This conversion is not applied to the database metadata which will always report `WITH TIME ZONE` information.
+
+The `TIME ZONE TO EXTENDED` binds (including type-specific variants) is only supported under Java 8 and higher using the Java 8 or higher version of Jaybird.
+As mentioned earlier, the support for 'extended' time zone types will behave identical to the normal time zone types. 
 
 See also <<ref-datatypebind>>.
 
