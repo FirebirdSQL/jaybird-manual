@@ -112,7 +112,7 @@ To map `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE` to the legacy withou
 ----
 Properties props = new Properties();
 props.setProperty("dataTypeBind", 
-    "time with time zone to legacy;timestamp with time zone to legacy"
+    "time with time zone to legacy;timestamp with time zone to legacy");
 ----
 
 Instead of `legacy`, you can also explicitly specify `time` and `timestamp` respectively.
