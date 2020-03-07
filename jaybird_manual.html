@@ -7910,6 +7910,14 @@ If no mapping is available the time will be returned at UTC (offset zero).</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>In addition, Firebird 4 has 'bind-only' data types <code>EXTENDED TIME/TIMESTAMP WITH TIME ZONE</code>.
+These data types can be set through the data type bind configuration and include an extra offset in its data so clients without access to ICU or other time zone data can use the offset as determined by Firebird.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird provides minimal support for these types by handling them the same as the normal <code>WITH TIME ZONE</code> types.
+That means the extra offset information is ignored and Jaybird will always use the Java time zone information to calculate the offset of a named zone, and if a zone is unknown in Java, Jaybird will fallback to UTC even when the actual offset is available in the 'extended' time zone type.</p>
+</div>
 <div class="sect5">
 <h6 id="ref-datetime-tz-scope-legacy"><a class="anchor" href="#ref-datetime-tz-scope-legacy"></a>Support for legacy JDBC date/time types</h6>
 <div class="paragraph">
@@ -7957,7 +7965,7 @@ It can also be used for tools or applications that expect <code>java.sql.Time</c
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">Properties props = new Properties();
 props.setProperty("dataTypeBind",
-    "time with time zone to legacy;timestamp with time zone to legacy"</code></pre>
+    "time with time zone to legacy;timestamp with time zone to legacy");</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7969,6 +7977,10 @@ props.setProperty("dataTypeBind",
 <div class="paragraph">
 <p>Result set columns and parameters on prepared statements will behave as the equivalent <code>WITHOUT TIME ZONE</code> types.
 This conversion is not applied to the database metadata which will always report <code>WITH TIME ZONE</code> information.</p>
+</div>
+<div class="paragraph">
+<p>The <code>TIME ZONE TO EXTENDED</code> binds (including type-specific variants) is only supported under Java 8 and higher using the Java 8 or higher version of Jaybird.
+As mentioned earlier, the support for 'extended' time zone types will behave identical to the normal time zone types.</p>
 </div>
 <div class="paragraph">
 <p>See also <a href="#ref-datatypebind">Data type bind support</a>.</p>
@@ -11958,7 +11970,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-01 12:57:54 UTC
+Last updated 2020-03-07 16:18:10 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
