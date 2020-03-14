@@ -188,6 +188,18 @@ In Jaybird 4, also configures the time zone used for legacy datetime conversion 
 See <<ref-datetime-sessiontimezone>> for more information. +
 Default: not set (Jaybird 3 and earlier), or the JVM default time zone ([.since]_Jaybird 4_)
 
+a|`decfloatRound` +
+`decfloat_round`
+|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4_)
+Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
+See <<ref-decfloat-traps-round>> for more information.
+
+a|`decfloatTraps` +
+`decfloat_traps`
+|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4_)
+Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
+See <<ref-decfloat-traps-round>> for more information.
+
 a|`useStandarUdf` +
 `use_standard_udf`
 |Jaybird specific property.

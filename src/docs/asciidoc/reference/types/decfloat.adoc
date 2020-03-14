@@ -183,6 +183,20 @@ The resulting value is now `1000000000000000E+369` or `1.000000000000000E+384`, 
     
 If you need other rounding and overflow behavior, make sure you round the values appropriately before you set them.
 
+[[ref-decfloat-traps-round]]
+===== Configuring decfloat traps and rounding
+
+To configure the server-side(!) error and rounding behaviour of the `DECFLOAT` data types, you can configure use the following connection properties:
+
+* `decfloatRound` (alias: `decfloat_round`) 
++
+Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
+* `decfloatTraps` (alias: `decfloat_traps`)
++
+Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
+    
+Configuring these options does not change driver behaviour, only server-side behaviour.
+
 [[ref-decfloat-notes]]
 ===== Notes
 
