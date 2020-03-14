@@ -8434,6 +8434,31 @@ And these values for coefficient and exponent are in range of the storage requir
 </div>
 </div>
 <div class="sect4">
+<h5 id="ref-decfloat-traps-round"><a class="anchor" href="#ref-decfloat-traps-round"></a>Configuring decfloat traps and rounding</h5>
+<div class="paragraph">
+<p>To configure the server-side(!) error and rounding behaviour of the <code>DECFLOAT</code> data types, you can configure use the following connection properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>decfloatRound</code> (alias: <code>decfloat_round</code>)</p>
+<div class="paragraph">
+<p>Possible values: <code>ceiling</code>, <code>up</code>, <code>half_up</code> (default), <code>half_even</code>, <code>half_down</code>, <code>down</code>, <code>floor</code>, <code>reround</code></p>
+</div>
+</li>
+<li>
+<p><code>decfloatTraps</code> (alias: <code>decfloat_traps</code>)</p>
+<div class="paragraph">
+<p>Comma-separated list with options: <code>Division_by_zero</code> (default), <code>Inexact</code>, <code>Invalid_operation</code> (default), <code>Overflow</code> (default), <code>Underflow</code></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Configuring these options does not change driver behaviour, only server-side behaviour.</p>
+</div>
+</div>
+<div class="sect4">
 <h5 id="ref-decfloat-notes"><a class="anchor" href="#ref-decfloat-notes"></a>Notes</h5>
 <div class="olist arabic">
 <ol class="arabic">
@@ -8866,6 +8891,24 @@ In Jaybird 3, only configures the Firebird 4 server-side session time zone.
 In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for more information.<br>
 Default: not set (Jaybird 3 and earlier), or the JVM default time zone (<em class="since">Jaybird 4</em>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>decfloatRound</code><br>
+<code>decfloat_round</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side rounding behaviour for <code>DECFLOAT</code> data types (<em class="since">Jaybird 4</em> <em class="since">Firebird 4</em>)
+Possible values: <code>ceiling</code>, <code>up</code>, <code>half_up</code> (default), <code>half_even</code>, <code>half_down</code>, <code>down</code>, <code>floor</code>, <code>reround</code>
+See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>decfloatTraps</code><br>
+<code>decfloat_traps</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side error behaviour for <code>DECFLOAT</code> data types (<em class="since">Jaybird 4</em> <em class="since">Firebird 4</em>)
+Comma-separated list with options: <code>Division_by_zero</code> (default), <code>Inexact</code>, <code>Invalid_operation</code> (default), <code>Overflow</code> (default), <code>Underflow</code>
+See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding</a> for more information.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -11970,7 +12013,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-07 16:18:10 UTC
+Last updated 2020-03-14 12:50:14 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
