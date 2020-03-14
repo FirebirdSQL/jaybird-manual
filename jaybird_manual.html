@@ -11236,12 +11236,23 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 <div class="sect4">
 <h5 id="jb4-firebird4"><a class="anchor" href="#jb4-firebird4"></a>Notes on Firebird 4 support</h5>
 <div class="paragraph">
-<p>Jaybird 4 supports the protocol improvements of Firebird 4 like statement and session timeouts.
-It does not implement the new batch protocol.</p>
+<p>At the time of release of Jaybird 4, Firebird 4 was still in testing.
+As a result, support for Firebird 4 is tentative.
+There can be incompatibilities with features or changes after Firebird version 4.0.0.1803.
+Once Firebird 4 is released, incompatibilities or otherwise breaking changes will be addressed in a point release of Jaybird 4.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436).
-You will need Firebird version 4.0.0.1683 or later for the <code>dataTypeBind</code> connection property.</p>
+<p>Jaybird 4 supports the protocol improvements of Firebird 4 for statement timeouts, but does not implement the new batch protocol.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1683 or later for the <code>dataTypeBind</code> connection property.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4 supports the extended numeric precision types introduced after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1604 to be able to use <code>NUMERIC</code> or <code>DECIMAL</code> with a precision higher than 18.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird does not support the ChaCha wire encryption plugin.
+This may be added in a future major or point release.</p>
 </div>
 </div>
 </div>
@@ -12013,7 +12024,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-14 12:50:14 UTC
+Last updated 2020-03-14 17:27:18 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
