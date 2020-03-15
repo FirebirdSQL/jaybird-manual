@@ -8915,7 +8915,7 @@ See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding<
 <p><code>useStandarUdf</code><br>
 <code>use_standard_udf</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 5</em>)
 Boolean property.
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls.
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
@@ -10448,12 +10448,13 @@ When no equivalent is available, Jaybird will pass the function call "as is" to 
 </div>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup> shipped with Firebird.
-Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database.
+Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until">Jaybird 5</em>).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
 <div class="paragraph">
 <p>(<em class="since">Jaybird 3</em>) In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
-Using the <code>use_standard_udf</code> is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.</p>
+Using the <code>use_standard_udf</code> is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.
+<em class="since">Jaybird 5</em> UDF mode (<code>use_standard_udf</code>) is no longer available in Jaybird 5 and higher.</p>
 </div>
 <div class="paragraph">
 <p>Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
@@ -12024,7 +12025,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-14 17:27:18 UTC
+Last updated 2020-03-15 10:03:56 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
