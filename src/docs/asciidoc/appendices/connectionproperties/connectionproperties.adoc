@@ -202,7 +202,7 @@ See <<ref-decfloat-traps-round>> for more information.
 
 a|`useStandarUdf` +
 `use_standard_udf`
-|Jaybird specific property.
+|Jaybird specific property ([.until]_Jaybird 5_)
 Boolean property. 
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.

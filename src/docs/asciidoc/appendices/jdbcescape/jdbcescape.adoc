@@ -7,11 +7,12 @@ Jaybird will try to provide an equivalent of the JDBC function using the built-i
 When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.
 
 Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library ``ib_udf``{wj}footnote:[On Windows platform it is represented by the `ib_udf.dll`, on Linux it is represented by the `libib_udf.so`.] shipped with Firebird.
-Jaybird provides a connection parameter `use_standard_udf` to configure the driver to assume that functions from that UDF are available in the database.
+Jaybird provides a connection parameter `use_standard_udf` to configure the driver to assume that functions from that UDF are available in the database ([.until]_Jaybird 5_).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.
 
 ([.since]_Jaybird 3_) In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
 Using the `use_standard_udf` is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.
+[.since]_Jaybird 5_ UDF mode (`use_standard_udf`) is no longer available in Jaybird 5 and higher.
 
 Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "built-in" and in the "UDF" modes.
 
