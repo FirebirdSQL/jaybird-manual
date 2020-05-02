@@ -151,10 +151,9 @@ For information about using SQL in Firebird, see the https://www.firebirdsql.org
 
 Support for Jaybird is available through the following channels:
 
-* The https://groups.yahoo.com/group/Firebird-Java[Firebird-Java group^] and corresponding mailing
-list firebird-java@yahoogroups.com
+* The https://groups.google.com/d/forum/firebird-java[firebird-java Google Group^] and corresponding mailing list firebird-java@googlegroups.com
 +
-You can subscribe to the mailing list by sending an email to firebird-java-subscribe@yahoogroups.com
+You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account). Alternatively, you can join the group at https://groups.google.com/d/forum/firebird-java[firebird-java Google Group^] (this requires a Google account).
 * On https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html[Jaybird Frequently Asked Questions^].
 * On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
 +
@@ -180,9 +179,9 @@ Firebird-devel mailing list)
 [[intro-reporting-bugs]]
 ==== Reporting Bugs
 
-The developers follow the firebird-java@yahoogroups.com list. Join the list and post information 
-about suspected bugs. List members may be able to help out to determine if it is an actual bug, 
-provide a workaround and get you going again, whereas bug fixes might take awhile.
+The developers follow the https://groups.google.com/d/forum/firebird-java[firebird-java Google Group^] and mailing list.
+Join the list and post information about suspected bugs.
+List members may be able to help out to determine if it is an actual bug, provide a workaround and get you going again, whereas bug fixes might take awhile.
 
 You can report bugs in the Firebird bug tracker, project http://tracker.firebirdsql.org/browse/JDBC["Jaybird JCA/JDBC Driver"^]
 
