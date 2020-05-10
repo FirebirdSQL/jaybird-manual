@@ -1,5 +1,5 @@
 = Jaybird JDBC Driver Java Programmer's Manual
-Roman Rokytskyy;Mark Rotteveel
+Roman Rokytskyy; Mark Rotteveel
 :doctype: book
 :docinfo:
 :sectanchors:

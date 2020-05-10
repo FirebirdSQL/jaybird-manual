@@ -195,7 +195,7 @@ An `SQLException` is a special exception that is thrown by the JDBC
 connectivity component in case of an error. Each instance of this
 exception is required to carry the vendor error code (if applicable) and
 a SQL state according to the X/Open SQLstate or SQL:2003 specifications. Firebird 
-and Jaybird use SQL:2003 SQL state codes.footnoteref:[sqlstate, it is possible sometimes X/Open SQLstates are used]
+and Jaybird use SQL:2003 SQL state codes.footnote:sqlstate[it is possible sometimes X/Open SQLstates are used]
 
 When multiple SQL errors happened, they are joined into a chain. Usually
 the most recent exception is thrown to the application, the exceptions
@@ -284,7 +284,7 @@ conversions see <<Data Type Conversion Table>>.
 
 === SQL states
 
-Jaybird supports the SQLstate values from the SQL:2003 standard,footnoteref:[sqlstate] 
+Jaybird supports the SQLstate values from the SQL:2003 standard,footnote:sqlstate[] 
 however only few states nicely map into the Firebird error codes.
 
 Applications can use the SQLstate codes in the error handling routines
