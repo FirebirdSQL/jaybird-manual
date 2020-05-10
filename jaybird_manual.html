@@ -8589,11 +8589,25 @@ The precision specified is the minimum precison, not the exact precision.
 <p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p>
 </div>
 <div class="paragraph">
-<p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 34.
-Any <code>NUMERIC</code> or <code>DECIMAL</code> with a precision between 19 and 34 will allow storage up to a precision of 34.</p>
+<p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 38.
+Any <code>NUMERIC</code> or <code>DECIMAL</code> with a precision between 19 and 38 will allow storage up to a precision of 38.</p>
 </div>
 <div class="paragraph">
-<p>In the implementation in Firebird, this extended precision is backed by a IEEE-754 Decimal128 which is also used for <code>DECFLOAT</code> support.</p>
+<p>In the implementation in Firebird, this extended precision is backed by an Int128.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In Firebird 4 beta 1, the maximum precision was 34, backed by an IEEE-754 Decimal128 as also used for <code>DECFLOAT</code>.
+Support for this previous variant of extended precision backed by a Decimal128 is not supported by Jaybird 4.
+Support for the extended precision backed by an Int128 requires Firebird 4 beta 2 or higher (or a Firebird 4 snapshot build 1604 or higher).
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Values set on a field or parameter will be rounded to the target scale of the field using <code>RoundingMode.HALF_EVEN</code>.
@@ -12030,7 +12044,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-10 17:02:57 UTC
+Last updated 2020-05-10 18:36:36 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
