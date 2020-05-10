@@ -11,10 +11,14 @@ The precision specified is the minimum precison, not the exact precision.
 
 In Firebird 3 and earlier, the maximum precision of `DECIMAL` and `NUMERIC` is 18 with a maximum scale of 18.footnote:[In practice, values with precision 19 are possible up to the maximum value of the `BIGINT` backing the value.]
 
-[.since]_Firebird 4_ [.since]_Jaybird 4_ In Firebird 4 the maximum precision and scale of `DECIMAL` and `NUMERIC` have been raised to 34.
-Any `NUMERIC` or `DECIMAL` with a precision between 19 and 34 will allow storage up to a precision of 34.
+[.since]_Firebird 4_ [.since]_Jaybird 4_ In Firebird 4 the maximum precision and scale of `DECIMAL` and `NUMERIC` have been raised to 38.
+Any `NUMERIC` or `DECIMAL` with a precision between 19 and 38 will allow storage up to a precision of 38.
 
-In the implementation in Firebird, this extended precision is backed by a IEEE-754 Decimal128 which is also used for `DECFLOAT` support.
+In the implementation in Firebird, this extended precision is backed by an Int128.
+
+NOTE: In Firebird 4 beta 1, the maximum precision was 34, backed by an IEEE-754 Decimal128 as also used for `DECFLOAT`.
+Support for this previous variant of extended precision backed by a Decimal128 is not supported by Jaybird 4. 
+Support for the extended precision backed by an Int128 requires Firebird 4 beta 2 or higher (or a Firebird 4 snapshot build 1604 or higher).
 
 Values set on a field or parameter will be rounded to the target scale of the field using `RoundingMode.HALF_EVEN`.
 Values exceeding a precision of 34 after rounding will be rejected with a `TypeConversionException`.
