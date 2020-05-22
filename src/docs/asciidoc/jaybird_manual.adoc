@@ -10,12 +10,12 @@ Roman Rokytskyy; Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird-version: 3
-:jaybird-full-version: 3.0.8
+:jaybird-full-version: 3.0.9
 :jna-version: 4.4.0
 :jaybird4-full-version: 4.0.0
 :jaybird4-template-version: 4.0.0.<java>
 :jaybird4-example-version: 4.0.0.java8
-:jaybird3-full-version: 3.0.8
+:jaybird3-full-version: 3.0.9
 :jaybird22-full-version: 2.2.15
 :jaybird-fbclient-version: 3.0.5.1
 :min-support-firebird: 2.0
