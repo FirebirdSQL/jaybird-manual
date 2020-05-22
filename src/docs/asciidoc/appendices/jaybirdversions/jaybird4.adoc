@@ -1,8 +1,6 @@
 [[jb4]]
 === Jaybird 4
 
-WARNING: Jaybird 4 is not yet released
-
 [[jb4-java]]
 ==== Java support
 

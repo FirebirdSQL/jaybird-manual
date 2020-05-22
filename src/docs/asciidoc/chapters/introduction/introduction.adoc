@@ -21,7 +21,7 @@ This manual covers Jaybird {jaybird-version} and may use Java 8 and Firebird 3 s
 New or removed features are tagged with the version that introduced a feature (eg [.since]_Jaybird 3_) or removed  feature (eg [.until]_Jaybird 3_).
 This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3 or later, and for features available in Java/JDBC versions 8/4.2 or later.
 
-This manual may include documentation of features of Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
+This manual may include documentation of features of -- possibly unreleased -- Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
 
 === History
 
@@ -70,8 +70,8 @@ Alternatively, you can use maven to automatically download Jaybird and its depen
 Jaybird {jaybird-version} is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird-XXX` (where `XXX` is `jdk17` or `jdk18`). +
-Version: `{jaybird-full-version}`
+Artifactid: `jaybird`, +
+Version: `{jaybird-template-version}` (where `<java>` is `java7`, `java8` or `java11`)
 
 For example:
 
@@ -79,8 +79,8 @@ For example:
 ----
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
-  <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird-full-version}</version>
+  <artifactId>jaybird</artifactId>
+  <version>{jaybird-example-version}</version>
 </dependency>
 ----
 
@@ -94,8 +94,8 @@ dependency:
 ----
 <dependency>
   <groupId>org.firebirdsql.jdbc</groupId>
-  <artifactId>jaybird-jdk18</artifactId>
-  <version>{jaybird-full-version}</version>
+  <artifactId>jaybird</artifactId>
+  <version>{jaybird-example-version}</version>
   <exclusions>
     <exclusion>
       <groupId>javax.resource</groupId>

@@ -92,7 +92,7 @@ You can specify the value of this property during JVM startup:
 ....
 java\
   -Djdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver\
-  -classpath jaybird-full-{jaybird-full-version}.jar;C:/myproject/classes\
+  -classpath jaybird-full-{jaybird-example-version}.jar;C:/myproject/classes\
   my.company.SomeJavaExample
 ....
 ====
