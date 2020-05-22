@@ -675,14 +675,14 @@ The type 2 driver includes support for Firebird Embedded.</p>
 <div class="sect2">
 <h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
 <div class="paragraph">
-<p>This manual covers Jaybird 3 and may use Java 8 and Firebird 3 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.</p>
+<p>This manual covers Jaybird 4 and may use Java 8 and Firebird 3 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.</p>
 </div>
 <div class="paragraph">
 <p>New or removed features are tagged with the version that introduced a feature (eg <em class="since">Jaybird 3</em>) or removed  feature (eg <em class="until">Jaybird 3</em>).
 This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3 or later, and for features available in Java/JDBC versions 8/4.2 or later.</p>
 </div>
 <div class="paragraph">
-<p>This manual may include documentation of features of Jaybird versions later than 3 to simplify manual maintenance and versioning.</p>
+<p>This manual may include documentation of features of&#8201;&#8212;&#8201;possibly unreleased&#8201;&#8212;&#8201;Jaybird versions later than 4 to simplify manual maintenance and versioning.</p>
 </div>
 </div>
 <div class="sect2">
@@ -735,7 +735,7 @@ backup/restore, user management, statistics gathering, etc.</p>
 <div class="sect2">
 <h3 id="distribution"><a class="anchor" href="#distribution"></a>1.4. Jaybird Distribution</h3>
 <div class="paragraph">
-<p>Jaybird 3 supports Firebird 2.0 and higher.
+<p>Jaybird 4 supports Firebird 2.5 and higher.
 See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
 <div class="paragraph">
@@ -747,12 +747,12 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <p>Alternatively, you can use maven to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 3 is available from Maven central:</p>
+<p>Jaybird 4 is available from Maven central:</p>
 </div>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
-Artifactid: <code>jaybird-XXX</code> (where <code>XXX</code> is <code>jdk17</code> or <code>jdk18</code>).<br>
-Version: <code>3.0.9</code></p>
+Artifactid: <code>jaybird</code>,<br>
+Version: <code>4.0.0.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java7</code>, <code>java8</code> or <code>java11</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -761,8 +761,8 @@ Version: <code>3.0.9</code></p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.9&lt;/version&gt;
+  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
+  &lt;version&gt;4.0.0.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -778,8 +778,8 @@ dependency:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird-jdk18&lt;/artifactId&gt;
-  &lt;version&gt;3.0.9&lt;/version&gt;
+  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
+  &lt;version&gt;4.0.0.java11&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -797,14 +797,14 @@ dependency:</p>
 </div>
 <div class="paragraph">
 <p>If you want to use Type 2 support (native, local or embedded), you need to
-explicitly include JNA 4.4.0 as a dependency:</p>
+explicitly include JNA 5.5.0 as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
   &lt;artifactId&gt;jna&lt;/artifactId&gt;
-  &lt;version&gt;4.4.0&lt;/version&gt;
+  &lt;version&gt;5.5.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1051,7 +1051,7 @@ Multiple drivers can be separated using a colon (<code>:</code>).</p>
 <div class="content">
 <pre>java\
   -Djdbc.drivers=foo.Driver:org.firebirdsql.jdbc.FBDriver\
-  -classpath jaybird-full-{jaybird-full-version}.jar;C:/myproject/classes\
+  -classpath jaybird-full-{jaybird-example-version}.jar;C:/myproject/classes\
   my.company.SomeJavaExample</pre>
 </div>
 </div>
@@ -1373,7 +1373,7 @@ should use following:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 4.4.0
+<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 5.5.0
 needs to be on the classpath.</p>
 </div>
 <div class="sect4">
@@ -11209,18 +11209,6 @@ With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
 </div>
 <div class="sect2">
 <h3 id="jb4"><a class="anchor" href="#jb4"></a>G.1. Jaybird 4</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Jaybird 4 is not yet released
-</td>
-</tr>
-</table>
-</div>
 <div class="sect3">
 <h4 id="jb4-java"><a class="anchor" href="#jb4-java"></a>G.1.1. Java support</h4>
 <div class="paragraph">
@@ -12044,7 +12032,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-22 14:54:55 UTC
+Last updated 2020-05-22 15:16:59 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
