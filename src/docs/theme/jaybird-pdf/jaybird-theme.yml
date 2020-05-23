@@ -1,6 +1,28 @@
 extends: default
 base:
   align: justify
+firebird:
+  color:
+    orange: '#FB2400'
+    blue: '#404090'
+    darkblue: '#00008B'
+    light_yellow: '#FFFFEC'
+link:
+  font_color: $firebird_color_darkblue
+literal:
+  font_color: null
+heading:
+  font_color: $firebird_color_blue
+title_page:
+  align: center 
+  logo_image: image:./images/firebird_logo_400x400.png[pdfwidth=25%,align=center]
+  title:
+    font_color: $firebird_color_blue
+  subtitle:
+    font_color: $firebird_color_blue
+code:
+  background_color: $firebird_color_light_yellow
+  border_color: $firebird_color_light_yellow
 header:
   border_color: dddddd
   border_width: 0.25
@@ -17,11 +39,14 @@ footer:
     right:
       # reset from default style
       content: ''
-    center: 
+    center:
       content: '{page-number}'
   verso:
     left:
       # reset from default style
       content: ''
-    center: 
+    center:
       content: $footer_recto_center_content
+admonition:
+  caption:
+    font_style: bold
