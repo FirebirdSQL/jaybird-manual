@@ -3,13 +3,13 @@
 *.gradle        text
 *.adoc          text
 *.asciidoc      text
-*.css           text
+*.css           text    eol=lf
 *.df            text
 *.htm           text
 *.html          text
 *.java          text
 *.properties    text
-*.sh            text
+*.sh            text    eol=lf
 *.txt           text
 *.xml           text
 *.bat           text    eol=crlf

@@ -1,4 +1,4 @@
-extends: default
+extends: default-with-fallback-font
 base:
   align: justify
 firebird:
@@ -50,3 +50,4 @@ footer:
 admonition:
   caption:
     font_style: bold
+    

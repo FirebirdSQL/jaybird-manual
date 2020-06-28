@@ -50,7 +50,9 @@ asciidoctor {
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'revnumber': null
+    attributes 'revnumber': null, 
+        'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
+        'docinfo': 'shared', 'docinfodir': file('src/docs/theme/jaybird-html/docinfo')
 }
 
 pdfThemes {
@@ -65,7 +67,8 @@ asciidoctorPdf {
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress', 'compress': ''
+    attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress', 
+        'compress': '', 'icon-set': 'fas'
     theme 'jaybird'
 }
 
