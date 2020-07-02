@@ -594,6 +594,7 @@ div#preheader table { border: none; }
 <li><a href="#ref-datetime">12.3. Date/time types</a></li>
 <li><a href="#ref-decfloat">12.4. Decimal floating point type DECFLOAT</a></li>
 <li><a href="#ref-decimal">12.5. Exact numeric types DECIMAL/NUMERIC</a></li>
+<li><a href="#ref-int128">12.6. Type INT128</a></li>
 </ul>
 </li>
 </ul>
@@ -8644,6 +8645,35 @@ Values exceeding a precision of 34 after rounding will be rejected with a <code>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-int128"><a class="anchor" href="#ref-int128"></a>12.6. Type INT128</h3>
+<div class="paragraph">
+<p><em class="since">Firebird 4</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 4 introduced the non-standard type <code>INT128</code>, a signed 128 bit number.</p>
+</div>
+<div class="sect3">
+<h4 id="_support_for_int128"><a class="anchor" href="#_support_for_int128"></a>12.6.1. Support for INT128</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 4.0.1</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 4.0.1 introduced support for the <code>INT128</code> type.
+Jaybird 4.0.0 will also be able to handle the type, but does not formally identify it as <code>INT128</code>.</p>
+</div>
+<div class="paragraph">
+<p>As JDBC does not define an <code>INT128</code> type, Jaybird maps the Firebird type <code>INT128</code> to the JDBC type <code>NUMERIC</code> with precision of 38.
+This way most tools should be able to handle the full range of values of without issue.</p>
+</div>
+<div class="paragraph">
+<p>For details on numeric, see <a href="#ref-decimal">Exact numeric types DECIMAL/NUMERIC</a>.</p>
+</div>
+<div class="paragraph">
+<p>The introduction of this type is specified by <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2020-08-int128-support.md" target="_blank" rel="noopener">jdp-2020-08 Int128 support</a>.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <h1 id="_appendices" class="sect0"><a class="anchor" href="#_appendices"></a>Appendices</h1>
@@ -12061,7 +12091,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-28 16:24:23 UTC
+Last updated 2020-07-02 18:51:39 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
