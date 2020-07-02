@@ -1,0 +1,20 @@
+[[ref-int128]]
+=== Type INT128
+
+[.since]_Firebird 4_
+
+Firebird 4 introduced the non-standard type `INT128`, a signed 128 bit number.
+
+==== Support for INT128
+
+[.since]_Jaybird 4.0.1_
+
+Jaybird 4.0.1 introduced support for the `INT128` type.
+Jaybird 4.0.0 will also be able to handle the type, but does not formally identify it as `INT128`.
+
+As JDBC does not define an `INT128` type, Jaybird maps the Firebird type `INT128` to the JDBC type `NUMERIC` with precision of 38.
+This way most tools should be able to handle the full range of values of without issue.
+
+For details on numeric, see <<ref-decimal>>.
+
+The introduction of this type is specified by https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2020-08-int128-support.md[jdp-2020-08 Int128 support^].

@@ -57,3 +57,5 @@ include::types/datetime.adoc[]
 include::types/decfloat.adoc[]
 
 include::types/decimal.adoc[]
+
+include::types/int128.adoc[]
