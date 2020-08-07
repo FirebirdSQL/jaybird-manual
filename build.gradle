@@ -68,7 +68,7 @@ asciidoctorPdf {
         include 'jaybird_manual.adoc'
     }
     attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress', 
-        'compress': '', 'icon-set': 'fas'
+        'compress': '', 'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
     theme 'jaybird'
 }
 

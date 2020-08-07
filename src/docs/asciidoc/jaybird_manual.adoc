@@ -7,6 +7,7 @@ Roman Rokytskyy; Mark Rotteveel
 :keywords: jaybird, firebird, jdbc, sql, database, java
 :source-highlighter: prettify
 :toc: left
+:outlinelevels: 6:1
 :imagesdir: images
 :icons: font
 :jaybird-version: 4
