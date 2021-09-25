@@ -1,5 +1,5 @@
 # jaybird-manual
-Jaybird JDBC Driver Java Programmer's Manual [![Build Status](https://travis-ci.com/FirebirdSQL/jaybird-manual.svg?branch=master)](https://travis-ci.com/FirebirdSQL/jaybird-manual)
+Jaybird JDBC Driver Java Programmer's Manual [![Build Status](https://github.com/FirebirdSQL/jaybird-manual/actions/workflows/publish-to-github-pages.yml/badge.svg?branch=master)](https://github.com/FirebirdSQL/jaybird-manual/actions?query=branch%3Amaster+workflow%3Apublish-to-github-pages)
 
 Manual for [Jaybird](https://github.com/FirebirdSQL/jaybird), the Firebird JDBC driver.
 
