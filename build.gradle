@@ -1,18 +1,24 @@
 plugins {
-    id 'org.asciidoctor.jvm.convert' version '3.1.0'
-    id 'org.asciidoctor.jvm.pdf' version '3.1.0'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'org.asciidoctor.jvm.pdf' version '3.3.2'
 }
 
 defaultTasks 'clean', 'asciidoctor'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 asciidoctorj {
     modules {
         pdf {
-            version '1.5.3'
+            version '1.6.0'
+        }
+        groovyDsl {
+            // Default of asciidoctor-gradle-plugin 3.3.2 depends on 2.0.0 which is not on Maven Central.
+            // Remove once newer version of the plugin is released.
+            // see also https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/620
+            version '2.0.2'
         }
     }
     docExtensions {
