@@ -587,6 +587,7 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel2">
 <li><a href="#ref-generatedkeys">10.1. Generated keys retrieval</a></li>
 <li><a href="#ref-callable-ignore-proctype">10.2. Connection property ignoreProcedureType</a></li>
+<li><a href="#ref-scrollable-cursor">10.3. Connection property scrollableCursor</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -3751,11 +3752,18 @@ object.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Due to a missing support of scrollable cursors in Firebird, this
-support (<code>TYPE_SCROLL_INSENSITIVE</code> result set type) is implemented by
-fetching the complete result set to the client. Scrolling happens in the
-memory on the client. This can have adverse effect on the system memory
-usage and performance when the result set is large.</p>
+<p>Due to a missing support of scrollable cursors in Firebird 4.0 and earlier, support for scrollable results set (<code>TYPE_SCROLL_INSENSITIVE</code> result set type) is implemented by fetching the complete result set to the client.
+Scrolling happens in memory on the client.
+This can have adverse effect on the system memory usage and performance when the result set is large.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em><br>
+<em class="since">Firebird 5.0</em></p>
+</div>
+<div class="paragraph">
+<p>Starting with Firebird 5.0, server-side scrollable cursors are supported.
+Jaybird 5 introduced support for non-holdable result set when the connection property <code>scrollableCursor</code> is set to value <code>SERVER</code>, and the connection is a pure Java connection (not native or embedded).
+A future version may enable this behaviour by default.</p>
 </div>
 </td>
 </tr>
@@ -3836,6 +3844,21 @@ executing a <code>"COMMIT RETAIN"</code> SQL statement.</p>
 <p>To support holdable result sets, Jaybird will upgrade the result set to
 <code>TYPE_SCROLL_INSENSITIVE</code> to cache all rows locally, even if you asked for a <code>TYPE_FORWARD_ONLY</code>
 result set. See also <a href="#resultsets-types">ResultSet Types</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When connecting to Firebird 5 with Jaybird 5 and connection property <code>scrollableCursor=SERVER</code>, a holdable result set will not use server-side scrollable cursor, but instead emulate by caching.
+Server-side scrollable cursors do not support the holdable behaviour.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -7331,6 +7354,62 @@ When necessary you can use <code>FirebirdCallableStatement.setSelectableProcedur
 <p>For Firebird 2.0 and lower this property has no effect, as there the procedure type information is not available.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.3. Connection property scrollableCursor</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em><br>
+<em class="since">Firebird 5.0</em></p>
+</div>
+<div class="paragraph">
+<p>On Firebird 5.0 and higher, Jaybird 5 and higher support server-side scrollable cursors..</p>
+</div>
+<div class="paragraph">
+<p>This feature is only available on pure Java connections, and only when explicitly enabled with connection property <code>scrollableCursor</code>.
+Support is only available in pure Java, as the bindings for native and embedded use the legacy fbclient API, and scrollable cursors are not exposed in the legacy fbclient API.</p>
+</div>
+<div class="paragraph">
+<p>The connection property <code>scrollableCursor</code> has the following values (case-insensitive):</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>EMULATED</code></dt>
+<dd>
+<p>(default) Use client-side cached result set;
+this is the same behaviour as previous Jaybird versions used</p>
+</dd>
+<dt class="hdlist1"><code>SERVER</code></dt>
+<dd>
+<p>Use server-side scrollable cursors, if possible</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>If a connection does not support scrollable cursors, or if holdable cursors are requested, the behaviour will silently fall back to <em>emulated</em> scrollable cursors.</p>
+</div>
+<div class="paragraph">
+<p>Compared to emulated scrollable cursor, server-side scrollable cursors exhibit slightly different behaviour (we may change the behaviour of <em>emulated</em> later in Jaybird 5 or in a future Jaybird release):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New rows are inserted at the end of the cursor, where in <em>emulated</em> they are inserted before the current row</p>
+</li>
+<li>
+<p>Deleted rows are visible with an all-null marker row, where in <em>emulated</em>, the deleted row is removed from the result set</p>
+</li>
+<li>
+<p>Result sets now report <code>true</code> for <code>rowUpdated()</code>, <code>rowDeleted()</code> and <code>rowInserted()</code> for rows updated, deleted or inserted through the result set.</p>
+<div class="paragraph">
+<p>This is not yet reflected in <code>updatesAreDetected()</code>, <code>deletesAreDetected()</code> and <code>insertsAreDetected()</code> of <code>DatabaseMetaData</code>.
+This will be corrected when we retrofit the new behaviour for <em>emulated</em> as well.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://github.com/FirebirdSQL/jaybird/tree/master/devdoc/jdp/jdp-2021-04-real-scrollable-cursor-support.md.md">jdp-2021-04</a>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8751,8 +8830,11 @@ The properties listed below are usable as JDBC connection properties.</p>
 </div>
 <div class="paragraph">
 <p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, but also without a value, or with an empty value.
-The default for these properties is always <code>false</code>.
-For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value <code>true</code>.</p>
+For readability, we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit values like <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 4 and earlier, the default for all <em>boolean</em> properties is <code>false</code>.<br>
+In Jaybird 5 and higher, the default of <em>boolean</em> properties varies (but unless explicitly mentioned, the default is <code>false</code>).</p>
 </div>
 <div class="paragraph">
 <p>A subset of these properties is also exposed in the <code>javax.sql.DataSource</code> implementations in Jaybird.
@@ -8987,10 +9069,13 @@ Don&#8217;t set the property or set it to <code>false</code> for JDBC-compliant 
 <p><code>useStreamBlobs</code><br>
 <code>use_stream_blobs</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property.
 Boolean property.
-Tells the driver to create stream BLOBs.
-By default segmented BLOBs are created.</p></td>
+Tells the driver to create stream BLOBs.<br>
+Default: Jaybird 5 and higher: <code>true</code> (stream BLOBS)<br>
+Jaybird 4 and earlier: `false (segmented BLOBs)</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9000,6 +9085,18 @@ By default segmented BLOBs are created.</p></td>
 Boolean property.
 Set property to <code>true</code> to disable usage of procedure type metadata to decide to use <code>SELECT</code> for selectable procedure instead of <code>EXECUTE PROCEDURE</code>.
 See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureType</a> for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>scrollableCursor</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+Allowed values: <code>EMULATED</code>, <code>SERVER</code> (case-insensitive)
+Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
+See <a href="#ref-scrollable-cursor">Connection property scrollableCursor</a> for more information.
+Default: <code>EMULATED</code></p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -12153,7 +12250,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-25 12:35:43 UTC
+Last updated 2022-07-03 14:43:28 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
