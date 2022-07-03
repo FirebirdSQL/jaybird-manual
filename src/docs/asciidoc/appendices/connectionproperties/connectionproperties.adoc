@@ -173,7 +173,7 @@ a|`scrollableCursor`
 a|Jaybird specific property ([.since]_Jaybird 5_).
 Allowed values: `EMULATED`, `SERVER` (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
-See <<ref-scrollable-cursor>> for more information.
+See <<ref-scrollable-cursor>> for more information. +
 Default: `EMULATED`
 
 a|`octetsAsBytes`
