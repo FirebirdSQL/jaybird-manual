@@ -161,7 +161,7 @@ a|Jaybird specific property.
 Boolean property.
 Tells the driver to create stream BLOBs. +
 Default: Jaybird 5 and higher: `true` (stream BLOBS) +
-Jaybird 4 and earlier: `false (segmented BLOBs)
+Jaybird 4 and earlier: `false` (segmented BLOBs)
 
 a|`ignoreProcedureType`
 |Jaybird specific property ([.since]_Jaybird 3.0.6_).
