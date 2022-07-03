@@ -29,6 +29,8 @@ include::statement/generatedkeys.adoc[]
 
 include::statement/ignoreproceduretype.adoc[]
 
+include::statement/scrollablecursor.adoc[]
+
 // TODO: Document closeOnCompletion support?
 
 ////

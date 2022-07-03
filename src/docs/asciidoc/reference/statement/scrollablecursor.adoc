@@ -1,0 +1,31 @@
+[[ref-scrollable-cursor]]
+=== Connection property scrollableCursor
+
+[.since]_Jaybird 5_ +
+[.since]_Firebird 5.0_
+
+On Firebird 5.0 and higher, Jaybird 5 and higher support server-side scrollable cursors..
+
+This feature is only available on pure Java connections, and only when explicitly enabled with connection property `scrollableCursor`.
+Support is only available in pure Java, as the bindings for native and embedded use the legacy fbclient API, and scrollable cursors are not exposed in the legacy fbclient API.
+
+The connection property `scrollableCursor` has the following values (case-insensitive):
+
+`EMULATED`::
+(default) Use client-side cached result set;
+this is the same behaviour as previous Jaybird versions used
+`SERVER`::
+Use server-side scrollable cursors, if possible
+
+If a connection does not support scrollable cursors, or if holdable cursors are requested, the behaviour will silently fall back to _emulated_ scrollable cursors.
+
+Compared to emulated scrollable cursor, server-side scrollable cursors exhibit slightly different behaviour (we may change the behaviour of _emulated_ later in Jaybird 5 or in a future Jaybird release):
+
+* New rows are inserted at the end of the cursor, where in _emulated_ they are inserted before the current row
+* Deleted rows are visible with an all-null marker row, where in _emulated_, the deleted row is removed from the result set
+* Result sets now report `true` for `rowUpdated()`, `rowDeleted()` and `rowInserted()` for rows updated, deleted or inserted through the result set.
++
+This is not yet reflected in `updatesAreDetected()`, `deletesAreDetected()` and `insertsAreDetected()` of `DatabaseMetaData`.
+This will be corrected when we retrofit the new behaviour for _emulated_ as well.
+
+See also https://github.com/FirebirdSQL/jaybird/tree/master/devdoc/jdp/jdp-2021-04-real-scrollable-cursor-support.md.md[jdp-2021-04].

@@ -8,8 +8,10 @@ This appendix provides a list of most connection properties and a short explanat
 The properties listed below are usable as JDBC connection properties.
 
 The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, but also without a value, or with an empty value.
-The default for these properties is always `false`.
-For readability we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit value `true`.
+For readability, we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit values like `true`.
+
+In Jaybird 4 and earlier, the default for all _boolean_ properties is `false`. +
+In Jaybird 5 and higher, the default of _boolean_ properties varies (but unless explicitly mentioned, the default is `false`).
 
 A subset of these properties is also exposed in the `javax.sql.DataSource` implementations in Jaybird.
 When using data sources, unexposed properties can be set using `setNonStandardProperty`.
@@ -155,16 +157,24 @@ Don't set the property or set it to `false` for JDBC-compliant behaviour (recomm
 
 a|`useStreamBlobs` +
 `use_stream_blobs`
-|Jaybird specific property. 
+a|Jaybird specific property.
 Boolean property.
-Tells the driver to create stream BLOBs. 
-By default segmented BLOBs are created.
+Tells the driver to create stream BLOBs. +
+Default: Jaybird 5 and higher: `true` (stream BLOBS) +
+Jaybird 4 and earlier: `false (segmented BLOBs)
 
 a|`ignoreProcedureType`
 |Jaybird specific property ([.since]_Jaybird 3.0.6_).
 Boolean property.
 Set property to `true` to disable usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
 See <<ref-callable-ignore-proctype>> for more information.
+
+a|`scrollableCursor`
+a|Jaybird specific property ([.since]_Jaybird 5_).
+Allowed values: `EMULATED`, `SERVER` (case-insensitive)
+Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
+See <<ref-scrollable-cursor>> for more information.
+Default: `EMULATED`
 
 a|`octetsAsBytes`
 |Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
