@@ -11,10 +11,10 @@ We also provide a print-friendly PDF on https://firebirdsql.github.io/jaybird-ma
 
 These documents are automatically built for each change on master.
 
-Latest release
-==============
+Release for Jaybird 2.1
+=======================
 
-The latest published version of this manual is [Jaybird 2.1 JDBC driver Java Programmer's Manual](https://www.firebirdsql.org/file/documentation/drivers_documentation/Jaybird_2_1_JDBC_driver_manual.pdf)
+An old version for Jaybird 2.1 is [Jaybird 2.1 JDBC driver Java Programmer's Manual](https://www.firebirdsql.org/file/documentation/drivers_documentation/Jaybird_2_1_JDBC_driver_manual.pdf)
 
 This version was created from the old ODT version; its rendering doesn't match
 the rendering of the current asciidoc version.
@@ -35,7 +35,8 @@ Sourcecode examples: indent 2 spaces, continuations: 4 spaces
 How to build
 ============
 
-Run `gradlew` or its full equivalent `gradlew clean asciidoctor`.
+Run `./gradlew` or its full equivalent `./gradlew clean asciidoctor`. 
+Add `asciidoctorPdf` for the PDF version.
 
 Supporting information
 ======================
