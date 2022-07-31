@@ -1,6 +1,12 @@
 [[jb3]]
 === Jaybird 3
 
+[NOTE]
+====
+Jaybird 3 is end-of-life and will not receive further updates.
+We recommend to upgrade to Jaybird 4.
+====
+
 [[jb3-java]]
 ==== Java support
 
