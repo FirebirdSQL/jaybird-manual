@@ -60,6 +60,9 @@ asciidoctor {
     attributes 'revnumber': null, 
         'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
         'docinfo': 'shared', 'docinfodir': file('src/docs/theme/jaybird-html/docinfo')
+    forkOptions {
+        jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
+    }
 }
 
 pdfThemes {
@@ -77,6 +80,9 @@ asciidoctorPdf {
     attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress', 
         'compress': '', 'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
     theme 'jaybird'
+    forkOptions {
+        jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
+    }
 }
 
 // Create the HTML and PDF output and copy them to the build/pages folder
