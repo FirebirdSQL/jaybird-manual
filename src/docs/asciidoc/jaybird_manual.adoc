@@ -11,16 +11,16 @@ Roman Rokytskyy; Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird-version: 4
-:jaybird-full-version: 4.0.0
+:jaybird-full-version: 4.0.6
 :jaybird-example-version: {jaybird-full-version}.java11
 :jaybird-template-version: {jaybird-full-version}.<java>
 :jna-version: 5.5.0
-:jaybird4-full-version: 4.0.0
+:jaybird4-full-version: 4.0.6
 :jaybird4-template-version: {jaybird4-full-version}.<java>
 :jaybird4-example-version: {jaybird4-full-version}.java8
-:jaybird3-full-version: 3.0.9
+:jaybird3-full-version: 3.0.12
 :jaybird22-full-version: 2.2.15
-:jaybird-fbclient-version: 3.0.5.1
+:jaybird-fbclient-version: 4.0.0.0
 :min-support-firebird: 2.5
 :antlr-version: 4.7
 :is-snapshot:
