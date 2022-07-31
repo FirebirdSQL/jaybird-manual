@@ -7,7 +7,7 @@
 Jaybird 4 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).
 
 Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the most recent LTS version and the latest release.
-Currently that means we support Java 11 and Java 13.
+Currently, that means we support Java 11, Java 17 and Java 18.
 
 Jaybird 4 provides libraries for Java 7, Java 8 and Java 11.
 The Java 8 builds have the same source and all JDBC 4.3 related functionality and can be used on Java 9 and higher as well.
