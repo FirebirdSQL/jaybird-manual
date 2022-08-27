@@ -589,6 +589,8 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-generatedkeys">10.1. Generated keys retrieval</a></li>
 <li><a href="#ref-callable-ignore-proctype">10.2. Connection property ignoreProcedureType</a></li>
 <li><a href="#ref-scrollable-cursor">10.3. Connection property scrollableCursor</a></li>
+<li><a href="#ref-batch-use-server-batch">10.4. Connection property useServerBatch</a></li>
+<li><a href="#ref-batch-server-batch-buffer-size">10.5. Connection property serverBatchBufferSize</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -3445,10 +3447,11 @@ number of parameters and the database server will generate an error.
 <div class="sect2">
 <h3 id="_batch_updates"><a class="anchor" href="#_batch_updates"></a>4.5. Batch Updates</h3>
 <div class="paragraph">
-<p>Batch updates are intended to group multiple update operations to be
-submitted to a database server to be processed at once. Firebird does
-not provide support for such functionality<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>,
-but Jaybird emulates it by issuing separate update commands.</p>
+<p>Batch updates are intended to group multiple update operations to be submitted to a database server to be processed at once.
+Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4.0 and earlier emulate it by issuing separate update commands.</p>
+</div>
+<div class="paragraph">
+<p>Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <a href="#stmt-batch-server-side">Server-side Batch Updates</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="_batch_updates_with_java_sql_statement_interface"><a class="anchor" href="#_batch_updates_with_java_sql_statement_interface"></a>4.5.1. Batch Updates with java.sql.Statement interface</h4>
@@ -3563,6 +3566,55 @@ statement can be used, but with different sets of parameter values.</p>
   int[] updateCounts = stmt.executeBatch();
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="stmt-batch-server-side"><a class="anchor" href="#stmt-batch-server-side"></a>4.5.3. Server-side Batch Updates</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em><br>
+<em class="since">Firebird 4.0</em></p>
+</div>
+<div class="paragraph">
+<p>Jaybird 5 adds support for server-side batch updates when connecting to Firebird 4.0 or higher.
+This support comes with a number of limitations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Only supported on the pure Java protocol, not on native or embedded.</p>
+</li>
+<li>
+<p>Only supported on <code>PreparedStatement</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>Statement</code> batch behaviour is not supported by server-side batch updates.</p>
+</li>
+<li>
+<p>The <code>CallableStatement</code> implementation is more complex than prepared statement, so the decision was made not to reimplement this using server-side batch updates.
+The implementation might be rewritten in a future Jaybird version, if there is sufficient demand.
+As a workaround, use <code>execute procedure</code> or <code>{call procedure_name(...)}</code> from a <code>PreparedStatement</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the <code>RETURNING</code> clause.</p>
+</li>
+<li>
+<p>Firebird 4.0 has additional facilities to send <code>BLOB</code> values as part of the batch update, but this is not yet used by Jaybird.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When server-side batch support is unavailable, either because the server doesn&#8217;t support it, or because of above limitations, or if the <a href="#ref-batch-use-server-batch">connection property <code>useServerBatch</code></a> is <code>false</code>, Jaybird will fall back to the emulated behaviour.</p>
+</div>
+<div class="paragraph">
+<p>By default, Jaybird will request the maximum server-side batch buffer size (256MB as of Firebird 4.0).
+A smaller buffer can be requested with <a href="#ref-batch-server-batch-buffer-size">connection property <code>serverBatchBufferSize</code></a> (value in bytes).
+Jaybird does not track the consumption of the server-side batch buffer.
+Attempting to execute a batch larger than this buffer will fail with error &#8220;Internal buffer overflow - batch too big&#8221; (<code>isc_batch_too_big</code>, <code>335545198</code>).
+The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size (a naive calculation says around 4000 rows, but this doesn&#8217;t account for all overhead of a row).</p>
 </div>
 </div>
 </div>
@@ -4075,7 +4127,7 @@ undone.</p>
 <p>Firebird supports multiple concurrent transactions over the same
 database connection. This allows applications that work via the native
 Firebird API to save the number of network connections, which in turn
-saves the resources on the server<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>.</p>
+saves the resources on the server<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>This model however cannot be applied to each database engine in the
@@ -4281,7 +4333,7 @@ while(rs.next()) { <i class="conum" data-value="2"></i><b>(2)</b>
 <div class="paragraph">
 <p>Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software.
 To address this, Jaybird 2.1 introduced the connection parameter <code>defaultHoldable</code> which makes result sets holdable by default.
-The holdable result sets will be fully cached in memory, but won&#8217;t be closed automatically when transaction ends.<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>
+The holdable result sets will be fully cached in memory, but won&#8217;t be closed automatically when transaction ends.<sup class="footnote">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup>
 This property also affects the default holdability of result sets when auto-commit is disabled.</p>
 </div>
 <div class="paragraph">
@@ -4756,7 +4808,7 @@ corresponding access modes at the beginning of the transaction. When the
 transaction is started, the engine tries to obtain the requested locks for
 the specified tables and proceeds only when all of them were
 successfully obtained. Such behavior allows to create a deadlock-free
-execution history<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>.</p>
+execution history<sup class="footnote">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>The table reservation is specified via a TPB and includes the table to
@@ -5138,7 +5190,7 @@ server.</p>
 to perform the backup and restore tasks. These methods will block until
 the operation is finished. If the <code>logger</code> property was set, the output
 of the service will be written into the specified output stream,
-otherwise it will be ignored.<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup></p>
+otherwise it will be ignored.<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup></p>
 </div>
 <div class="listingblock">
 <div class="title">Example of backup and restore process</div>
@@ -5236,7 +5288,7 @@ This allows restoring a clean database from the backup.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BACKUP_NO_GARBAGE_COLLECT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Do not collect garbage during backup.</p>
 <p class="tableblock">The backup process reads all records in the tables one by one.
-When cooperative garbage collection is enabled<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup> the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
+When cooperative garbage collection is enabled<sup class="footnote">[<a id="_footnoteref_10" class="footnote" href="#_footnotedef_10" title="View footnote.">10</a>]</sup> the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
 This process is time consuming and might be switched off when creating backup, where
 the most recent version will be read.</p>
 <p class="tableblock">Later, operator can restore the database from the backup.
@@ -5274,7 +5326,7 @@ overcome such situations.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RESTORE_NO_VALIDITY</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Do not restore validity constraints.</p>
-<p class="tableblock">This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup>.</p>
+<p class="tableblock">This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup>.</p>
 <p class="tableblock">When this option is specified, the validity constraints won&#8217;t be restored. This allows to recover
 the data and perform cleanup tasks. The application and/or database administrators are responsible
 for restoring the validity constrains afterwards.</p></td>
@@ -5343,7 +5395,7 @@ deprecated. You should use the SQL DDL statements for user management instead.</
 defined in the <code>UserManager</code> interface and are implemented in the
 <code>FBUserManager</code> class. Additionally, there is an <code>User</code> interface
 providing getters and setters for properties of a user account on the
-server and corresponding implementation in the <code>FBUser</code> class.<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup> The available properties of the <code>FBUser</code> class
+server and corresponding implementation in the <code>FBUser</code> class.<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup> The available properties of the <code>FBUser</code> class
 are:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -5524,7 +5576,7 @@ New connections and transactions are not prohibited during the wait.</p>
 <div class="paragraph">
 <p>After database shutdown, the owner of the database or SYSDBA can
 connect to it and perform maintenance tasks, e.g. migration to the new
-data model<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnotedef_14" title="View footnote.">14</a>]</sup>, validation of the
+data model<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>, validation of the
 database, changing the database file configuration.</p>
 </div>
 <div class="paragraph">
@@ -5536,7 +5588,7 @@ database, changing the database file configuration.</p>
 <div class="paragraph">
 <p>A database shadow is an in-sync copy of the database that is usually
 stored on a different hard disk, possibly on a remote
-computer<sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="#_footnotedef_15" title="View footnote.">15</a>]</sup>, which can be used as a primary database if the main
+computer<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnotedef_14" title="View footnote.">14</a>]</sup>, which can be used as a primary database if the main
 database server crashes. Shadows can be defined using <code>CREATE SHADOW</code>
 SQL command and are characterized by a <em>mode</em> parameter:</p>
 </div>
@@ -5664,7 +5716,7 @@ assess the damage.</p>
 <div class="paragraph">
 <p>Limbo transactions are transactions that were prepared for commit
 but were never committed. This can happen when, for example, the database
-was accessed by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnotedef_16" title="View footnote.">16</a>]</sup>. The in-limbo transactions affect the normal database
+was accessed by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_15" class="footnote" href="#_footnotedef_15" title="View footnote.">15</a>]</sup>. The in-limbo transactions affect the normal database
 operation, since the records that were modified in that transactions are
 not available – Firebird does not know whether the new version will be
 committed or rolled back and blocks access to them. Also in-limbo
@@ -5735,7 +5787,7 @@ transaction and the OIT, which leads to performance degradation on large
 databases. In order to solve the issue Firebird periodically starts a
 database sweeping process, that traverses all database records, removes
 the changes made by the rolled back transactions and moves forward the
-OIT.<sup class="footnote">[<a id="_footnoteref_17" class="footnote" href="#_footnotedef_17" title="View footnote.">17</a>]</sup></p>
+OIT.<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnotedef_16" title="View footnote.">16</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>The sweep process is controlled by a threshold parameter – a difference
@@ -5980,7 +6032,7 @@ and increases the event count for the subscribed applications. Another
 thread checks the table periodically and notifies the application about
 all new events relevant to the particular application. Such mechanism
 allows Firebird to keep the event notification table very
-small<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnotedef_18" title="View footnote.">18</a>]</sup> and to
+small<sup class="footnote">[<a id="_footnoteref_17" class="footnote" href="#_footnotedef_17" title="View footnote.">17</a>]</sup> and to
 reduce the number of messages sent to the application.</p>
 </div>
 <div class="admonitionblock note">
@@ -6192,7 +6244,7 @@ It also includes plugins <code>Legacy_Auth</code> that supports the pre-Firebird
 Firebird 4 introduced the plugins <code>Srp224</code>, <code>Srp384</code> and <code>Srp512</code>.</p>
 </div>
 <div class="paragraph">
-<p>The original <code>Srp</code> plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p>
+<p>The original <code>Srp</code> plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnotedef_18" title="View footnote.">18</a>]</sup></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -7297,7 +7349,7 @@ For these statement types, <code>Statement.getGeneratedKeys()</code> will return
 </div>
 <div class="paragraph">
 <p>Invalid values will be ignored.
-If none of he specified statement types are supported by Firebird, it will behave as <code>ignored</code>.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
+If none of he specified statement types are supported by Firebird, it will behave as <code>ignored</code>.<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>Some examples:</p>
@@ -7409,6 +7461,66 @@ This will be corrected when we retrofit the new behaviour for <em>emulated</em> 
 </div>
 <div class="paragraph">
 <p>See also <a href="https://github.com/FirebirdSQL/jaybird/tree/master/devdoc/jdp/jdp-2021-04-real-scrollable-cursor-support.md.md">jdp-2021-04</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.4. Connection property useServerBatch</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em><br>
+<em class="since">Firebird 4.0</em></p>
+</div>
+<div class="paragraph">
+<p>A Boolean property to configure use of server-side batch updates.
+The default value is <code>true</code>, to use server-side batch updates when possible.
+Set to <code>false</code> to disable server-side batch updates and always use emulated batch updates.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#stmt-batch-server-side">Server-side Batch Updates</a> for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.5. Connection property serverBatchBufferSize</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em><br>
+<em class="since">Firebird 4.0</em></p>
+</div>
+<div class="paragraph">
+<p>Configures the server-side batch buffer size in bytes.</p>
+</div>
+<div class="hdlist">
+<div class="title">Possible values</div>
+<table>
+<tr>
+<td class="hdlist1">
+<code>&lt; 0</code>
+</td>
+<td class="hdlist2">
+<p>use server-side default (16MB as of Firebird 4.0)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>0</code>
+</td>
+<td class="hdlist2">
+<p>(default) use server-side maximum (16MB as of Firebird 4.0)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&gt; 0</code>
+</td>
+<td class="hdlist2">
+<p>batch buffer size capped at server-side maximum</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Firebird 4.0 by uses a minimum buffer size of either 128KB, or enough to fit at least two row, whichever is bigger.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#stmt-batch-server-side">Server-side Batch Updates</a> for more information.</p>
 </div>
 </div>
 </div>
@@ -7738,12 +7850,12 @@ The connection property <code>octetsAsBytes</code> is no longer supported.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0f</code> sets false, everything else sets true <sup class="footnote" id="_footnote_boolean-set-float">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0f</code>, false is <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>0.0</code> sets false, everything else sets true <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true is <code>1.0</code>, false is <code>0.0</code></p></td>
 </tr>
 <tr>
@@ -7826,17 +7938,17 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code>/<code>FLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0f</code> is true, everything else is false <sup class="footnote" id="_footnote_boolean-get-float">[<a id="_footnoteref_21" class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0f</code>, false sets <code>0.0f</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DOUBLE PRECISION</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1.0</code> is true, everything else is false <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_21" title="View footnote.">21</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1.0</code>, false sets <code>0.0</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exact <code>1E0</code> is true, everything else is false (including <code>1.0E0</code>!) <sup class="footnote">[<a id="_footnoteref_22" class="footnote" href="#_footnotedef_22" title="View footnote.">22</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true sets <code>1E0</code>, false sets <code>0E0</code></p></td>
 </tr>
 </tbody>
@@ -8512,7 +8624,7 @@ This to avoid additional dependencies.</p>
 <h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
 <div class="paragraph">
 <p>The <code>DECFLOAT</code> datatype supports values with a precision of 16 or 34 decimal digits, and an exponent
-<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup>
+<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>
 between -398 and 369 (<code>DECFLOAT(16)</code>), or between -6176 and 6111 (<code>DECFLOAT(34)</code>), so the minimum and maximum values are:</p>
 </div>
 <table class="tableblock frame-all grid-all fit-content">
@@ -8758,7 +8870,7 @@ The precision specified is the minimum precison, not the exact precision.
 <div class="sect3">
 <h4 id="ref-decimal-precision-range"><a class="anchor" href="#ref-decimal-precision-range"></a>12.5.1. Precision and range</h4>
 <div class="paragraph">
-<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p>
+<p>In Firebird 3 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_24" class="footnote" href="#_footnotedef_24" title="View footnote.">24</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p><em class="since">Firebird 4</em> <em class="since">Jaybird 4</em> In Firebird 4 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 38.
@@ -9097,6 +9209,31 @@ Allowed values: <code>EMULATED</code>, <code>SERVER</code> (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <a href="#ref-scrollable-cursor">Connection property scrollableCursor</a> for more information.<br>
 Default: <code>EMULATED</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>useServerBatch</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+Boolean property.
+Value <code>true</code> enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
+Set to <code>false</code> to always use emulated batch updates.
+See <a href="#ref-batch-use-server-batch">Connection property useServerBatch</a> for more information.<br>
+Default value: <code>true</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>serverBatchBufferSize</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+Size in bytes of the server-side batch buffer.
+Value <code>&lt; 0</code>&#8201;&#8212;&#8201;server-side default, <code>0</code>&#8201;&#8212;&#8201;server-side maximum, <code>&gt; 0</code>&#8201;&#8212;&#8201;size (capped at server-side maximum)
+See <a href="#ref-batch-server-batch-buffer-size">Connection property serverBatchBufferSize</a> for more information.<br>
+Default value: <code>0</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -9503,7 +9640,7 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Float</code></p></td>
 </tr>
 <tr>
@@ -9547,7 +9684,7 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code> (<em class="since">Jaybird 4</em>)<sup class="footnote">[<a id="_footnoteref_26" class="footnote" href="#_footnotedef_26" title="View footnote.">26</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -10234,7 +10371,7 @@ This encoding might or might not match the database default encoding.</p>
 </div>
 <div class="paragraph">
 <p>Firebird performs translation between character sets of the client connection and the character set of the content.
-The list of allowed character sets as well as the allowed translations between them are specified in the <code>fbintl</code> shared library located in the <code>intl/</code> directory of the Firebird installation.<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup>
+The list of allowed character sets as well as the allowed translations between them are specified in the <code>fbintl</code> shared library located in the <code>intl/</code> directory of the Firebird installation.<sup class="footnote">[<a id="_footnoteref_27" class="footnote" href="#_footnotedef_27" title="View footnote.">27</a>]</sup>
 There is also a special character set NONE that tells Firebird not to interpret the contents of the character field.</p>
 </div>
 <div class="paragraph">
@@ -10272,7 +10409,7 @@ Firebird, on the other side, is not based on Unicode and allows different charac
 Additionally, Firebird requires a connection character set to be specified in connection options, which forces Firebird to convert data from the character set of the database object into the character set of the client application.</p>
 </div>
 <div class="paragraph">
-<p>There are two boundary cases that we will consider here, one when Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup> character set <code>UTF8</code>, another when the Firebird database was created without specifying the character set (i.e. character set <code>NONE</code>).</p>
+<p>There are two boundary cases that we will consider here, one when Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_28" class="footnote" href="#_footnotedef_28" title="View footnote.">28</a>]</sup> character set <code>UTF8</code>, another when the Firebird database was created without specifying the character set (i.e. character set <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
 <p>The character set <code>UTF8</code> in Firebird 2.0 and higher is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
@@ -10294,7 +10431,7 @@ this can be done by either creating database with default <code>UTF8</code> char
 <p>The <code>encoding</code> connection property in the JDBC driver has to be set to <code>UTF8</code>;
 this can be done in several ways: the easiest one is to add the appropriate parameter to the JDBC URL (see the first example), another possibility is to use appropriate method of the <code>DriverManager</code> class (see the second example).
 Applications that use <code>DataSource</code> interface to obtain the database connections also have access to the
-<code>encoding</code> property.<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup></p>
+<code>encoding</code> property.<sup class="footnote">[<a id="_footnoteref_29" class="footnote" href="#_footnotedef_29" title="View footnote.">29</a>]</sup></p>
 </li>
 </ol>
 </div>
@@ -10329,7 +10466,7 @@ Connection connection = DriverManager.getConnection(
 this limitation is caused by the fact that the longest possible <code>VARCHAR</code> column can occupy 32765 bytes (32767 for <code>CHAR</code> columns) and a single <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 <li>
-<p>It is not possible to index Unicode columns longer than 1023 characters;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup>
+<p>It is not possible to index Unicode columns longer than 1023 characters;<sup class="footnote">[<a id="_footnoteref_30" class="footnote" href="#_footnotedef_30" title="View footnote.">30</a>]</sup>
 this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which in Firebird 2.0 and higher can be maximum 16k and the before mentioned fact that each <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 </ul>
@@ -10685,7 +10822,7 @@ Jaybird will try to provide an equivalent of the JDBC function using the built-i
 When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.</p>
 </div>
 <div class="paragraph">
-<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup> shipped with Firebird.
+<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup> shipped with Firebird.
 Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until">Jaybird 5</em>).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
@@ -10820,7 +10957,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-center valign-top"></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -10900,7 +11037,7 @@ is between 0 and 255</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR_LENGTH(string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in characters of the string expression</p></td>
 </tr>
@@ -10912,7 +11049,7 @@ is between 0 and 255</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER_LENGTH( string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>CHAR_LENGTH</code> (<em class="since">Jaybird 3</em>)</p></td>
 </tr>
@@ -10954,19 +11091,19 @@ is between 0 and 255</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string [,CHARACTERS])</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_36" class="footnote" href="#_footnotedef_36" title="View footnote.">36</a>]</sup></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_37" class="footnote" href="#_footnotedef_37" title="View footnote.">37</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks (built-in <em class="since">Jaybird 3</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string, OCTETS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_38" class="footnote" href="#_footnotedef_38" title="View footnote.">38</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_37" class="footnote" href="#_footnotedef_37" title="View footnote.">37</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LOCATE(string1, string2 [,start])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_38" class="footnote" href="#_footnotedef_38" title="View footnote.">38</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Position in <code>string2</code> of the first occurrence of <code>string1</code>, searching from the beginning of <code>string2</code>;
 if <code>start</code> is specified, the search begins from position <code>start</code>.
@@ -10987,13 +11124,13 @@ Position 1 is the first character in <code>string2</code> (<em class="since">Jay
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (<em class="since">Jaybird 3</em> without <code>CHARACTERS</code>, <em class="since">Jaybird 4</em> with optional <code>CHARACTERS</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string, OCTETS)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (<em class="since">Jaybird 4</em> with caveat)</p></td>
 </tr>
@@ -11102,7 +11239,7 @@ this could be a four-digit SOUNDEX code, a phonetic representation of each word,
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>; the name for the day is specific to the data source (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
@@ -11153,7 +11290,7 @@ The value for field may be one of the following: <code>YEAR</code>, <code>MONTH<
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTHNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month component of <code>date</code>; the name for the month is specific to the data source (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
@@ -11226,7 +11363,7 @@ The value for field may be one of the following: <code>YEAR</code>, <code>MONTH<
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE()</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_44" class="footnote" href="#_footnotedef_44" title="View footnote.">44</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database (<em class="since">Jaybird 4</em>)</p></td>
 </tr>
@@ -12149,126 +12286,123 @@ hyperlink/alias]).</p>
 <a href="#_footnoteref_5">5</a>. escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
 </div>
 <div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. Support is expected in Firebird 4 for prepared statements, Jaybird will add support in a future version
+<a href="#_footnoteref_6">6</a>. Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.
 </div>
 <div class="footnote" id="_footnotedef_7">
-<a href="#_footnoteref_7">7</a>. Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.
+<a href="#_footnoteref_7">7</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be "detached" from the statement object that created them, please check the <code>javax.sql.RowSet</code> implementations.
 </div>
 <div class="footnote" id="_footnotedef_8">
-<a href="#_footnoteref_8">8</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be "detached" from the statement object that created them, please check the <code>javax.sql.RowSet</code> implementations.
+<a href="#_footnoteref_8">8</a>. This approach follows the two-phase locking protocol, where all locks are acquired on the beginning of the transaction and are released only when transaction is finished.
 </div>
 <div class="footnote" id="_footnotedef_9">
-<a href="#_footnoteref_9">9</a>. This approach follows the two-phase locking protocol, where all locks are acquired on the beginning of the transaction and are released only when transaction is finished.
+<a href="#_footnoteref_9">9</a>. The output of the service is always transferred over the network regardless whether the logger property is set or not. Additionally to providing a possibility to the user to track the service progress it acts also as a signal of operation completion – in this case the Java code will receive an EOF marker.
 </div>
 <div class="footnote" id="_footnotedef_10">
-<a href="#_footnoteref_10">10</a>. The output of the service is always transferred over the network regardless whether the logger property is set or not. Additionally to providing a possibility to the user to track the service progress it acts also as a signal of operation completion – in this case the Java code will receive an EOF marker.
+<a href="#_footnoteref_10">10</a>. Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can&#8217;t be switched off in ClassicServer architecture and in previous Firebird versions.
 </div>
 <div class="footnote" id="_footnotedef_11">
-<a href="#_footnoteref_11">11</a>. Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can&#8217;t be switched off in ClassicServer architecture and in previous Firebird versions.
+<a href="#_footnoteref_11">11</a>. All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
 </div>
 <div class="footnote" id="_footnotedef_12">
-<a href="#_footnoteref_12">12</a>. All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
+<a href="#_footnoteref_12">12</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of the <code>User</code> interface.
 </div>
 <div class="footnote" id="_footnotedef_13">
-<a href="#_footnoteref_13">13</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of the <code>User</code> interface.
+<a href="#_footnoteref_13">13</a>. Until Firebird 2.0 adding a foreign key constraint required exclusive access to the database.
 </div>
 <div class="footnote" id="_footnotedef_14">
-<a href="#_footnoteref_14">14</a>. Until Firebird 2.0 adding a foreign key constraint required exclusive access to the database.
+<a href="#_footnoteref_14">14</a>. Currently possible only on Unix platforms by using NFS shares.
 </div>
 <div class="footnote" id="_footnotedef_15">
-<a href="#_footnoteref_15">15</a>. Currently possible only on Unix platforms by using NFS shares.
+<a href="#_footnoteref_15">15</a>. Another reason for limbo transactions are multidatabase transactions which can be initiated via native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
 </div>
 <div class="footnote" id="_footnotedef_16">
-<a href="#_footnoteref_16">16</a>. Another reason for limbo transactions are multidatabase transactions which can be initiated via native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
+<a href="#_footnoteref_16">16</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="http://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">http://www.ibphoenix.com/resources/documents/design/doc_21</a>
 </div>
 <div class="footnote" id="_footnotedef_17">
-<a href="#_footnoteref_17">17</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="http://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">http://www.ibphoenix.com/resources/documents/design/doc_21</a>
+<a href="#_footnoteref_17">17</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnotedef_18">
-<a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
+<a href="#_footnoteref_18">18</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="http://tracker.firebirdsql.org/browse/CORE-5788" target="_blank" rel="noopener">CORE-5788</a>).
 </div>
 <div class="footnote" id="_footnotedef_19">
-<a href="#_footnoteref_19">19</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="http://tracker.firebirdsql.org/browse/CORE-5788" target="_blank" rel="noopener">CORE-5788</a>).
+<a href="#_footnoteref_19">19</a>. This is not the case for the unsupported Firebird 1.0 and 1.5 versions. There this will behave similar to <code>disabled</code>, and you will need to explicitly specify <code>ignored</code> instead to get this behaviour.
 </div>
 <div class="footnote" id="_footnotedef_20">
-<a href="#_footnoteref_20">20</a>. This is not the case for the unsupported Firebird 1.0 and 1.5 versions. There this will behave similar to <code>disabled</code>, and you will need to explicitly specify <code>ignored</code> instead to get this behaviour.
+<a href="#_footnoteref_20">20</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
 </div>
 <div class="footnote" id="_footnotedef_21">
-<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to the equivalent of <code>setLong((long) value)</code>
+<a href="#_footnoteref_21">21</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
 </div>
 <div class="footnote" id="_footnotedef_22">
-<a href="#_footnoteref_22">22</a>. This behaviour may change in a future version to the equivalent of <code>getLong(..) == 1L</code>
+<a href="#_footnoteref_22">22</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
 </div>
 <div class="footnote" id="_footnotedef_23">
-<a href="#_footnoteref_23">23</a>. This behaviour may change in a future version to use <code>compareTo</code> or the equivalent of <code>getLong(..) == 1L</code> instead
+<a href="#_footnoteref_23">23</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
 </div>
 <div class="footnote" id="_footnotedef_24">
-<a href="#_footnoteref_24">24</a>. The <code>DECFLOAT</code> decimal format stores values as sign, integral number with 16 or 34 digits, and an exponent. This is similar to <code>java.math.BigDecimal</code>, but instead of an exponent, that uses the concept <code>scale</code>, where <code>scale = -1 * exponent</code>.
+<a href="#_footnoteref_24">24</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_25">
-<a href="#_footnoteref_25">25</a>. In practice, values with precision 19 are possible up to the maximum value of the <code>BIGINT</code> backing the value.
+<a href="#_footnoteref_25">25</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_26">
-<a href="#_footnoteref_26">26</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
+<a href="#_footnoteref_26">26</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_27">
-<a href="#_footnoteref_27">27</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
+<a href="#_footnoteref_27">27</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>
 </div>
 <div class="footnote" id="_footnotedef_28">
-<a href="#_footnoteref_28">28</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux – <code>libfbintl.so</code>
+<a href="#_footnoteref_28">28</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_29">
-<a href="#_footnoteref_29">29</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_29">29</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_30">
-<a href="#_footnoteref_30">30</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_30">30</a>. 2047 characters in Firebird 4 with a page size of 32 kilobytes
 </div>
 <div class="footnote" id="_footnotedef_31">
-<a href="#_footnoteref_31">31</a>. 2047 characters in Firebird 4 with a page size of 32 kilobytes
+<a href="#_footnoteref_31">31</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_32">
-<a href="#_footnoteref_32">32</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_32">32</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
 </div>
 <div class="footnote" id="_footnotedef_33">
-<a href="#_footnoteref_33">33</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_33">33</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_34">
-<a href="#_footnoteref_34">34</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_34">34</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_35">
-<a href="#_footnoteref_35">35</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_35">35</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_36">
-<a href="#_footnoteref_36">36</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_36">36</a>. The trailing blanks are also counted, only works if second parameter is omitted
 </div>
 <div class="footnote" id="_footnotedef_37">
-<a href="#_footnoteref_37">37</a>. The trailing blanks are also counted, only works if second parameter is omitted
+<a href="#_footnoteref_37">37</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_38">
-<a href="#_footnoteref_38">38</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_38">38</a>. In Jaybird 3, start is required, start is optional since Jaybird 4
 </div>
 <div class="footnote" id="_footnotedef_39">
-<a href="#_footnoteref_39">39</a>. In Jaybird 3, start is required, start is optional since Jaybird 4
+<a href="#_footnoteref_39">39</a>. In Jaybird 3 and earlier only supported without the <code>CHARACTERS</code> parameter
 </div>
 <div class="footnote" id="_footnotedef_40">
-<a href="#_footnoteref_40">40</a>. In Jaybird 3 and earlier only supported without the <code>CHARACTERS</code> parameter
+<a href="#_footnoteref_40">40</a>. Parameter <code>OCTETS</code> is ignored
 </div>
 <div class="footnote" id="_footnotedef_41">
-<a href="#_footnoteref_41">41</a>. Parameter <code>OCTETS</code> is ignored
+<a href="#_footnoteref_41">41</a>. Always returns English full names (eg Sunday)
 </div>
 <div class="footnote" id="_footnotedef_42">
-<a href="#_footnoteref_42">42</a>. Always returns English full names (eg Sunday)
+<a href="#_footnoteref_42">42</a>. Always returns English full names (eg January)
 </div>
 <div class="footnote" id="_footnotedef_43">
-<a href="#_footnoteref_43">43</a>. Always returns English full names (eg January)
-</div>
-<div class="footnote" id="_footnotedef_44">
-<a href="#_footnoteref_44">44</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
+<a href="#_footnoteref_43">43</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-21 11:33:18 UTC
+Last updated 2022-08-27 13:49:44 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
