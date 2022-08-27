@@ -1,0 +1,17 @@
+[[ref-batch-server-batch-buffer-size]]
+=== Connection property serverBatchBufferSize
+
+[.since]_Jaybird 5_ +
+[.since]_Firebird 4.0_
+
+Configures the server-side batch buffer size in bytes.
+
+[horizontal]
+.Possible values
+`< 0`:: use server-side default (16MB as of Firebird 4.0)
+`0`:: (default) use server-side maximum (16MB as of Firebird 4.0)
+`> 0`:: batch buffer size capped at server-side maximum
+
+Firebird 4.0 by uses a minimum buffer size of either 128KB, or enough to fit at least two row, whichever is bigger.
+
+See <<stmt-batch-server-side>> for more information.

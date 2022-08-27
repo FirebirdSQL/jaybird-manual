@@ -176,6 +176,21 @@ Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure 
 See <<ref-scrollable-cursor>> for more information. +
 Default: `EMULATED`
 
+a|`useServerBatch`
+a|Jaybird specific property ([.since]_Jaybird 5_).
+Boolean property.
+Value `true` enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
+Set to `false` to always use emulated batch updates.
+See <<ref-batch-use-server-batch>> for more information. +
+Default value: `true`
+
+a|`serverBatchBufferSize`
+a|Jaybird specific property ([.since]_Jaybird 5_).
+Size in bytes of the server-side batch buffer.
+Value `< 0` -- server-side default, `0` -- server-side maximum, `> 0` -- size (capped at server-side maximum)
+See <<ref-batch-server-batch-buffer-size>> for more information. +
+Default value: `0`
+
 a|`octetsAsBytes`
 |Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
 Boolean property.

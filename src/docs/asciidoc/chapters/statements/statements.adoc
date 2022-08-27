@@ -916,10 +916,10 @@ number of parameters and the database server will generate an error.
 
 === Batch Updates
 
-Batch updates are intended to group multiple update operations to be
-submitted to a database server to be processed at once. Firebird does
-not provide support for such functionalityfootnote:[Support is expected in Firebird 4 for prepared statements, Jaybird will add support in a future version], 
-but Jaybird emulates it by issuing separate update commands.
+Batch updates are intended to group multiple update operations to be submitted to a database server to be processed at once.
+Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4.0 and earlier emulate it by issuing separate update commands.
+
+Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
 
 ==== Batch Updates with java.sql.Statement interface
 
@@ -1019,6 +1019,32 @@ try (CallableStatement stmt = connection.prepareCall(
   int[] updateCounts = stmt.executeBatch();
 }
 ----
+
+[[stmt-batch-server-side]]
+==== Server-side Batch Updates
+
+[.since]_Jaybird 5_ +
+[.since]_Firebird 4.0_
+
+Jaybird 5 adds support for server-side batch updates when connecting to Firebird 4.0 or higher.
+This support comes with a number of limitations:
+
+* Only supported on the pure Java protocol, not on native or embedded.
+* Only supported on `PreparedStatement`.
+** The `Statement` batch behaviour is not supported by server-side batch updates.
+** The `CallableStatement` implementation is more complex than prepared statement, so the decision was made not to reimplement this using server-side batch updates.
+The implementation might be rewritten in a future Jaybird version, if there is sufficient demand.
+As a workaround, use `execute procedure` or `++{call procedure_name(...)}++` from a `PreparedStatement`.
+* Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the `RETURNING` clause.
+* Firebird 4.0 has additional facilities to send `BLOB` values as part of the batch update, but this is not yet used by Jaybird.
+
+When server-side batch support is unavailable, either because the server doesn't support it, or because of above limitations, or if the <<ref-batch-use-server-batch,connection property `useServerBatch`>> is `false`, Jaybird will fall back to the emulated behaviour.
+
+By default, Jaybird will request the maximum server-side batch buffer size (256MB as of Firebird 4.0).
+A smaller buffer can be requested with <<ref-batch-server-batch-buffer-size,connection property `serverBatchBufferSize`>> (value in bytes).
+Jaybird does not track the consumption of the server-side batch buffer.
+Attempting to execute a batch larger than this buffer will fail with error "`Internal buffer overflow - batch too big`" (`isc_batch_too_big`, `335545198`).
+The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size (a naive calculation says around 4000 rows, but this doesn't account for all overhead of a row).
 
 === Escape Syntax
 

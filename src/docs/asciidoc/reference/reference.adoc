@@ -31,6 +31,10 @@ include::statement/ignoreproceduretype.adoc[]
 
 include::statement/scrollablecursor.adoc[]
 
+include::statement/useserverbatch.adoc[]
+
+include::statement/serverbatchbuffersize.adoc[]
+
 // TODO: Document closeOnCompletion support?
 
 ////
