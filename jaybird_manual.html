@@ -7301,13 +7301,9 @@ Attempts to use generated keys methods other than using <code>Statement.NO_GENER
 Attempts to use generated keys methods will not attempt to detect generated keys support and execute as if the statement generates no keys.
 The <code>Statement.getGeneratedKeys()</code> method will always return an empty result set.
 This behaviour is equivalent to using the non-generated keys methods.</p>
-<div class="ulist">
-<ul>
+</li>
 <li>
 <p>A comma-separated list of statement types to enable.</p>
-</li>
-</ul>
-</div>
 </li>
 </ul>
 </div>
@@ -7503,7 +7499,7 @@ Set to <code>false</code> to disable server-side batch updates and always use em
 <code>0</code>
 </td>
 <td class="hdlist2">
-<p>(default) use server-side maximum (16MB as of Firebird 4.0)</p>
+<p>(default) use server-side maximum (256MB as of Firebird 4.0)</p>
 </td>
 </tr>
 <tr>
@@ -7517,7 +7513,8 @@ Set to <code>false</code> to disable server-side batch updates and always use em
 </table>
 </div>
 <div class="paragraph">
-<p>Firebird 4.0 by uses a minimum buffer size of either 128KB, or enough to fit at least two row, whichever is bigger.</p>
+<p>Too small buffer sizes will use 128KB or the size necessary for two rows (whichever is bigger).
+Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.0).</p>
 </div>
 <div class="paragraph">
 <p>See <a href="#stmt-batch-server-side">Server-side Batch Updates</a> for more information.</p>
@@ -8402,7 +8399,7 @@ Use <code>LOCALTIME</code> and <code>LOCALTIMESTAMP</code> (introduced in Firebi
 For Java 7 compatibility the JDBC 4.2 <code>java.sql.Types</code> constants <code>TIME_WITH_TIMEZONE</code> and <code>TIMESTAMP_WITH_TIMEZONE</code> are also defined in <code>org.firebirdsql.jdbc.JaybirdTypeCodes</code>.</p>
 </li>
 <li>
-<p>([.since]_Jaybird 4) The default <code>sessionTimeZone</code> is set to the JVM default time zone, this may result in different application behavior for <code>DATE</code>, <code>TIME</code> and <code>TIMESTAMP</code>, including values generated in triggers and default value clauses.
+<p>(<em class="since">Jaybird 4</em>) The default <code>sessionTimeZone</code> is set to the JVM default time zone, this may result in different application behavior for <code>DATE</code>, <code>TIME</code> and <code>TIMESTAMP</code>, including values generated in triggers and default value clauses.
 To prevent this, either switch those types to a <code>WITH TIME ZONE</code> type, or set the <code>sessionTimeZone</code> to <code>server</code> or to the actual time zone of the Firebird server.</p>
 </li>
 <li>
@@ -12425,7 +12422,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-30 13:48:59 UTC
+Last updated 2022-08-30 15:39:24 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
