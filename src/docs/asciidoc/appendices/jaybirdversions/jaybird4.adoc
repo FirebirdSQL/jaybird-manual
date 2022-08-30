@@ -30,11 +30,6 @@ Jaybird 4 supports the Firebird 3 and higher zlib compression.
 [[jb4-firebird4]]
 ===== Notes on Firebird 4 support
 
-At the time of release of Jaybird 4, Firebird 4 was still in testing.
-As a result, support for Firebird 4 is tentative.
-There can be incompatibilities with features or changes after Firebird version 4.0.0.1803.
-Once Firebird 4 is released, incompatibilities or otherwise breaking changes will be addressed in a point release of Jaybird 4.
-
 Jaybird 4 supports the protocol improvements of Firebird 4 for statement timeouts, but does not implement the new batch protocol.
 
 Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1683 or later for the `dataTypeBind` connection property.
@@ -53,7 +48,7 @@ Jaybird supports the following specifications:
 |=======================================================================
 |Specification |Details
 |JDBC 4.3 
-|Jaybird supports most of JDBC 4.3, inasfar the features are required or supported by Firebird. 
+|Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
 It is not officially JDBC compliant, because we currently don't have access to the TCK.
 
 |JCA 1.5 
