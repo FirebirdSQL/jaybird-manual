@@ -9615,7 +9615,10 @@ method is provided.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMERIC</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NUMERIC</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>NUMERIC</code><br>
+<code>INT128</code></p>
+</div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
 <tr>
@@ -9654,6 +9657,22 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Double</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY</code> (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>CHAR CHARACTER SET OCTETS</code><br>
+<code>BINARY</code> (<em class="since">Firebird 4.0</em>)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARBINARY</code> (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>VARCHAR CHARACTER SET OCTETS</code><br>
+<code>VARBINARY</code> (<em class="since">Firebird 4.0</em>)</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LONGVARBINARY</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB SUB_TYPE BINARY</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
@@ -9669,9 +9688,19 @@ method is provided.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Time</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME_WITH_TIMEZONE</code> (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME WITH TIME ZONE</code> (<em class="since">Firebird 4.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetTime</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.sql.Timestamp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP_WITH_TIMEZONE</code> (<em class="since">Jaybird 4</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP WITH TIME ZONE</code> (<em class="since">Firebird 4.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetDateTime</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BLOB</code></p></td>
@@ -12402,7 +12431,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-27 13:49:44 UTC
+Last updated 2022-08-30 13:02:10 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
