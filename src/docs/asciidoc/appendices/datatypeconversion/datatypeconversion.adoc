@@ -25,7 +25,8 @@ method is provided.
 |`String`
 
 |`NUMERIC` 
-|`NUMERIC` 
+a|`NUMERIC` +
+`INT128`
 |`java.math.BigDecimal`
 
 |`DECIMAL` 
@@ -56,6 +57,16 @@ method is provided.
 |`DOUBLE PRECISION` 
 |`java.lang.Double`
 
+|`BINARY` ([.since]_Jaybird 4_)
+a|`CHAR CHARACTER SET OCTETS` +
+`BINARY` ([.since]_Firebird 4.0_)
+|`byte[]`
+
+|`VARBINARY` ([.since]_Jaybird 4_)
+a|`VARCHAR CHARACTER SET OCTETS` +
+`VARBINARY` ([.since]_Firebird 4.0_)
+|`byte[]`
+
 |`LONGVARBINARY` 
 |`BLOB SUB_TYPE BINARY`
 |`byte[]`
@@ -68,9 +79,17 @@ method is provided.
 |`TIME` 
 |`java.sql.Time`
 
+|`TIME_WITH_TIMEZONE` ([.since]_Jaybird 4_)
+|`TIME WITH TIME ZONE` ([.since]_Firebird 4.0_)
+|`java.time.OffsetTime`
+
 |`TIMESTAMP` 
 |`TIMESTAMP` 
 |`java.sql.Timestamp`
+
+|`TIMESTAMP_WITH_TIMEZONE` ([.since]_Jaybird 4_)
+|`TIMESTAMP WITH TIME ZONE` ([.since]_Firebird 4.0_)
+|`java.time.OffsetDateTime`
 
 |`BLOB` 
 |`BLOB SUB_TYPE < 0` 
