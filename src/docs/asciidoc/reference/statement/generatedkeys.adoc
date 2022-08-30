@@ -278,7 +278,7 @@ Attempts to use generated keys methods other than using `Statement.NO_GENERATED_
 Attempts to use generated keys methods will not attempt to detect generated keys support and execute as if the statement generates no keys.
 The `Statement.getGeneratedKeys()` method will always return an empty result set.
 This behaviour is equivalent to using the non-generated keys methods.
-- A comma-separated list of statement types to enable.
+* A comma-separated list of statement types to enable.
 
 For `disabled` and `ignored`, `DatabaseMetaData.supportsGetGeneratedKeys` will report `false`.
 
