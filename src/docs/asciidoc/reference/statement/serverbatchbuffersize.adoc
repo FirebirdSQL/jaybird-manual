@@ -9,9 +9,10 @@ Configures the server-side batch buffer size in bytes.
 [horizontal]
 .Possible values
 `< 0`:: use server-side default (16MB as of Firebird 4.0)
-`0`:: (default) use server-side maximum (16MB as of Firebird 4.0)
+`0`:: (default) use server-side maximum (256MB as of Firebird 4.0)
 `> 0`:: batch buffer size capped at server-side maximum
 
-Firebird 4.0 by uses a minimum buffer size of either 128KB, or enough to fit at least two row, whichever is bigger.
+Too small buffer sizes will use 128KB or the size necessary for two rows (whichever is bigger).
+Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.0).
 
 See <<stmt-batch-server-side>> for more information.
