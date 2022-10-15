@@ -1,0 +1,135 @@
+[[jb5]]
+=== Jaybird 5
+
+[[jb5-java]]
+==== Java support
+
+Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).
+
+Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the most recent LTS version after Java 17 and the latest Java release.
+Currently, that means we support Java 8, 11, 17 and 19.
+
+[NOTE]
+====
+Jaybird 5 will be the last version to support Java 8 and 11.
+Jaybird 6 will use Java 17 as the baseline (minimum) version.
+We highly recommend upgrading to Java 17 or higher.
+
+Jaybird 5 will serve as a "`long-term support`" version for Java 8 and 11, with maintenance releases at least until the release of Jaybird 7.
+====
+
+Jaybird 5 provides libraries for Java 8 and Java 11.
+The Java 8 builds have all JDBC 4.3 related functionality and can be used on Java 9 and higher as well, but the Java 11 version has additional features, like the ChaCha wire encryption.
+
+Jaybird 5 is not modularized, but all versions declare the automatic module name `org.firebirdsql.jaybird`.
+
+[[jb5-firebird]]
+==== Firebird support
+
+Jaybird 5 supports Firebird 2.5 and higher.
+
+Formal support for Firebird 2.0 and 2.1 has been dropped, and some things may no longer work (especially `DatabaseMetaData` methods), if features of Firebird 2.5 have been used.
+The Type 2 and embedded server JDBC drivers use JNA to access the Firebird client or embedded library.
+
+[[jb5-firebird3]]
+===== Notes on Firebird 3.0 support
+
+Jaybird 5 supports the Firebird 3.0 and higher zlib compression.
+
+[[jb5-firebird4]]
+===== Notes on Firebird 4.0 support
+
+Jaybird 5 supports the protocol improvements of Firebird 4.0 for statement timeouts and server-side batch execution.
+Jaybird 5 does not support sending blobs as part of batch execution.
+
+Jaybird 5 only supports the ChaCha wire encryption plugin using the Java 11 version of the driver.
+Jaybird 5 does not support the ChaCha64 wire encryption plugin.
+This may be added in a future major or point release.
+
+See also <<jb5-firebird3>>
+
+[[jb5-firebird5]]
+===== Notes on Firebird 4.0 support
+
+Jaybird 5 supports Firebird 5.0 server-side scrollable cursors and multi-row `RETURNING`.
+
+See also <<jb5-firebird4>>
+
+[[jb5-spec]]
+==== Supported Specifications
+
+Jaybird 5 supports the following specifications:
+
+[width="100%",cols="1,3",options="header",]
+|===
+|Specification |Details
+|JDBC 4.3 
+|Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
+It is not officially JDBC compliant, because we currently don't have access to the TCK.
+
+|JTA
+|The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via a `javax.sql.XADataSource` implementation.
+
+|===
+
+[[jb5-distribution]]
+==== Distribution
+
+Jaybird has no required runtime dependencies.
+For native or embedded connections, JNA 5.12.1 needs to be on the class path.
+
+
+[[jb5-distribution-package]]
+===== Distribution package
+
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/
+
+The following files can be found in the distribution package:
+
+[cols="2,5",options="header",]
+|===
+|File name |Description
+| `jaybird-{jaybird5-template-version}.jar`
+| An archive containing the JDBC driver, the Services API and event management classes.
+Where `<java>` is either `java8` or `java11`.
+
+| `lib/jna-5.12.1.jar`
+| Optional dependency, required if you want to use Type 2 native, or embedded protocols
+
+|===
+
+[[jb5-distribution-maven]]
+===== Maven
+
+Alternatively, you can use maven to automatically download Jaybird and its dependencies.
+
+Jaybird 5 is available from Maven central:
+
+Groupid: `org.firebirdsql.jdbc`, +
+Artifactid: `jaybird`, +
+Version: `{jaybird5-template-version}` (where `<java>` is either `java8` or `java11`)
+
+For example:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird</artifactId>
+  <version>{jaybird5-example-version}</version>
+</dependency>
+----
+
+If you want to use Type 2 support (native or embedded), you need to explicitly include JNA as a dependency:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+  <groupId>net.java.dev.jna</groupId>
+  <artifactId>jna</artifactId>
+  <version>5.12.1</version>
+</dependency>
+----
+
+For native connections you can use the `org.firebirdsql.jdbc:fbclient` dependency to provide the client library.
+See <<driver-native-maven>> for details.

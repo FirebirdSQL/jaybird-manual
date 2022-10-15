@@ -4,6 +4,8 @@
 
 This appendix lists the distribution files and supported specifications of recent Jaybird versions.
 
+// include::jaybird5.adoc[]
+
 include::jaybird4.adoc[]
 
 include::jaybird3.adoc[]
