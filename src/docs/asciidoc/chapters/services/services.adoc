@@ -92,9 +92,13 @@ This behavior can be changed by overriding the appropriate method in the
 `FBServiceManager` class and/or subclasses. The only requirement is to
 detach from the service manager when it is no longer needed.
 
-=== Backup and restore
+[[backup-and-restore]]
+=== Backup and restore[[_backup_and_restore]]
 
-// TODO Add documentation for streaming backup
+Jaybird supports gbak, gbak streaming, and nbackup backup and restore.
+
+[[backup-and-restore-gbak]]
+==== Gbak backup and restore
 
 The gbak backup and restore routines are defined in the `BackupManager` interface and are implemented in the `FBBackupManager` class.
 This class provides server-side gbak backups.
@@ -190,6 +194,8 @@ implications:
 server; 
 . it is not possible to restore from the local or network drive unless it is mounted on the remote 
 server.
+
+The `FBStreamingBackupManager` can be used to perform remote backup and restore, see <<backup-and-restore-gbak-streaming>>.
 ====
 
 After specifying all the needed properties, the application developer can use `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods to perform the backup and restore tasks.
@@ -364,6 +370,160 @@ backupManager.restoreDatabase(
     BackupManager.RESTORE_NO_VALIDITY |
     BackupManager.RESTORE_NO_SHADOW |
     BackupManager.RESTORE_ONE_AT_A_TIME);
+----
+
+[[backup-and-restore-gbak-streaming]]
+==== Gbak streaming backup and restore
+
+[.since]_Jaybird 3_
+
+The `FBStreamingBackupManager` class is a sibling of `FBBackupManager`, providing streaming backup and restore.
+Streaming backup and restore allows client-server backup and restore, by streaming the backup from the server to the client -- on backup, or from the client to the server -- on restore.
+
+The class implements interface `BackupManager` -- just like `FBBackupManager`, but the methods to set backup files (`setBackupPath`, `addBackupPath`) are not supported and throw an `IllegalArgumentException`.
+Verbose backups are not supported.
+
+In addition, the class defines the following methods:
+
+[cols="3m,4",]
+|===
+|Method |Description
+
+|setBackupOutputStream(OutputStream)
+|`OutputStream` to write the backup.
+
+|setRestoreInputStream(InputStream)
+|`InputStream` to read the backup to restore.
+
+|setBackupBufferSize(int)
+|Size in bytes of the local buffer to use during backup, defaults to 30KB.
+
+|===
+
+[[backup-and-restore-nbackup]]
+==== Nbackup
+
+The `NBackupManager` interface and its implementation `FBNbackupManager` provides _nbackup_ backup and restore through the service API.
+This form of backup and restore is server-side, meaning that all paths are on the Firebird server.
+For information about nbackup, consult the https://www.firebirdsql.org/file/documentation/html/en/firebirddocs/nbackup/firebird-nbackup.html[Firebird's nbackup tool^] documentation.
+
+In addition to the setters and getters described in the previous section, the following methods are used to specify the backup and restore paths and properties:
+
+[cols="2m,1m,4",options="header",]
+|===
+|Name |Type |Description
+
+|database
+|String
+|For backup operation it specifies the path or alias of the database to backup.
+
+For restore operation it specifies the path to the database into which the backup file will be restored.
+
+|backupFile
+|String
+|Path to the backup file.
+For backup operation specifies the path and the file name of the newly created backup file on the server.
+For restore operations specifies path to the single backup file.
+If database should be restored from multi-file backup, use the `addBackupFile(String)` method for additional files.
+
+|backupLevel
+|int
+|The level of backup to perform.
+Setting a level of `0` performs a full backup.
+A level of `N` with `N > 1` will backup all data pages modified since the last level `N - 1` backup.
+Defaults to `0` if `backupGuid` has not been set.
+
+|backupGuid
+|String
+a|[.since]_Jaybird 4.0.4_ Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
+This will backup all data pages modified since the backup identified by the GUID.
+The GUID is enclosed in braces (`++{++` and `++}++`).
+
+|noDbTriggers
+|boolean
+|Disable database triggers for nbackup operations that connect to the database.
+
+|inPlaceRestore
+|boolean
+a|[.since]_Jaybird 4.0.4_ Enables in-place restore (requires Firebird 4.0 or higher).
+This allows incremental restore, for example for a read-only replica, or a hot standby.
+
+|preserveSequence
+|boolean
+a|[.since]_Jaybird 5_ Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
+This preserves the existing GUID and replication sequence of the original database.
+
+|cleanHistory
+|boolean
+a|[.since]_Jaybird 4.0.7_ Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
+One of the properties `keepRows` _or_ `keepDays` must also be set.
+When enabled, after performing a backup, old records from the `RDB$BACKUP_HISTORY` will be removed.
+
+|keepDays
+|int
+a|[.since]_Jaybird 4.0.7_ Number of days to keep backup history when `cleanHistory` is enabled.
+
+|keepRows
+|int
+a|[.since]_Jaybird 4.0.7_ Number of rows (including the new backup!) to keep backup history when `cleanHistory` is enabled.
+
+|===
+
+In addition to the properties, the following methods are used to configure the paths to backup-files when multi-file restore operations are used.
+
+[cols="3m,4",]
+|===
+|Method |Description
+
+|addBackupFile(String)
+|Add a path to a backup file from a multi-file backup.
+In practice, `setBackupFile` does the same as `addBackupFile`.
+For backup, only the first file set or added is used.
+For restore, the files must be in the correct order to form the chain of the level `0` backup up to the highest level or last GUID-based backup to restore.
+
+|clearBackupFiles()
+|Clears the list of backup files.
+
+|backupDatabase()
+|Perform backup.
+
+|restoreDatabase()
+|Perform restore.
+
+|fixupDatabase()
+a|[.since]_Jaybird 5_ Perform the nbackup fixup operation.
+A fixup will switch a locked database back to "`normal`" state without merging the delta, so this is a potentially destructive action.
+The normal use-case of this option is to unlock a copy of a database file where the source database file was locked with `nbackup -L` or `ALTER DATABASE BEGIN BACKUP`.
+Enable `preserveSequence` to preserve the original database GUID and replication sequence.
+
+|===
+
+After specifying all the needed properties, the application developer can use the `backupDatabase()`, `restoreDatabase()` and `fixupDatabase` methods to perform the backup and restore tasks.
+These methods will block until the operation is finished.
+No output is written to the `logger`.
+
+[source,java]
+.Example of nbackup backup and restore process
+----
+NBackupManager backupManager = new FBNBackupManager();
+
+backupManager.setHost("localhost");
+backupManager.setPort(3050);
+backupManager.setUser("SYSDBA");
+backupManager.setPassword("masterkey");
+
+// backup level 1 increment against a previously performed level 0
+backupManager.setDatabase("/path/to/database.fdb");
+backupManager.setBackupFile("/path/to/backup_lvl_1.nbk");
+backupManager.setBackupLevel(1);
+backupManager.backupDatabase();
+
+// restore level 0 and level 1 in new db restored.fdb
+backupManager.clearBackupFiles();
+backupManager.setDatabase("/path/to/restored.fdb");
+backupManager.addBackupFile("/path/to/backup_lvl_0.nbk");
+backupManager.addBackupFile("/path/to/backup_lvl_1.nbk");
+backupManager.restoreDatabase();
 ----
 
 === User management
