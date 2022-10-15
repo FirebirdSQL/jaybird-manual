@@ -66,10 +66,59 @@ The meaning of the property depends on the service being invoked and will be des
 |String
 |Password corresponding to the specified user. _Required_.
 
-|`expectedDb`
+|roleName
+|String
+|Role name. _Optional_.
+
+|expectedDb
 |String
 a|[.since]_Jaybird 5_ With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. _Optional_.
+
+|authPlugins
+|String
+a|[.since]_Jaybird 4_ Comma-separated list of authentication plugins to use (ignored for Firebird 2.5 or earlier).
+Use `null` (the default) to use Jaybird defaults.
+
+|processId
+|int
+a|[.since]_Jaybird 5_ Process id to report to the server.
+
+|processName
+|String
+a|[.since]_Jaybird 5_ Process name to report to the server.
+
+|socketBufferSize
+|int
+a|[.since]_Jaybird 5_ Socket buffer size in bytes
+
+|soTimeout
+|int
+a|[.since]_Jaybird 5_ Socket blocking read timeout in milliseconds (`0` is OS default timeout)
+
+|connectTimeout
+|int
+a|[.since]_Jaybird 5_ Socket connect timeout in milliseconds (`0` is OS default timeout)
+
+|wireCrypt
+a|`String` or `WireCrypt`
+a|[.since]_Jaybird 3.0.4_ Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
+In Jaybird 3.0.4+ and Jaybird 4, the property is type `WireCrypt`.
+In Jaybird 5, the property is type `String`.
+
+|wireCryptAsEnum
+|WireCrypt
+a|[.since]_Jaybird 5_ Alternative to `WireCrypt` to use `WireCrypt` enum.
+
+|dbCryptConfig
+|String
+a|[.since]_Jaybird 3.0.4_ Database encryption config.
+See <<ref-dbcrypt>> for details.
+
+|wireCompression
+|boolean
+a|[.since]_Jaybird 4_ Enable wire compression (requires Firebird 3.0 or higher).
+Default is `false`.
 
 |logger
 |java.io.OutputStream
