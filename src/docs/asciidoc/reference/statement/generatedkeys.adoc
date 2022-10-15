@@ -16,21 +16,30 @@ There are four distinct use-cases:
 . Methods accepting a `String[]` parameter with column names, see <<ref-generatedkeys-column-name>>.
 . Providing a query already containing a `RETURNING` clause to any of these methods.
 +
-In this case all of the previous cases are ignored and the query is executed as is. 
+In this case all the previous cases are ignored and the query is executed as is.
 It is possible to retrieve the result set using `getGeneratedKeys()`.
 
-The generated keys functionality will only be available if the ANTLR runtime classes are on the classpath. 
+.ANTLR Runtime required in Jaybird 4 and earlier
+****
+For Jaybird 4 and earlier, the generated keys functionality will only be available if the ANTLR runtime classes are on the classpath.
 Except for calling methods with `NO_GENERATED_KEYS`, absence of the ANTLR runtime will throw `FBDriverNotCapableException`.
 
 TIP: The required ANTLR runtime version depends on the Jaybird version, check the release notes of your version for details.
+
+Since Jaybird 5, Jaybird uses a custom parser and no longer requires ANTLR for the generated keys feature.
+If you previously relied on absence of ANTLR to disable generated keys support, the generated keys feature can be disabled by setting <<ref-generatedkeys-config,connection property `generatedKeysEnabled`>> to `disabled`.
+****
 
 This functionality is available for `INSERT` ([.since]_Firebird 2.0_), for `UPDATE`, `UPDATE OR INSERT` and `DELETE` ([.since]_Firebird 2.1_), and for `MERGE` ([.since]_Firebird 3.0_).
 
 [NOTE] 
 ====
 Generated keys retrieval modifies the statement to add a `RETURNING`-clause.
-Currently Firebird only supports `RETURNING` for DML operations that affect a single row.
-Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error _"multiple rows in singleton select"_. 
+Firebird 4.0 and earlier only support `RETURNING` for DML operations that affect a single row.
+Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error _"multiple rows in singleton select"_.
+
+[.since]_Jaybird 5/Firebird 5.0_ Support for multi-row `RETURNING` is introduced in Firebird 5.0.
+Support for multi-row `RETURNING` is available in Jaybird 5.
 ====
 
 The examples in this section use the following (Firebird 3) table:
@@ -311,7 +320,7 @@ But only on Firebird 3 and higher, for Firebird 2.5 this will behave as `ignored
 * `jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert,update` will only enable insert and update support
 
 This feature can be used to circumvent issues with frameworks or tools that always use generated keys methods for prepare or execution.
-For example with `UPDATE` statements that touch multiple records and - given the Firebird limitations for `RETURNING` - produce the error _"multiple rows in singleton select"_.
+For example with `UPDATE` statements that touch multiple records and -- given the Firebird 4.0 and earlier limitations for `RETURNING` -- produce the error _"multiple rows in singleton select"_.
 
 [[ref-generatedkeys-limitations]]
 ==== Limitations
