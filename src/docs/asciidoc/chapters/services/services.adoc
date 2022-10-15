@@ -141,12 +141,12 @@ This behavior can be changed by overriding the appropriate method in the
 `FBServiceManager` class and/or subclasses. The only requirement is to
 detach from the service manager when it is no longer needed.
 
-[[backup-and-restore]]
+[[services-backup-and-restore]]
 === Backup and restore[[_backup_and_restore]]
 
 Jaybird supports gbak, gbak streaming, and nbackup backup and restore.
 
-[[backup-and-restore-gbak]]
+[[services-backup-and-restore-gbak]]
 ==== Gbak backup and restore
 
 The gbak backup and restore routines are defined in the `BackupManager` interface and are implemented in the `FBBackupManager` class.
@@ -244,7 +244,7 @@ server;
 . it is not possible to restore from the local or network drive unless it is mounted on the remote 
 server.
 
-The `FBStreamingBackupManager` can be used to perform remote backup and restore, see <<backup-and-restore-gbak-streaming>>.
+The `FBStreamingBackupManager` can be used to perform remote backup and restore, see <<services-backup-and-restore-gbak-streaming>>.
 ====
 
 After specifying all the needed properties, the application developer can use `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods to perform the backup and restore tasks.
@@ -421,7 +421,7 @@ backupManager.restoreDatabase(
     BackupManager.RESTORE_ONE_AT_A_TIME);
 ----
 
-[[backup-and-restore-gbak-streaming]]
+[[services-backup-and-restore-gbak-streaming]]
 ==== Gbak streaming backup and restore
 
 [.since]_Jaybird 3_
@@ -449,7 +449,7 @@ In addition, the class defines the following methods:
 
 |===
 
-[[backup-and-restore-nbackup]]
+[[services-backup-and-restore-nbackup]]
 ==== Nbackup
 
 The `NBackupManager` interface and its implementation `FBNbackupManager` provides _nbackup_ backup and restore through the service API.
