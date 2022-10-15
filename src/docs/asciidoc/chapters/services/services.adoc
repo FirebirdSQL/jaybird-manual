@@ -30,7 +30,7 @@ tasks. All classes and interfaces described below are defined in the
 standalone object and does not require an open connection to the server.
 
 [[servicemanager]]
-=== ServiceManager
+=== ServiceManager[[_servicemanager]]
 
 The `ServiceManager` interface and the `FBServiceManager` class are
 defined as the common superclasses providing setters and getters for
