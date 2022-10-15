@@ -16,17 +16,19 @@ Data sources and `ServiceManager` implementations have an equivalent property wi
 This property can be set as follows:
 
 * Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later).
-* Strings prefixed with `base64:`: rest of the string is decoded as base64 to bytes. 
+* Strings prefixed with `base64:`: rest of the string is decoded as _base64_ to bytes.
 The `=` padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).
+* [.since]_Jaybird 5_ Strings prefixed with `base64url:`: rest of the string is decoded as _base64url_ to bytes (using "`Base 64 URL and Filename safe`" alphabet).
+As `base64:`, the `=` padding characters are optional
 * Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response.
     
 Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with `&` or `;`. 
-Likewise, avoid `:` so that we can support other prefixes similar to `base64:` in the future. 
+Likewise, avoid `:` so that we can support other prefixes similar to `base64:` and `base64url:` in the future.
 If you need these characters, consider using a base64 encoded value instead.
 
 [.since]_Jaybird 3.0.9_ Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded. 
-When the base64 encoded value contains `+`, it must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
-For backwards compatibility with Jaybird 3, we can't switch to the URL-safe variant of base64.
+When the _base64_ encoded value contains `{plus}`, it must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
+Jaybird 5 introduced _base64url_, an alternative to _base64_, which doesn't use `{plus}`, thus avoiding the need to escape.
 
 For service operations, as implemented in the `org.firebirdsql.management` package, Firebird requires the `KeyHolderPlugin` configuration to be globally defined in `firebird.conf`. 
 Database-specific configuration in `databases.conf` will be ignored for service operations. 
