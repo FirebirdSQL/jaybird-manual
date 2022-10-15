@@ -5021,11 +5021,93 @@ The meaning of the property depends on the service being invoked and will be des
 <td class="tableblock halign-left valign-top"><p class="tableblock">Password corresponding to the specified user. <em>Required</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>expectedDb</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>roleName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Role name. <em>Optional</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>expectedDb</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><em class="since">Jaybird 5</em> With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. <em>Optional</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>authPlugins</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 4</em> Comma-separated list of authentication plugins to use (ignored for Firebird 2.5 or earlier).
+Use <code>null</code> (the default) to use Jaybird defaults.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>processId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Process id to report to the server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>processName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Process name to report to the server.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>socketBufferSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Socket buffer size in bytes</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>soTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wireCrypt</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>String</code> or <code>WireCrypt</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 3.0.4</em> Wire encryption level (<code>DISABLED</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DEFAULT</code>).
+In Jaybird 3.0.4+ and Jaybird 4, the property is type <code>WireCrypt</code>.
+In Jaybird 5, the property is type <code>String</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wireCryptAsEnum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WireCrypt</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 5</em> Alternative to <code>WireCrypt</code> to use <code>WireCrypt</code> enum.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbCryptConfig</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 3.0.4</em> Database encryption config.
+See <a href="#ref-dbcrypt">Database encryption support</a> for details.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wireCompression</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><em class="since">Jaybird 4</em> Enable wire compression (requires Firebird 3.0 or higher).
+Default is <code>false</code>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -12675,7 +12757,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-10-15 11:24:18 UTC
+Last updated 2022-10-15 11:50:54 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
