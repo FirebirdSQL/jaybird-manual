@@ -19,6 +19,8 @@ Portions created by Mark Rotteveel are Copyright (C) 2014-2022. All
 Rights Reserved. (Contributor contact(s):
 mrotteveel@users.sourceforge.net).
 
+////
 Portions created by ..... are Copyright (C).....[Insert year(s)].
 All Rights Reserved. (Contributor contact(s):...............[Insert
 hyperlink/alias]).
+////
