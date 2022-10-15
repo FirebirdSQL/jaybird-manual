@@ -96,89 +96,89 @@ detach from the service manager when it is no longer needed.
 
 // TODO Add documentation for streaming backup
 
-The backup and restore routines are defined in the `BackupManager`
-interface and are implemented in the `FBBackupManager` class.
-Additionally to the setters and getters described in the previous
-section the following methods are used to specify the backup and restore
-paths and properties:
+The gbak backup and restore routines are defined in the `BackupManager` interface and are implemented in the `FBBackupManager` class.
+This class provides server-side gbak backups.
+For details on gbak itself, consult the https://firebirdsqlsbak.html[Firebird Backup & Restore Utility^] documentation.
 
-[cols="2,1,4",options="header",]
-|=======================================================================
+In addition to the setters and getters described in the previous section, the following methods are used to specify the backup and restore paths and properties:
+
+[cols="2m,1m,4",options="header",]
+|===
 |Name |Type |Description
 
-|`database` 
-|`String` 
-|For backup operation it specifies the path to the database to backup.
+|database
+|String
+|For backup operation it specifies the path or alias of the database to backup.
 
 For restore operation it specifies the path to the database into which the backup file will be restored. 
 In case when multi-file database should be created, use `addRestorePath(String, int)` method instead.
 
-|`backupPath` 
-|`String` 
+|backupPath
+|String
 |Path to the backup file. 
 For backup operation specifies the path and the file name of the newly created backup file.
 If multi-file backup files are to be created, use `addBackupPath(String, int)` method instead. 
 For restore operations specifies path to the single backup file. 
 If database should be restored from multi-file backup, please use the `addBackupPath(String)` method instead.
 
-|`restorePageBufferCount` 
-|`int` 
+|restorePageBufferCount
+|int
 |Number of pages that will be cached of this particular database. 
 Should be used only for restore operation.
 
-|`restorePageSize` 
-|`int` 
+|restorePageSize
+|int
 |Size of the database page. 
 Should be used only for restore operation. 
 Valid values depend on the Firebird version, but should be one of the 1024, 2048, 4096 or 8192.
 
-|`restoreReadOnly` 
-|`boolean` 
+|restoreReadOnly
+|boolean
 |Set to `true` if the database should be restored in read-only mode.
 
-|`restoreReplace` 
-|`boolean` 
-a| Set to `true` if restore should replace the existing database with the one from backup.
+|restoreReplace
+|boolean
+a|Set to `true` if restore should replace the existing database with the one from backup.
 
 WARNING: It is easy to drop an existing database if the backup can't be restored, as the existing database is first deleted and only after that the restore process starts. 
 To avoid such situation it is recommended to restore a database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
 
-|`verbose` 
-|`boolean` 
+|verbose
+|boolean
 |Be verbose when writing to the log. 
 
 The service called on the server will produce lots of output that will be written to the output stream specified in logger property.
-|=======================================================================
+|===
 
 In addition to the properties, the following methods are used to configure
 the paths to backup and database files when multi-file backup or restore
 operations are used.
 
-[cols="3,4",]
-|=======================================================================
+[cols="3m,4",]
+|===
 |Method |Description
 
-|`addBackupPath(String)` 
+|addBackupPath(String)
 |Add a path to a backup file from a multi-file backup. 
 Should be used for restore operation only.
 
-|`addBackupPath(String, int)` 
+|addBackupPath(String, int)
 |Add a path to the multi-file backup. 
 The second parameter specifies the maximum size of the particular file in bytes. 
 Should be used for backup operation only.
 
-|`addRestorePath(String, int)` 
+|addRestorePath(String, int)
 |Add a path for the multi-file database.
 The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by `restorePageSize` parameter)
 
-|`clearBackupPaths()` 
+|clearBackupPaths()
 |Clear all the specified backup paths. 
 This method also clears the path specified in `backupPath` property.
 
-|`clearRestorePaths()` 
+|clearRestorePaths()
 |Clear all the specified restore paths. 
 This method also clears the path specified in the database property.
-|=======================================================================
+|===
 
 [NOTE]
 ====
@@ -192,16 +192,10 @@ server;
 server.
 ====
 
-After specifying all the needed properties, the application developer can use
-`backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods
-to perform the backup and restore tasks. These methods will block until
-the operation is finished. If the `logger` property was set, the output
-of the service will be written into the specified output stream,
-otherwise it will be ignored.footnote:[The output of the service is
-always transferred over the network regardless whether the logger
-property is set or not. Additionally to providing a possibility to the
-user to track the service progress it acts also as a signal of operation
-completion – in this case the Java code will receive an EOF marker.]
+After specifying all the needed properties, the application developer can use `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods to perform the backup and restore tasks.
+These methods will block until the operation is finished.
+If the `logger` property was set, the output of the service will be written into the specified output stream, otherwise it will be ignored.footnote:[The output of the service is always transferred over the network regardless whether the logger property is set or not.
+ In addition to providing a possibility to the user to track the service progress, it acts also as a signal of operation completion -- in this case the Java code will receive an EOF marker.]
 
 [source,java]
 .Example of backup and restore process
@@ -245,14 +239,14 @@ be specified via the properties of this class. The parameter value is
 bitwise combination of the following constants:
 
 [cols="3,4",options="header",]
-|=======================================================================
+|===
 |Constant |Description
 |BACKUP_CONVERT 
 |Backup external files as tables.
 
-By default external tables are not backed up, only references to the external files with data are stored in the backup file. 
+By default, external tables are not backed up, only references to the external files with data are stored in the backup file.
 When this option is used, the backup will store the external table as if they were regular tables. 
-After restore the tables will remain regular tables.
+On restore the tables are created as regular tables.
 
 |BACKUP_EXPAND 
 |No data compression.
@@ -265,8 +259,8 @@ Using this option tells it to write strings in their full length, possibly fully
 
 The backup utility can't backup a database with page checksum errors.
 Such database is considered corrupted and the completeness and correctness of the backup cannot be guaranteed.
-However in some cases such errors can be ignored, e.g. when the index page is corrupted.
-In such case the data in the database are ok and the error disappears when the database is restored and index is recreated.
+However, in some cases such errors can be ignored, e.g. when the index page is corrupted.
+In such cases the data in the database are OK and the error disappears when the database is restored and index is recreated.
 
 Use this option only when checksum errors are detected and can't be corrected without full backup/restore cycle.
 Ensure that the restored database contains correct data afterwards.
@@ -277,7 +271,7 @@ Ensure that the restored database contains correct data afterwards.
 The backup utility can't backup database with in-limbo transactions.
 When such situation appears, backup has to wait until the decision about the outcome of the in-limbo transaction.
 After a wait timeout, an exception is thrown and backup is aborted.
-This option allows to workaround this situation – the gbak looks for the most recent committed version of the record and writes it into the backup.
+This option allows to work around this situation –- gbak looks for the most recent committed version of the record and writes it into the backup.
 
 |BACKUP_METADATA_ONLY 
 |Backup metadata only.
@@ -291,17 +285,17 @@ This allows restoring a clean database from the backup.
 
 The backup process reads all records in the tables one by one.
 When cooperative garbage collection is enabledfootnote:[Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can't be switched off in ClassicServer architecture and in previous Firebird versions.] the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
-This process is time consuming and might be switched off when creating backup, where
+This process is time-consuming and might be switched off when creating backup, where
 the most recent version will be read.
 
 Later, operator can restore the database from the backup. 
-In databases with many backversions of the records, the backup-restore cycle can be
+In databases with many back-versions of the records, the backup-restore cycle can be
 faster than traditional garbage collection.
 
 |BACKUP_NON_TRANSPORTABLE 
 |Use non-transportable backup format.
 
-By default gbak creates so-called transportable backup where it does not make difference whether it is later restored on the platform with big or little endianess.
+By default, gbak creates so-called transportable backup where it does not make difference whether it is later restored on the platform with big or little endianness.
 By using this option a non-transportable format will be used which allows restoring the database only on the same architecture.
 
 |BACKUP_OLD_DESCRIPTIONS 
@@ -312,24 +306,23 @@ Actually no real information exist for this option, by default it is switched of
 |RESTORE_DEACTIVATE_INDEX 
 |Deactivate indexes during restore.
 
-By default indexes are created at the beginning of the restore process and they are updated with 
-each record being restored from the backup file. On a big tables it is more efficient first to 
-store data in the database and to update the index afterwards. When this option is specified, the 
-indexes will be restored in the inactive state. The downside of this option is that the database
-administrator is required to activate indexes afterwards, it won't happen automatically.
+By default, indexes are created at the beginning of the restore process, and they are updated with
+each record being restored from the backup file.
+For big tables it is more efficient first to store data in the database and to update the index afterwards.
+When this option is specified, the indexes will be restored in the inactive state.
+The downside of this option is that the database administrator is required to activate indexes afterwards, it won't happen automatically.
 
 |RESTORE_NO_SHADOW 
 |Do not restore shadow database.
 
 If the shadow database is configured, an absolute path to the shadow is stored in the backup file.
-If such backup file is restored on a different system where the path does not exist (e.g. moving 
-a database from Windows to Linux or otherwise), the restore will fail. Using this option allows to 
-overcome such situations.
+If such backup file is restored on a different system where the path does not exist (e.g. moving a database from Windows to Linux or otherwise), the restore will fail.
+Using this option allows to overcome such situations.
 
 |RESTORE_NO_VALIDITY 
 |Do not restore validity constraints.
 
-This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database but the database contains records that do not satisfy such constraintsfootnote:[All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.].
+This option is usually needed when the validity constraints (e.g. NOT NULL constraints) were added after the data were already in the database, but the database contains records that do not satisfy such constraintsfootnote:[All versions of Firebird upto 2.5 allow to define validity constraints despite the table(s) contain data that do not satisfy them. Only the new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.].
 
 When this option is specified, the validity constraints won't be restored. This allows to recover 
 the data and perform cleanup tasks. The application and/or database administrators are responsible 
@@ -338,12 +331,12 @@ for restoring the validity constrains afterwards.
 |RESTORE_ONE_AT_A_TIME 
 |Commit after completing restore of each table.
 
-By default all data is restored in one transaction. If for some reason a complete restore is not 
-possible, using this option will allow to restore at least some of the data.
+By default, all data is restored in one transaction.
+If for some reason a complete restore is not possible, using this option will allow to restore at least some of the data.
 
 |RESTORE_USE_ALL_SPACE
 |Do not reserve 20% on each page for the future versions, useful for read-only databases.
-|=======================================================================
+|===
 
 Example of using these options:
 
