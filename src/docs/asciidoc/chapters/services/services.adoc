@@ -29,6 +29,7 @@ tasks. All classes and interfaces described below are defined in the
 `org.firebirdsql.management` package. Each management class works as a
 standalone object and does not require an open connection to the server.
 
+[[servicemanager]]
 === ServiceManager
 
 The `ServiceManager` interface and the `FBServiceManager` class are
@@ -36,35 +37,44 @@ defined as the common superclasses providing setters and getters for
 common properties as well as some common routines. The following
 properties can be specified:
 
-[cols="1,2,4",options="header",]
-|=======================================================================
+[cols="2m,2m,4",options="header",]
+|===
 |Name |Type |Description
 
-|`host` 
-|`java.lang.String` 
-|Name or the IP address of the host to which we make the Service API request. __Required__.
+a|`host` +
+`serverName`
+|String
+|Name or the IP address of the host to which we make the Service API request. _Required_.
 
-|`port` 
-|`int` 
+a|`port` +
+`portNumber`
+|int
 |Port to which we make the request, 3050 by default.
 
-|`database` 
-|`java.lang.String` 
+3+a|NOTE: [.since]_Jaybird 5_ `serverName` and `portNumber` are replacements for `host` and `port`, which have been deprecated for removal
+
+|database
+|String
 |Path to the database. 
 The meaning of the property depends on the service being invoked and will be described in each of chapters below.
 
-|`user` 
-|`java.lang.String` 
-|Name of the user on behalf of which which all Service API calls will be executed. __Required__.
+|user
+|String
+|Name of the user on behalf of which all Service API calls will be executed. _Required_.
 
-|`password` 
-|`java.lang.String` 
-|Password corresponding to the specified user. _Required._
+|password
+|String
+|Password corresponding to the specified user. _Required_.
 
-|`logger` 
-|`java.io.OutputStream` 
-|Stream into which the output of the remote service will be written to. __Optional__.
-|=======================================================================
+|`expectedDb`
+|String
+a|[.since]_Jaybird 5_ With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+Value is a database path or alias the user can connect to. _Optional_.
+
+|logger
+|java.io.OutputStream
+|Stream into which the output of the remote service will be written to. _Optional_.
+|===
 
 The last parameter requires some explanation. The calls to all
 Services API routines are asynchronous. The client application can start
