@@ -555,7 +555,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#services">7. Working with Services</a>
 <ul class="sectlevel2">
 <li><a href="#servicemanager">7.1. ServiceManager</a></li>
-<li><a href="#backup-and-restore">7.2. Backup and restore</a></li>
+<li><a href="#services-backup-and-restore">7.2. Backup and restore</a></li>
 <li><a href="#_user_management">7.3. User management</a></li>
 <li><a href="#_database_maintenance">7.4. Database maintenance</a></li>
 <li><a href="#_database_statistics">7.5. Database statistics</a></li>
@@ -698,29 +698,32 @@ request with the fix.</p>
 <h2 id="introduction"><a class="anchor" href="#introduction"></a>1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Jaybird is a JCA/JDBC driver suite to connect to the Firebird database
-server.</p>
-</div>
-<div class="paragraph">
-<p>This driver is based on both the JCA standard for application server
-connections to enterprise information systems and the well-known JDBC
-standard. The JCA standard specifies an architecture in which an
-application server can cooperate with a driver so that the application
-server manages transactions, security, and resource pooling, and the
-driver supplies only the connection functionality.</p>
+<p>Jaybird is a JDBC driver to connect to the Firebird database server.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
 The type 2 driver includes support for Firebird Embedded.</p>
 </div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">JCA&#8201;&#8212;&#8201;Java Connector Architecture</div>
+<div class="paragraph">
+<p>Jaybird 4 and earlier are based on both the well-known JDBC standard and the JCA&#8201;&#8212;&#8201;Java Connector Architecture&#8201;&#8212;&#8201;standard for application server connections to enterprise information systems.
+The JCA standard specifies an architecture in which an application server can cooperate with a driver so that the application server manages transactions, security, and resource pooling, and the driver supplies only the connection functionality.</p>
+</div>
+<div class="paragraph">
+<p>The JCA implementation was removed in Jaybird 5, and Jaybird is now only a JDBC driver.</p>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
 <div class="paragraph">
-<p>This manual covers Jaybird 4 and may use Java 8 and Firebird 3 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.</p>
+<p>This manual covers Jaybird 4 and may use Java 8 and Firebird 3.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.</p>
 </div>
 <div class="paragraph">
-<p>New or removed features are tagged with the version that introduced a feature (eg <em class="since">Jaybird 3</em>) or removed  feature (eg <em class="until">Jaybird 3</em>).
-This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3 or later, and for features available in Java/JDBC versions 8/4.2 or later.</p>
+<p>New or removed features are tagged with the version that introduced a feature (eg <em class="since">Jaybird 3</em>) or removed feature (e.g. <em class="until">Jaybird 3</em>).
+This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java/JDBC versions 8/4.2 or later.</p>
 </div>
 <div class="paragraph">
 <p>This manual may include documentation of features of&#8201;&#8212;&#8201;possibly unreleased&#8201;&#8212;&#8201;Jaybird versions later than 4 to simplify manual maintenance and versioning.</p>
@@ -730,7 +733,7 @@ This tagging is only done for features introduced (or removed) in Jaybird 2.2 or
 <h3 id="_history"><a class="anchor" href="#_history"></a>1.2. History</h3>
 <div class="paragraph">
 <p>When Borland released an open-source version of the InterBase RDBMS, it included sources for a type 3 JDBC driver called InterClient.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
-However due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end.
+However, due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end.
 Instead, the Firebird team decided to develop a pure Java implementation of the wire protocol.
 This implementation became the basis for Jaybird, a pure Java driver for Firebird relational database.</p>
 </div>
@@ -744,21 +747,23 @@ responsible for its part of the functionality.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The GDS layer represents a Java translation of the Firebird API. It is
-represented by a number of interfaces and classes from the
-<code>org.firebirdsql.gds</code> package (and sub-packages).</p>
+<p>The GDS layer represents a Java translation of the Firebird API.
+It is represented by a number of interfaces and classes from the <code>org.firebirdsql.gds</code> package (and sub-packages).</p>
 <div class="paragraph">
 <p>This API is implemented by a number of plugins that provide the pure java, native,
 local, and embedded implementations of the driver.</p>
 </div>
 </li>
 <li>
-<p>The JCA layer represents the heart of the driver. Here all connection
-and transaction management happens. Additionally this layer adapts the
-GDS API and proxies the calls to the GDS implementation.</p>
+<p><em class="until">Jaybird 5</em> The JCA layer represents the heart of the driver.
+Here all connection and transaction management happens.
+Additionally, this layer adapts the GDS API and proxies the calls to the GDS implementation.</p>
 <div class="paragraph">
 <p>The JCA layer is an implementation of the Java Connector Architecture specification.</p>
 </div>
+</li>
+<li>
+<p><em class="since">Jaybird 5</em> The XCA layer is a replacement of the JCA layer of previous versions.</p>
 </li>
 <li>
 <p>The JDBC layer is an implementation of the JDBC specification.</p>
@@ -863,7 +868,7 @@ During development unit tests are extensively used.
 Committing a code change to the source control is not allowed until it passes all existing unit tests.
 Each reproducible bug usually gets its own test case.
 This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.
-Currently there are more than 3900 test cases covering most of the driver code.</p>
+Currently there are more than 9000 test cases covering most of the driver code.</p>
 </div>
 </div>
 <div class="sect2">
@@ -877,10 +882,10 @@ Currently there are more than 3900 test cases covering most of the driver code.<
 <div class="sect3">
 <h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.6.2. Firebird</h4>
 <div class="paragraph">
-<p>General information about the Firebird database is available from the Firebird web site (<a href="https://www.firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/</a>).</p>
+<p>General information about the Firebird database is available from the Firebird website (<a href="https://www.firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/</a>).</p>
 </div>
 <div class="paragraph">
-<p>For information about using SQL in Firebird, see the <a href="https://www.firebirdsql.org/file/documentation/reference_manuals/fblangref25-en/html/fblangref25.html" target="_blank" rel="noopener">Firebird 2.5 Language Reference</a> and other documents available from the <a href="https://www.firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird web site.</p>
+<p>For information about using SQL in Firebird, see the <a href="https://www.firebirdsql.org/file/documentation/html/en/refdocs/fblangref40/firebird-40-language-reference.html" target="_blank" rel="noopener">Firebird 4.0 Language Reference</a> and other documents available from the <a href="https://www.firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird website.</p>
 </div>
 </div>
 <div class="sect3">
@@ -891,9 +896,10 @@ Currently there are more than 3900 test cases covering most of the driver code.<
 <div class="ulist">
 <ul>
 <li>
-<p>The <a href="https://groups.google.com/d/forum/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and corresponding mailing list <a href="mailto:firebird-java@googlegroups.com">firebird-java@googlegroups.com</a></p>
+<p>The <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and corresponding mailing list <a href="mailto:firebird-java@googlegroups.com">firebird-java@googlegroups.com</a></p>
 <div class="paragraph">
-<p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java+subscribe@googlegroups.com">firebird-java+subscribe@googlegroups.com</a> (this does not require a Google account). Alternatively, you can join the group at <a href="https://groups.google.com/d/forum/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> (this requires a Google account).</p>
+<p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java+subscribe@googlegroups.com">firebird-java+subscribe@googlegroups.com</a> (this does not require a Google account).
+Alternatively, you can join the group at <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> (this requires a Google account).</p>
 </div>
 </li>
 <li>
@@ -901,10 +907,6 @@ Currently there are more than 3900 test cases covering most of the driver code.<
 </li>
 <li>
 <p>On <a href="https://github.com/FirebirdSQL/jaybird/wiki/" target="_blank" rel="noopener">Jaybird wiki</a>.</p>
-<div class="paragraph">
-<p>This is a place where the community shares information about different aspects of Jaybird usage,
-configuration examples for different applications/servers, tips and tricks, FAQ, etc.</p>
-</div>
 </li>
 <li>
 <p>On <a href="https://stackoverflow.com/" target="_blank" rel="noopener">Stack Overflow</a>, please tag your questions with
@@ -946,12 +948,12 @@ Firebird-devel mailing list)</p>
 <div class="sect3">
 <h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.7.1. Reporting Bugs</h4>
 <div class="paragraph">
-<p>The developers follow the <a href="https://groups.google.com/d/forum/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and mailing list.
+<p>The developers follow the <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and mailing list.
 Join the list and post information about suspected bugs.
-List members may be able to help out to determine if it is an actual bug, provide a workaround and get you going again, whereas bug fixes might take awhile.</p>
+List members may be able to help out to determine if it is an actual bug, provide a workaround and get you going again, whereas bug fixes might take a while.</p>
 </div>
 <div class="paragraph">
-<p>You can report bugs in the Firebird bug tracker, project <a href="http://tracker.firebirdsql.org/browse/JDBC" target="_blank" rel="noopener">"Jaybird JCA/JDBC Driver"</a></p>
+<p>You can report bugs in the <a href="https://github.com/FirebirdSQL/jaybird/issues" target="_blank" rel="noopener">Jaybird bug tracker</a> on GitHub.</p>
 </div>
 <div class="paragraph">
 <p>When reporting bugs, please provide a minimal, but complete reproduction, including databases and
@@ -5138,12 +5140,12 @@ detach from the service manager when it is no longer needed.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="backup-and-restore"><a class="anchor" href="#backup-and-restore"></a>7.2. Backup and restore<a id="_backup_and_restore"></a></h3>
+<h3 id="services-backup-and-restore"><a class="anchor" href="#services-backup-and-restore"></a>7.2. Backup and restore<a id="_backup_and_restore"></a></h3>
 <div class="paragraph">
 <p>Jaybird supports gbak, gbak streaming, and nbackup backup and restore.</p>
 </div>
 <div class="sect3">
-<h4 id="backup-and-restore-gbak"><a class="anchor" href="#backup-and-restore-gbak"></a>7.2.1. Gbak backup and restore</h4>
+<h4 id="services-backup-and-restore-gbak"><a class="anchor" href="#services-backup-and-restore-gbak"></a>7.2.1. Gbak backup and restore</h4>
 <div class="paragraph">
 <p>The gbak backup and restore routines are defined in the <code>BackupManager</code> interface and are implemented in the <code>FBBackupManager</code> class.
 This class provides server-side gbak backups.
@@ -5297,7 +5299,7 @@ server.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>The <code>FBStreamingBackupManager</code> can be used to perform remote backup and restore, see <a href="#backup-and-restore-gbak-streaming">Gbak streaming backup and restore</a>.</p>
+<p>The <code>FBStreamingBackupManager</code> can be used to perform remote backup and restore, see <a href="#services-backup-and-restore-gbak-streaming">Gbak streaming backup and restore</a>.</p>
 </div>
 </td>
 </tr>
@@ -5489,7 +5491,7 @@ backupManager.restoreDatabase(
 </div>
 </div>
 <div class="sect3">
-<h4 id="backup-and-restore-gbak-streaming"><a class="anchor" href="#backup-and-restore-gbak-streaming"></a>7.2.2. Gbak streaming backup and restore</h4>
+<h4 id="services-backup-and-restore-gbak-streaming"><a class="anchor" href="#services-backup-and-restore-gbak-streaming"></a>7.2.2. Gbak streaming backup and restore</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 3</em></p>
 </div>
@@ -5532,7 +5534,7 @@ Verbose backups are not supported.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="backup-and-restore-nbackup"><a class="anchor" href="#backup-and-restore-nbackup"></a>7.2.3. Nbackup</h4>
+<h4 id="services-backup-and-restore-nbackup"><a class="anchor" href="#services-backup-and-restore-nbackup"></a>7.2.3. Nbackup</h4>
 <div class="paragraph">
 <p>The <code>NBackupManager</code> interface and its implementation <code>FBNbackupManager</code> provides <em>nbackup</em> backup and restore through the service API.
 This form of backup and restore is server-side, meaning that all paths are on the Firebird server.
@@ -6887,8 +6889,12 @@ This property can be set as follows:</p>
 <p>Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later).</p>
 </li>
 <li>
-<p>Strings prefixed with <code>base64:</code>: rest of the string is decoded as base64 to bytes.
+<p>Strings prefixed with <code>base64:</code>: rest of the string is decoded as <em>base64</em> to bytes.
 The <code>=</code> padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).</p>
+</li>
+<li>
+<p><em class="since">Jaybird 5</em> Strings prefixed with <code>base64url:</code>: rest of the string is decoded as <em>base64url</em> to bytes (using &#8220;Base 64 URL and Filename safe&#8221; alphabet).
+As <code>base64:</code>, the <code>=</code> padding characters are optional</p>
 </li>
 <li>
 <p>Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response.</p>
@@ -6897,13 +6903,13 @@ The <code>=</code> padding characters are optional, but when present they must b
 </div>
 <div class="paragraph">
 <p>Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with <code>&amp;</code> or <code>;</code>.
-Likewise, avoid <code>:</code> so that we can support other prefixes similar to <code>base64:</code> in the future.
+Likewise, avoid <code>:</code> so that we can support other prefixes similar to <code>base64:</code> and <code>base64url:</code> in the future.
 If you need these characters, consider using a base64 encoded value instead.</p>
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 3.0.9</em> Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded.
-When the base64 encoded value contains <code>+</code>, it must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
-For backwards compatibility with Jaybird 3, we can&#8217;t switch to the URL-safe variant of base64.</p>
+When the <em>base64</em> encoded value contains <code>&#43;</code>, it must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
+Jaybird 5 introduced <em>base64url</em>, an alternative to <em>base64</em>, which doesn&#8217;t use <code>&#43;</code>, thus avoiding the need to escape.</p>
 </div>
 <div class="paragraph">
 <p>For service operations, as implemented in the <code>org.firebirdsql.management</code> package, Firebird requires the <code>KeyHolderPlugin</code> configuration to be globally defined in <code>firebird.conf</code>.
@@ -7194,14 +7200,17 @@ This feature can be used to retrieve the generated ids (and other columns) from 
 <li>
 <p>Providing a query already containing a <code>RETURNING</code> clause to any of these methods.</p>
 <div class="paragraph">
-<p>In this case all of the previous cases are ignored and the query is executed as is.
+<p>In this case all the previous cases are ignored and the query is executed as is.
 It is possible to retrieve the result set using <code>getGeneratedKeys()</code>.</p>
 </div>
 </li>
 </ol>
 </div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">ANTLR Runtime required in Jaybird 4 and earlier</div>
 <div class="paragraph">
-<p>The generated keys functionality will only be available if the ANTLR runtime classes are on the classpath.
+<p>For Jaybird 4 and earlier, the generated keys functionality will only be available if the ANTLR runtime classes are on the classpath.
 Except for calling methods with <code>NO_GENERATED_KEYS</code>, absence of the ANTLR runtime will throw <code>FBDriverNotCapableException</code>.</p>
 </div>
 <div class="admonitionblock tip">
@@ -7217,6 +7226,12 @@ The required ANTLR runtime version depends on the Jaybird version, check the rel
 </table>
 </div>
 <div class="paragraph">
+<p>Since Jaybird 5, Jaybird uses a custom parser and no longer requires ANTLR for the generated keys feature.
+If you previously relied on absence of ANTLR to disable generated keys support, the generated keys feature can be disabled by setting <a href="#ref-generatedkeys-config">connection property <code>generatedKeysEnabled</code></a> to <code>disabled</code>.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
 <p>This functionality is available for <code>INSERT</code> (<em class="since">Firebird 2.0</em>), for <code>UPDATE</code>, <code>UPDATE OR INSERT</code> and <code>DELETE</code> (<em class="since">Firebird 2.1</em>), and for <code>MERGE</code> (<em class="since">Firebird 3.0</em>).</p>
 </div>
 <div class="admonitionblock note">
@@ -7228,8 +7243,12 @@ The required ANTLR runtime version depends on the Jaybird version, check the rel
 <td class="content">
 <div class="paragraph">
 <p>Generated keys retrieval modifies the statement to add a <code>RETURNING</code>-clause.
-Currently Firebird only supports <code>RETURNING</code> for DML operations that affect a single row.
+Firebird 4.0 and earlier only support <code>RETURNING</code> for DML operations that affect a single row.
 Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error <em>"multiple rows in singleton select"</em>.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5/Firebird 5.0</em> Support for multi-row <code>RETURNING</code> is introduced in Firebird 5.0.
+Support for multi-row <code>RETURNING</code> is available in Jaybird 5.</p>
 </div>
 </td>
 </tr>
@@ -7701,7 +7720,7 @@ But only on Firebird 3 and higher, for Firebird 2.5 this will behave as <code>ig
 </div>
 <div class="paragraph">
 <p>This feature can be used to circumvent issues with frameworks or tools that always use generated keys methods for prepare or execution.
-For example with <code>UPDATE</code> statements that touch multiple records and - given the Firebird limitations for <code>RETURNING</code> - produce the error <em>"multiple rows in singleton select"</em>.</p>
+For example with <code>UPDATE</code> statements that touch multiple records and&#8201;&#8212;&#8201;given the Firebird 4.0 and earlier limitations for <code>RETURNING</code>&#8201;&#8212;&#8201;produce the error <em>"multiple rows in singleton select"</em>.</p>
 </div>
 </div>
 </div>
@@ -12757,7 +12776,7 @@ hyperlink/alias]).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-10-15 11:50:54 UTC
+Last updated 2022-10-15 13:05:20 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
