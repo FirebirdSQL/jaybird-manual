@@ -10,10 +10,10 @@ repositories {
 }
 
 asciidoctorj {
-    version = '2.5.5'
+    version = '2.5.7'
     modules {
         pdf {
-            version '2.3.0'
+            version '2.3.3'
         }
         groovyDsl {
             // Default of asciidoctor-gradle-plugin 3.3.2 depends on 2.0.0 which is not on Maven Central.
