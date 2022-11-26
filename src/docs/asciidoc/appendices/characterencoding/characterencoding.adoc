@@ -38,7 +38,7 @@ Additionally, Firebird requires a connection character set to be specified in co
 There are two boundary cases that we will consider here, one when Firebird database was created with defaultfootnote:[The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.] character set `UTF8`, another when the Firebird database was created without specifying the character set (i.e. character set `NONE`).
 
 The character set `UTF8` in Firebird 2.0 and higher is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
-Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earleir – it did not support proper uppercasing and correct sorting.
+Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earlier – it did not support proper uppercasing and correct sorting.
 These issues were addressed in Firebird 2.0 and at the moment nothing prevents developers from using Unicode in the database and on the client side, which greatly simplifies the internationalization and localization of the applications.
 
 ==== The UTF8 character set
@@ -95,7 +95,7 @@ This addresses most of the problems described in this paragraph, except for colu
 
 It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
 One application running on the computer with, for example, Russian regional settings saves the Russian text (the default character set of the JVM is Cp1251) and another application running on computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
-However, when all client applications run same OS with the same regional settings in most cases will not have any severe consequences (except probably wrong sorting order or uppercasing on the server side).
+However, when all client applications run same OS with the same regional settings in most cases will not have any severe consequences, except probably wrong sorting order or uppercasing on the server side.
 
 On Linux and other Unix platforms it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").
 
