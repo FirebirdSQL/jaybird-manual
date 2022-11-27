@@ -64,8 +64,7 @@ framework and a `javax.sql.XADataSource` implementation.
 [[jb4-distribution]]
 ==== Distribution
 
-The Jaybird driver has compile-time and run-time dependencies to JCA 1.5. 
-Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.
+The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
 
 [[jb4-distribution-package]]
 ===== Distribution package
@@ -85,9 +84,6 @@ Where `<java>` is either `java7`, `java8` or `java11`.
 | `jaybird-full-{jaybird4-template-version}.jar` 
 | Same as above, but including the JCA 1.5 dependency.
 Where `<java>` is either `java7`, `java8` or `java11`.
-
-| `lib/antlr-runtime-4.7.2.jar`
-| Optional dependency, required if you want to use `getGeneratedKeys` support
 
 | `lib/connector-api-1.5.jar`
 | Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
@@ -118,8 +114,6 @@ For example:
   <version>{jaybird4-example-version}</version>
 </dependency>
 ----
-
-The Maven definition of Jaybird depends on antlr-runtime by default.
 
 If your application is deployed to a Java EE application server, you will need to exclude the `javax.resource:connector-api` dependency, and add it as a provided dependency:
 

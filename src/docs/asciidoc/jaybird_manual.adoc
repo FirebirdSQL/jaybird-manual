@@ -11,7 +11,7 @@ Roman Rokytskyy; Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird-version: 4
-:jaybird-full-version: 4.0.6
+:jaybird-full-version: 4.0.8
 :jaybird-example-version: {jaybird-full-version}.java11
 :jaybird-template-version: {jaybird-full-version}.<java>
 :jna-version: 5.5.0
@@ -25,7 +25,6 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird22-full-version: 2.2.15
 :jaybird-fbclient-version: 4.0.0.0
 :min-support-firebird: 2.5
-:antlr-version: 4.7
 :is-snapshot:
 
 ifdef::is-snapshot[]

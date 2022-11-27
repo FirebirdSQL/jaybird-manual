@@ -84,8 +84,6 @@ For example:
 </dependency>
 ----
 
-The Maven definition of Jaybird depends on antlr-runtime by default.
-
 If your application is deployed to a Java EE application server, you will need to
 exclude the `javax.resource:connector-api` dependency, and add it as a provided 
 dependency:
