@@ -49,7 +49,7 @@ This may be added in a future major or point release.
 See also <<jb5-firebird3>>
 
 [[jb5-firebird5]]
-===== Notes on Firebird 4.0 support
+===== Notes on Firebird 5.0 support
 
 Jaybird 5 supports Firebird 5.0 server-side scrollable cursors and multi-row `RETURNING`.
 
@@ -77,7 +77,6 @@ It is not officially JDBC compliant, because we currently don't have access to t
 
 Jaybird has no required runtime dependencies.
 For native or embedded connections, JNA 5.12.1 needs to be on the class path.
-
 
 [[jb5-distribution-package]]
 ===== Distribution package

@@ -9,7 +9,7 @@ By default, Firebird 3 uses the authentication plugin `Srp` (_Secure remote pass
 It also includes plugins `Legacy_Auth` that supports the pre-Firebird-3 authentication mechanism, and - [.since]_Firebird 3.0.4_ - `Srp256`.
 Firebird 4 introduced the plugins `Srp224`, `Srp384` and `Srp512`.
 
-The original `Srp` plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.footnote:[Internally `SrpNNN` continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also http://tracker.firebirdsql.org/browse/CORE-5788[CORE-5788^]).]
+The original `Srp` plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.footnote:[Internally `SrpNNN` continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also https://github.com/FirebirdSQL/firebird/issues/6051[firebird#6051^]).]
 
 [NOTE]
 ====
@@ -20,28 +20,35 @@ For example, SHA-224 is not supported in Oracle Java 7 by default and may requir
 [[ref-auth-plugins-default]]
 ==== Default authentication plugins
 
-[[ref-auth-plugins-default-jb3]]
-===== Jaybird 3
+[[ref-auth-plugins-default-jb5]]
+===== Jaybird 5
 
-Jaybird 3 will try - in order - `Srp` and `Legacy_Auth`, or - [.since]_Jaybird 3.0.5_ - `Srp256`, `Srp` and `Legacy_Auth`.
-It is not possible to specify a different configuration in Jaybird 3.
+The default plugins applied by Jaybird 5 are -- in order -- `Srp256` and `Srp`.
+This applies only for the pure Java protocol and only when connecting to Firebird 3 or higher.
+The native implementation will use its own default or the value configured through its `firebird.conf`.
+
+When connecting to Firebird 3 or higher, the pure Java protocol in Jaybird 4 and higher will no longer try the `Legacy_Auth` plugin by default as it is an unsafe authentication mechanism.
+We strongly suggest to use SRP users only, but if you really need to use legacy authentication, you can specify connection property `authPlugins=Legacy_Auth`, see <<ref-auth-plugins-config>> for details.
+
+When connecting to Firebird 3 versions earlier than 3.0.4, or if `Srp256` has been removed from the `AuthServer` setting in Firebird, this might result in slightly slower authentication because more roundtrips to the server are needed.
+After an attempt to use `Srp256` fails, authentication continues with `Srp`.
+
+To avoid this, consider explicitly configuring the authentication plugins to use, see <<ref-auth-plugins-config>> for details.
 
 Firebird 2.5 and earlier will always use legacy authentication.
 
 [[ref-auth-plugins-default-jb4]]
 ===== Jaybird 4
 
-The default plugins applied by Jaybird 4 are - in order - `Srp256` and `Srp`.
-This applies only for the pure Java protocol and only when connecting to Firebird 3 or higher.
-The native implementation will use its own default or the value configured through its `firebird.conf`.
+The default plugins applied by Jaybird 4 are -- in order -- `Srp256` and `Srp`.
 
-When connecting to Firebird 3 or higher, the pure Java protocol in Jaybird 4 will no longer try the `Legacy_Auth` plugin by default as it is an unsafe authentication mechanism.
-We strongly suggest to use SRP users only, but if you really need to use legacy authentication, you can specify connection property `authPlugins=Legacy_Auth`, see <<ref-auth-plugins-config>> for details.
+See section on <<ref-auth-plugins-default-jb5>> for further details.
 
-When connecting to Firebird 3 versions earlier than 3.0.4, or if `Srp256` has been removed from the `AuthServer` setting in Firebird, this might result in slightly slower authentication because more roundtrips to the server are needed. 
-After an attempt to use `Srp256` fails, authentication continues with `Srp`.
+[[ref-auth-plugins-default-jb3]]
+===== Jaybird 3
 
-To avoid this, consider explicitly configuring the authentication plugins to use, see <<ref-auth-plugins-config>> for details.
+Jaybird 3 will try - in order - `Srp` and `Legacy_Auth`, or - [.since]_Jaybird 3.0.5_ - `Srp256`, `Srp` and `Legacy_Auth`.
+It is not possible to specify a different configuration in Jaybird 3.
 
 Firebird 2.5 and earlier will always use legacy authentication.
 

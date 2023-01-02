@@ -323,33 +323,39 @@ default.
 [[driver-native]]
 ==== NATIVE and LOCAL types
 
-The `NATIVE` and `LOCAL` types (JDBC Type 2) use a JNA proxy to access the Firebird
-client library and requires installation of the Firebird client. The
-`NATIVE` driver type is used to access the remote database server, the
-`LOCAL` type accesses the database server running on the same host by
-means of IPC (Inter-Process Communication). Performance of `NATIVE` driver is approximately 10% lower
-compared to the `PURE_JAVA` driver, but `LOCAL` type has up to 30% higher
-performance compared to the `PURE_JAVA` driver when connecting the server
-on the same host. This is mostly due to the fact that TCP/IP stack is
-not involved in this mode.
+The `NATIVE` and `LOCAL` types (JDBC Type 2) use a JNA proxy to access the Firebird client library and requires installation of the Firebird client.
+The `NATIVE` driver type is used to access the remote database server, the `LOCAL` type (Windows only) accesses the database server running on the same host by means of IPC (Inter-Process Communication).
+Performance of `NATIVE` driver is approximately 10% lower compared to the `PURE_JAVA` driver, but `LOCAL` type has up to 30% higher performance compared to the `PURE_JAVA` driver when connecting the server on the same host.
+This is mostly due to the fact that TCP/IP stack is not involved in this mode.
 
-To create a connection using the `NATIVE` JDBC driver to
-connect to a remote server you have to use the following JDBC URL with
-the native subprotocol:
+To create a connection using the `NATIVE` JDBC driver to connect to a remote server you have to use the following JDBC URL with the native subprotocol:
 
 ....
 jdbc:firebirdsql:native:host[/port]:<path to database>
 ....
 
-When connecting to a local database server using the `LOCAL` driver, you
-should use following:
+When connecting to a local database server using the `LOCAL` driver, you should use following:
 
 ....
 jdbc:firebirdsql:local:<absolute path to database>
 ....
 
-In addition to Jaybird, this requires a native Firebird client library, and JNA {jna-version} 
-needs to be on the classpath.
+In addition to Jaybird, this requires a native Firebird client library, and JNA {jna-version} needs to be on the classpath.
+
+[NOTE]
+.LOCAL protocol removed in Jaybird 5
+====
+[.since]_Jaybird 5_ The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
+To ensure local access, use a connection string using XNET (Windows only!):
+
+....
+jdbc:firebirdsql:native:xnet://<path to database>
+....
+
+Support for this type of URLs was introduced in Jaybird 5, so this syntax cannot be used in earlier versions.
+
+As XNET is Windows only, on other platforms, consider using an <<driver-embedded,EMBEDDED>> connection instead.
+====
 
 [[driver-native-maven]]
 ===== Maven dependency for native client
@@ -496,72 +502,66 @@ jdbc:firebirdsql:oo://host[:port]/<path to database>
 
 All other notes for <<driver-pure-java>> apply.
 
+[NOTE]
+.OOREMOTE deprecated in Jaybird 5, to be removed in Jaybird 6
+====
+[.since]_Jaybird 5_ The OOREMOTE protocol implementation is deprecated and will be removed in Jaybird 6.
+To connect to Firebird, use LibreOffice Base with connection option "`Firebird External`".
+====
+
 [[connection-pooling]]
 === Connection Pooling
 
-Each time a connection is opened via `DriverManager`, a new physical
-connection to server is opened. It is closed when the connection is
-closed. In order to avoid the overhead of creating connections, you can use 
-a connection pool implementation to maintain a cache of open physical
-connections that can be reused between user sessions.
+Each time a connection is opened via `DriverManager`, a new physical connection to server is opened.
+It is closed when the connection is closed.
+In order to avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.
 
-Since version 3.0, Jaybird no longer provides a connection pool. If you need
-a `javax.sql.DataSource` implementation that provides a connection pool, either use the
-connection pool support of your application server, or consider using https://brettwooldridge.github.io/HikariCP/[HikariCP^], 
-http://commons.apache.org/proper/commons-dbcp/[DBCP^], or http://www.mchange.com/projects/c3p0/[c3p0^].
+Since Jaybird 3, Jaybird no longer provides a connection pool.
+If you need a `javax.sql.DataSource` implementation that provides a connection pool, either use the connection pool support of your application server, or consider using https://brettwooldridge.github.io/HikariCP/[HikariCP^], https://commons.apache.org/proper/commons-dbcp/[DBCP^], or https://www.mchange.com/projects/c3p0/[c3p0^].
 
 [[data-source-implementation]]
 === The javax.sql.DataSource implementation
 
-Connection pool implementations, whether provided by a Java EE application server or
-a third-party library, are exposed as an implementation of the `javax.sql.DataSource` interface.
+Connection pool implementations, whether provided by a Java EE/Jakarta EE application server or a third-party library, are exposed as an implementation of the `javax.sql.DataSource` interface.
 
-The most important method exposed by this interface is the `getConnection()` method, which will
-return a connection based on the configuration of the data source. For a 'basic' (non-pooling) data 
-source this will create a new, physical, connection. For a connection pool, this will create a logical
-connection that wraps a physical connection from the pool. 
+The most important method exposed by this interface is the `getConnection()` method, which will return a connection based on the configuration of the data source.
+For a 'basic' (non-pooling) data source this will create a new, physical, connection.
+For a connection pool, this will create a logical connection that wraps a physical connection from the pool.
 
 [NOTE]
 ====
-The 'user' of a connection should not care whether the connection is pooled or not, the
-connection should behave the same from the perspective of the user, and the user should use the
-connection in the same way. This should allow for swapping between a non-pooling and pooling
-data source in an application without any changes to the code using the data source.
+The 'user' of a connection should not care whether the connection is pooled or not, the connection should behave the same from the perspective of the user, and the user should use the connection in the same way.
+This should allow for swapping between a non-pooling and pooling data source in an application without any changes to the code using the data source.
 ====
 
 When the application is done with the connection, it should call `close()` on the connection. 
-A connection from a non-pooling data source will be closed. For a logical connection from a 
-connection pool, `close()` will invalidate the logical connection (which will make it 
-behave like a closed connection), and return the underlying physical connection to the 
-connection pool, where it will be either kept for re-use, or maybe closed.
+A connection from a non-pooling data source will be closed.
+For a logical connection from a connection pool, `close()` will invalidate the logical connection (which will make it behave like a closed connection), and return the underlying physical connection to the connection pool, where it will be either kept for re-use, or maybe closed.
 
 [TIP]
 ====
-Use a connection for the shortest scope (and time) necessary for correct behaviour. Get a connection,
-and close it as soon as you're done. When using a connection pool, this has the added benefit that just
-a few connections can serve the needs of the application.
+Use a connection for the shortest scope (and time) necessary for correct behaviour.
+Get a connection, and close it as soon as you're done.
+When using a connection pool, this has the added benefit that just a few connections can serve the needs of the application.
 ====
 
 [[connection-pool-data-source-implementation]]
 === The javax.sql.ConnectionPoolDataSource implementation
 
-The `javax.sql.ConnectionPoolDataSource` interface represents a factory that creates
-`PooledConnection` objects for use by a connection pool. For example, application servers
-support the use of a `ConnectionPoolDataSource` to populate their connection pool.
+The `javax.sql.ConnectionPoolDataSource` interface represents a factory that creates `PooledConnection` objects for use by a connection pool.
+For example, application servers support the use of a `ConnectionPoolDataSource` to populate their connection pool.
 
-A `PooledConnection` instance represents a physical connection to a database and is a source
-of logical connections that a connection pool can hand out to the application. Closing this 
-logical connection returns the physical connection back into the pool.
+A `PooledConnection` instance represents a physical connection to a database and is a source of logical connections that a connection pool can hand out to the application.
+Closing this logical connection returns the physical connection back into the pool.
 
 [WARNING]
 ====
 Contrary to its name, a `ConnectionPoolDataSource` is not a connection pool!
 ====
 
-Jaybird provides `org.firebirdsql.ds.FBConnectionPoolDataSource` as an implementation of the
-`javax.sql.ConnectionPoolDataSource` interface.
+Jaybird provides `org.firebirdsql.ds.FBConnectionPoolDataSource` as an implementation of the `javax.sql.ConnectionPoolDataSource` interface.
 
-*TODO* Add more info
+// TODO Add more info
 
 [[xa-data-source-implementation]]
 === The javax.sql.XADataSource implementation

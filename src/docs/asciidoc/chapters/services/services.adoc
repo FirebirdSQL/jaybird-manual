@@ -884,7 +884,7 @@ the changes made by the rolled back transactions and moves forward the
 OIT.footnote:[For more information please read article by Ann Harrison
 "Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep",
 available, for example, at
-http://www.ibphoenix.com/resources/documents/design/doc_21]
+https://www.ibphoenix.com/resources/documents/design/doc_21]
 
 The sweep process is controlled by a threshold parameter – a difference
 between the Next Transaction and OIT, by default it equal to 20,000.

@@ -14,7 +14,7 @@ The reason is that Firebird for some DDL commands only executes at a real commit
 On statement completion (as specified in JDBC), result sets will still close unless they are holdable over commit. 
 The result set is only closed client side, which means that the cursor remains open server side to prevent roundtrips. 
 This may lead to additional resource usage server side unless explicitly closed in the code. 
-Note that any open blobs will be closed client- and server-side (until this is improved with http://tracker.firebirdsql.org/browse/JDBC-401[JDBC-401^]).
+Note that any open blobs will be closed client- and server-side (until this is improved with https://github.com/FirebirdSQL/jaybird/issues/442[jaybird#442^]).
 
 A connection can be interrogated using `FirebirdConnection.isUseFirebirdAutocommit()` if it uses `isc_tpb_autocommit`.
 

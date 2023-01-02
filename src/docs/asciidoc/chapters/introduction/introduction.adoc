@@ -19,7 +19,7 @@ The JCA implementation was removed in Jaybird 5, and Jaybird is now only a JDBC 
 This manual covers Jaybird {jaybird-version} and may use Java 8 and Firebird 3.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
 
 New or removed features are tagged with the version that introduced a feature (eg [.since]_Jaybird 3_) or removed feature (e.g. [.until]_Jaybird 3_).
-This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java/JDBC versions 8/4.2 or later.
+This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java 8 (JDBC 4.2) or later.
 
 This manual may include documentation of features of -- possibly unreleased -- Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
 
@@ -137,7 +137,7 @@ Currently there are more than 9000 test cases covering most of the driver code.
 
 ==== JDBC
 
-For JDBC documentation, see http://www.oracle.com/technetwork/java/javase/jdbc/index.html[^].
+For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[^].
 
 ==== Firebird
 

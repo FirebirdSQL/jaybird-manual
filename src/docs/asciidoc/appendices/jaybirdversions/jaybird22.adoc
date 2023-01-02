@@ -105,11 +105,7 @@ Native dependencies (required only for Type 2 and Embedded):
 * `libjaybird22_x64.so` – Linux 64-bit (AMD/Intel 64)
 
 The Windows DLLs have been built with Microsoft Visual Studio 2010 SP1. 
-To use the native or embedded driver, you will need to install the Microsoft Visual C++ 2010 SP 1 redistributable available at:
-
-    x86: http://www.microsoft.com/download/en/details.aspx?id=8328
-    x64: http://www.microsoft.com/download/en/details.aspx?id=13523
-
+To use the native or embedded driver, you will need to install the Microsoft Visual C++ 2010 SP 1 redistributable.
 
 [[jb22-distribution-maven]]
 ===== Maven
