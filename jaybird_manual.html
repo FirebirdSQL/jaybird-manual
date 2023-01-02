@@ -723,7 +723,7 @@ The JCA standard specifies an architecture in which an application server can co
 </div>
 <div class="paragraph">
 <p>New or removed features are tagged with the version that introduced a feature (eg <em class="since">Jaybird 3</em>) or removed feature (e.g. <em class="until">Jaybird 3</em>).
-This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java/JDBC versions 8/4.2 or later.</p>
+This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java 8 (JDBC 4.2) or later.</p>
 </div>
 <div class="paragraph">
 <p>This manual may include documentation of features of&#8201;&#8212;&#8201;possibly unreleased&#8201;&#8212;&#8201;Jaybird versions later than 4 to simplify manual maintenance and versioning.</p>
@@ -873,7 +873,7 @@ Currently there are more than 9000 test cases covering most of the driver code.<
 <div class="sect3">
 <h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.6.1. JDBC</h4>
 <div class="paragraph">
-<p>For JDBC documentation, see <a href="http://www.oracle.com/technetwork/java/javase/jdbc/index.html" class="bare" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/jdbc/index.html</a>.</p>
+<p>For JDBC documentation, see <a href="https://www.oracle.com/java/technologies/javase/javase-tech-database.html" class="bare" target="_blank" rel="noopener">https://www.oracle.com/java/technologies/javase/javase-tech-database.html</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1383,20 +1383,13 @@ default.</p>
 <div class="sect3">
 <h4 id="driver-native"><a class="anchor" href="#driver-native"></a>2.2.2. NATIVE and LOCAL types</h4>
 <div class="paragraph">
-<p>The <code>NATIVE</code> and <code>LOCAL</code> types (JDBC Type 2) use a JNA proxy to access the Firebird
-client library and requires installation of the Firebird client. The
-<code>NATIVE</code> driver type is used to access the remote database server, the
-<code>LOCAL</code> type accesses the database server running on the same host by
-means of IPC (Inter-Process Communication). Performance of <code>NATIVE</code> driver is approximately 10% lower
-compared to the <code>PURE_JAVA</code> driver, but <code>LOCAL</code> type has up to 30% higher
-performance compared to the <code>PURE_JAVA</code> driver when connecting the server
-on the same host. This is mostly due to the fact that TCP/IP stack is
-not involved in this mode.</p>
+<p>The <code>NATIVE</code> and <code>LOCAL</code> types (JDBC Type 2) use a JNA proxy to access the Firebird client library and requires installation of the Firebird client.
+The <code>NATIVE</code> driver type is used to access the remote database server, the <code>LOCAL</code> type (Windows only) accesses the database server running on the same host by means of IPC (Inter-Process Communication).
+Performance of <code>NATIVE</code> driver is approximately 10% lower compared to the <code>PURE_JAVA</code> driver, but <code>LOCAL</code> type has up to 30% higher performance compared to the <code>PURE_JAVA</code> driver when connecting the server on the same host.
+This is mostly due to the fact that TCP/IP stack is not involved in this mode.</p>
 </div>
 <div class="paragraph">
-<p>To create a connection using the <code>NATIVE</code> JDBC driver to
-connect to a remote server you have to use the following JDBC URL with
-the native subprotocol:</p>
+<p>To create a connection using the <code>NATIVE</code> JDBC driver to connect to a remote server you have to use the following JDBC URL with the native subprotocol:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1404,8 +1397,7 @@ the native subprotocol:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>When connecting to a local database server using the <code>LOCAL</code> driver, you
-should use following:</p>
+<p>When connecting to a local database server using the <code>LOCAL</code> driver, you should use following:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1413,8 +1405,34 @@ should use following:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 5.5.0
-needs to be on the classpath.</p>
+<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 5.5.0 needs to be on the classpath.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">LOCAL protocol removed in Jaybird 5</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em> The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
+To ensure local access, use a connection string using XNET (Windows only!):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>jdbc:firebirdsql:native:xnet://&lt;path to database&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Support for this type of URLs was introduced in Jaybird 5, so this syntax cannot be used in earlier versions.</p>
+</div>
+<div class="paragraph">
+<p>As XNET is Windows only, on other platforms, consider using an <a href="#driver-embedded">EMBEDDED</a> connection instead.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect4">
 <h5 id="driver-native-maven"><a class="anchor" href="#driver-native-maven"></a>Maven dependency for native client</h5>
@@ -1428,7 +1446,7 @@ This dependency does not support the <code>embedded</code> protocol.</p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
-    &lt;version&gt;4.0.0.0&lt;/artifactId&gt;
+    &lt;version&gt;4.0.2.0&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1595,35 +1613,45 @@ it is not about the Firebird embedded use that has been introduced in recent Lib
 <div class="paragraph">
 <p>All other notes for <a href="#driver-pure-java">PURE_JAVA type</a> apply.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">OOREMOTE deprecated in Jaybird 5, to be removed in Jaybird 6</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em> The OOREMOTE protocol implementation is deprecated and will be removed in Jaybird 6.
+To connect to Firebird, use LibreOffice Base with connection option &#8220;Firebird External&#8221;.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="connection-pooling"><a class="anchor" href="#connection-pooling"></a>2.3. Connection Pooling</h3>
 <div class="paragraph">
-<p>Each time a connection is opened via <code>DriverManager</code>, a new physical
-connection to server is opened. It is closed when the connection is
-closed. In order to avoid the overhead of creating connections, you can use
-a connection pool implementation to maintain a cache of open physical
-connections that can be reused between user sessions.</p>
+<p>Each time a connection is opened via <code>DriverManager</code>, a new physical connection to server is opened.
+It is closed when the connection is closed.
+In order to avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.</p>
 </div>
 <div class="paragraph">
-<p>Since version 3.0, Jaybird no longer provides a connection pool. If you need
-a <code>javax.sql.DataSource</code> implementation that provides a connection pool, either use the
-connection pool support of your application server, or consider using <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>,
-<a href="http://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">DBCP</a>, or <a href="http://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>.</p>
+<p>Since Jaybird 3, Jaybird no longer provides a connection pool.
+If you need a <code>javax.sql.DataSource</code> implementation that provides a connection pool, either use the connection pool support of your application server, or consider using <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>, <a href="https://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">DBCP</a>, or <a href="https://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="data-source-implementation"><a class="anchor" href="#data-source-implementation"></a>2.4. The javax.sql.DataSource implementation</h3>
 <div class="paragraph">
-<p>Connection pool implementations, whether provided by a Java EE application server or
-a third-party library, are exposed as an implementation of the <code>javax.sql.DataSource</code> interface.</p>
+<p>Connection pool implementations, whether provided by a Java EE/Jakarta EE application server or a third-party library, are exposed as an implementation of the <code>javax.sql.DataSource</code> interface.</p>
 </div>
 <div class="paragraph">
-<p>The most important method exposed by this interface is the <code>getConnection()</code> method, which will
-return a connection based on the configuration of the data source. For a 'basic' (non-pooling) data
-source this will create a new, physical, connection. For a connection pool, this will create a logical
-connection that wraps a physical connection from the pool.</p>
+<p>The most important method exposed by this interface is the <code>getConnection()</code> method, which will return a connection based on the configuration of the data source.
+For a 'basic' (non-pooling) data source this will create a new, physical, connection.
+For a connection pool, this will create a logical connection that wraps a physical connection from the pool.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1633,10 +1661,8 @@ connection that wraps a physical connection from the pool.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The 'user' of a connection should not care whether the connection is pooled or not, the
-connection should behave the same from the perspective of the user, and the user should use the
-connection in the same way. This should allow for swapping between a non-pooling and pooling
-data source in an application without any changes to the code using the data source.</p>
+<p>The 'user' of a connection should not care whether the connection is pooled or not, the connection should behave the same from the perspective of the user, and the user should use the connection in the same way.
+This should allow for swapping between a non-pooling and pooling data source in an application without any changes to the code using the data source.</p>
 </div>
 </td>
 </tr>
@@ -1644,10 +1670,8 @@ data source in an application without any changes to the code using the data sou
 </div>
 <div class="paragraph">
 <p>When the application is done with the connection, it should call <code>close()</code> on the connection.
-A connection from a non-pooling data source will be closed. For a logical connection from a
-connection pool, <code>close()</code> will invalidate the logical connection (which will make it
-behave like a closed connection), and return the underlying physical connection to the
-connection pool, where it will be either kept for re-use, or maybe closed.</p>
+A connection from a non-pooling data source will be closed.
+For a logical connection from a connection pool, <code>close()</code> will invalidate the logical connection (which will make it behave like a closed connection), and return the underlying physical connection to the connection pool, where it will be either kept for re-use, or maybe closed.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1657,9 +1681,9 @@ connection pool, where it will be either kept for re-use, or maybe closed.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Use a connection for the shortest scope (and time) necessary for correct behaviour. Get a connection,
-and close it as soon as you&#8217;re done. When using a connection pool, this has the added benefit that just
-a few connections can serve the needs of the application.</p>
+<p>Use a connection for the shortest scope (and time) necessary for correct behaviour.
+Get a connection, and close it as soon as you&#8217;re done.
+When using a connection pool, this has the added benefit that just a few connections can serve the needs of the application.</p>
 </div>
 </td>
 </tr>
@@ -1669,14 +1693,12 @@ a few connections can serve the needs of the application.</p>
 <div class="sect2">
 <h3 id="connection-pool-data-source-implementation"><a class="anchor" href="#connection-pool-data-source-implementation"></a>2.5. The javax.sql.ConnectionPoolDataSource implementation</h3>
 <div class="paragraph">
-<p>The <code>javax.sql.ConnectionPoolDataSource</code> interface represents a factory that creates
-<code>PooledConnection</code> objects for use by a connection pool. For example, application servers
-support the use of a <code>ConnectionPoolDataSource</code> to populate their connection pool.</p>
+<p>The <code>javax.sql.ConnectionPoolDataSource</code> interface represents a factory that creates <code>PooledConnection</code> objects for use by a connection pool.
+For example, application servers support the use of a <code>ConnectionPoolDataSource</code> to populate their connection pool.</p>
 </div>
 <div class="paragraph">
-<p>A <code>PooledConnection</code> instance represents a physical connection to a database and is a source
-of logical connections that a connection pool can hand out to the application. Closing this
-logical connection returns the physical connection back into the pool.</p>
+<p>A <code>PooledConnection</code> instance represents a physical connection to a database and is a source of logical connections that a connection pool can hand out to the application.
+Closing this logical connection returns the physical connection back into the pool.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1693,11 +1715,7 @@ logical connection returns the physical connection back into the pool.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>Jaybird provides <code>org.firebirdsql.ds.FBConnectionPoolDataSource</code> as an implementation of the
-<code>javax.sql.ConnectionPoolDataSource</code> interface.</p>
-</div>
-<div class="paragraph">
-<p><strong>TODO</strong> Add more info</p>
+<p>Jaybird provides <code>org.firebirdsql.ds.FBConnectionPoolDataSource</code> as an implementation of the <code>javax.sql.ConnectionPoolDataSource</code> interface.</p>
 </div>
 </div>
 <div class="sect2">
@@ -6598,24 +6616,14 @@ For example, SHA-224 is not supported in Oracle Java 7 by default and may requir
 <div class="sect3">
 <h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.1.1. Default authentication plugins</h4>
 <div class="sect4">
-<h5 id="ref-auth-plugins-default-jb3"><a class="anchor" href="#ref-auth-plugins-default-jb3"></a>Jaybird 3</h5>
+<h5 id="ref-auth-plugins-default-jb5"><a class="anchor" href="#ref-auth-plugins-default-jb5"></a>Jaybird 5</h5>
 <div class="paragraph">
-<p>Jaybird 3 will try - in order - <code>Srp</code> and <code>Legacy_Auth</code>, or - <em class="since">Jaybird 3.0.5</em> - <code>Srp256</code>, <code>Srp</code> and <code>Legacy_Auth</code>.
-It is not possible to specify a different configuration in Jaybird 3.</p>
-</div>
-<div class="paragraph">
-<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="ref-auth-plugins-default-jb4"><a class="anchor" href="#ref-auth-plugins-default-jb4"></a>Jaybird 4</h5>
-<div class="paragraph">
-<p>The default plugins applied by Jaybird 4 are - in order - <code>Srp256</code> and <code>Srp</code>.
+<p>The default plugins applied by Jaybird 5 are&#8201;&#8212;&#8201;in order&#8201;&#8212;&#8201;<code>Srp256</code> and <code>Srp</code>.
 This applies only for the pure Java protocol and only when connecting to Firebird 3 or higher.
 The native implementation will use its own default or the value configured through its <code>firebird.conf</code>.</p>
 </div>
 <div class="paragraph">
-<p>When connecting to Firebird 3 or higher, the pure Java protocol in Jaybird 4 will no longer try the <code>Legacy_Auth</code> plugin by default as it is an unsafe authentication mechanism.
+<p>When connecting to Firebird 3 or higher, the pure Java protocol in Jaybird 4 and higher will no longer try the <code>Legacy_Auth</code> plugin by default as it is an unsafe authentication mechanism.
 We strongly suggest to use SRP users only, but if you really need to use legacy authentication, you can specify connection property <code>authPlugins=Legacy_Auth</code>, see <a href="#ref-auth-plugins-config">Configure authentication plugins</a> for details.</p>
 </div>
 <div class="paragraph">
@@ -6624,6 +6632,25 @@ After an attempt to use <code>Srp256</code> fails, authentication continues with
 </div>
 <div class="paragraph">
 <p>To avoid this, consider explicitly configuring the authentication plugins to use, see <a href="#ref-auth-plugins-config">Configure authentication plugins</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-auth-plugins-default-jb4"><a class="anchor" href="#ref-auth-plugins-default-jb4"></a>Jaybird 4</h5>
+<div class="paragraph">
+<p>The default plugins applied by Jaybird 4 are&#8201;&#8212;&#8201;in order&#8201;&#8212;&#8201;<code>Srp256</code> and <code>Srp</code>.</p>
+</div>
+<div class="paragraph">
+<p>See section on <a href="#ref-auth-plugins-default-jb5">Jaybird 5</a> for further details.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-auth-plugins-default-jb3"><a class="anchor" href="#ref-auth-plugins-default-jb3"></a>Jaybird 3</h5>
+<div class="paragraph">
+<p>Jaybird 3 will try - in order - <code>Srp</code> and <code>Legacy_Auth</code>, or - <em class="since">Jaybird 3.0.5</em> - <code>Srp256</code>, <code>Srp</code> and <code>Legacy_Auth</code>.
+It is not possible to specify a different configuration in Jaybird 3.</p>
 </div>
 <div class="paragraph">
 <p>Firebird 2.5 and earlier will always use legacy authentication.</p>
@@ -7013,7 +7040,7 @@ The reason is that Firebird for some DDL commands only executes at a real commit
 <p>On statement completion (as specified in JDBC), result sets will still close unless they are holdable over commit.
 The result set is only closed client side, which means that the cursor remains open server side to prevent roundtrips.
 This may lead to additional resource usage server side unless explicitly closed in the code.
-Note that any open blobs will be closed client- and server-side (until this is improved with <a href="http://tracker.firebirdsql.org/browse/JDBC-401" target="_blank" rel="noopener">JDBC-401</a>).</p>
+Note that any open blobs will be closed client- and server-side (until this is improved with <a href="https://github.com/FirebirdSQL/jaybird/issues/442" target="_blank" rel="noopener">jaybird#442</a>).</p>
 </div>
 <div class="paragraph">
 <p>A connection can be interrogated using <code>FirebirdConnection.isUseFirebirdAutocommit()</code> if it uses <code>isc_tpb_autocommit</code>.</p>
@@ -12094,7 +12121,7 @@ Version: <code>4.0.8.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is eit
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.8.java8&lt;/version&gt;
+  &lt;version&gt;4.0.8.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -12106,7 +12133,7 @@ Version: <code>4.0.8.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is eit
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.8.java8&lt;/version&gt;
+  &lt;version&gt;4.0.8.java11&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -12531,13 +12558,7 @@ If the ANTLR runtime classes are absent, the generated keys functionality will n
 </div>
 <div class="paragraph">
 <p>The Windows DLLs have been built with Microsoft Visual Studio 2010 SP1.
-To use the native or embedded driver, you will need to install the Microsoft Visual C++ 2010 SP 1 redistributable available at:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>x86: http://www.microsoft.com/download/en/details.aspx?id=8328
-x64: http://www.microsoft.com/download/en/details.aspx?id=13523</pre>
-</div>
+To use the native or embedded driver, you will need to install the Microsoft Visual C++ 2010 SP 1 redistributable.</p>
 </div>
 </div>
 <div class="sect4">
@@ -12603,25 +12624,23 @@ dependency:</p>
 <h2 id="license"><a class="anchor" href="#license"></a>Appendix H: License</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The contents of this Documentation are subject to the Public
-Documentation License Version 1.0 (the "License"); you may only use this
-Documentation if you comply with the terms of this License. A copy of
-the License is available at
-<a href="http://www.firebirdsql.org/manual/licenses-pdl-text.html" class="bare">http://www.firebirdsql.org/manual/licenses-pdl-text.html</a>.</p>
+<p>The contents of this Documentation are subject to the Public Documentation License Version 1.0 (the "License");
+you may only use this Documentation if you comply with the terms of this License.
+A copy of the License is available at <a href="https://www.firebirdsql.org/en/public-documentation-license/" class="bare">https://www.firebirdsql.org/en/public-documentation-license/</a>.</p>
 </div>
 <div class="paragraph">
-<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s
-Manual. The Initial Writer of the Original Documentation is Roman
-Rokytskyy Copyright &#169; 2004-2008. All Rights Reserved. (Initial Writer
-contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
+<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s Manual.
+The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright &#169; 2004-2008.
+All Rights Reserved.
+(Initial Writer contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
 </div>
 <div class="paragraph">
 <p>Contributor(s): Mark Rotteveel.</p>
 </div>
 <div class="paragraph">
-<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2022. All
-Rights Reserved. (Contributor contact(s):
-<a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
+<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2023.
+All Rights Reserved.
+(Contributor contact(s): <a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
 </div>
 </div>
 </div>
@@ -12674,13 +12693,13 @@ Rights Reserved. (Contributor contact(s):
 <a href="#_footnoteref_15">15</a>. Another reason for limbo transactions are multidatabase transactions which can be initiated via native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
 </div>
 <div class="footnote" id="_footnotedef_16">
-<a href="#_footnoteref_16">16</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="http://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">http://www.ibphoenix.com/resources/documents/design/doc_21</a>
+<a href="#_footnoteref_16">16</a>. For more information please read article by Ann Harrison "Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep", available, for example, at <a href="https://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">https://www.ibphoenix.com/resources/documents/design/doc_21</a>
 </div>
 <div class="footnote" id="_footnotedef_17">
 <a href="#_footnoteref_17">17</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
 </div>
 <div class="footnote" id="_footnotedef_18">
-<a href="#_footnoteref_18">18</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="http://tracker.firebirdsql.org/browse/CORE-5788" target="_blank" rel="noopener">CORE-5788</a>).
+<a href="#_footnoteref_18">18</a>. Internally <code>SrpNNN</code> continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also <a href="https://github.com/FirebirdSQL/firebird/issues/6051" target="_blank" rel="noopener">firebird#6051</a>).
 </div>
 <div class="footnote" id="_footnotedef_19">
 <a href="#_footnoteref_19">19</a>. This is not the case for the unsupported Firebird 1.0 and 1.5 versions. There this will behave similar to <code>disabled</code>, and you will need to explicitly specify <code>ignored</code> instead to get this behaviour.
@@ -12760,7 +12779,7 @@ Rights Reserved. (Contributor contact(s):
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-11-29 13:14:49 UTC
+Last updated 2023-01-02 12:55:05 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
