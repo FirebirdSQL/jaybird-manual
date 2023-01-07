@@ -9,6 +9,15 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidocExtensions
+}
+
+dependencies {
+    // Needed to make the docExtensions work on Gradle 7.6, likely no longer needed when asciidoctor-gradle 4.0
+    asciidocExtensions gradleApi()
+}
+
 asciidoctorj {
     version = '2.5.7'
     modules {
@@ -53,6 +62,7 @@ asciidoctorj {
 }
 
 asciidoctor {
+    configurations 'asciidocExtensions'
     baseDirFollowsSourceDir()
     sources {
         include 'jaybird_manual.adoc'
@@ -73,6 +83,7 @@ pdfThemes {
 }
 
 asciidoctorPdf {
+    configurations 'asciidocExtensions'
     baseDirFollowsSourceDir()
     sources {
         include 'jaybird_manual.adoc'
