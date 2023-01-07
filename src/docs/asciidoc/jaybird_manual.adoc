@@ -10,12 +10,7 @@ Roman Rokytskyy; Mark Rotteveel
 :outlinelevels: 6:1
 :imagesdir: images
 :icons: font
-:jaybird-version: 4
-:jaybird-full-version: 4.0.8
-:jaybird-example-version: {jaybird-full-version}.java11
-:jaybird-template-version: {jaybird-full-version}.<java>
-:jna-version: 5.5.0
-:jaybird5-full-version: 5.0.0-SNAPSHOT
+:jaybird5-full-version: 5.0.0
 :jaybird5-template-version: {jaybird5-full-version}.<java>
 :jaybird5-example-version: {jaybird5-full-version}.java11
 :jaybird4-full-version: 4.0.8
@@ -24,6 +19,11 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird3-full-version: 3.0.12
 :jaybird22-full-version: 2.2.15
 :jaybird-fbclient-version: 4.0.2.0
+:jaybird-version: 5
+:jaybird-full-version: {jaybird5-full-version}
+:jaybird-example-version: {jaybird5-example-version}
+:jaybird-template-version: {jaybird5-template-version}
+:jna-version: 5.12.1
 :min-support-firebird: 2.5
 :is-snapshot:
 
