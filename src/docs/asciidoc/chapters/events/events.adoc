@@ -1,68 +1,46 @@
 [[events]]
 == Working with Events
 
-Firebird supports events. Events are a feature that provides asynchronous notification to the 
-connected applications about events triggered by the database or other applications. Instead of 
-requiring applications to reread the database tables to check for the changes, events make it 
-possible to avoid that: triggers in the database can post an event in case of a change. And even 
-more, the event can be so specific that an application would need to reread only a limited set of 
-records, possibly only one. 
+Firebird supports events.
+Events are a feature that provides asynchronous notification to the connected applications about events triggered by the database or other applications.
+Instead of requiring applications to reread the database tables to check for the changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
+And even more, the event can be so specific that an application would need to reread only a limited set of records, possibly only one.
 
 This chapter describes the event mechanism in Firebird and the common usage scenarios.
 
 === Database events
 
-An _event_ is a message generated in a trigger, stored procedure or execute block that
-is delivered to subscribed applications. The event is characterized only
-by a name which is used when the event is posted, therefore two different
-events must have two different names. The applications that subscribe
-for events are required to specify the event names of interest, 
-no wildcards are allowed; and applications either provide a
-callback function that will be invoked in case of event or are required
-to poll for the posted events periodically.
+An _event_ is a message generated in a trigger, stored procedure or execute block that is delivered to subscribed applications.
+The event is characterized only by a name which is used when the event is posted, therefore two different events must have two different names.
+The applications that subscribe for events are required to specify the event names of interest, no wildcards are allowed;
+and applications either provide a callback function that will be invoked in case of event or are required to poll for the posted events periodically.
 
-Events are delivered to the application only on (after) commit of the transaction that generated 
-the event. Firebird does not provide any guarantees about the time of event delivery – it depends on 
-the load of the Firebird engine, application load, network delays between application and
-the database system. The database engine will continue operating even if no
-application subscribes to events or when the subscribed application
-crashed in the meantime.
+Events are delivered to the application only on (after) commit of the transaction that generated the event.
+Firebird does not provide any guarantees about the time of event delivery, it depends on the load of the Firebird engine, application load, network delays between application and the database system.
+The database engine will continue operating even if no application subscribes to events or when the subscribed application crashed in the meantime.
 
-It can also happen that multiple transactions will be committed before
-the events are delivered to the client system. But even in such case the
-callback function will be invoked only once, and only the event name and
-the count of the events will be passed as parameters. The same applies to
-periodical polling – the application will receive event names and counts of
-the events since last polling.
+It can also happen that multiple transactions will be committed before the events are delivered to the client system.
+But even in such case the callback function will be invoked only once, and only the event name and the count of the events will be passed as parameters.
+The same applies to periodical polling, the application will receive event names and counts of the events since last polling.
 
-Internally, Firebird can be thought to store the subscription information
-in a table where columns contain event names, rows correspond to the
-subscribed applications and the cells contain the count of the
-particular event for a particular application. When an event is posted in
-trigger or stored procedure, Firebird checks the subscription information
-and increases the event count for the subscribed applications. Another
-thread checks the table periodically and notifies the application about
-all new events relevant to the particular application. Such mechanism
-allows Firebird to keep the event notification table very
-smallfootnote:[For example, the effective size for 100 applications
-subscribed for 100 different events is about 40k in memory.] and to
-reduce the number of messages sent to the application.
+Internally, Firebird can be thought to store the subscription information in a table where columns contain event names, rows correspond to the subscribed applications and the cells contain the count of the particular event for a particular application.
+When an event is posted in trigger or stored procedure, Firebird checks the subscription information and increases the event count for the subscribed applications.
+Another thread checks the table periodically and notifies the application about all new events relevant to the particular application.
+Such mechanism allows Firebird to keep the event notification table very smallfootnote:[
+For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.]
+and to reduce the number of messages sent to the application.
 
 [NOTE]
 ====
-It is not possible to pass parameters with the event, e.g. an
-ID of the modified records. It is also not possible to encode such
-information in the event names – wildcards are not supported. For
-such cases, applications should maintain a change tracking table where
-the IDs of the modified records are stored and the event mechanism is
-used to tell the application that new records were added to the table.
+It is not possible to pass parameters with the event, e.g. an ID of the modified records.
+It is also not possible to encode such information in the event names, wildcards are not supported.
+For such cases, applications should maintain a change tracking table where the IDs of the modified records are stored and the event mechanism is used to tell the application that new records were added to the table.
 ====
 
 === Posting events
 
-Events are posted from PSQL procedural code (trigger, stored procedure, execute block, function)
-using the `POST_EVENT` command. It is possible to create a stored
-procedure with the sole purpose of posting events:
+Events are posted from PSQL procedural code (trigger, stored procedure, execute block, function) using the `POST_EVENT` command.
+It is possible to create a stored procedure with the sole purpose of posting events:
 
 [source,sql]
 .Example of posting events from PSQL code
@@ -73,14 +51,12 @@ AS BEGIN
 END
 ----
 
-Firebird 2.0 introduced a new command `EXECUTE BLOCK` which allows to
-execute PSQL statements within DSQL code:
+Firebird 2.0 introduced a new command `EXECUTE BLOCK` which allows to execute PSQL statements within DSQL code:
 
 [source,sql]
 .Using EXECUTE BLOCK to post events
 ----
-Statement stmt = connection.createStatement();
-try {
+try (Statement stmt = connection.createStatement()) {
   stmt.execute(
       "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
 } finally {
@@ -90,33 +66,32 @@ try {
 
 === Subscribing to events
 
-The design of the classes and interfaces in the `org.firebirdsql.event`
-package is similar to the Services API support – there is a central
-manager-class that establishes a database connection and provides
-service methods to work with the events, a callback interface that
-applications must implement to use the asynchronous event notification
-and an interface representing a database event with two properties –
-event name and occurrence count.
+The design of the classes and interfaces in the `org.firebirdsql.event` package is similar to the Services API support;
+there is a central manager-class that establishes a database connection and provides service methods to work with the events, a callback interface that applications must implement to use the asynchronous event notification and an interface representing a database event with two properties, event name and occurrence count.
 
-Applications have to configure the following properties before starting
-use of the implementation `EventManager` interface:
+Applications have to configure the following properties before starting use of the implementation `EventManager` interface:
 
 [cols="1,2,4",options="header",]
-|=======================================================================
+|===
 |Name |Type |Description
 
-|`host`
+a|`host` +
+`serverName`
 |`java.lang.String`
 |Name or the IP address of the host to which we subscribe for events. __Required__.
 
-|`port`
+a|`port` +
+`portNumber`
 |`int`
 |Port to which we connect to, 3050 by default.
 
-|`database`
+|`database` +
+`databaseName`
 |`java.lang.String`
 |Path to the database.
 The path is specified for the remote host but must be absolute. __Required__.
+
+3+a|NOTE: [.since]_Jaybird 5_ `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `databaseName`, which have been deprecated for removal in Jaybird 6.
 
 |`user`
 |`java.lang.String`
@@ -125,39 +100,86 @@ The path is specified for the remote host but must be absolute. __Required__.
 |`password`
 |`java.lang.String`
 |Password corresponding to the specified user. __Required__.
-|=======================================================================
 
-After configuring these properties, the application has to invoke the
-`connect()` method to establish a physical connection to the database.
-At this point the `EventManager` is ready to receive the event
-notifications.
+|roleName
+|String
+|Role name. _Optional_.
 
-Now the application developer has two choices: use asynchronous event
-notification or use methods that will block until an event is delivered
-or timeout occurs.
+|expectedDb
+|String
+a|[.since]_Jaybird 5_ With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+Value is a database path or alias the user can connect to. _Optional_.
+
+|authPlugins
+|String
+a|[.since]_Jaybird 4_ Comma-separated list of authentication plugins to use (ignored for Firebird 2.5 or earlier).
+Use `null` (the default) to use Jaybird defaults.
+
+|processId
+|int
+a|[.since]_Jaybird 5_ Process id to report to the server.
+
+|processName
+|String
+a|[.since]_Jaybird 5_ Process name to report to the server.
+
+|socketBufferSize
+|int
+a|[.since]_Jaybird 5_ Socket buffer size in bytes
+
+|soTimeout
+|int
+a|[.since]_Jaybird 5_ Socket blocking read timeout in milliseconds (`0` is OS default timeout)
+
+|connectTimeout
+|int
+a|[.since]_Jaybird 5_ Socket connect timeout in milliseconds (`0` is OS default timeout)
+
+|wireCrypt
+a|`String` or `WireCrypt`
+a|[.since]_Jaybird 3.0.4_ Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
+In Jaybird 3.0.4+ and Jaybird 4, the property is type `WireCrypt`.
+In Jaybird 5, the property is type `String`.
+
+|wireCryptAsEnum
+|WireCrypt
+a|[.since]_Jaybird 5_ Alternative to `WireCrypt` to use `WireCrypt` enum.
+
+|dbCryptConfig
+|String
+a|[.since]_Jaybird 3.0.4_ Database encryption config.
+See <<ref-dbcrypt>> for details.
+
+|wireCompression
+|boolean
+a|[.since]_Jaybird 4_ Enable wire compression (requires Firebird 3.0 or higher).
+Default is `false`.
+
+This property only affects the primary connection, not the event channel (secondary connection).
+
+|===
+
+After configuring these properties, the application has to invoke the `connect()` method to establish a physical connection to the database.
+At this point the `EventManager` is ready to receive the event notifications.
+
+Now the application developer has two choices: use asynchronous event notification or use methods that will block until an event is delivered or timeout occurs.
 
 ==== Asynchronous event notification
 
-The asynchronous event notification uses a separate daemon thread to
-wait for the event notifications and to deliver the events to the
-registered listeners. The listeners are added using the
-`addEventListener(String, EventListener)` method, where the first
-parameter contains the name of the event to register on
-and the second parameter – an instance of `EventListener` interface
-that will be notified about occurrences of this event. It is allowed to use the same
-instance of `EventListener` interface to listen on different events. The
-code below shows an example of using asynchronous event
-notification.
+The asynchronous event notification uses a separate daemon thread to wait for the event notifications and to deliver the events to the registered listeners.
+The listeners are added using the `addEventListener(String, EventListener)` method, where the first parameter contains the name of the event to register on and the second parameter, an instance of `EventListener` interface that will be notified about occurrences of this event.
+It is allowed to use the same instance of `EventListener` interface to listen on different events.
+The code below shows an example of using asynchronous event notification.
 
 [source,java]
 .Example of registering an event listener for asynchronous event notification
 ----
 EventManager eventManager = new FBEventManager();
 
-eventManager.setHost("localhost");
+eventManager.setServerName("localhost");
 eventManager.setUser("SYSDBA");
 eventManager.setPassword("masterkey");
-eventManager.setDatabase("c:/database/employee.fdb");
+eventManager.setDatabaseName("c:/database/employee.fdb");
 
 eventManager.connect();
 
@@ -174,22 +196,18 @@ eventManager.addEventListener("test_event",
 
 ==== Using blocking methods
 
-Alternatively, an application can use the synchronous methods, one that
-blocks until the named event is received – the `waitForEvent(String)`
-method, or one that will block until the named event is received or
-timeout specified in the second parameter occurs – the
-`waitForEvent(String, int)` method. The following shows an example of
-using the blocking methods.
+Alternatively, an application can use the synchronous methods, one that blocks until the named event is received -- the `waitForEvent(String)` method, or one that will block until the named event is received or timeout specified in the second parameter occurs -- the `waitForEvent(String, int)` method.
+The following shows an example of using the blocking methods.
 
 [source,java]
 .Example of blocking waiting for event with a specified timeout
 ----
 EventManager eventManager = new FBEventManager();
 
-eventManager.setHost("localhost");
+eventManager.setServerName("localhost");
 eventManager.setUser("SYSDBA");
 eventManager.setPassword("masterkey");
-eventManager.setDatabase("c:/database/employee.fdb");
+eventManager.setDatabaseName("c:/database/employee.fdb");
 
 eventManager.connect();
 

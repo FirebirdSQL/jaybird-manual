@@ -59,16 +59,16 @@ because of reasons that will be discussed later.
 
 A statement can be executed using the following methods:
 
-* `Statement.executeQuery(String)` – executes a SELECT statement and
+* `Statement.executeQuery(String)` -- executes a SELECT statement and
 returns a result set. If the specified statement does not produce a result set, 
 an `SQLException` is thrown after statement execution.
-* `Statement.executeUpdate(String)` – executes INSERT, UPDATE, DELETE or
-DDLfootnote:[DDL – Data Definition Language. This term is used to group
+* `Statement.executeUpdate(String)` -- executes INSERT, UPDATE, DELETE or
+DDLfootnote:[DDL -- Data Definition Language. This term is used to group
 all statements that are used to manipulate database schema, i.e.
 creation of tables, indices, views, etc.] statements and returns the
 number of updated rows. If the specified statement is a query, an
 `SQLException` is thrown.
-* `Statement.execute(String)` – executes a statement and returns `true`
+* `Statement.execute(String)` -- executes a statement and returns `true`
 when the statement returned a result set, otherwise an update was
 executed and `false` is returned. You can use `Statement.getResultSet()`
 method to get the result of the executed query or you can use
@@ -129,7 +129,7 @@ read the chapter <<resultsets>> for more details.
 However, here it is done intentionally to emphasize that a single
 object is used to execute `SELECT` and `UPDATE`/`INSERT` statements. It also
 shows how to check whether the executed statement modified expected
-number of rows – the application first tries to update the account and only
+number of rows -- the application first tries to update the account and only
 if no rows were updated, it inserts new record into the `accounts`
 table.
 
@@ -296,9 +296,9 @@ documentation of your connection pool for more information.
 === The java.sql.PreparedStatement interface
 
 As we have seen, Jaybird already performs internal optimization when it
-comes to multiple statement execution – it can reuse the allocated
-statement handle in subsequent calls. However this improvement is very
-small and sometimes can even be neglible compared to the time
+comes to multiple statement execution -- it can reuse the allocated
+statement handle in subsequent calls. However, this improvement is very
+small and sometimes can even be negligible compared to the time
 needed to compile the SQL statement into the BLR form.
 
 The `PreparedStatement` interface addresses such inefficiencies. An object
@@ -310,8 +310,8 @@ to go directly to the step 4 for repeated executions.
 However, executing the same statement with the same values makes little
 sense, unless we want to fill the table with the same data, which
 usually is not the case. Therefore, JDBC provides support for 
-parametrized statements – SQL statements where literals are replaced
-with question marks (`?`), so called positional parameters. The application then assigns values to 
+parametrized statements -- SQL statements where literals are replaced
+with question marks (`?`), so-called positional parameters. The application then assigns values to
 the parameters before executing the statement.
 
 Our first example in this chapter can be rewritten as shown below. At first glance the code becomes 
@@ -356,8 +356,7 @@ try (PreparedStatement stmt1 = connection.prepareStatement(
 }
 ----
 
-* First, instead of using just one statement object we have to use three
-– one per statement.
+* First, instead of using just one statement object we have to use three, one per statement.
 * Second, before executing the statement we have to set parameters
 first. As is shown in the example, parameters are referenced by
 their position. The `PreparedStatement` interface provides setter
@@ -917,9 +916,9 @@ number of parameters and the database server will generate an error.
 === Batch Updates
 
 Batch updates are intended to group multiple update operations to be submitted to a database server to be processed at once.
-Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4.0 and earlier emulate it by issuing separate update commands.
+Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4 and earlier emulate it by issuing separate update commands.
 
-Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
+[.since]_Jaybird 5_ Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
 
 ==== Batch Updates with java.sql.Statement interface
 
@@ -934,7 +933,7 @@ Adding a statement that returns result set is an error.
 try (Statement stmt = connection.createStatement()) {
 
   stmt.addBatch("UPDATE products " + 
-      "SET amount = amount – 1 WHERE id = 1");
+      "SET amount = amount - 1 WHERE id = 1");
   stmt.addBatch("INSERT INTO orders(id, amount) VALUES(1, 1)");
     
   int[] updateCounts = stmt.executeBatch();
@@ -957,11 +956,8 @@ server. In case of successful execution of the complete batch, it
 returns an array of integers containing update counts for each of the
 commands. Possible values are:
 
-* 0 or positive value – an update count for the corresponding update/DDL
-statement.
-* `Statement.SUCCESS_NO_INFO` – driver does not have any information
-about the update count, but it knows that statement was executed
-successfully.
+* 0 or positive value -- an update count for the corresponding update/DDL statement.
+* `Statement.SUCCESS_NO_INFO` -- driver does not have any information about the update count, but it knows that statement was executed successfully.
 
 The `Statement.executeBatch` method closes the current result set if one
 is open. After successful execution the batch is cleared. Calling

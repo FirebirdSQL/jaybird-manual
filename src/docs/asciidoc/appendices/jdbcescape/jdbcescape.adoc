@@ -72,7 +72,7 @@ Below you will find the list of JDBC functions and whether they have a correspon
 |TRUNCATE(number, places) |X | |`number` truncated to `places` places ([.since]_Jaybird 3_)
 |=======================================================================
 
-Legend: X – available in this mode.
+Legend: X -- available in this mode.
 
 === String Functions
 
@@ -139,7 +139,7 @@ this could be a four-digit SOUNDEX code, a phonetic representation of each word,
 |UCASE(string) |X |X |Converts all lowercase characters in `string` to uppercase
 |=======================================================================
 
-Legend: X – available in this mode.
+Legend: X -- available in this mode.
 
 === Time and Date Functions
 
@@ -194,7 +194,7 @@ The value for field may be one of the following: `YEAR`, `MONTH`, `DAY`, `HOUR`,
 |YEAR(date) |X |X |An integer representing the year component of `date`
 |=======================================================================
 
-Legend: X – available in this mode.
+Legend: X -- available in this mode.
 
 === System Functions
 
@@ -210,7 +210,7 @@ Legend: X – available in this mode.
 |USER() |X | |User name in the DBMS ([.since]_Jaybird 3_)
 |=======================================================================
 
-Legend: X – available in this mode.
+Legend: X -- available in this mode.
 
 === Conversion Functions
 
@@ -255,7 +255,7 @@ Since Jaybird 4, these type names can also be prefixed with `SQL_`.
 
 |=======================================================================
 
-Legend: X – available in this mode.
+Legend: X -- available in this mode.
 
 ([.since]_Jaybird 4_) The following improvements where added to `CONVERT` support in Jaybird 4:
 

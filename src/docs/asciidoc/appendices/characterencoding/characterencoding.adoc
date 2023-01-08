@@ -11,12 +11,12 @@ Firebird uses character encodings in two different areas:
 
 * The database encoding defines the character set in which `CHAR`, `VARCHAR` and `BLOB SUB_TYPE TEXT` fields are physically stored on the disk.
 There is a default database encoding that is specified during database creation.
-It is also possible to specify character sets on a per column basis.
+It is also possible to specify character sets on a per-column basis.
 * The client connection encoding defines a character set in which client will send and expects to receive character data.
 This encoding might or might not match the database default encoding.
 
 Firebird performs translation between character sets of the client connection and the character set of the content.
-The list of allowed character sets as well as the allowed translations between them are specified in the `fbintl` shared library located in the `intl/` directory of the Firebird installation.footnote:[On Windows this library is represented by `fbintl.dll`, on Linux – `libfbintl.so`]
+The list of allowed character sets as well as the allowed translations between them are specified in the `fbintl` shared library located in the `intl/` directory of the Firebird installation.footnote:[On Windows this library is represented by `fbintl.dll`, on Linux, `libfbintl.so`]
 There is also a special character set NONE that tells Firebird not to interpret the contents of the character field.
 
 Firebird uses the following algorithm when performing translations:
@@ -38,7 +38,7 @@ Additionally, Firebird requires a connection character set to be specified in co
 There are two boundary cases that we will consider here, one when Firebird database was created with defaultfootnote:[The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.] character set `UTF8`, another when the Firebird database was created without specifying the character set (i.e. character set `NONE`).
 
 The character set `UTF8` in Firebird 2.0 and higher is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
-Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earlier – it did not support proper uppercasing and correct sorting.
+Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earlier -- it did not support proper uppercasing and correct sorting.
 These issues were addressed in Firebird 2.0 and at the moment nothing prevents developers from using Unicode in the database and on the client side, which greatly simplifies the internationalization and localization of the applications.
 
 ==== The UTF8 character set

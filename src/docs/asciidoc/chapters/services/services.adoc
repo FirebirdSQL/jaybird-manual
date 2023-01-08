@@ -32,10 +32,8 @@ standalone object and does not require an open connection to the server.
 [[servicemanager]]
 === ServiceManager[[_servicemanager]]
 
-The `ServiceManager` interface and the `FBServiceManager` class are
-defined as the common superclasses providing setters and getters for
-common properties as well as some common routines. The following
-properties can be specified:
+The `ServiceManager` interface and the `FBServiceManager` class are defined as the common superclasses providing setters and getters for common properties as well as some common routines.
+The following properties can be specified:
 
 [cols="2m,2m,4",options="header",]
 |===
@@ -51,7 +49,7 @@ a|`port` +
 |int
 |Port to which we make the request, 3050 by default.
 
-3+a|NOTE: [.since]_Jaybird 5_ `serverName` and `portNumber` are replacements for `host` and `port`, which have been deprecated for removal
+3+a|NOTE: [.since]_Jaybird 5_ `serverName` and `portNumber` are replacements for `host` and `port`, which have been deprecated for removal in Jaybird 6.
 
 |database
 |String
@@ -125,21 +123,15 @@ Default is `false`.
 |Stream into which the output of the remote service will be written to. _Optional_.
 |===
 
-The last parameter requires some explanation. The calls to all
-Services API routines are asynchronous. The client application can start
-the call, but there are no other means to find out whether execution of
-the service call is finished or not except reading the output of the
-service call – EOF in this case means that execution is finished.
+The last parameter requires some explanation.
+The calls to all Services API routines are asynchronous.
+The client application can start the call, but there are no other means to find out whether execution of the service call is finished or not except reading the output of the service call -- EOF in this case means that execution is finished.
 
-The `FBServiceManager` converts the asynchronous calls into synchronous
-by constantly polling the service output stream. If the `logger` property is
-specified the received data is copied into the specified
-`OutputStream`, otherwise it is simply ignored and the EOF-marker is
-being watched.
+The `FBServiceManager` converts the asynchronous calls into synchronous by constantly polling the service output stream.
+If the `logger` property is specified the received data is copied into the specified `OutputStream`, otherwise it is simply ignored and the EOF-marker is being watched.
 
-This behavior can be changed by overriding the appropriate method in the
-`FBServiceManager` class and/or subclasses. The only requirement is to
-detach from the service manager when it is no longer needed.
+This behavior can be changed by overriding the appropriate method in the `FBServiceManager` class and/or subclasses.
+The only requirement is to detach from the service manager when it is no longer needed.
 
 [[services-backup-and-restore]]
 === Backup and restore[[_backup_and_restore]]
@@ -258,8 +250,8 @@ If the `logger` property was set, the output of the service will be written into
 // backup the database
 BackupManager backupManager = new FBBackupManager();
 
-backupManager.setHost("localhost");
-backupManager.setPort(3050);
+backupManager.setServerName("localhost");
+backupManager.setPortNumber(3050);
 backupManager.setUser("SYSDBA");
 backupManager.setPassword("masterkey");
 backupManager.setLogger(System.out);
@@ -273,8 +265,8 @@ backupManager.backupDatabase();
 // and restore it back
 BackupManager restoreManager = new FBBackupManager();
 
-restoreManager.setHost("localhost");
-restoreManager.setPort(3050);
+restoreManager.setServerName("localhost");
+restoreManager.setPortNumber(3050);
 restoreManager.setUser("SYSDBA");
 restoreManager.setPassword("masterkey");
 restoreManager.setLogger(System.out);
@@ -326,7 +318,7 @@ Ensure that the restored database contains correct data afterwards.
 The backup utility can't backup database with in-limbo transactions.
 When such situation appears, backup has to wait until the decision about the outcome of the in-limbo transaction.
 After a wait timeout, an exception is thrown and backup is aborted.
-This option allows to work around this situation –- gbak looks for the most recent committed version of the record and writes it into the backup.
+This option allows to work around this situation -- gbak looks for the most recent committed version of the record and writes it into the backup.
 
 |BACKUP_METADATA_ONLY 
 |Backup metadata only.
@@ -400,8 +392,8 @@ Example of using these options:
 ----
 BackupManager restoreManager = new FBBackupManager();
 
-restoreManager.setHost("localhost");
-restoreManager.setPort(3050);
+restoreManager.setServerName("localhost");
+restoreManager.setPortNumber(3050);
 restoreManager.setUser("SYSDBA");
 restoreManager.setPassword("masterkey");
 restoreManager.setLogger(System.out);
@@ -556,8 +548,8 @@ No output is written to the `logger`.
 ----
 NBackupManager backupManager = new FBNBackupManager();
 
-backupManager.setHost("localhost");
-backupManager.setPort(3050);
+backupManager.setServerName("localhost");
+backupManager.setPortNumber(3050);
 backupManager.setUser("SYSDBA");
 backupManager.setPassword("masterkey");
 
@@ -579,22 +571,19 @@ backupManager.restoreDatabase();
 
 [IMPORTANT]
 ====
-Starting with Firebird 3, user management through the Services API has been
-deprecated. You should use the SQL DDL statements for user management instead.
+Starting with Firebird 3, user management through the Services API has been deprecated.
+You should use the SQL DDL statements for user management instead.
 ====
 
-The next service available is the user management. The routines are
-defined in the `UserManager` interface and are implemented in the
-`FBUserManager` class. Additionally, there is an `User` interface
-providing getters and setters for properties of a user account on the
-server and corresponding implementation in the `FBUser` class.footnote:[The
-class implementation is a simple bean publishing the properties via
-getters and setters. You can replace it with any other implementation of
-the `User` interface.] The available properties of the `FBUser` class
-are:
+The next service available is the user management.
+The routines are defined in the `UserManager` interface and are implemented in the `FBUserManager` class.
+Additionally, there is an `User` interface providing getters and setters for properties of a user account on the server and corresponding implementation in the `FBUser` class.footnote:[
+The class implementation is a simple bean publishing the properties via getters and setters.
+You can replace it with any other implementation of the `User` interface.]
+The available properties of the `FBUser` class are:
 
 [cols="2,1,4",options="header",]
-|=======================================================================
+|===
 |Name |Type |Description
 
 |`userName` 
@@ -626,13 +615,12 @@ Getter return value only if the password had been set
 |`groupId` 
 |`int` 
 |ID of the group on Unix. Optional.
-|=======================================================================
+|===
 
-The management class, `FBUserManager` has following methods to
-manipulate the user accounts on the server:
+The management class, `FBUserManager` has the following methods to manipulate the user accounts on the server:
 
 [cols="3,4",options="header",]
-|=======================================================================
+|===
 |Method |Description
 
 |`getUsers():Map` 
@@ -647,7 +635,7 @@ The instances of `FBUser` class do not contain passwords, the corresponding prop
 
 |`deleteUser(User)` 
 |Delete the user account on the server.
-|=======================================================================
+|===
 
 An example of using the `FBUserManager` class:
 
@@ -656,8 +644,8 @@ An example of using the `FBUserManager` class:
 ----
 UserManager userManager = new FBUserManager();
 
-userManager.setHost("localhost");
-userManager.setPort(3050);
+userManager.setServerName("localhost");
+userManager.setPortNumber(3050);
 userManager.setUser("SYSDBA");
 userManager.setPassword("masterkey");
 
@@ -685,20 +673,16 @@ interface and its implementation, the `FBMaintenanceManager` class.
 
 ==== Database shutdown and restart
 
-One of the most often used maintenance operations is database shutdown
-and/or bringing it back online. When the database was shutdown only the
-user that initiated the shutdown, either SYSDBA or the database owner, can
-connect to the database and perform other tasks, e.g. metadata
-modification or database validation and repair.
+One of the most often used maintenance operations is database shutdown and/or bringing it back online.
+When the database was shutdown only the user that initiated the shutdown, either SYSDBA or the database owner, can connect to the database and perform other tasks, e.g. metadata modification or database validation and repair.
 
-The database shutdown is performed by `shutdownDatabase(int, int)`
-method. The first parameter is the shutdown mode, the second – maximum
-allowed time for operation.
+The database shutdown is performed by `shutdownDatabase(int, int)` method.
+The first parameter is the shutdown mode, the second -- maximum allowed time for operation.
 
 There are three shutdown modes:
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Shutdown mode |Description
 
 |`SHUTDOWN_ATTACH` 
@@ -720,13 +704,11 @@ New connections and transactions are not prohibited during the wait.
 
 After that any running transaction won't be able to commit.
 
-|=======================================================================
+|===
 
-After database shutdown, the owner of the database or SYSDBA can
-connect to it and perform maintenance tasks, e.g. migration to the new
-data modelfootnote:[Until Firebird 2.0 adding a foreign key constraint
-required exclusive access to the database.], validation of the
-database, changing the database file configuration.
+After database shutdown, the owner of the database or SYSDBA can connect to it and perform maintenance tasks, e.g. migration to the new data modelfootnote:[
+Until Firebird 2.0 adding a foreign key constraint required exclusive access to the database.],
+validation of the database, changing the database file configuration.
 
 To bring the database back online use the `bringDatabaseOnline()` method.
 
@@ -760,33 +742,26 @@ which the management class is connected.
 
 ==== Database validation and repair
 
-The Firebird server does its best to keep the database file in a
-consistent form. In particular this is achieved by a special algorithm
-called _careful writes_ which guarantees that the server writes data on
-disk in such a manner that despite events like a server crash the database file
-always remains in a consistent state. Unfortunately, it is still possible
-that under certain conditions, e.g. crash of the file system or hardware
-failure, the database file might become corrupted. Firebird server can
-detect such cases including
+The Firebird server does its best to keep the database file in a consistent form.
+In particular this is achieved by a special algorithm called _careful writes_ which guarantees that the server writes data on disk in such a manner that despite events like a server crash the database file always remains in a consistent state.
+Unfortunately, it is still possible that under certain conditions, e.g. crash of the file system or hardware failure, the database file might become corrupted. Firebird server can detect such cases including
 
-* Orphan pages. These are the database pages that were allocated for
-subsequent write, but due to a crash were not used. Such pages have to
-be marked as unused to return storage space back to the application;
-* Corrupted pages. These are the database pages that were caused by the
-operating system or hardware failures.
+* Orphan pages.
+These are the database pages that were allocated for subsequent write, but due to a crash were not used.
+Such pages have to be marked as unused to return storage space back to the application;
+* Corrupted pages.
+These are the database pages that were caused by the operating system or hardware failures.
 
-The `MaintenanceManager` class provides a `validateDatabase()` method to
-perform simple health check of the database, and releasing the orphan
-pages if needed. It also reports presence of the checksum errors. The
-output of the routine is written to the output stream configured in the
-`logger` property.
+The `MaintenanceManager` class provides a `validateDatabase()` method to perform simple health check of the database, and releasing the orphan pages if needed.
+It also reports presence of the checksum errors.
+The output of the routine is written to the output stream configured in the `logger` property.
 
-The `validateDatabase(int)` method can be used to customize the
-validation process:
+The `validateDatabase(int)` method can be used to customize the validation process:
 
 [cols="1,2",options="header",]
-|=======================================================================
-|Validation mode |Description
+|===
+|Validation mode
+|Description
 
 |`VALIDATE_READ_ONLY` 
 |Perform read-only validation. 
@@ -803,52 +778,38 @@ Can be used for periodical health-check of the database.
 The checksum error means that the database page was overwritten in a random order and the data stored on it are corrupted.
 When this option is specified, the validation process will succeed even if checksum errors are present.
 
-|=======================================================================
+|===
 
-In order to repair the corrupted database use the `markCorruptRecords()`
-method which marks the corrupted records as unavailable. This method is
-equivalent to `gfix -mend` command. After this operation database can be
-backed up and restored to a different place.
+In order to repair the corrupted database use the `markCorruptRecords()` method which marks the corrupted records as unavailable.
+This method is equivalent to `gfix -mend` command.
+After this operation database can be backed up and restored to a different place.
 
 [CAUTION]
 ====
-The presence of the checksum errors and subsequent use of
-`markCorruptedRecords()` method will mark all corrupted data as unused
-space. You have to perform a careful check after backup/restore cycle to
-assess the damage.
+The presence of the checksum errors and subsequent use of `markCorruptedRecords()` method will mark all corrupted data as unused space.
+You have to perform a careful check after backup/restore cycle to assess the damage.
 ====
 
 ==== Limbo transactions
 
-Limbo transactions are transactions that were prepared for commit
-but were never committed. This can happen when, for example, the database
-was accessed by JTA-enabled applications from Javafootnote:[Another
-reason for limbo transactions are multidatabase transactions which can
-be initiated via native Firebird API. However, since Jaybird does not
-provide methods to initiate them, we do not consider them in this
-manual.]. The in-limbo transactions affect the normal database
-operation, since the records that were modified in that transactions are
-not available – Firebird does not know whether the new version will be
-committed or rolled back and blocks access to them. Also in-limbo
-transactions prevents garbage collection, since the garbage collector
-does not know whether it can discard the record versions of the in-limbo
-transaction.
+Limbo transactions are transactions that were prepared for commit but were never committed.
+This can happen when, for example, the database was accessed by JTA-enabled applications from Javafootnote:[
+Another reason for limbo transactions are multi-database transactions which can be initiated via native Firebird API.
+However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.].
+The in-limbo transactions affect the normal database operation, since the records that were modified in that transactions are not available, Firebird does not know whether the new version will be committed or rolled back and blocks access to them.
+Also, in-limbo transactions prevents garbage collection, since the garbage collector does not know whether it can discard the record versions of the in-limbo transaction.
 
-Jaybird contains functionality to allow the JTA-enabled
-transaction coordinator to recover the in-limbo transactions and either
-commit them or perform a rollback. For the cases when this is not
-possible `MaintenanceManager` provides the following methods to perform this
-in interactive mode:
+Jaybird contains functionality to allow the JTA-enabled transaction coordinator to recover the in-limbo transactions and either commit them or perform a rollback.
+For the cases when this is not possible `MaintenanceManager` provides the following methods to perform this in interactive mode:
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Method |Description
 
 |`listLimboTransactions()` 
 |Method lists IDs of all in-limbo transactions to the output stream specified in logger property.
 
-The application has to either parse the output to commit or rollback the transactions in some 
-automated fashion or it should present the output to the user and let him/her make a decision. 
+The application has to either parse the output to commit or rollback the transactions in some automated fashion, or it should present the output to the user and let him/her make a decision.
 Alternatively, use one of the following two methods
 
 |`limboTransactionsAsList()`
@@ -862,42 +823,26 @@ Alternatively, use one of the following two methods
 
 |`rollbackTransaction(long)` 
 |Rollback the transaction with the specified ID.
-|=======================================================================
+
+|===
 
 ==== Sweeping the database
 
-The in-limbo transactions are not the only kind of transactions that
-prevent garbage collection. Another type are transactions are those that
-were finished by "rollback" and the changes made in such transactions
-were not automatically undone by the internal savepoint mechanism,
-e.g. when there were a lot of changes made in the transaction (e.g.
-10,000 records and more). Such transactions are marked as "rollback"
-transactions on Transaction Inventory Page and this prevents advancing the
-so-called Oldest Interesting Transaction (OIT) – ID of the oldest
-transaction which created record versions that are relevant to any of
-the currently running transactions. On each access to the records,
-Firebird has to check all the record versions between the current
-transaction and the OIT, which leads to performance degradation on large
-databases. In order to solve the issue Firebird periodically starts a
-database sweeping process, that traverses all database records, removes
-the changes made by the rolled back transactions and moves forward the
-OIT.footnote:[For more information please read article by Ann Harrison
-"Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep",
-available, for example, at
-https://www.ibphoenix.com/resources/documents/design/doc_21]
+The in-limbo transactions are not the only kind of transactions that prevent garbage collection.
+Another type are transactions are those that were finished by "rollback" and the changes made in such transactions were not automatically undone by the internal savepoint mechanism, e.g. when there were a lot of changes made in the transaction (e.g. 10,000 records and more).
+Such transactions are marked as "rollback" transactions on Transaction Inventory Page and this prevents advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
+On each access to the records, Firebird has to check all the record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
+In order to solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes the changes made by the rolled back transactions and moves forward the OIT.footnote:[
+For more information please read article by Ann Harrison "`Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep`", available, for example, at https://www.ibphoenix.com/resources/documents/design/doc_21]
 
-The sweep process is controlled by a threshold parameter – a difference
-between the Next Transaction and OIT, by default it equal to 20,000.
-While this value is ok for the average database, a DBA can decide to
-increase or decrease the number to fit the database usage scenario.
-Alternatively, a DBA can trigger the sweep process manually regardless of
-the current difference between Next Transaction and OIT.
+The sweep process is controlled by a threshold parameter, a difference between the Next Transaction and OIT, by default it equal to 20,000.
+While this value is OK for the average database, a DBA can decide to increase or decrease the number to fit the database usage scenario.
+Alternatively, a DBA can trigger the sweep process manually regardless of the current difference between Next Transaction and OIT.
 
-The `MaintenanceManager` provides following methods to help with
-database sweeping:
+The `MaintenanceManager` provides following methods to help with database sweeping:
 
 [cols="1,3",options="header",]
-|=======================================================================
+|===
 |Method |Description
 
 |`setSweepThreshold(int)` 
@@ -906,15 +851,15 @@ Default value is 20,000.
 
 |`sweepDatabase()` 
 |Perform the sweep regardless of the current difference between Next Transaction and OIT.
-|=======================================================================
+
+|===
 
 ==== Other database properties
 
-There are a few other properties of the database that can be set via
-`MaintenanceManager`:
+There are a few other properties of the database that can be set via `MaintenanceManager`:
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Method |Description
 |`setDatabaseAccessMode(int)` 
 a|Change the access mode of the database. 
@@ -937,41 +882,47 @@ This setting applies to this specific database, overriding the system-wide confi
 |`setForcedWrites(boolean)` 
 |Change the forced writes setting for the database.
 
-When forced writes are switched off, the database engine does not enforce flushing pending changes 
-to disk and they are kept in OS cache. Tthe same page is changed again later, the write happens in 
-memory, which in many cases increases the performance. However, in case of OS or hardware crashes 
-the database will be corrupted.
+When forced writes are switched off, the database engine does not enforce flushing pending changes to disk, and they are kept in OS cache.
+If the same page is changed again later, the write happens in memory, which in many cases increases the performance.
+However, in case of OS or hardware crashes the database will be corrupted.
 
 |`setPageFill(int)`
 a|Set the page fill factor.
 
 Firebird leaves 20% of free space on each database page for future record versions.
-It is possible to tell Firebird not to reserve the space, this makes sense for read-only databases, 
-since more data fit the page, which increases performance.
+It is possible to tell Firebird not to reserve the space, this makes sense for read-only databases, since more data fit the page, which increases performance.
 
 Possible values are:
 
-* `PAGE_FILL_FULL` – do not reserve additional space for future versions;
-* `PAGE_FILL_RESERVE` – reserve the free space for future record versions.
+* `PAGE_FILL_FULL` -- do not reserve additional space for future versions;
+* `PAGE_FILL_RESERVE` -- reserve the free space for future record versions.
 
-|=======================================================================
+|===
+
+[#services-table-statistics-manager]
+=== Table statistics of a connection (experimental)
+
+[.since]_Jaybird 5_
+
+A new class was added in Jaybird 5, `org.firebirdsql.management.FBTableStatisticsManager`, which can be used to retrieve the table statistics of a connection.
+
+Create an instance with `FBTableStatisticsManager#of(java.sql.Connection)` -- the connection must unwrap to a `FirebirdConnection` -- and retrieve a snapshot of the statistics with `FBTableStatisticsManager#getTableStatistics()`.
+
+[NOTE]
+====
+This is an experimental feature.
+Its API may change in point releases, or it may be removed or replaced entirely in a future major release.
+====
 
 === Database statistics
 
-And last but not least is the `StatisticsManager` interface and
-corresponding implementation in the `FBStatisticsManager` class, which
-allow to obtain statistical information for the database, like page
-size, values of OIT and Next transactions, database dialect, database
-page allocation and its distribution.
+And last but not least is the `StatisticsManager` interface and corresponding implementation in the `FBStatisticsManager` class, which allow to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.
 
-The following methods provide the functionality equivalent to the
-`gstat` command line tool, the output of the commands is written to the
-output stream specified in the `logger` property. It is the
-responsibility of the application to correctly parse the text output if
-needed.
+The following methods provide the functionality equivalent to the `gstat` command line tool, the output of the commands is written to the output stream specified in the `logger` property.
+It is the responsibility of the application to correctly parse the text output if needed.
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Method |Description
 
 |`getDatabaseStatistics()` 
@@ -994,5 +945,4 @@ Possible values are (bit mask, can be combined):
 |Get statistic information for the specified tables.
 
 This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.
-|=======================================================================
-
+|===

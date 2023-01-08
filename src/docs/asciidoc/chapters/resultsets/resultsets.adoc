@@ -1,9 +1,7 @@
 [[resultsets]]
 == Working with result sets
 
-When a SELECT statement is executed, the results of the query
-are returned through the implementation of the `java.sql.ResultSet`
-interface.
+When a SELECT statement is executed, the results of the query are returned through the implementation of the `java.sql.ResultSet` interface.
 
 === ResultSet properties
 
@@ -12,22 +10,13 @@ interface.
 
 The JDBC specification defines three types of result sets
 
-* `TYPE_FORWARD_ONLY` – the result set is not scrollable, cursor can
-only move forward. When the `TRANSACTION_READ_COMMITTED` isolation level
-is used, the result set will return all rows that are satisfying the
-search condition at the moment of fetch (which will be every _fetch size_ calls to
-`ResultSet.next()`). In other
-cases result set will return only rows that were visible at the moment
-of the transaction start.
-* `TYPE_SCROLL_INSENSITIVE` – the result set is scrollable, the cursor
-can move back and forth, can be positioned on the specified row. Only
-rows satisfying the condition at the time of query execution are
-visible.
+* `TYPE_FORWARD_ONLY` -- the result set is not scrollable, cursor can only move forward.
+When the `TRANSACTION_READ_COMMITTED` isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which will be every _fetch size_ calls to `ResultSet.next()`).
+In other cases, the result set will return only rows that were visible at the moment of the transaction start.
+* `TYPE_SCROLL_INSENSITIVE` -- the result set is scrollable, the cursor can move back and forth, can be positioned on the specified row.
+Only rows satisfying the condition at the time of query execution are visible.
 * `TYPE_SCROLL_SENSITIVE`, is not supported by Firebird and Jaybird.
-Jaybird allows an application to ask for this type of result set, however
-in compliance with the JDBC specification, the type is "downgraded" to the
-`TYPE_SCROLL_INSENSITIVE` and a corresponding warning is added to the connection
-object.
+Jaybird allows an application to ask for this type of result set, however in compliance with the JDBC specification, the type is "downgraded" to the `TYPE_SCROLL_INSENSITIVE` and a corresponding warning is added to the connection object.
 
 [NOTE]
 ====
@@ -39,61 +28,43 @@ This can have adverse effect on the system memory usage and performance when the
 [.since]_Firebird 5.0_
 
 Starting with Firebird 5.0, server-side scrollable cursors are supported.
-Jaybird 5 introduced support for non-holdable result set when the connection property `scrollableCursor` is set to value `SERVER`, and the connection is a pure Java connection (not native or embedded).
+Jaybird 5 introduced support for scrolling non-holdable result set when the connection property `scrollableCursor` is set to value `SERVER`, and the connection is a pure Java connection (not native or embedded).
 A future version may enable this behaviour by default.
 ====
 
 [[resultsets-concurrency]]
 ==== ResultSet Concurrency
 
-Result set concurrency specifies whether the result set object can be
-updated directly or a separate SQL request should be used to update the
-row. Result sets that allow direct modification using the
-`ResultSet.updateXXX` methods are usually used in GUI applications which
-allow in-place editing of the underlying result set.
+Result set concurrency specifies whether the result set object can be updated directly or a separate SQL request should be used to update the row.
+Result sets that allow direct modification using the `ResultSet.updateXXX` methods are usually used in GUI applications which allow in-place editing of the underlying result set.
 
-The result set concurrency is specified during statement creation
-and cannot be changed later. Jaybird supports two types of result set
-concurrency:
+The result set concurrency is specified during statement creation and cannot be changed later. Jaybird supports two types of result set concurrency:
 
-* `CONCUR_READ_ONLY` is available for all types of result sets. It tells
-the driver that direct update of the result set is not possible and all
-`ResultSet.updateXXX` methods should throw an exception.
-* `CONCUR_UPDATABLE` is supported only under certain conditions that are
-needed for the driver to correctly construct a DML request that will
-modify exactly one row. These conditions are:
-** the SELECT statement that generated the result set references only
-one table;
-** all columns that are not referenced by the SELECT statement allow
-`NULL` values, otherwise it won't be possible to insert new rows;
-** the SELECT statement does not contain the `DISTINCT` predicate, aggregate
-functions, joined tables, or stored procedures;
-** the SELECT statement references all columns of the tables primary
-key definition or the `RDB$DB_KEY` column.
+* `CONCUR_READ_ONLY` is available for all types of result sets.
+It tells the driver that direct update of the result set is not possible and all `ResultSet.updateXXX` methods should throw an exception.
+* `CONCUR_UPDATABLE` is supported only under certain conditions that are needed for the driver to correctly construct a DML request that will modify exactly one row.
+These conditions are:
+** the SELECT statement that generated the result set references only one table;
+** all columns that are not referenced by the SELECT statement allow `NULL` values, otherwise it won't be possible to insert new rows;
+** the SELECT statement does not contain the `DISTINCT` predicate, aggregate functions, joined tables, or stored procedures;
+** the SELECT statement references all columns of the tables primary key definition or the `RDB$DB_KEY` column.
 
 [[resultsets-holdability]]
 ==== ResultSet Holdability
 
-Result set holdability informs the driver whether result sets should be kept
-open across commits. `ResultSet.HOLD_CURSORS_OVER_COMMIT` tells the
-driver to keep the result set object open, while
-`ResultSet.CLOSE_CURSORS_AT_COMMIT` tells driver to close them on
-commit.
+Result set holdability informs the driver whether result sets should be kept open across commits.
+`ResultSet.HOLD_CURSORS_OVER_COMMIT` tells the driver to keep the result set object open, while `ResultSet.CLOSE_CURSORS_AT_COMMIT` tells driver to close them on commit.
 
-When an application calls `Connection.commit()`, the Firebird server closes
-all open result sets. It is not possible to tell the server to keep a
-result set open over commit unless "commit retaining" mode is used. This
-mode is global for the complete connection and is not suitable for
-holdability control on a statement level. Use of "commit retaining" mode is believed
-to have an undesired side-effect for read-write transactions as it
-inhibits garbage collection. Because of these reasons "commit
-retaining" is not used in Jaybird during normal execution. Applications
-are able to commit the transaction keeping the result sets open by
-executing a `"COMMIT RETAIN"` SQL statement.
+When an application calls `Connection.commit()`, the Firebird server closes all open result sets.
+It is not possible to tell the server to keep a result set open over commit unless "commit retaining" mode is used.
+This mode is global for the complete connection and is not suitable for holdability control on a statement level.
+Use of "commit retaining" mode is believed to have an undesired side effect for read-write transactions as it inhibits garbage collection.
+Because of these reasons "commit retaining" is not used in Jaybird during normal execution.
+Applications are able to commit the transaction keeping the result sets open by executing a "`COMMIT RETAIN`" SQL statement.
 
-To support holdable result sets, Jaybird will upgrade the result set to 
-`TYPE_SCROLL_INSENSITIVE` to cache all rows locally, even if you asked for a `TYPE_FORWARD_ONLY` 
-result set. See also <<resultsets-types>>.
+To support holdable result sets, Jaybird will upgrade the result set to `TYPE_SCROLL_INSENSITIVE` to cache all rows locally, even if you asked for a `TYPE_FORWARD_ONLY`
+result set.
+See also <<resultsets-types>>.
 
 [NOTE]
 ====
@@ -103,19 +74,13 @@ Server-side scrollable cursors do not support the holdable behaviour.
 
 === ResultSet manipulation
 
-`ResultSet` objects are created when either
-`Statement.executeQuery(String)` or `Statement.getResultSet()` methods
-are called, or when obtaining the generated keys from `Statement.getGeneratedKeys()`. `Statement.getResultSet()` is
-used in combination with
-`Statement.execute(String)` and can be called only once per
-result set (see the following two examples).
+`ResultSet` objects are created when either `Statement.executeQuery(String)` or `Statement.getResultSet()` methods are called, or when obtaining the generated keys from `Statement.getGeneratedKeys()`.
+`Statement.getResultSet()` is used in combination with `Statement.execute(String)` and can be called only once per result set (see the following two examples).
 
 [NOTE]
 ====
-The current implementation does not allow to call `getResultSet()`
-method after using the `executeQuery(String)` method of the `Statement`
-class. The JDBC specification is unclear on this topic and JDBC
-drivers of different vendors treat it differently.
+The current implementation does not allow calls to the `getResultSet()` method after using the `executeQuery(String)` method of the `Statement` class.
+The JDBC specification is unclear on this topic and JDBC drivers of different vendors treat it differently.
 ====
 
 [source,java]
@@ -142,34 +107,26 @@ try (Statement stmt = connection.createStatement()) {
 
 ==== Accessing the values in the result set
 
-Depending on the type of the result set, it is possible to move the cursor either forward only
-(link:#using-forward-only[next example]) or using absolute and relative positioning
-(link:#using-scrollable-updatable[second example below]).
+Depending on the type of the result set, it is possible to move the cursor either forward only (link:#using-forward-only[next example]) or using absolute and relative positioning (link:#using-scrollable-updatable[second example below]).
 
-Values of the result set are obtained by calling the corresponding
-getter method depending on the type of column. For example the
-`ResultSet.getInt(1)` method returns the value of the first column as an
-`int` value. If value of the column is not integer, Jaybird tries to
-convert it according to the "Data Type Conversion Table" specified in
-<<datatypeconversion>>. If conversion is not possible, an exception is thrown.
+Values of the result set are obtained by calling the corresponding getter method depending on the type of column.
+For example, the `ResultSet.getInt(1)` method returns the value of the first column as an `int` value.
+If the value of the column is not integer, Jaybird tries to convert it according to the "Data Type Conversion Table" specified in <<datatypeconversion>>.
+If conversion is not possible, an exception is thrown.
 
-There are two possibilities to obtain data from the result set columns:
-by column label or by column position. Position of the first column is 1.
-Names supplied to getter methods are case-insensitive. The search first
-happens in the column aliases, and if no match found, driver checks the
-original column names. If there is more then one column matching the
-specified name (even if the original names were quoted), the first match
-is taken. *TODO: Behavior changed with Jaybird 2.2, verify and update*
+There are two possibilities to obtain data from the result set columns: by column label or by column position.
+Position of the first column is 1.
+Names supplied to getter methods are case-insensitive.
+The search only happens in column aliases -- or in JDBC terminology the _column label_.
+If a column has no alias, the original column name is considered its alias.
+If there is more than one column matching the specified name (even if the original names were quoted), the first match is taken.
 
-When getters for primitive types are used and original value in the
-result set is `NULL`, driver returns a default value for that type. For
-example `getInt()` method will return 0. In order to know whether the
-value is really 0 or NULL, you have to call `ResultSet.wasNull()`
-method *after* calling the _get_ method.
+When getters for primitive types are used and the value in the result set is `NULL`, the driver returns the default value for that type.
+For example, `getInt()` method will return `0`.
+In order to know whether the value is really `0` or `NULL`, you have to call `ResultSet.wasNull()` method *after* calling the _get_ method.
 
-Getters that return object values (`getString`, `getDate`, `getObject`,
-etc.) will return a `null` value for columns containing
-`NULL`. Calling `wasNull` after object _get_ methods is possible but unnecessary.
+Getters that return object values (`getString`, `getDate`, `getObject`, etc.) will return a `null` value for columns containing `NULL`.
+Calling `wasNull` after object _get_ methods is possible but unnecessary.
 
 [[using-forward-only]]
 [source,java]
@@ -189,9 +146,7 @@ try (Statement forwardStatement = connection.createStatement();
 
 ==== Updating records in the result set
 
-Scrollable cursors are especially useful when result of some query is
-displayed by the application which also allows the user to directly edit
-the data and post the changes to the database.
+Scrollable cursors are especially useful when result of some query is displayed by the application which also allows the user to directly edit the data and post the changes to the database.
 
 [[using-scrollable-updatable]]
 [source,java]
@@ -218,20 +173,15 @@ rs.moveToCurrentRow();
 rs.relative(-2);
 ----
 
-The code example above shows how to update first row, insert new one and
-after that move two records backwards.
+The code example above shows how to update first row, insert new one and after that move two records backwards.
 
-An application can also update the current row using so called
-"positioned updates" on named cursors. This technique can be used only
-with forward-only cursors, since application can update only the row to
-which the server-side cursor points to. In case of scrollable cursors
-the complete result set is fetched to the client and then the
-server-side cursor is closed. link:#using-positioned-updates[The example below] shows how to use
-positioned updates.
+An application can also update the current row using so called "`positioned updates`" on named cursors.
+This technique can be used only with forward-only cursors, since application can update only the row to which the server-side cursor points to.
+In case of scrollable cursors the complete result set is fetched to the client and then the server-side cursor is closed.
+link:#using-positioned-updates[The example below] shows how to use positioned updates.
 
-First, the application has to specify the name of the cursor and the list of the columns that will
-be updated before the query is executed. This name is later used in the `UPDATE` statement as
-shown in the example.
+First, the application has to specify the name of the cursor and the list of the columns that will be updated before the query is executed.
+This name is later used in the `UPDATE` statement as shown in the example.
 
 [[using-positioned-updates]]
 [source,java]
@@ -262,15 +212,10 @@ try (Statement selectStmt = connection.createStatement();
 
 ==== Closing the result set
 
-A result set is closed by calling the `ResultSet.close()` method. This
-releases the associated server resources and makes the `ResultSet`
-object available for garbage collection. It is strongly recommended to
-explicitly close result sets in auto-commit mode or
-`ResultSet.TYPE_SCROLL_INSENSITIVE` result sets, because this releases
-memory used for the cached data. Whenever possible, use try-with-resources.
+A result set is closed by calling the `ResultSet.close()` method.
+This releases the associated server resources and makes the `ResultSet` object available for garbage collection.
+It is strongly recommended to explicitly close result sets in auto-commit mode or `ResultSet.TYPE_SCROLL_INSENSITIVE` result sets, because this releases memory used for the cached data.
+Whenever possible, use try-with-resources.
 
-The result set object is also closed automatically, when the statement
-that created it is closed or re-executed. In auto-commit mode, the
-result set is closed automatically if any statement is executed on the
-same connection.
-
+The result set object is also closed automatically, when the statement that created it is closed or re-executed.
+In auto-commit mode, the result set is closed automatically if any statement is executed on the same connection.

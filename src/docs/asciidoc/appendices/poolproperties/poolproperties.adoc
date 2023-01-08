@@ -100,7 +100,7 @@ Value is between 0 and `totalSize`.
 
 |`totalSize` 
 |Total size of open connection. 
-At the pool creation – 0, after obtaining first connection – between `minPoolSize` and `maxPoolSize`.
+At pool creation, 0, after obtaining first connection, between `minPoolSize` and `maxPoolSize`.
 |=======================================================================
 
 === Firebird-specific Properties

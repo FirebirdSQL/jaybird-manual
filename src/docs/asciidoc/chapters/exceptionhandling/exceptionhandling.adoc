@@ -128,9 +128,9 @@ whole purpose of using the `PreparedStatement` is neglected: the statement
 is prepared, used only once and then deallocated. However, when this
 practice is combined with connection and statement pooling, it
 brings enormous advantage to the application code. The code becomes much
-more manageable – resource allocations and deallocations happen in the
+more manageable -- resource allocations and deallocations happen in the
 same method and the software developer does not need to remember the places where
-the same prepared statement might be used – a statement pool will either
+the same prepared statement might be used -- a statement pool will either
 reuse the statement or it will prepare a new one, if it detects that all
 pooled prepared statements are currently in use. As a side effect,
 the application will always use the minimum number of statements handles,
@@ -270,14 +270,14 @@ exception conversion to preserve the error code.
 * Subclasses of `java.sql.SQLException` are thrown by the JDBC layer.
 Jaybird has a few subclasses that might be interesting to the
 application:
-** `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` – this
+** `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` -- this
 exception is thrown when driver detects an internal inconsistent state.
 SQL state is `HY000`.
-** `org.firebirdsql.jdbc.FBDriverNotCapableException` – this exception
+** `org.firebirdsql.jdbc.FBDriverNotCapableException` -- this exception
 is thrown when an unsupported method is called. SQL state is `0A000`.
-** `org.firebirdsql.jdbc.FBSQLParseException` – this exception is thrown
+** `org.firebirdsql.jdbc.FBSQLParseException` -- this exception is thrown
 when incorrect escaped syntax is detected. SQL state is `42000`.
-** `org.firebirdsql.jdbc.field.TypeConversionException` – this exception
+** `org.firebirdsql.jdbc.field.TypeConversionException` -- this exception
 is thrown when the driver is asked to perform a type conversion that is
 not defined in the JDBC specification. For a table of allowed type
 conversions see <<Data Type Conversion Table>>.

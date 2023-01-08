@@ -6,10 +6,12 @@
 
 Firebird 3 introduced authentication plugins together with a new authentication model.
 By default, Firebird 3 uses the authentication plugin `Srp` (_Secure remote password_).
-It also includes plugins `Legacy_Auth` that supports the pre-Firebird-3 authentication mechanism, and - [.since]_Firebird 3.0.4_ - `Srp256`.
+It also includes plugins `Legacy_Auth` that supports the pre-Firebird-3 authentication mechanism, and -- [.since]_Firebird 3.0.4_ -- `Srp256`.
 Firebird 4 introduced the plugins `Srp224`, `Srp384` and `Srp512`.
 
-The original `Srp` plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.footnote:[Internally `SrpNNN` continues to uses SHA-1, only the client-proof applies the SHA-NNN hash. See also https://github.com/FirebirdSQL/firebird/issues/6051[firebird#6051^]).]
+The original `Srp` plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.footnote:[
+Internally `SrpNNN` continues to use SHA-1, only the client-proof applies the SHA-NNN hash.
+See also https://github.com/FirebirdSQL/firebird/issues/6051[firebird#6051^]).]
 
 [NOTE]
 ====

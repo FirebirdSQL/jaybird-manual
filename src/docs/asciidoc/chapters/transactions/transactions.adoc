@@ -89,7 +89,7 @@ The JDBC 2.0 specification did not fully define the rules for the statement comp
 Since Firebird does not allow the result set to remain open after the transaction ends, Jaybird 1.5.x and below cached the complete result set in memory when the SELECT statements were executed and corresponding transaction was committed.
 This had an adverse effect on allocated memory when the result set is big, especially when it contains BLOB fields.
 The JDBC 3.0 specification addressed this unclear situation (see above) and Jaybird 2.1 was improved to correctly handle them.
-It also allowed to improve the memory footprint – the driver no longer caches non-scrollable and non-holdable result sets in memory.
+It also allowed to improve the memory footprint -- the driver no longer caches non-scrollable and non-holdable result sets in memory.
 
 However, some Java applications that do not conform the current JDBC specification might no longer work with Jaybird 2.1 and above unless additional steps are taken.
 
@@ -184,12 +184,12 @@ This isolation level guarantees truly serial history of transaction execution.
 
 In order to satisfy the JDBC specification Jaybird provides a following default mapping of the JDBC transaction isolation levels into Firebird isolation levels:
 
-* TRANSACTION_READ_COMMITTED is mapped to `read_committed` isolation level in Firebird –- any changes made inside a transaction are not visible outside a transaction until the transaction is committed.
+* TRANSACTION_READ_COMMITTED is mapped to `read_committed` isolation level in Firebird -- any changes made inside a transaction are not visible outside a transaction until the transaction is committed.
 A transaction in read-committed mode sees all committed changes made by other transactions even if that happened after start of the current transaction.
-* TRANSACTION_REPEATABLE_READ is mapped to `concurrency` isolation level in Firebird –- any changes made inside this transaction are not visible outside a transaction until the transaction is committed.
+* TRANSACTION_REPEATABLE_READ is mapped to `concurrency` isolation level in Firebird -- any changes made inside this transaction are not visible outside a transaction until the transaction is committed.
 A transaction in repeatable-read sees only those changes that were committed before the transaction started.
 Any committed change in another transaction that happened after the start of this transaction is not visible in this transaction.
-* TRANSACTION_SERIALIZABLE is mapped into `consistency` isolation level in Firebird -– any modification to a table happens in serial way: all transactions wait until the current modification is done.
+* TRANSACTION_SERIALIZABLE is mapped into `consistency` isolation level in Firebird -- any modification to a table happens in serial way: all transactions wait until the current modification is done.
 This mode can be considered as a traditional pessimistic locking scheme, but the lock is placed on the whole table.
 See section "<<transactions-table-reservation>>" for more information.
 
@@ -268,9 +268,9 @@ The behavior of Firebird transactions is internally controlled by the _Transacti
 
 * the transaction isolation level;
 * the transaction's read-only or read-write mode;
-* the lock conflict resolution mode – wait or no wait;
+* the lock conflict resolution mode -- wait or no wait;
 * the lock wait timeout;
-* and, finally, the table reservations – their names and reservation modes.
+* and, finally, the table reservations -- their names and reservation modes.
 
 The TPB is automatically generated depending on the transaction isolation level specified for the `java.sql.Connection` object.
 Usually there is no need to manipulate the TPB directly.
@@ -353,11 +353,11 @@ When an application tries to read a record from the database, the database engin
 If the operation succeeds and the application later tries to update the record, the lock is upgraded to a "`write lock`".
 And finally, if the resource is already locked for write, concurrent transactions cannot lock it for reading, since the system cannot allow the transaction to make a decision based on data that might be rolled back later.
 This approach significantly decreases concurrency.
-However, databases systems that employ a record versioning mechanism do not have such restrictions because each transaction "`sees`" its own version of the record –- the only possible conflict happens when two concurrent transactions try to obtain a "`write lock`" for the same database record.
+However, databases systems that employ a record versioning mechanism do not have such restrictions because each transaction "`sees`" its own version of the record -- the only possible conflict happens when two concurrent transactions try to obtain a "`write lock`" for the same database record.
 
-Firebird belongs to the latter, and on `read_committed` and `concurrency` isolation levels it behaves appropriately –- there are no
+Firebird belongs to the latter, and on `read_committed` and `concurrency` isolation levels it behaves appropriately -- there are no
 lock conflicts between readers and writers, and only writers competing for the same resource raise a lock conflict.
-However, on the `consistency` isolation level Firebird emulates the behavior of systems with pessimistic locking -– read operations will conflict with write operations.
+However, on the `consistency` isolation level Firebird emulates the behavior of systems with pessimistic locking -- read operations will conflict with write operations.
 Even more, the locks are obtained for whole tables (see "<<transactions-table-reservation>>" for details).
 
 The following table summarizes the above for Firebird 2.0.

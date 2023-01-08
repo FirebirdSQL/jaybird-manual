@@ -26,7 +26,7 @@ For example:
 .JDBC url with dataTypeBind and encoded semicolon
 ----
 String jdbcUrl = "jdbc:firebirdsql://localhost/database?charSet=utf-8"
-    + "&dataTypeBind=decfloat to varchar%3Btimestamp with time zone to legacy
+    + "&dataTypeBind=decfloat to varchar%3Btimestamp with time zone to legacy"
 ----
 
 When the property is set through a `Properties` object or a `DataSource` configuration, encoding the semicolon is not necessary and will result in errors.
