@@ -86,7 +86,8 @@ Where `<java>` is either `java7`, `java8` or `java11`.
 Where `<java>` is either `java7`, `java8` or `java11`.
 
 | `lib/connector-api-1.5.jar`
-| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
+| Required dependency;
+part of `jaybird-full`, not necessary when deploying to a Java EE or Jakarta EE 8 or lower application server
 
 | `lib/jna-5.5.0.jar`
 | Optional dependency, required if you want to use Type 2 native, local or embedded protocols
@@ -100,9 +101,10 @@ Alternatively, you can use maven to automatically download Jaybird and its depen
 
 Jaybird 4 is available from Maven central:
 
-Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird`, +
-Version: `{jaybird4-template-version}` (where `<java>` is either `java7`, `java8` or `java11`)
+[horizontal]
+groupId:: `org.firebirdsql.jdbc`
+artifactId:: `jaybird`
+version:: `{jaybird4-template-version}` (where `<java>` is either `java11`, `java8` or `java7`)
 
 For example:
 
@@ -115,7 +117,7 @@ For example:
 </dependency>
 ----
 
-If your application is deployed to a Java EE application server, you will need to exclude the `javax.resource:connector-api` dependency, and add it as a provided dependency:
+If your application is deployed to a Java EE or Jakarta EE 8 or lower application server, you will need to exclude the `javax.resource:connector-api` dependency, and add it as a provided dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----

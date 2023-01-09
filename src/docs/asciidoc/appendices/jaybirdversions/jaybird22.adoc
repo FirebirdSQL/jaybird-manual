@@ -86,7 +86,8 @@ management classes.
 | Optional dependency, required if you want to use `getGeneratedKeys` support
 
 | `lib/connector-api-1.5.jar`
-| Required dependency; part of `jaybird-full`, not necessary when deploying to a Java EE application server
+| Required dependency;
+part of `jaybird-full`, not necessary when deploying to a Java EE or Jakarta EE 8 or lower application server
 
 | `lib/log4j-core.jar` 
 | Optional dependency, core Log4J classes that provide logging.
@@ -131,9 +132,7 @@ For example:
 
 The Maven definition of Jaybird depends on antlr-runtime by default.
 
-If your application is deployed to a Java EE application server, you will need to
-exclude the `javax.resource:connector-api` dependency, and add it as a provided 
-dependency:
+If your application is deployed to a Java EE or Jakarta EE 8 or lower application server, you will need to exclude the `javax.resource:connector-api` dependency, and add it as a provided dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----

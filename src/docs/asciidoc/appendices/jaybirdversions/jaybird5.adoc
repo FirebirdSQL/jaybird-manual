@@ -90,7 +90,7 @@ The following files can be found in the distribution package:
 |File name |Description
 | `jaybird-{jaybird5-template-version}.jar`
 | An archive containing the JDBC driver, the Services API and event management classes.
-Where `<java>` is either `java8` or `java11`.
+Where `<java>` is either `java11` or `java8`.
 
 | `lib/jna-5.12.1.jar`
 | Optional dependency, required if you want to use Type 2 native, or embedded protocols
@@ -104,9 +104,10 @@ Alternatively, you can use maven to automatically download Jaybird and its depen
 
 Jaybird 5 is available from Maven central:
 
-Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird`, +
-Version: `{jaybird5-template-version}` (where `<java>` is either `java8` or `java11`)
+[horizontal]
+groupId:: `org.firebirdsql.jdbc`
+artifactId:: `jaybird`
+version:: `{jaybird5-template-version}` (where `<java>` is either `java11` or `java8`)
 
 For example:
 
