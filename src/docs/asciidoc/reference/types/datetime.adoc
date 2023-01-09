@@ -150,10 +150,6 @@ As mentioned earlier, the support for 'extended' time zone types will behave ide
 
 See also <<ref-datatypebind>>.
 
-// TODO Warning can be removed after Firebird 4 release
-NOTE: This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1683 or later). 
-It will be ignored in builds before 1481 as the necessary database parameter buffer item does not exist, and it will raise an error in versions between 1481 and 1682 as there the DPB item points to the removed DPB item `isc_time_zone_bind`.
-
 [[ref-datetime-sessiontimezone]]
 ===== Connection property sessionTimeZone
 

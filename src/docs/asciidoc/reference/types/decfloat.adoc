@@ -60,10 +60,6 @@ When set Firebird will present columns or parameters of `DECFLOAT` as the specif
 
 TIP: This property is also available in Jaybird 4, but we recommend to not use this property in Jaybird 4 and instead rely on the default behaviour (`native`) and support for `DECFLOAT`.
 
-// TODO Warning can be removed after Firebird 4 release
-WARNING: This feature requires Firebird 4 beta 2 or higher (or a snapshot build version 4.0.0.1683 or later).
-It will be ignored in builds before 1481 as the necessary database parameter buffer item does not exist, and it will raise an error in versions between 1481 and 1682 as there the DPB item points to the removed DPB item `isc_time_zone_bind`.
-
 To map `DECFLOAT(16)` and `DECFLOAT(34)` to a string type, you can use:
 
 [source,java]
