@@ -71,7 +71,7 @@ Jaybird {jaybird-version} is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
 Artifactid: `jaybird`, +
-Version: `{jaybird-template-version}` (where `<java>` is `java7`, `java8` or `java11`)
+Version: `{jaybird-template-version}` (where `<java>` is `java11` or `java8`)
 
 For example:
 
@@ -84,33 +84,7 @@ For example:
 </dependency>
 ----
 
-If your application is deployed to a Java EE application server, you will need to
-exclude the `javax.resource:connector-api` dependency, and add it as a provided 
-dependency:
-
-[source,xml,subs="verbatim,attributes"]
-----
-<dependency>
-  <groupId>org.firebirdsql.jdbc</groupId>
-  <artifactId>jaybird</artifactId>
-  <version>{jaybird-example-version}</version>
-  <exclusions>
-    <exclusion>
-      <groupId>javax.resource</groupId>
-      <artifactId>connector-api</artifactId>
-    </exclusion>
-  </exclusions>
-</dependency>
-<dependency>
-  <groupId>javax.resource</groupId>
-  <artifactId>connector-api</artifactId>
-  <version>1.5</version>
-  <scope>provided</scope>
-</dependency>
-----
-
-If you want to use Type 2 support (native, local or embedded), you need to 
-explicitly include JNA {jna-version} as a dependency:
+If you want to use Type 2 support (native or embedded), you need to explicitly include JNA {jna-version} as a dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -121,8 +95,10 @@ explicitly include JNA {jna-version} as a dependency:
 </dependency>
 ----
 
-We plan to make native and embedded support a separate library in future 
-releases, and provide Firebird client libraries as Maven dependencies as well.
+We plan to make native and embedded support a separate library in future releases.
+
+The Firebird client library is available as a Maven dependencies, see <<driver-native-maven>>.
+In the future, a Maven dependency for Firebird embedded may become available as well.
 
 === Quality Assurance
 
