@@ -381,11 +381,9 @@ See the Windows example above for more details.
 [[driver-native-limitations]]
 ===== Limitations
 
-*TODO* Section might be outdated
-
-Firebird client library is not thread-safe when connecting to a local database server using IPC.
-Jaybird provides the necessary synchronization in Java code using a static object instance.
-However, this static object instance is local to the classloader that has loaded the Jaybird classes.
+Older versions of the Firebird client library may not be thread-safe when connecting to a local database server using IPC.
+By default, Jaybird does not provide synchronization, but it can be enabled with the system property `org.firebirdsql.jna.syncWrapNativeLibrary` set to true.
+However, this synchronization is local to the classloader that has loaded the Jaybird classes.
 
 In order to guarantee correct synchronization, the Jaybird driver must be loaded by the top-most classloader.
 For example, when using the Type 2 JDBC driver with a web or application server, you have to add the Jaybird classes to the main classpath (for example, to the `lib/` directory of your web or application server), but *not* to the web or Jave EE/Jakarta EE application, e.g. the `WEB-INF/lib` directory.
@@ -418,24 +416,19 @@ For an example, see the article https://www.lawinegevaar.nl/firebird/jaybird_emb
 [[driver-embedded-limitations]]
 ===== Limitations
 
-*TODO* Section might be outdated
-
-The Firebird embedded server for Linux is not thread safe.
-Jaybird provides the needed synchronization in Java code, similar to the one described for the Type 2 JDBC driver.
+Older versions of the Firebird embedded server for Linux are not thread safe.
+Jaybird can provide the needed synchronization in Java code, similar to the one described for the Type 2 JDBC driver.
 This implies the same restrictions on the classloader that will load the Jaybird classes.
 
-The Firebird embedded server for Windows opens databases in exclusive mode.
+By default, the Firebird embedded library opens databases in exclusive mode.
 This means that this particular database is accessible only to one Java virtual machine.
-_There is no exclusive mode on the POSIX platform. When the same database file is accessed by multiple JVM instances,
-database will be corrupted!_
+This can be changed by the `ServerMode` setting in `firebird.conf`.
 
 [[driver-ooremote]]
 ==== OOREMOTE type
 
 The `OOREMOTE` type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
 It addresses some differences in interpretation of the JDBC specification, and provides alternative metadata in certain cases to allow OpenOffice.org and LibreOffice to function correctly.
-
-// TODO Expand on differences?
 
 [NOTE]
 ====
