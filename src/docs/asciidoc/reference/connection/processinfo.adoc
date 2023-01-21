@@ -7,14 +7,22 @@
 Firebird 2.1 introduced the `MON$ATTACHMENTS` table.
 This table includes the columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` which report the process id and process name of the connected process.
 
-By default, Jaybird does not provide this information.
+[.until]_Jaybird 5_ Jaybird 5 and earlier do not provide this information, except for the process ID of native connections.
 This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just 'java' (or similar), which is not very useful.
+
+[.since]_Jaybird 6_ Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
+No default process name is provided as in most cases the process name is just 'java' (or similar), which is not very useful.
+When a `SecurityManager` is installed, the entire call-chain needs to have the `RuntimePermission("manageProcess")` to obtain the process ID in pure Java connections.
+If this permission check fails, Jaybird will silently ignore it and not set the `isc_dpb_process_id` based on the actual process ID.
 
 Since Firebird 3, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`. 
 Jaybird ([.since]_Jaybird 3.0_) will report its full version (eg `Jaybird 3.0.5-JDK_1.8`).
 
 WARNING: Do not use this information for security decisions. 
 Treat it as informational only, as clients can report fake information.
+
+Native connections will always report the actual process ID, if a fbclient of Firebird 2.1 or higher is used.
+This cannot be overridden using the options below.
 
 It is possible to specify the process name and process id in two ways:
 
@@ -26,7 +34,8 @@ It is possible to specify the process information through Java system properties
 `org.firebirdsql.jdbc.pid`:: Process id
 `org.firebirdsql.jdbc.processName`:: Process name
 
-This is the preferred method because you only need to specify it once.
+Until Jaybird 6, this is the preferred method because you only need to specify it once.
+For Jaybird 6 and later, the preferred method is to not set any option and use the actual process ID.
 
 [[ref-processinfo-connprops]]
 ==== Connection properties for process information
@@ -34,7 +43,10 @@ This is the preferred method because you only need to specify it once.
 It is also possible to specify the process information through connection properties:
 
 `process_id`:: Process id (alias: `processId` ([.since]_Jaybird 3_))
++
+This property is ignored on native connections, which will always report the actual process id.
 `process_name`:: Process name (alias: `processName` ([.since]_Jaybird 3_))
 
-These properties are not exposed on the data sources.
-To set on data sources, use `setNonStandardProperty`.
+Since Jaybird 5, these properties are exposed on data sources.
+In earlier versions, these properties were not exposed on the data sources.
+To set on data sources in Jaybird 4 or earlier, use `setNonStandardProperty`.
