@@ -10,7 +10,7 @@ Not all functions described in the JDBC specification have corresponding built-i
 Jaybird provides a connection parameter `use_standard_udf` to configure the driver to assume that functions from that UDF are available in the database ([.until]_Jaybird 5_).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.
 
-([.since]_Jaybird 3_) In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
+In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
 Using the `use_standard_udf` is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.
 [.since]_Jaybird 5_ UDF mode (`use_standard_udf`) is no longer available in Jaybird 5 and higher.
 
@@ -19,207 +19,447 @@ Below you will find the list of JDBC functions and whether they have a correspon
 === Numeric Functions
 
 [cols="3m,^1,^1,5",options="header",]
-|=======================================================================
-|JDBC |built-in |UDF mode |Description
+|===
+|JDBC
+|built-in
+|UDF mode
+|Description
 
-|ABS(number) |X |X |Absolute value of `number`
+|ABS(number)
+|X
+|X
+|Absolute value of `number`
 
-|ACOS(float) |X |X |Arccosine, in radians, of `float`
+|ACOS(float)
+|X
+|X
+|Arccosine, in radians, of `float`
 
-|ASIN(float) |X |X |Arcsine, in radians, of `float`
+|ASIN(float)
+|X
+|X
+|Arcsine, in radians, of `float`
 
-|ATAN(float) |X |X |Arctangent, in radians, of `float`
+|ATAN(float)
+|X
+|X
+|Arctangent, in radians, of `float`
 
-|ATAN2(float1, float2) |X |X |Arctangent, in radians, of `float2` / `float1`
+|ATAN2(float1, float2)
+|X
+|X
+|Arctangent, in radians, of `float2` / `float1`
 
-|CEILING(number) |X |X |Smallest integer >= `number`
+|CEILING(number)
+|X
+|X
+|Smallest integer >= `number`
 
-|COS(float) |X |X |Cosine of `float` radians
+|COS(float)
+|X
+|X
+|Cosine of `float` radians
 
-|COT(float) |X |X |Cotangent of `float` radians
+|COT(float)
+|X
+|X
+|Cotangent of `float` radians
 
-|DEGREES(number) |X | |Degrees in `number` radians ([.since]_Jaybird 4_)
+|DEGREES(number)
+|X
+|{nbsp}
+|Degrees in `number` radians ([.since]_Jaybird 4_)
 
-|EXP(float) |X | |Exponential function of `float`
+|EXP(float)
+|X
+|{nbsp}
+|Exponential function of `float`
 
-|FLOOR(number) |X |X |Largest integer <= `number`
+|FLOOR(number)
+|X
+|X
+|Largest integer ++<=++ `number`
 
-|LOG(float) |X |X |Base e logarithm of `float`
+|LOG(float)
+|X
+|X
+|Base e logarithm of `float`
 
-|LOG10(float) |X |X |Base 10 logarithm of `float`
+|LOG10(float)
+|X
+|X
+|Base 10 logarithm of `float`
 
-|MOD(integer1, integer2) |X |X |Remainder for `integer1` / `integer2`
+|MOD(integer1, integer2)
+|X
+|X
+|Remainder for `integer1` / `integer2`
 
-|PI() |X |X |The constant pi
+|PI()
+|X
+|X
+|The constant pi
 
-|POWER(number, power) |X | |`number` raised to (integer) `power`
+|POWER(number, power)
+|X
+|{nbsp}
+|`number` raised to (integer) `power`
 
-|RADIANS(number) |X | |Radians in `number` degrees ([.since]_Jaybird 4_)
+|RADIANS(number)
+|X
+|{nbsp}
+|Radians in `number` degrees ([.since]_Jaybird 4_)
 
-|RAND(integer) | |Xfootnote:[Maps to UDF `RAND()` taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.] |Random floating point for seed `integer`
+|RAND(integer)
+|{nbsp}
+|Xfootnote:[Maps to UDF `RAND()` taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.]
+|Random floating point for seed `integer`
 
-|ROUND(number, places) |X | |`number` rounded to `places` places
+|ROUND(number, places)
+|X
+|{nbsp}
+|`number` rounded to `places` places
 
-|SIGN(number) |X |X |-1 to indicate `number` is < 0; 0 to indicate
-`number` is = 0; 1 to indicate `number` is > 0
+|SIGN(number)
+|X
+|X
+|-1 to indicate `number` is < 0;
+0 to indicate `number` is = 0;
+1 to indicate `number` is > 0
 
-|SIN(float) |X |X |Sine of `float` radians
+|SIN(float)
+|X
+|X
+|Sine of `float` radians
 
-|SQRT(float) |X |X |Square root of float
+|SQRT(float)
+|X
+|X
+|Square root of float
 
-|TAN(float) |X |X |Tangent of `float` radians
+|TAN(float)
+|X
+|X
+|Tangent of `float` radians
 
-|TRUNCATE(number, places) |X | |`number` truncated to `places` places ([.since]_Jaybird 3_)
-|=======================================================================
+|TRUNCATE(number, places)
+|X
+|{nbsp}
+|`number` truncated to `places` places
+
+|===
 
 Legend: X -- available in this mode.
 
 === String Functions
 
 [cols="3m,^1,^1,5",options="header",]
-|=======================================================================
-|JDBC |built-in |UDF mode |Description
+|===
+|JDBC
+|built-in
+|UDF mode
+|Description
 
-|ASCII(string) |X |X |Integer representing the ASCII code value of the
-leftmost character in `string`
+|ASCII(string)
+|X
+|X
+|Integer representing the ASCII code value of the leftmost character in `string`
 
-|CHAR(code) |X |X |Character with ASCII code value `code`, where `code`
-is between 0 and 255
+|CHAR(code)
+|X
+|X
+|Character with ASCII code value `code`, where `code` is between 0 and 255
 
-|CHAR_LENGTH(string [,CHARACTERS]) |Xfootnote:[Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher] | |Returns the length in characters of the string expression
+|CHAR_LENGTH(string [,CHARACTERS])
+|Xfootnote:[Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher]
+|{nbsp}
+|Returns the length in characters of the string expression
 
-|CHAR_LENGTH(string, OCTETS) |X | |Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8, alias for `OCTET_LENGTH` ([.since]_Jaybird 4_)
+|CHAR_LENGTH(string, OCTETS)
+|X
+|{nbsp}
+|Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8, alias for `OCTET_LENGTH` ([.since]_Jaybird 4_)
 
-|CHARACTER_LENGTH( string [,CHARACTERS]) |Xfootnote:[Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher] | |Alias for `CHAR_LENGTH` ([.since]_Jaybird 3_)
+|CHARACTER_LENGTH( string [,CHARACTERS])
+|Xfootnote:[Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher]
+|{nbsp}
+|Alias for `CHAR_LENGTH`
 
-|CHARACTER_LENGTH(string, OCTETS) |X | |Alias for `CHAR_LENGTH`, `OCTET_LENGTH` ([.since]_Jaybird 4_)
+|CHARACTER_LENGTH(string, OCTETS)
+|X
+|{nbsp}
+|Alias for `CHAR_LENGTH`, `OCTET_LENGTH` ([.since]_Jaybird 4_)
 
-|CONCAT(string1, string2) |X |X |Character string formed by appending `string2` to `string1`
+|CONCAT(string1, string2)
+|X
+|X
+|Character string formed by appending `string2` to `string1`
 
-|DIFFERENCE(string1, string2) | | |Integer indicating the difference between the values returned by the function `SOUNDEX` for `string1` and `string2`
+|DIFFERENCE(string1, string2)
+|{nbsp}
+|{nbsp}
+|Integer indicating the difference between the values returned by the function `SOUNDEX` for `string1` and `string2`
 
-|INSERT(string1, start, length, string2) |X | |A character string formed by deleting `length` characters from `string1` beginning at `start`, and inserting `string2` into `string1` at `start` ([.since]_Jaybird 3_)
+|INSERT(string1, start, length, string2)
+|X
+|{nbsp}
+|A character string formed by deleting `length` characters from `string1` beginning at `start`, and inserting `string2` into `string1` at `start`
 
-|LCASE(string) |X |X |Converts all uppercase characters in `string` to lowercase ([.since]_Jaybird 3_)
+|LCASE(string)
+|X
+|X
+|Converts all uppercase characters in `string` to lowercase
 
-|LEFT(string, count) |X |X |The `count` leftmost characters from `string`
+|LEFT(string, count)
+|X
+|X
+|The `count` leftmost characters from `string`
 
-|LENGTH(string [,CHARACTERS]) |Xfootnote:[In Jaybird 3, the second parameter is ignored, in Jaybird 4 the `CHARACTERS` parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type] |Xfootnote:[The trailing blanks are also counted, only works if second parameter is omitted] |Number of characters in `string`, excluding trailing blanks (built-in [.since]_Jaybird 3_)
+|LENGTH(string [,CHARACTERS])
+|Xfootnote:[In Jaybird 3, the second parameter is ignored, in Jaybird 4 the `CHARACTERS` parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type]
+|Xfootnote:[The trailing blanks are also counted, only works if second parameter is omitted]
+|Number of characters in `string`, excluding trailing blanks
 
-|LENGTH(string, OCTETS]) |Xfootnote:[The `OCTETS` parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type] | |Number of characters in `string`, excluding trailing blanks ([.since]_Jaybird 4_)
+|LENGTH(string, OCTETS])
+|Xfootnote:[The `OCTETS` parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type]
+|{nbsp}
+|Number of characters in `string`, excluding trailing blanks ([.since]_Jaybird 4_)
 
-|LOCATE(string1, string2 [,start]) |Xfootnote:[In Jaybird 3, start is required, start is optional since Jaybird 4] | |Position in `string2` of the first occurrence of `string1`, searching from the beginning of `string2`;
+|LOCATE(string1, string2 [,start])
+|Xfootnote:[In Jaybird 3, start is required, start is optional since Jaybird 4]
+|{nbsp}
+|Position in `string2` of the first occurrence of `string1`, searching from the beginning of `string2`;
 if `start` is specified, the search begins from position `start`.
 0 is returned if `string2` does not contain `string1`. 
 Position 1 is the first character in `string2` ([.since]_Jaybird 3_ with `start` required, [.since]_Jaybird 4_ with `start` optional)
 
-|LTRIM(string) |X |X |Characters of `string` with leading blank spaces removed ([.since]_Jaybird 3_)
+|LTRIM(string)
+|X
+|X
+|Characters of `string` with leading blank spaces removed
 
-|OCTET_LENGTH(string) |X | |Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8
+|OCTET_LENGTH(string)
+|X
+|{nbsp}
+|Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8
 
-|POSITION(substring IN string [,CHARACTERS]) |Xfootnote:[In Jaybird 3 and earlier only supported without the `CHARACTERS` parameter] | |Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 3_ without `CHARACTERS`, [.since]_Jaybird 4_ with optional `CHARACTERS`)
+|POSITION(substring IN string [,CHARACTERS])
+|Xfootnote:[In Jaybird 3 and earlier only supported without the `CHARACTERS` parameter]
+|{nbsp}
+|Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 3_ without `CHARACTERS`, [.since]_Jaybird 4_ with optional `CHARACTERS`)
 
-|POSITION(substring IN string, OCTETS) |Xfootnote:[Parameter `OCTETS` is ignored] | |Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 4_ with caveat)
+|POSITION(substring IN string, OCTETS)
+|Xfootnote:[Parameter `OCTETS` is ignored]
+|{nbsp}
+|Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 4_ with caveat)
 
-|REPEAT(string, count) |X | |A character string formed by repeating `string` `count` times ([.since]_Jaybird 3_)
+|REPEAT(string, count)
+|X
+|{nbsp}
+|A character string formed by repeating `string` `count` times
 
-|REPLACE(string1, string2, string3) |X | |Replaces all occurrences of `string2` in `string1` with `string3`
+|REPLACE(string1, string2, string3)
+|X
+|{nbsp}
+|Replaces all occurrences of `string2` in `string1` with `string3`
 
-|RIGHT(string, count) |X | |The `count` rightmost characters in `string`
+|RIGHT(string, count)
+|X
+|{nbsp}
+|The `count` rightmost characters in `string`
 
-|RTRIM(string) |X |X |The characters of `string` with no trailing blanks ([.since]_Jaybird 3_)
+|RTRIM(string)
+|X
+|X
+|The characters of `string` with no trailing blanks
 
-|SOUNDEX(string) | | |A character string, which is data source-dependent, representing the sound of the words in `string`;
+|SOUNDEX(string)
+|{nbsp}
+|{nbsp}
+|A character string, which is data source-dependent, representing the sound of the words in `string`;
 this could be a four-digit SOUNDEX code, a phonetic representation of each word, etc
 
-|SPACE(count) |X | |A character string consisting of `count` spaces ([.since]_Jaybird 3_)
+|SPACE(count)
+|X
+|{nbsp}
+|A character string consisting of `count` spaces
 
-|SUBSTRING(string, start, length) |X |X |A character string formed by extracting `length` characters from `string` beginning at `start`
+|SUBSTRING(string, start, length)
+|X
+|X
+|A character string formed by extracting `length` characters from `string` beginning at `start`
 
-|UCASE(string) |X |X |Converts all lowercase characters in `string` to uppercase
-|=======================================================================
+|UCASE(string)
+|X
+|X
+|Converts all lowercase characters in `string` to uppercase
+
+|===
 
 Legend: X -- available in this mode.
 
 === Time and Date Functions
 
 [cols="3m,^1,^1,5",options="header",]
-|=======================================================================
-|JDBC |built-in |UDF mode |Description
+|===
+|JDBC
+|built-in
+|UDF mode
+|Description
 
-|CURRENT_DATE[()] |X | |Synonym for `CURDATE()`
+|CURRENT_DATE[()]
+|X
+|{nbsp}
+|Synonym for `CURDATE()`
 
-|CURRENT_TIME[()] |X | |Synonym for `CURTIME()`
+|CURRENT_TIME[()]
+|X
+|{nbsp}
+|Synonym for `CURTIME()`
 
-|CURRENT_TIMESTAMP[()] |X | |Synonym for `NOW()`
+|CURRENT_TIMESTAMP[()]
+|X
+|{nbsp}
+|Synonym for `NOW()`
 
-|CURDATE() |X |X |The current date as a date value
+|CURDATE()
+|X
+|X
+|The current date as a date value
 
-|CURTIME() |X |X |The current local time as a time value
+|CURTIME()
+|X
+|X
+|The current local time as a time value
 
-|DAYNAME(date) |Xfootnote:[Always returns English full names (eg Sunday)] | |A character string representing the day component of `date`; the name for the day is specific to the data source ([.since]_Jaybird 4_)
+|DAYNAME(date)
+|Xfootnote:[Always returns English full names (eg Sunday)]
+|{nbsp}
+|A character string representing the day component of `date`;
+the name for the day is specific to the data source ([.since]_Jaybird 4_)
 
-|DAYOFMONTH(date) |X |X |An integer from 1 to 31 representing the day of the month in `date`
+|DAYOFMONTH(date)
+|X
+|X
+|An integer from 1 to 31 representing the day of the month in `date`
 
-|DAYOFWEEK(date) |X | |An integer from 1 to 7 representing the day of the week in `date`;
-1 represents Sunday ([.since]_Jaybird 3_)
+|DAYOFWEEK(date)
+|X
+|{nbsp}
+|An integer from 1 to 7 representing the day of the week in `date`;
+1 represents Sunday
 
-|DAYOFYEAR(date) |X | |An integer from 1 to 366 representing the day of the year in `date` ([.since]_Jaybird 3_)
+|DAYOFYEAR(date)
+|X
+|{nbsp}
+|An integer from 1 to 366 representing the day of the year in `date`
 
-|EXTRACT(field FROM source) |X | |Extract the field portion from the source.
+|EXTRACT(field FROM source)
+|X
+|{nbsp}
+|Extract the field portion from the source.
 The source is a datetime value.
 The value for field may be one of the following: `YEAR`, `MONTH`, `DAY`, `HOUR`, `MINUTE`, `SECOND`
 
-|HOUR(time) |X |X |An integer from 0 to 23 representing the hour component of `time`
+|HOUR(time)
+|X
+|X
+|An integer from 0 to 23 representing the hour component of `time`
 
-|MINUTE(time) |X |X |An integer from 0 to 59 representing the minute component of `time`
+|MINUTE(time)
+|X
+|X
+|An integer from 0 to 59 representing the minute component of `time`
 
-|MONTH(date) |X |X |An integer from 1 to 12 representing the month component of `date`
+|MONTH(date)
+|X
+|X
+|An integer from 1 to 12 representing the month component of `date`
 
-|MONTHNAME(date) |Xfootnote:[Always returns English full names (eg January)] | |A character string representing the month component of `date`; the name for the month is specific to the data source ([.since]_Jaybird 4_)
+|MONTHNAME(date)
+|Xfootnote:[Always returns English full names (e.g. "`January`")]
+|{nbsp}
+|A character string representing the month component of `date`;
+the name for the month is specific to the data source ([.since]_Jaybird 4_)
 
-|NOW() |X |X |A timestamp value representing the current date and time
+|NOW()
+|X
+|X
+|A timestamp value representing the current date and time
 
-|QUARTER(date) |X | |An integer from 1 to 4 representing the quarter in `date`;
+|QUARTER(date)
+|X
+|{nbsp}
+|An integer from 1 to 4 representing the quarter in `date`;
 1 represents January 1 through March 31 ([.since]_Jaybird 4_)
 
-|SECOND(time) |X |X |An integer from 0 to 59 representing the second component of `time`
+|SECOND(time)
+|X
+|X
+|An integer from 0 to 59 representing the second component of `time`
 
-|TIMESTAMPADD( interval, count, timestamp) |X | |A timestamp calculated by adding `count` number of `interval`(s) to `timestamp` ([.since]_Jaybird 4_)
+|TIMESTAMPADD( interval, count, timestamp)
+|X
+|{nbsp}
+|A timestamp calculated by adding `count` number of `interval`(s) to `timestamp` ([.since]_Jaybird 4_)
 
-|TIMESTAMPDIFF( interval, timestamp1, timestamp2) |X | |An integer representing the number of `interval` by which `timestamp2` is greater than `timestamp1` ([.since]_Jaybird 4_)
+|TIMESTAMPDIFF( interval, timestamp1, timestamp2)
+|X
+|{nbsp}
+|An integer representing the number of `interval` by which `timestamp2` is greater than `timestamp1` ([.since]_Jaybird 4_)
 
-|WEEK(date) |X |X |An integer from 1 to 53 representing the week of the year in `date`
+|WEEK(date)
+|X
+|X
+|An integer from 1 to 53 representing the week of the year in `date`
 
-|YEAR(date) |X |X |An integer representing the year component of `date`
-|=======================================================================
+|YEAR(date)
+|X
+|X
+|An integer representing the year component of `date`
+
+|===
 
 Legend: X -- available in this mode.
 
 === System Functions
 
 [cols="3m,^1,^1,5",options="header",]
-|=======================================================================
+|===
 |JDBC |built-in |UDF mode |Description
 
-|DATABASE() |Xfootnote:[Either the full path of the database or the alias. See documentation of `RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')` for details.] | |Name of the database ([.since]_Jaybird 4_)
+|DATABASE()
+|Xfootnote:[Either the full path of the database or the alias. See documentation of `RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')` for details.]
+|{nbsp}
+|Name of the database ([.since]_Jaybird 4_)
 
-|IFNULL(expression, value) |X |X |`value` if `expression` is null;
+|IFNULL(expression, value)
+|X
+|X
+|`value` if `expression` is null;
 `expression` if `expression` is not null
 
-|USER() |X | |User name in the DBMS ([.since]_Jaybird 3_)
-|=======================================================================
+|USER()
+|X
+|{nbsp}
+|Username in the DBMS
+|===
 
 Legend: X -- available in this mode.
 
 === Conversion Functions
 
 [cols="3m,^1,^1,5",options="header",]
-|=======================================================================
-|JDBC |built-in |UDF mode |Description
+|===
+|JDBC
+|built-in
+|UDF mode
+|Description
 
-|CONVERT(value, SQLtype) |X |X a|
-`value` converted to `SQLtype` where `SQLtype` may be one of the following SQL types:
+|CONVERT(value, SQLtype)
+|X
+|X
+a|`value` converted to `SQLtype` where `SQLtype` may be one of the following SQL types:
 
 * `BIGINT`
 * `BINARY` ([.since]_Jaybird 4_)
@@ -253,7 +493,7 @@ Legend: X -- available in this mode.
 
 Since Jaybird 4, these type names can also be prefixed with `SQL_`.
 
-|=======================================================================
+|===
 
 Legend: X -- available in this mode.
 

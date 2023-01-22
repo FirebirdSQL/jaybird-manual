@@ -37,7 +37,7 @@ Additionally, Firebird requires a connection character set to be specified in co
 
 There are two boundary cases that we will consider here, one when Firebird database was created with defaultfootnote:[The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.] character set `UTF8`, another when the Firebird database was created without specifying the character set (i.e. character set `NONE`).
 
-The character set `UTF8` in Firebird 2.0 and higher is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
+The character set `UTF8` is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
 Firebird has supported Unicode character set for a long time, however its implementation was deficient in Firebird 1.5 and earlier -- it did not support proper uppercasing and correct sorting.
 These issues were addressed in Firebird 2.0 and at the moment nothing prevents developers from using Unicode in the database and on the client side, which greatly simplifies the internationalization and localization of the applications.
 
@@ -77,11 +77,11 @@ There are a few limitations related to using the `UTF8` character set:
 
 * It is not possible to create Unicode columns longer than 8191 Unicode characters;
 this limitation is caused by the fact that the longest possible `VARCHAR` column can occupy 32765 bytes (32767 for `CHAR` columns) and a single `UTF8` character can occupy up to four bytes.
-* It is not possible to index Unicode columns longer than 1023 characters;footnote:[2047 characters in Firebird 4 with a page size of 32 kilobytes]
-this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which in Firebird 2.0 and higher can be maximum 16k and the before mentioned fact that each `UTF8` character can occupy up to four bytes.
+* It is not possible to index Unicode columns longer than 1023 characters -- or 2047 characters in Firebird 4.0 with a page size of 32 kilobytes;
+this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which has a maximum of 16k ([.since]_Firebird 4.0_ 32k) and the before mentioned fact that each `UTF8` character can occupy up to four bytes.
 
 It should be mentioned that using Unicode character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
-This mainly applies to the cases when non-latin characters are stored in the database, as those characters will require two or more bytes, which in turn might cause additional roudtrips to the server to fetch data.
+This mainly applies to the cases when non-latin characters are stored in the database, as those characters will require two or more bytes, which in turn might cause additional roundtrips to the server to fetch data.
 
 ==== The NONE character set
 
@@ -90,30 +90,30 @@ The reason for this is that Java internally stores all strings in Unicode format
 When the `NONE` character set is used, Jaybird does not know how to interpret the received data.
 The only choice that is left to Jaybird is to construct a string using the default character set of the JVM, which usually matches the regional settings of the operating system and can be accessed from within the JVM through the `file.encoding` system property.
 
-([.since]_Jaybird 3_) Starting with Jaybird 3, with connection character set `NONE`, Jaybird will use the explicit character set of `CHAR`, `VARCHAR` and `BLOB SUB_TYPE TEXT` columns for the conversion.
-This addresses most of the problems described in this paragraph, except for columns without an explicit character set (ie their character set is `NONE`).
+With connection character set `NONE`, Jaybird uses the explicit character set of `CHAR`, `VARCHAR` and `BLOB SUB_TYPE TEXT` columns for the conversion.
+This addresses most of the problems described in this paragraph, except for columns without an explicit character set (i.e. their character set is `NONE`).
 
 It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
 One application running on the computer with, for example, Russian regional settings saves the Russian text (the default character set of the JVM is Cp1251) and another application running on computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
-However, when all client applications run same OS with the same regional settings in most cases will not have any severe consequences, except probably wrong sorting order or uppercasing on the server side.
+However, when all client applications run on the same OS with the same regional settings, in most cases this will not have any severe consequences, except probably wrong sorting order or uppercasing on the server side.
 
-On Linux and other Unix platforms it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").
+On Linux and other Unix platforms, it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").
 
 Therefore, application should use `NONE` character encoding as an encoding for a database and a connection only when at least one of the following is met:
 
 * Database will contain only ASCII characters,
 * It is guaranteed that all Java Virtual Machines accessing the database will have the same default encoding that can correctly handle all characters stored in the database,
-* ([.since]_Jaybird 3_) All columns have an explicit character set.
+* All columns have an explicit character set.
 When columns have an explicit character set (other than `NONE`) and connection character set `NONE` is used, Firebird will send an identifier of the character set of each column, and Jaybird will use that character set for the conversion.
 
 As a partial workaround, you can specify the encoding that should be used to interpret bytes coming from the server in the `charSet` connection property.
 The following rules are used when interpreting the `encoding` and `charSet` properties:
 
-* When only `encoding` property specified, Jaybird uses the default mapping between server and Java encodings.
+* When only `encoding` property is specified, Jaybird uses the default mapping between server and Java encodings.
 When `encoding` property is not set or set to `NONE` and `charSet` property is not set, the default JVM encoding is used to interpret bytes coming from the server.
 * When only `charSet` property is specified, Jaybird uses the reverse mapping to specify the connection encoding for the server and interprets byte stream according to the value of the property.
 * When both `encoding` and `charSet` property are specified, Jaybird sets the connection encoding according to the value of the `encoding` property, but interprets the byte stream according to the `charSet` property.
-([.since]_Jaybird 3_) With Jaybird 3 and higher, this option has limitations when `encoding=NONE`: the conversion using `charSet` will only be applied for columns that don't have an explicit character set, otherwise that explicit character set is used for the conversion.
+With Jaybird 3 and higher, this option has limitations when `encoding=NONE`: the conversion using `charSet` will only be applied for columns that don't have an explicit character set, otherwise that explicit character set is used for the conversion.
 
 The last case is most powerful, but also is the most dangerous in use.
 When used properly, it can solve the problems with the legacy databases;
@@ -124,91 +124,216 @@ when used incorrectly, one can easily trash the content of the database.
 The below table lists the available character encodings in the default Firebird distribution and their mapping to the Java ones:
 
 [cols="2,2,1,5",options="header",]
-|=======================================================================
-|Firebird encoding (`encoding` property) |Java encoding (`charSet` property) |Size in bytes |Comments
+|===
+|Firebird encoding (`encoding` property)
+|Java encoding (`charSet` property)
+|Size in bytes
+|Comments
 
-|NONE |- |1 |Raw bytes, no interpretation of the content is possible.
+|NONE
+|{nbsp}
+|1
+|Raw bytes, no interpretation of the content is possible.
 
-|ASCII |ASCII |1 |-
+|ASCII
+|ASCII
+|1
+|{nbsp}
 
-|BIG_5 |Big5 |2 |Traditional Chinese
+|BIG_5
+|Big5
+|2
+|Traditional Chinese
 
-|DOS437 |Cp437 |1 |MS-DOS: United States, Australia, New Zeland, South
-Africa
+|DOS437
+|Cp437
+|1
+|MS-DOS: United States, Australia, New Zeland, South Africa
 
-|DOS737 |Cp737 |1 |MS-DOS: Greek
+|DOS737
+|Cp737
+|1
+|MS-DOS: Greek
 
-|DOS775 |Cp775 |1 |MS-DOS: Baltic
+|DOS775
+|Cp775
+|1
+|MS-DOS: Baltic
 
-|DOS850 |Cp850 |1 |MS-DOS: Latin-1
+|DOS850
+|Cp850
+|1
+|MS-DOS: Latin-1
 
-|DOS852 |Cp852 |1 |MS-DOS: Latin-2
+|DOS852
+|Cp852
+|1
+|MS-DOS: Latin-2
 
-|DOS857 |Cp857 |1 |IBM: Turkish
+|DOS857
+|Cp857
+|1
+|IBM: Turkish
 
-|DOS858 |Cp858 |1 |IBM: Latin-1 + Euro
+|DOS858
+|Cp858
+|1
+|IBM: Latin-1 + Euro
 
-|DOS860 |Cp860 |1 |MS-DOS: Portuguese
+|DOS860
+|Cp860
+|1
+|MS-DOS: Portuguese
 
-|DOS861 |Cp861 |1 |MS-DOS: Icelandic
+|DOS861
+|Cp861
+|1
+|MS-DOS: Icelandic
 
-|DOS862 |Cp862 |1 |IBM: Hebrew
+|DOS862
+|Cp862
+|1
+|IBM: Hebrew
 
-|DOS863 |Cp863 |1 |MS-DOS: Canadian French
+|DOS863
+|Cp863
+|1
+|MS-DOS: Canadian French
 
-|DOS864 |Cp864 |1 |IBM: Arabic
+|DOS864
+|Cp864
+|1
+|IBM: Arabic
 
-|DOS865 |Cp865 |1 |MS-DOS: Nordic
+|DOS865
+|Cp865
+|1
+|MS-DOS: Nordic
 
-|DOS866 |Cp866 |1 |IBM: Cyrillic
+|DOS866
+|Cp866
+|1
+|IBM: Cyrillic
 
-|DOS869 |Cp869 |1 |IBM: Modern Greek
+|DOS869
+|Cp869
+|1
+|IBM: Modern Greek
 
-|EUCJ_0208 |EUC_JP |2 |JIS X 0201, 0208, 0212, EUC encoding, Japanese
+|EUCJ_0208
+|EUC_JP
+|2
+|JIS X 0201, 0208, 0212, EUC encoding, Japanese
 
-|GB_2312 |EUC_CN |2 |GB2312, EUC encoding, Simplified Chinese
+|GB_2312
+|EUC_CN
+|2
+|GB2312, EUC encoding, Simplified Chinese
 
-|ISO8859_1 |ISO-8859-1 |1 |ISO 8859-1, Latin alphabet No. 1
+|ISO8859_1
+|ISO-8859-1
+|1
+|ISO 8859-1, Latin alphabet No. 1
 
-|ISO8859_2 |ISO-8859-2 |1 |ISO 8859-2
+|ISO8859_2
+|ISO-8859-2
+|1
+|ISO 8859-2
 
-|ISO8859_3 |ISO-8859-3 |1 |ISO 8859-3
+|ISO8859_3
+|ISO-8859-3
+|1
+|ISO 8859-3
 
-|ISO8859_4 |ISO-8859-4 |1 |ISO 8859-4
+|ISO8859_4
+|ISO-8859-4
+|1
+|ISO 8859-4
 
-|ISO8859_5 |ISO-8859-5 |1 |ISO 8859-5
+|ISO8859_5
+|ISO-8859-5
+|1
+|ISO 8859-5
 
-|ISO8859_6 |ISO-8859-6 |1 |ISO 8859-6
+|ISO8859_6
+|ISO-8859-6
+|1
+|ISO 8859-6
 
-|ISO8859_7 |ISO-8859-7 |1 |ISO 8859-7
+|ISO8859_7
+|ISO-8859-7
+|1
+|ISO 8859-7
 
-|ISO8859_8 |ISO-8859-8 |1 |ISO 8859-8
+|ISO8859_8
+|ISO-8859-8
+|1
+|ISO 8859-8
 
-|ISO8859_9 |ISO-8859-9 |1 |ISO 8859-9
+|ISO8859_9
+|ISO-8859-9
+|1
+|ISO 8859-9
 
-|ISO8859_13 |ISO-8859-13 |1 |ISO 8859-13
+|ISO8859_13
+|ISO-8859-13
+|1
+|ISO 8859-13
 
-|KSC_5601 |MS949 |2 |Windows Korean
+|KSC_5601
+|MS949
+|2
+|Windows Korean
 
-|UNICODE_FSS |UTF-8 |3 |8-bit Unicode Transformation Format (deprecated
-since FB 2.0)
+|UNICODE_FSS
+|UTF-8
+|3
+|8-bit Unicode Transformation Format (deprecated since Firebird 2.0)
 
-|UTF8 |UTF-8 |4 |8-bit Unicode Transformation Format (FB 2.0+)
+|UTF8
+|UTF-8
+|4
+|8-bit Unicode Transformation Format (Firebird 2.0+)
 
-|WIN1250 |Cp1250 |1 |Windows Eastern European
+|WIN1250
+|Cp1250
+|1
+|Windows Eastern European
 
-|WIN1251 |Cp1251 |1 |Windows Cyrillic
+|WIN1251
+|Cp1251
+|1
+|Windows Cyrillic
 
-|WIN1252 |Cp1252 |1 |Windows Latin-1
+|WIN1252
+|Cp1252
+|1
+|Windows Latin-1
 
-|WIN1253 |Cp1253 |1 |Windows Greek
+|WIN1253
+|Cp1253
+|1
+|Windows Greek
 
-|WIN1254 |Cp1254 |1 |Windows Turkish
+|WIN1254
+|Cp1254
+|1
+|Windows Turkish
 
-|WIN1255 |Cp1255 |1 |-
+|WIN1255
+|Cp1255
+|1
+|{nbsp}
 
-|WIN1256 |Cp1256 |1 |-
+|WIN1256
+|Cp1256
+|1
+|{nbsp}
 
-|WIN1257 |Cp1257 |1 |-
-|=======================================================================
+|WIN1257
+|Cp1257
+|1
+|{nbsp}
+
+|===
 

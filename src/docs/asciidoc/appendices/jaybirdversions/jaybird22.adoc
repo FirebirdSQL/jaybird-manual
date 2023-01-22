@@ -4,7 +4,7 @@
 [NOTE]
 ====
 Jaybird 2.2 is end-of-life and will not receive further updates.
-We recommend to upgrade to Jaybird 4.
+We recommend upgrading to <<jb5,Jaybird 5>>.
 ====
 
 [[jb22-java]]
@@ -21,10 +21,10 @@ This guarantees a stable module name for Jaybird, and allows for future modulari
 
 Jaybird 2.2 supports Firebird 1.0 and higher, but is only tested with Firebird 2.5 and 3.0. 
 
-Connecting to Firebird 3 requires some additional configuration, see https://github.com/FirebirdSQL/jaybird/wiki/Jaybird-and-Firebird-3[Jaybird and Firebird 3.0^] for details.
+Connecting to Firebird 3.0 requires some additional configuration, see https://github.com/FirebirdSQL/jaybird/wiki/Jaybird-and-Firebird-3[Jaybird and Firebird 3.0^] for details.
 
-Firebird 4 is not formally supported in Jaybird 2.2.x, although connecting and most functionality will work. 
-We suggest that you use Jaybird 3.x or higher for Firebird 4. 
+Firebird 4.0 is not formally supported in Jaybird 2.2.x, although connecting and most functionality will work.
+We suggest that you use Jaybird 3.x or higher for Firebird 4.0.
 Support for newer data types like `DECFLOAT` and `NUMERIC`/`DECIMAL` with precision higher than 18 will be introduced in Jaybird 4.
 
 The Type 2 and embedded server JDBC drivers require the appropriate JNI library. 

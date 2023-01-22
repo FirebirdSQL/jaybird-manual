@@ -95,12 +95,12 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`BLOB SUB_TYPE < 0` 
 |`java.sql.Blob`
 
-|`BOOLEAN` ([.since]_Jaybird 2.2_)
-|`BOOLEAN` ([.since]_Firebird 3_)
+|`BOOLEAN`
+|`BOOLEAN` ([.since]_Firebird 3.0_)
 |`java.lang.Boolean`
 
 |`JaybirdTypeCodes.DECFLOAT` ([.since]_Jaybird 4_)footnote:[JDBC does not yet define a `java.sql.Types` code for `DECFLOAT`]
-|`DECFLOAT` ([.since]_Firebird 4_)
+|`DECFLOAT` ([.since]_Firebird 4.0_)
 |`java.math.BigDecimal`
 |================================================
 

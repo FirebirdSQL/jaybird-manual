@@ -1,10 +1,10 @@
 [[ref-decfloat]]
 === Decimal floating point type DECFLOAT
 
-[.since]_Firebird 4_
+[.since]_Firebird 4.0_
 
-Firebird 4 introduces the SQL:2016 `DECFLOAT` datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
-See the Firebird 4 documentation for details on this datatype.
+Firebird 4.0 introduces the SQL:2016 `DECFLOAT` datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
+See the Firebird 4.0 documentation for details on this datatype.
 
 [[ref-decfloat-jb4]]
 ==== Decfloat support in Jaybird 4 and higher
@@ -17,21 +17,14 @@ For more information, see <<ref-decfloat-support>>.
 [[ref-decfloat-jb3]]
 ==== Workarounds for Jaybird 3
 
-[.since]_Jaybird 3.0.6_
-
-Jaybird 3 does not support `DECFLOAT`, but starting with Jaybird 3.0.9, the connection property `dataTypeBind` can be used to convert to a datatype that is supported by Jaybird. 
-For earlier Jaybird 3 versions, see <<ref-decfloat-jb22>>.
+Jaybird 3 does not support `DECFLOAT`, but starting with Jaybird 3.0.9, the connection property `dataTypeBind` can be used to convert to a datatype that is supported by Jaybird.
 
 We recommend either `dataTypeBind=decfloat to varchar` or `dataTypeBind=decfloat to double precision`.
 Option `varchar` has our preference as it is able to support the full range of values of the `DECFLOAT` types.
 
 See <<ref-decfloat-bind>> for details.
 
-[[ref-decfloat-jb22]]
-==== Workarounds for Jaybird 2.2 and earlier
-
-Jaybird 2.2 and earlier do not support `DECFLOAT`.
-As a workaround, you can use the `SET BIND OF DECFLOAT TO <target-type>` statement to configure your connection to map `DECFLOAT` to a different datatype.
+For earlier Jaybird 3 versions, you can use the `SET BIND OF DECFLOAT TO <target-type>` statement to configure your connection to map `DECFLOAT` to a different datatype.
 When set, Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
 
 The available options are the same as documented in <<ref-decfloat-bind>>
@@ -200,8 +193,8 @@ Configuring these options does not change driver behaviour, only server-side beh
 When performing calculations in Java, use `MathContext.DECIMAL64` (for `DECFLOAT(16)`) or `MathContext.DECIMAL128` (for `DECFLOAT(34)`) to achieve similar results in calculations as in Firebird.
 Be aware there might still be differences in rounding, and the result of calculations may be out of range.
 
-   a. Firebird 4 snapshots currently allow storing NaN and Infinity values, retrieval of these values will result in a `SQLException`, with a  `DecimalInconvertibleException` cause with details on the special.
-The support for these special values is currently under discussion and may be removed in future Firebird 4 snapshots.
+   a. Firebird 4.0 currently allows storing NaN and Infinity values, retrieval of these values will result in a `SQLException`, with a  `DecimalInconvertibleException` cause with details on the special.
+The support for these special values is currently under discussion and may be removed in future Firebird versions.
 
 2. [[decfloat-note-2]]`byte` in Java is signed, and historically Jaybird has preserved sign when storing byte values, and it considers values outside -128 and +127 out of range.
 

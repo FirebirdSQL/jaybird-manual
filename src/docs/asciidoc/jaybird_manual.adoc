@@ -70,8 +70,6 @@ include::appendices/systemproperties/systemproperties.adoc[]
 
 include::appendices/datatypeconversion/datatypeconversion.adoc[]
 
-include::appendices/poolproperties/poolproperties.adoc[]
-
 include::appendices/characterencoding/characterencoding.adoc[]
 
 include::appendices/jdbcescape/jdbcescape.adoc[]

@@ -68,7 +68,7 @@ See also <<resultsets-types>>.
 
 [NOTE]
 ====
-When connecting to Firebird 5 with Jaybird 5 and connection property `scrollableCursor=SERVER`, a holdable result set will not use server-side scrollable cursor, but instead emulate by caching.
+When connecting to Firebird 5.0 with Jaybird 5 or higher and connection property `scrollableCursor=SERVER`, a holdable result set will not use server-side scrollable cursor, but instead emulate by caching.
 Server-side scrollable cursors do not support the holdable behaviour.
 ====
 

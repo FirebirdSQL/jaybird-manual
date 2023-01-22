@@ -2,9 +2,9 @@
 === Data type bind support
 
 [.since]_Jaybird 3.0.9_ +
-[.since]_Firebird 4_
+[.since]_Firebird 4.0_
 
-Firebird 4 (build 4.0.0.1683 or later) introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.
+Firebird 4.0 introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.
 This allows you to define data type conversion rules for compatibility or ease of processing data.
 
 This feature is specifically necessary for using the `WITH TIME ZONE` types under Jaybird 3, or Jaybird 4 on Java 7.

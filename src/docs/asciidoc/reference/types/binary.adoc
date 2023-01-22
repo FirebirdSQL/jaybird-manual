@@ -3,35 +3,14 @@
 
 The JDBC (and SQL standard) types `BINARY` and `VARBINARY` are called `CHAR(n) CHARACTER SET OCTETS` and `VARCHAR(n) CHARACTER SET OCTETS` in Firebird.
 
-[.since]_Firebird 4_ Firebird 4 introduces the names `BINARY` and `VARBINARY`/`BINARY VARYING` as aliases for `(VAR)CHAR(n) CHARACTER SET OCTETS`.
+([.since]_Firebird 4.0_) Firebird 4.0 introduces the names `BINARY` and `VARBINARY`/`BINARY VARYING` as aliases for `(VAR)CHAR(n) CHARACTER SET OCTETS`.
 
 In Java binary and varbinary are usually handled with byte arrays and `InputStream`/`OutputStream`.
-
-[[ref-binary-octets-as-bytes]]
-==== Connection property octetsAsBytes
-
-[.since]_Jaybird 2.1.1_ +
-[.until]_Jaybird 3_
-
-In Jaybird 2.2 and earlier, the default for `(VAR)CHAR(n) CHARACTER SET OCTETS` is to handle columns and parameters of this type as a string.
-That is, `getObject(int/String)` returns `String`, and metadata reports `(VAR)CHAR` type information.
-The bytes are converted to string using the default encoding or the connection encoding.
-
-Jaybird 2.1.1 introduced the boolean connection property `octetsAsBytes`.
-When set, `getObject(int/String)` will return `byte[]`, but otherwise columns or parameters will behave as normal string fields.
-Metadata information from sources like `DatabaseMetaData`, `ParameterMetaData`, and `ResultSetMetaData`, will report information as if it is a `String` (`(VAR)CHAR`) based field.
-[.since]_Jaybird 2.2.9_ `ResultSetMetaData` reports `(VAR)BINARY` type information.
-
-This approach was changed in Jaybird 3, see the next section
 
 [[ref-binary-always]]
 ==== Always BINARY/VARBINARY
 
-[.since]_Jaybird 3_
-
-Jaybird 3 and higher no longer handle `(VAR)CHAR(n) CHARACTER SET OCTETS` as JDBC types `CHAR`/`VARCHAR`, but always as `BINARY`/`VARBINARY`.
-This closer matches their intended usage.
-The connection property `octetsAsBytes` is no longer supported.
+Jaybird always handles `(VAR)CHAR(n) CHARACTER SET OCTETS` as JDBC types as `BINARY`/`VARBINARY`.
 
 Jaybird will report the JDBC `BINARY`/`VARBINARY` type information in all metadata (`DatabaseMetaData`, `ResultSetMetaData`, `ParameterMetaData`) for columns and parameters of type `(VAR)CHAR(n) CHARACTER SET OCTETS`, and `getObject(int/String)` will always return `byte[]`.
 

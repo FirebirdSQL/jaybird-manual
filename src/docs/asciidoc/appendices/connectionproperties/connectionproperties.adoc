@@ -46,22 +46,22 @@ Default: `Srp256,Srp`
 a|`wireCrypt`
 a|Jaybird specific property ([.since]_Jaybird 3.0.4_).
 Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED` (case insensitive).
-Configures Firebird 3 wire encryption behaviour.
+Configures Firebird 3.0 wire encryption behaviour.
 See <<ref-wirecrypt>> for more information. +
 Default: `DEFAULT`.
 
 a|`dbCryptConfig`
 |Jaybird specific property ([.since]_Jaybird 3.0.4_).
-Configures Firebird 3 database encryption support.
+Configures Firebird 3.0 database encryption support.
 See <<ref-dbcrypt>> for more information.
 
-a|`process_id` +
-`processId` ([.since]_Jaybird 3_), `isc_dpb_process_id`
+a|`processId` +
+`process_id`, `isc_dpb_process_id`
 |Specifies the process id reported to Firebird.
 See <<ref-processinfo>> for more information.
 
-a|`process_name` +
-`processName` ([.since]_Jaybird 3_), `isc_dpb_process_name`
+a|`processName` +
+`process_name`, `isc_dpb_process_name`
 |Specifies the process name reported to Firebird.
 See <<ref-processinfo>> for more information.
 |=======================================================================
@@ -88,9 +88,9 @@ Character set for the connection using Java character set name.
 Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
 
 a|`sqlDialect` +
-`dialect` ([.since]_Jaybird 3_), `sql_dialect`, `isc_dpb_sql_dialect`
+`dialect`, `sql_dialect`, `isc_dpb_sql_dialect`
 a|SQL dialect, can be 1, 2 and 3. +
-Default: 3 (in Jaybird 2.2 and earlier the default is a combination of dialect 3 and the actual database dialect)
+Default: 3
 
 a|`defaultHoldable` +
 `defaultResultSetHoldable`
@@ -101,7 +101,7 @@ A workaround for applications with incorrect assumptions on result sets in auto-
 See <<ref-defaultholdable>> for more information.
 
 a|`useFirebirdAutocommit`
-|Jaybird specific property ([.since]_Jaybird 2.2.9_).
+|Jaybird specific property.
 Boolean property.
 Enable experimental feature to use Firebird auto-commit for JDBC auto-commit mode.
 See <<ref-firebirdautocommit>> for more information.
@@ -138,19 +138,19 @@ Only has effect on Type 4 (pure Java) connections.
 
 a|`connectTimeout` +
 `connect_timeout`, `isc_dpb_connect_timeout`
-|Connect timeout in seconds ([.since]_Jaybird 2.2.2_).
+|Connect timeout in seconds.
 For the Java wire protocol the connect timeout will detect unreachable hosts. 
 In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol. 
 This means that -- for the native protocol -- the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
-|Jaybird specific property ([.since]_Jaybird 4_ [.since]_Firebird 3_).
+|Jaybird specific property ([.since]_Jaybird 4_ [.since]_Firebird 3.0_).
 Boolean property.
 Set property to `true` to enable zlib wire compression.
 See <<ref-wirecompression>> for more information.
 
 a|`columnLabelForName`
-|Jaybird specific property ([.since]_Jaybird 2.2.1_).
+|Jaybird specific property.
 Boolean property.
 Set property to `true` for backwards compatible behaviour (`getColumnName()` returns the column label). 
 Don't set the property or set it to `false` for JDBC-compliant behaviour (recommended).
@@ -191,17 +191,9 @@ Value `< 0` -- server-side default, `0` -- server-side maximum, `> 0` -- size (c
 See <<ref-batch-server-batch-buffer-size>> for more information. +
 Default value: `0`
 
-a|`octetsAsBytes`
-|Jaybird specific property. ([.since]_Jaybird 2.1.1_ [.until]_Jaybird 3_)
-Boolean property.
-Unused since Jaybird 3, removed in Jaybird 4.
-Makes `ResultSet.getObject` for `(VAR)CHAR CHARACTER SET OCTETS` return `byte[]` instead of `String`.
-Since Jaybird 3, this is the default behaviour (with further enhancements to identify these columns as JDBC `(VAR)BINARY`).
-See <<ref-binary>> for more information.
-
 a|`dataTypeBind` +
 `set_bind`
-|Defines data type bind from one type to a different type. ([.since]_Jaybird 3.0.9_ [.since]_Firebird 4_)
+|Defines data type bind from one type to a different type. ([.since]_Jaybird 3.0.9_ [.since]_Firebird 4.0_)
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using `%3B`.
 See <<ref-datatypebind>> for more information.
@@ -215,13 +207,13 @@ Default: not set (Jaybird 3 and earlier), or the JVM default time zone ([.since]
 
 a|`decfloatRound` +
 `decfloat_round`
-|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4_)
+|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4.0_)
 Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
 See <<ref-decfloat-traps-round>> for more information.
 
 a|`decfloatTraps` +
 `decfloat_traps`
-|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4_)
+|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4.0_)
 Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
 See <<ref-decfloat-traps-round>> for more information.
 
@@ -258,21 +250,15 @@ a|`set_db_charset` +
 `isc_dpb_set_db_charset`
 |Set the default character set of the database.
 
-a|`paranoia_mode`
-|Jaybird specific property. 
-Boolean property.
-Unused since Jaybird 2.2.
-Tells the driver to throw exception in situations not covered by the specification.
-
 a|`noResultSetTracking`
-|Jaybird specific property.
+|Jaybird specific property. ([.until]_Jaybird 4_)
 Boolean property.
-Unused since at least Jaybird 2.2, will be removed in Jaybird 4.
+Unused since at least Jaybird 2.2, removed in Jaybird 4.
 
 a|`useTranslation` +
 `mapping_path`
-|Jaybird specific property.
-Deprecated, will be removed in Jaybird 4.
+|Jaybird specific property. ([.until]_Jaybird 4_)
+Deprecated, removed in Jaybird 4.
 This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
 Value is the path to a mapping properties file.
 |=======================================================================

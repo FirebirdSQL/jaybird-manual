@@ -1,10 +1,7 @@
 [[ref-generatedkeys]]
 === Generated keys retrieval
 
-[.since]_Jaybird 2.2_ +
-[.since]_Firebird 2.0_
-
-Jaybird 2.2 added support for the `getGeneratedKeys()` JDBC feature for `Statement` and `PreparedStatement`.
+Jaybird provides support for the `getGeneratedKeys()` JDBC feature for `Statement` and `PreparedStatement`.
 This feature can be used to retrieve the generated ids (and other columns) from DML statements.
 
 This feature is available for `Connection.prepareStatement`, and `Statement.execute`, `Statement.executeUpdate` and `Statement.executeLargeUpdate` ([.since]_Java 8/JDBC 4.2_)
@@ -30,7 +27,7 @@ Since Jaybird 4.0.8, Jaybird uses a custom parser and no longer requires ANTLR f
 If you previously relied on absence of ANTLR to disable generated keys support, the generated keys feature can be disabled by setting <<ref-generatedkeys-config,connection property `generatedKeysEnabled`>> to `disabled`.
 ****
 
-This functionality is available for `INSERT` ([.since]_Firebird 2.0_), for `UPDATE`, `UPDATE OR INSERT` and `DELETE` ([.since]_Firebird 2.1_), and for `MERGE` ([.since]_Firebird 3.0_).
+This functionality is available for `INSERT`, `UPDATE`, `UPDATE OR INSERT` and `DELETE`, and for `MERGE` ([.since]_Firebird 3.0_).
 
 [NOTE] 
 ====
@@ -42,7 +39,7 @@ Attempting to use generated keys retrieval with a statement that affects multipl
 Support for multi-row `RETURNING` is available in Jaybird 5.
 ====
 
-The examples in this section use the following (Firebird 3) table:
+The examples in this section use the following (Firebird 3.0) table:
 
 [source,sql]
 .Example person table
@@ -316,14 +313,8 @@ Some examples:
 
 * `jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert` will only enable insert support
 * `jdbc:firebird://localhost/testdb?generatedKeysEnabled=merge` will only enable merge support.
-But only on Firebird 3 and higher, for Firebird 2.5 this will behave as `ignored` given the lack of `RETURNING` support for merge.
+But only on Firebird 3.0 and higher, for Firebird 2.5 this will behave as `ignored` given the lack of `RETURNING` support for merge.
 * `jdbc:firebird://localhost/testdb?generatedKeysEnabled=insert,update` will only enable insert and update support
 
 This feature can be used to circumvent issues with frameworks or tools that always use generated keys methods for prepare or execution.
 For example with `UPDATE` statements that touch multiple records and -- given the Firebird 4.0 and earlier limitations for `RETURNING` -- produce the error _"multiple rows in singleton select"_.
-
-[[ref-generatedkeys-limitations]]
-==== Limitations
-
-Jaybird 2.2 does not support generated keys retrieval for batch execution of prepared statements.
-Support for generated key retrieval with batch execution was introduced in Jaybird 3.0.

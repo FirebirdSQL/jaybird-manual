@@ -331,13 +331,13 @@ This allows restoring a clean database from the backup.
 |Do not collect garbage during backup.
 
 The backup process reads all records in the tables one by one.
-When cooperative garbage collection is enabledfootnote:[Cooperative garbage collection can be switched off in Firebird 2.0 SuperServer architecture by corresponding configuration option. It can't be switched off in ClassicServer architecture and in previous Firebird versions.] the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
-This process is time-consuming and might be switched off when creating backup, where
-the most recent version will be read.
+When cooperative garbage collection is enabledfootnote:[Cooperative garbage collection can be switched off in SuperServer architecture with configuration option "```GCPolicy```".
+It can't be switched off in ClassicServer and SuperClassic architectures.]
+the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
+This process is time-consuming and might be switched off when creating backup, where the most recent version will be read.
 
 Later, operator can restore the database from the backup. 
-In databases with many back-versions of the records, the backup-restore cycle can be
-faster than traditional garbage collection.
+In databases with many back-versions of the records, the backup-restore cycle can be faster than traditional garbage collection.
 
 |BACKUP_NON_TRANSPORTABLE 
 |Use non-transportable backup format.
@@ -415,8 +415,6 @@ backupManager.restoreDatabase(
 
 [[services-backup-and-restore-gbak-streaming]]
 ==== Gbak streaming backup and restore
-
-[.since]_Jaybird 3_
 
 The `FBStreamingBackupManager` class is a sibling of `FBBackupManager`, providing streaming backup and restore.
 Streaming backup and restore allows client-server backup and restore, by streaming the backup from the server to the client -- on backup, or from the client to the server -- on restore.
@@ -571,7 +569,7 @@ backupManager.restoreDatabase();
 
 [IMPORTANT]
 ====
-Starting with Firebird 3, user management through the Services API has been deprecated.
+Starting with Firebird 3.0, user management through the Services API has been deprecated.
 You should use the SQL DDL statements for user management instead.
 ====
 

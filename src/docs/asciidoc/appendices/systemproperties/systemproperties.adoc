@@ -10,17 +10,11 @@ Jaybird provides a number of system properties to control global behaviour of Ja
 To configure logging, the following system properties are available. 
 See <<ref-logging>> for details.
 
-`org.firebirdsql.jdbc.fallbackConsoleLogger`:: [.since]_Jaybird 2.2.8_ [.until]_Jaybird 3_ 
-Set to true for fallback to log to console if log4j is not used or not available
-`FBLog4j`:: [.until]_Jaybird 3_
-Set to true to attempt to use log4j (if on classpath) for logging
-`org.firebirdsql.jdbc.useLog4j`:: [.since]_Jaybird 2.2.8_ [.until]_Jaybird 3_ 
-Alias for `FBLog4j`
-`org.firebirdsql.jdbc.forceConsoleLogger`:: [.since]_Jaybird 3_ 
+`org.firebirdsql.jdbc.forceConsoleLogger`::
 Set to true to force logging to console (`System.out` for info, `System.err` for warn, error and fatal) instead of default `java.util.logging`
-`org.firebirdsql.jdbc.disableLogging`:: [.since]_Jaybird 3_ 
+`org.firebirdsql.jdbc.disableLogging`::
 Set to true to disable logging
-`org.firebirdsql.jdbc.loggerImplementation`:: [.since]_Jaybird 3_ 
+`org.firebirdsql.jdbc.loggerImplementation`::
 Fully-qualified name of `org.firebirdsql.logging.Logger` implementation to use for logging
 
 These properties need to be set before Jaybird is loaded and used.
@@ -31,9 +25,9 @@ These properties need to be set before Jaybird is loaded and used.
 For Firebird 2.1 and higher, Jaybird can provide Firebird with process information.
 This information can be specified in connection properties, or globally using the following system properties.
 
-`org.firebirdsql.jdbc.processName`:: [.since]_Jaybird 2.2_ 
+`org.firebirdsql.jdbc.processName`::
 Process name to send to Firebird
-`org.firebirdsql.jdbc.pid`:: [.since]_Jaybird 2.2_ 
+`org.firebirdsql.jdbc.pid`::
 PID to send to Firebird (must be a valid integer)
 
 The property values are read for each connect, so the value can be changed at any time.
@@ -43,7 +37,7 @@ The property values are read for each connect, so the value can be changed at an
 
 The following system properties control character set behaviour for connections.
 
-`org.firebirdsql.jdbc.defaultConnectionEncoding`:: [.since]_Jaybird 3_ 
+`org.firebirdsql.jdbc.defaultConnectionEncoding`::
 Firebird character set name to use as connection character set when no explicit connection character set is configured (defaults to `NONE` when not set)
 `org.firebirdsql.jdbc.requireConnectionEncoding`:: [.since]_Jaybird 3.0.2_ 
 Set to true to disallow connections without an explicit connection character set.
@@ -56,7 +50,7 @@ The property values are read for each connect, so the value can be changed at an
 
 The following system properties control other global behaviour of Jaybird.
 
-`org.firebirdsql.jna.syncWrapNativeLibrary`:: [.since]_Jaybird 3_ 
+`org.firebirdsql.jna.syncWrapNativeLibrary`::
 Set to true to add a synchronization proxy around the native client library.
 `org.firebirdsql.datatypeCoderCacheSize`:: [.since]_Jaybird 4_ 
 Integer value for the number of encoding specific data type coders cached (default and minimum is 1). 
@@ -65,7 +59,7 @@ Jaybird will log a warning (_"Cleared encoding specific datatype coder cache [..
 `org.firebirdsql.nativeResourceShutdownDisabled`:: [.since]_Jaybird 4_ 
 Set to true to disable automatic shutdown and unload of native libraries and other native resources.
 Normally you should only use this if the automatic shutdown misbehaves and causes application errors. 
-If you need to set this to true, we'd appreciate it if you post a message to the Firebird-Java list with details on why you needed to enable this, so we can improve or fix this feature.
+If you need to set this to true, we'd appreciate it if you post a message to the https://groups.google.com/g/firebird-java[firebird-java Google Group^] with details on why you needed to enable this, so we can improve or fix this feature.
 
 These properties need to be set before Jaybird is loaded and used.
 Technically, `org.firebirdsql.jna.syncWrapNativeLibrary` is dynamic, but a native library will usually be loaded once.
@@ -76,7 +70,12 @@ Technically, `org.firebirdsql.jna.syncWrapNativeLibrary` is dynamic, but a nativ
 The following Java system properties are relevant for Jaybird.
 
 `jdk.net.useFastTcpLoopback`:: [.since]_Firebird 3.0.2_ [.since]_Jave 8 update 60_ [.since]_Windows 8 / Windows Server 2012_
-Set to true on Windows to enable "TCP Loopback Fast Path" (`SIO_LOOPBACK_FAST_PATH` socket option). 
-"TCP Loopback Fast Path" can improve performance for localhost connections. +
-Java only has an 'all-or-nothing' support for the "TCP Loopback Fast Path", so Jaybird cannot enable this for you: you must specify this property on JVM startup. 
+Set to true on Windows to enable "`TCP Loopback Fast Path`" (`SIO_LOOPBACK_FAST_PATH` socket option).
+"`TCP Loopback Fast Path`" can improve performance for localhost connections. +
+Java only has an 'all-or-nothing' support for the "`TCP Loopback Fast Path`", so Jaybird cannot enable this for you: you must specify this property on JVM startup.
 This has the benefit that this works for all Jaybird versions, as long as you use Java 8 update 60 or higher (and Firebird 3.0.2 or higher).
++
+[WARNING]
+====
+Microsoft has deprecated the `SIO_LOOPBACK_FAST_PATH` and recommends not to use it.
+====

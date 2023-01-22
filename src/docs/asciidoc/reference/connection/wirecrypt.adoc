@@ -2,9 +2,9 @@
 === Wire encryption support
 
 [.since]_Jaybird 3.0.4_ +
-[.since]_Firebird 3_
+[.since]_Firebird 3.0_
 
-Firebird 3 and higher have support for encrypting the data sent over the network.
+Firebird 3.0 and higher have support for encrypting the data sent over the network.
 This _wire encryption_ is configured using the connection property `wireCrypt`, with the following (case-insensitive) values:
 
  `DEFAULT`:: default (value used when `wireCrypt` is not specified; you'd normally not specify `DEFAULT` explicitly)
@@ -15,15 +15,15 @@ This _wire encryption_ is configured using the connection property `wireCrypt`, 
 The default value acts as `ENABLED` for pure Java connections, for JNA (native) connections this wil use the fbclient default (either `Enabled` or the configured value of `WireCrypt` from a `firebird.conf` read by the native library).
 
 Connection property `wireCrypt=REQUIRED` will **not** reject unencrypted connections when connecting to Firebird 2.5 or lower. 
-This behavior matches the Firebird 3 client library behavior. 
+This behavior matches the Firebird 3.0 client library behavior.
 The value will also be ignored when using native connections with a Firebird 2.5 client library.
 
-Using `wireCrypt=DISABLED` when Firebird 3 or higher uses setting `WireCrypt = Required` (or vice versa) will yield error _"Incompatible wire encryption levels requested on client and server"_ (error: _isc_wirecrypt_incompatible / 335545064_).
+Using `wireCrypt=DISABLED` when Firebird 3.0 or higher uses setting `WireCrypt = Required` (or vice versa) will yield error _"Incompatible wire encryption levels requested on client and server"_ (error: _isc_wirecrypt_incompatible / 335545064_).
 
-The same error is raised when connecting to Firebird 3 and higher with a legacy authentication user with connection property `wireCrypt=REQUIRED`. 
+The same error is raised when connecting to Firebird 3.0 and higher with a legacy authentication user with connection property `wireCrypt=REQUIRED`.
 
 Alternative wire encryption plugins are currently not supported, although we made some preparations to support this. 
-If you want to develop such a plugin, contact us on the Firebird-Java mailing list so we can work out the details of adding plugin support.
+If you want to develop such a plugin, contact us on the https://groups.google.com/g/firebird-java[firebird-java Google Group^], so we can work out the details of adding plugin support.
 
 [WARNING]
 ====

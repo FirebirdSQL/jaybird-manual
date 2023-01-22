@@ -2,9 +2,9 @@
 === Database encryption support
 
 [.since]_Jaybird 3.0.4_ +
-[.since]_Firebird 3_
+[.since]_Firebird 3.0_
 
-Jaybird 3.0.4 added support for Firebird 3 database encryption callbacks in the pure Java implementation of the version 13 protocol. 
+Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in the pure Java implementation of the version 13 protocol.
 
 The current implementation is simple and only supports replying with a static value from a connection property. 
 Be aware that a static value response for database encryption is not very secure as it can easily lead to replay attacks or unintended key exposure. 
@@ -32,7 +32,7 @@ Jaybird 5 introduced _base64url_, an alternative to _base64_, which doesn't use 
 
 For service operations, as implemented in the `org.firebirdsql.management` package, Firebird requires the `KeyHolderPlugin` configuration to be globally defined in `firebird.conf`. 
 Database-specific configuration in `databases.conf` will be ignored for service operations. 
-Be aware that some service operations on encrypted databases are not supported by Firebird 3 (eg `gstat` equivalents other than `gstat -h` or `gstat -e`).
+Be aware that some service operations on encrypted databases are not supported by Firebird 3.0 (e.g. `gstat` equivalents other than `gstat -h` or `gstat -e`).
 
 [WARNING]
 ====

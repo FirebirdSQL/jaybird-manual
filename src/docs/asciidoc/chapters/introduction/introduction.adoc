@@ -17,9 +17,10 @@ The JCA implementation was removed in Jaybird 5, and Jaybird is now only a JDBC 
 === This manual
 
 This manual covers Jaybird {jaybird-version} and may use Java 11 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
+Features that were removed in Jaybird 3 or earlier are not covered.
 
-New or removed features are tagged with the version that introduced a feature (e.g. [.since]_Jaybird 3_) or removed feature (e.g. [.until]_Jaybird 3_).
-This tagging is only done for features introduced (or removed) in Jaybird 2.2 or later, or in Firebird 3.0 or later, and for features available in Java 8 (JDBC 4.2) or later.
+New or removed features are tagged with the version that introduced a feature (e.g. [.since]_Jaybird 4_) or removed feature (e.g. [.until]_Jaybird 4_).
+This tagging is only done for features introduced (or removed) in Jaybird 4 or later, or in Firebird 3.0 or later, and for features available in Java 8 (JDBC 4.2) or later.
 
 This manual may include documentation of features of -- possibly unreleased -- Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
 
@@ -144,8 +145,7 @@ There are several ways you can contribute to Jaybird or Firebird in general:
 * Participate on the mailing lists (see https://www.firebirdsql.org/en/mailing-lists/[^])
 * Report bugs or submit patches on the tracker (see <<intro-reporting-bugs>>)
 * Create pull requests on GitHub (https://github.com/FirebirdSQL/jaybird[^])
-* Become a developer (for Jaybird contact us on firebird-java, for Firebird in general, use the 
-Firebird-devel mailing list)
+* Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use the https://groups.google.com/g/firebird-devel[firebird-devel Google Group^])
 * Become a paying member or sponsor of the Firebird Foundation (see https://www.firebirdsql.org/en/firebird-foundation/[^])
 
 [[intro-reporting-bugs]]

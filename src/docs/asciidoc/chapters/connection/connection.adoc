@@ -408,7 +408,7 @@ This driver tries to load `fbembed.dll/libfbembed.so` and `fbclient.dll/libfbcli
 
 See also the <<NATIVE and LOCAL types>> section.
 
-When using Firebird 3 embedded, you will need to make sure the necessary plugins like `engine12.dll/libengine12.so` are accessible to the client library, consult the Firebird 3 documentation for more information.
+When using Firebird 3.0 embedded, you will need to make sure the necessary plugins like `engine12.dll/libengine12.so` are accessible to the client library, consult the Firebird 3.0 documentation for more information.
 For an example, see the article https://www.lawinegevaar.nl/firebird/jaybird_embedded_example.html[Jaybird with Firebird embedded example^].
 
 // TODO Extend documentation

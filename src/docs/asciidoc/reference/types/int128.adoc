@@ -1,9 +1,9 @@
 [[ref-int128]]
 === Type INT128
 
-[.since]_Firebird 4_
+[.since]_Firebird 4.0_
 
-Firebird 4 introduced the non-standard type `INT128`, a signed 128 bit number.
+Firebird 4.0 introduced the non-standard type `INT128`, a signed 128 bit number.
 
 ==== Support for INT128
 

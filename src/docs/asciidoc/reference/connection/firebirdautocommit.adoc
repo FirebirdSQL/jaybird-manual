@@ -1,8 +1,6 @@
 [[ref-firebirdautocommit]]
 === Firebird auto commit mode (experimental)
 
-[.since]_Jaybird 2.2.9_
-
 This option is enabled by specifying the connection property `useFirebirdAutocommit=true`.
 
 With this option, Jaybird will configure the transaction to use `isc_tpb_autocommit` with `autoCommit=true`. 

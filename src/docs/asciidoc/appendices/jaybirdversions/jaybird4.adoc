@@ -1,6 +1,12 @@
 [[jb4]]
 === Jaybird 4
 
+[NOTE]
+====
+Jaybird 4 is supported at least until the end of 2023.
+However, we recommend upgrading to <<jb5,Jaybird 5>>.
+====
+
 [[jb4-java]]
 ==== Java support
 
@@ -25,19 +31,20 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 [[jb4-firebird3]]
 ===== Notes on Firebird 3 support
 
-Jaybird 4 supports the Firebird 3 and higher zlib compression.
+Jaybird 4 supports the Firebird 3.0 and higher zlib compression.
 
 [[jb4-firebird4]]
 ===== Notes on Firebird 4 support
 
-Jaybird 4 supports the protocol improvements of Firebird 4 for statement timeouts, but does not implement the new batch protocol.
+Jaybird 4 supports the protocol improvements of Firebird 4.0 for statement timeouts, but does not implement the new batch protocol.
 
-Jaybird time zone support uses functionality added after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1683 or later for the `dataTypeBind` connection property.
+Jaybird 4 provides time zone support.
 
-Jaybird 4 supports the extended numeric precision types introduced after Firebird 4 beta 1 (4.0.0.1436), you will need version 4.0.0.1604 to be able to use `NUMERIC` or `DECIMAL` with a precision higher than 18.
+Jaybird 4 supports the extended numeric precision types `NUMERIC` or `DECIMAL` with a precision higher than 18 up to 38.
+Since Jaybird 4.0.1, the `INT128` type is also supported.
 
-Jaybird does not support the ChaCha wire encryption plugin.
-This may be added in a future major or point release.
+Jaybird 4 does not support the ChaCha wire encryption plugin.
+Support for ChaCha has been added in Jaybird 5.
 
 [[jb4-spec]]
 ==== Supported Specifications

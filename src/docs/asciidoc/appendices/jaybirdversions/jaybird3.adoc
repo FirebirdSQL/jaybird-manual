@@ -4,7 +4,7 @@
 [NOTE]
 ====
 Jaybird 3 is end-of-life and will not receive further updates.
-We recommend to upgrade to Jaybird 4.
+We recommend upgrading to <<jb5,Jaybird 5>>.
 ====
 
 [[jb3-java]]
@@ -31,20 +31,20 @@ The Type 2 and embedded server JDBC drivers use JNA to access the Firebird clien
 
 Jaybird 3.0.4 added support for wire protocol encryption and database encryption.
 
-Jaybird 3.0 does not support the Firebird 3 zlib compression.
+Jaybird 3 does not support the Firebird 3.0 zlib compression.
 
 [[jb3-firebird4]]
 ===== Notes on Firebird 4 support
 
-Jaybird 3.0 can connect and query Firebird 4. 
+Jaybird 3 can connect and query Firebird 4.0.
 Longer object names are supported. 
 
-The new data types introduced in Firebird 4 are not supported. 
+The new data types introduced in Firebird 4.0 are not supported.
 Support for data types like `DECFLOAT` and `NUMERIC`/`DECIMAL` with precision higher than 18 will be introduced in Jaybird 4.
 
 The Srp256 authentication plugin is supported ([.since]_Jaybird 3.0.5_), but the other SrpNNN plugins are not.
 
-Jaybird 3 does not support the Firebird 4 zlib compression.
+Jaybird 3 does not support the Firebird 4.0 zlib compression.
 
 [[jb3-spec]]
 ==== Supported Specifications

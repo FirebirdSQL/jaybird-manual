@@ -1,16 +1,12 @@
 [[ref-boolean]]
 === Type BOOLEAN
 
-[.since]_Firebird 3_
+[.since]_Firebird 3.0_
 
-Firebird 3 introduced the SQL standard type `BOOLEAN`.
+Firebird 3.0 introduced the SQL standard type `BOOLEAN`.
 
 [[ref-boolean-support]]
 ==== Support for BOOLEAN
-
-[.since]_Jaybird 2.2_
-
-Jaybird 2.2 introduced support for `BOOLEAN`.
 
 On parameters of type `BOOLEAN`, Jaybird supports most of the other Java types, using the following mapping:
 
@@ -53,7 +49,7 @@ The following options are recommended:
 * Use `CHAR` or `VARCHAR` with length 5 or longer with values `'true'` and `'false'`
 
 We recommend creating a domain for 'simulated' booleans with a check constraint to restrict the possible values.
-If you do this, name the domain something like `D_BOOLEAN`, and avoid the name `BOOLEAN` to prevent problems when upgrading to Firebird 3.
+If you do this, name the domain something like `D_BOOLEAN`, and avoid the name `BOOLEAN` to prevent problems when upgrading to Firebird 3.0.
 
 For non-boolean types, Jaybird supports the following conversions with `setBoolean` and `getBoolean`:
 

@@ -244,8 +244,7 @@ by a JDBC driver.
 *** `java.sql.DataTruncation` - thrown when a data truncation
 error happens, can also be used as a warning.
 
-NOTE: Unfortunately Jaybird 3.0 does not yet fully use this exception hierarchy, we are
-working to address this with the next versions of Jaybird.
+NOTE: Unfortunately Jaybird 3 does not yet fully use this exception hierarchy, we are working to address this with the next versions of Jaybird.
 
 Each of three layers in Jaybird use exceptions most appropriate to the
 specific layer. *TODO* List needs revision
