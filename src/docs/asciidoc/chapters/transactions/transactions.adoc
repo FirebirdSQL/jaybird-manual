@@ -193,9 +193,9 @@ Any committed change in another transaction that happened after the start of thi
 This mode can be considered as a traditional pessimistic locking scheme, but the lock is placed on the whole table.
 See section "<<transactions-table-reservation>>" for more information.
 
-The default mapping is specified in the `isc_tpb_mapping.properties` file that can be found in the Jaybird archive and can be overridden via the connection properties
+The default mapping is specified in the Jaybird code and can be overridden via the connection properties.
 
-* via the `tpbMapping` property that specifies the path to the `PropertiesResourceBundle` with the new mapping of the isolation level;
+* via the `tpbMapping` property that specifies the name of the `ResourceBundle` with the new mapping of the isolation level;
 * via the direct specification of the JDBC transaction isolation level.
 The following code contains an example of such operation, the values in the mapping are described in section "<<transactions-tpb>>".
 * via the data source configuration.
