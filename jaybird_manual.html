@@ -625,8 +625,9 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-logging">B.1. Logging</a></li>
 <li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
-<li><a href="#systemproperties-other">B.4. Other properties</a></li>
-<li><a href="#systemproperties-java">B.5. Useful Java system properties</a></li>
+<li><a href="#systemproperties-wire-buffers">B.4. Wire protocol buffer sizes</a></li>
+<li><a href="#systemproperties-other">B.5. Other properties</a></li>
+<li><a href="#systemproperties-java">B.6. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -9313,7 +9314,126 @@ This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectio
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.4. Other properties</h3>
+<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.4. Wire protocol buffer sizes</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>The following system properties control the sizes of a number of buffers used by Jaybird&#8217;s wire protocol implementation.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.wire.deflateBufferSize</code></dt>
+<dd>
+<p>Buffer size in bytes for deflate (compression).
+Has a minimum size of 512 and a default value of 8192.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.wire.inflateBufferSize</code></dt>
+<dd>
+<p>Buffer size in bytes for inflate (decompression).
+Has a minimum size of 512 and a default value of 8192.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.wire.decryptBufferSize</code></dt>
+<dd>
+<p>Buffer size in bytes for decryption.
+Has a minimum size of 512 and a default value 8192.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As the decryption input buffer determines the size of the decryption output buffer, the actual allocation is up to twice the specified value.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.wire.inputBufferSize</code></dt>
+<dd>
+<p>Buffer size in bytes for reading data from the socket.
+Has a minimum size of 1024 and a default value of 16384.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This property should not be confused with the socket buffer size (configurable with the <code>socketBufferSize</code> <em>connection property</em>).
+Setting this value higher than <code>socketBufferSize</code> is unlikely to have any benefits.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.wire.outputBufferSize</code></dt>
+<dd>
+<p>Buffer size in bytes for writing data.
+Has a minimum size of 1024 and a default value of 32768.</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This property should not be confused with the socket buffer size (configurable with the <code>socketBufferSize</code> <em>connection property</em>).
+Contrary to the input buffer size, setting it higher than <code>socketBufferSize</code> might have performance benefits.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These properties need to be set before Jaybird is loaded and used.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The minimum sizes and default values should be considered an implementation detail and might change in a future major version.</p>
+</div>
+<div class="paragraph">
+<p>The &#8220;deflate&#8221; and &#8220;inflate&#8221; buffers are only used when wire compression is enabled.
+The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (the default with Firebird 3.0 and higher).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The order of buffers for input is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Jaybird &#8656; [inflate &#8656;] [decrypt &#8656;] input &#8656; socket</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The order of buffers for output is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Jaybird &#8658; output [&#8658; deflate] &#8658; socket</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.5. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -9345,7 +9465,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.5. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.6. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -12136,7 +12256,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-01-28 13:32:20 UTC
+Last updated 2023-02-20 14:53:42 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
