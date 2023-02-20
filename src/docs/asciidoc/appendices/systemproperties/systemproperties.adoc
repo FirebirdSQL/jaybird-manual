@@ -45,6 +45,70 @@ This property will have no effect if `org.firebirdsql.jdbc.defaultConnectionEnco
 
 The property values are read for each connect, so the value can be changed at any time.
 
+[[systemproperties-wire-buffers]]
+=== Wire protocol buffer sizes
+
+[.since]_Jaybird 6_
+
+The following system properties control the sizes of a number of buffers used by Jaybird's wire protocol implementation.
+
+`org.firebirdsql.wire.deflateBufferSize`::
+Buffer size in bytes for deflate (compression).
+Has a minimum size of 512 and a default value of 8192.
+`org.firebirdsql.wire.inflateBufferSize`::
+Buffer size in bytes for inflate (decompression).
+Has a minimum size of 512 and a default value of 8192.
+`org.firebirdsql.wire.decryptBufferSize`::
+Buffer size in bytes for decryption.
+Has a minimum size of 512 and a default value 8192.
++
+[NOTE]
+====
+As the decryption input buffer determines the size of the decryption output buffer, the actual allocation is up to twice the specified value.
+====
+`org.firebirdsql.wire.inputBufferSize`::
+Buffer size in bytes for reading data from the socket.
+Has a minimum size of 1024 and a default value of 16384.
++
+[CAUTION]
+====
+This property should not be confused with the socket buffer size (configurable with the `socketBufferSize` _connection property_).
+Setting this value higher than `socketBufferSize` is unlikely to have any benefits.
+====
+`org.firebirdsql.wire.outputBufferSize`::
+Buffer size in bytes for writing data.
+Has a minimum size of 1024 and a default value of 32768.
++
+[CAUTION]
+====
+This property should not be confused with the socket buffer size (configurable with the `socketBufferSize` _connection property_).
+Contrary to the input buffer size, setting it higher than `socketBufferSize` might have performance benefits.
+====
+
+These properties need to be set before Jaybird is loaded and used.
+
+[NOTE]
+====
+The minimum sizes and default values should be considered an implementation detail and might change in a future major version.
+
+The "`deflate`" and "`inflate`" buffers are only used when wire compression is enabled.
+The "`decrypt`" buffer is only applied when wire encryption is used (the default with Firebird 3.0 and higher).
+====
+
+The order of buffers for input is as follows:
+
+[subs="normal"]
+----
+Jaybird <= [inflate <=] [decrypt <=] input <= socket
+----
+
+The order of buffers for output is as follows:
+
+[subs="normal"]
+----
+Jaybird => output [=> deflate] => socket
+----
+
 [[systemproperties-other]]
 === Other properties
 
