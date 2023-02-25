@@ -20,6 +20,8 @@ include::connection/processinfo.adoc[]
 
 include::connection/datatypebind.adoc[]
 
+include::connection/enableprotocol.adoc[]
+
 // TODO client-info
 
 [[ref-statement]]

@@ -1,0 +1,58 @@
+[[ref-enable-protocol]]
+=== Enabling unsupported protocol versions
+
+[.since]_Jaybird 6_
+
+Since Jaybird 6, the pure Java protocol implementation will no longer attempt to connect with protocol versions of Firebird versions which are not supported.
+Since the minimum supported Firebird version in Jaybird 6 is Firebird 3.0, this means that protocol versions 10, 11 and 12 are no longer tried by default.
+Protocol versions higher than 18 (Firebird 5.0.0) will also not be attempted (assuming a protocol implementation with that version number exists on the classpath).
+
+As a workaround, the connection property `enableProtocol` can enable unsupported protocols, assuming a suitable protocol implementation is available on the classpath.
+
+This connection property can have the following values:
+
+* A comma-separated list of additional protocol versions to try (e.g. `"11,12"`).
+The listed versions are tried in addition to the supported protocol versions.
+Non-integer values or unknown protocol versions are silently ignored.
++
+It is possible to use the "`masked`" protocol version (e.g. `"32780"` for protocol version 12).
+However, we recommend using the unmasked version (e.g. `"12"` for protocol version 12).
+* `"*"` -- enable all available protocol versions
+* `null` or empty string (`++""++`) -- default behaviour, only use supported protocols
+
+[WARNING]
+====
+Given these protocol versions and their Firebird version are not supported, there is no guarantee that the driver will function correctly when an unsupported protocol is enabled this way.
+Especially things like database metadata could use features that are not supported by older Firebird versions.
+We recommend upgrading your Firebird version, or downgrading to a Jaybird version which still supports your Firebird version.
+
+For maximum compatibility, it is recommended to either use `"*"`, or to make sure to include the maximum protocol version of your Firebird version.
+
+Unsupported protocol versions may be removed in future releases of Jaybird.
+====
+
+.Firebird versions and protocol versions
+[cols="1,1",options="header",]
+|===
+|Firebird version
+|Maximum protocol
+
+|1.0 -- 2.0
+|10
+
+|2.1
+|11
+
+|2.5
+|12
+
+|3.0
+|15footnote:[since Firebird 3.0.2, version 13 for 3.0.0 and 3.0.1]footnote:[Jaybird has no protocol 14 implementation]
+
+|4.0
+|16footnote:[Jaybird no protocol 17 implementation]
+
+|5.0
+|18
+
+|===

@@ -20,7 +20,7 @@ When using data sources, unexposed properties can be set using `setNonStandardPr
 === Authentication and security properties
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Connection property (+ aliases) 
 |Explanation
 
@@ -64,13 +64,13 @@ a|`processName` +
 `process_name`, `isc_dpb_process_name`
 |Specifies the process name reported to Firebird.
 See <<ref-processinfo>> for more information.
-|=======================================================================
+|===
 
 [[connectionproperties-other]]
 === Other properties
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Connection property (+ aliases) 
 |Explanation
 
@@ -261,7 +261,15 @@ a|`useTranslation` +
 Deprecated, removed in Jaybird 4.
 This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
 Value is the path to a mapping properties file.
-|=======================================================================
+
+a|'enableProtocol
+|Jaybird specific property. ([.since]_Jaybird 6_)
+|Enable unsupported protocol versions, if available.
+|Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
+The value `"*"` will enable all available protocol versions.
+See <<ref-enable-protocol>> for more information.
+
+|===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `org.firebirdsql.gds.ISCConstants`).
 The current Firebird API has almost 90 DPB parameters, however only few of them are interesting for regular users.
@@ -275,7 +283,7 @@ If a DPB item requires another type, it will need to be explicitly defined in Ja
 It is possible to redefine the transaction isolation levels through connection properties.
 
 [cols="1,2",options="header",]
-|=======================================================================
+|===
 |Connection property
 |Explanation
 
@@ -290,7 +298,7 @@ Default: `isc_tpb_concurrency,isc_tpb_write,isc_tpb_wait`
 a|`TRANSACTION_SERIALIZABLE`
 |Specify the definition of transaction isolation level `TRANSACTION_SERIALIZABLE`. +
 Default: `isc_tpb_consistency,isc_tpb_write,isc_tpb_wait`
-|=======================================================================
+|===
 
 For data sources, this feature is exposed using a definition properties file and the `setTpbMapping` property.
 See <<transactions-isolation-levels>> for more information.
