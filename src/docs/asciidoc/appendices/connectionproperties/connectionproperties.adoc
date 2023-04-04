@@ -262,13 +262,16 @@ Deprecated, removed in Jaybird 4.
 This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
 Value is the path to a mapping properties file.
 
-a|'enableProtocol
+a|`enableProtocol`
 |Jaybird specific property. ([.since]_Jaybird 6_)
-|Enable unsupported protocol versions, if available.
-|Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
+Enable unsupported protocol versions, if available.
+Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
 The value `"*"` will enable all available protocol versions.
 See <<ref-enable-protocol>> for more information.
 
+a|`parallelWorkers` +
+`parallel_workers`, `isc_dpb_parallel_workers`
+|The number of parallel workers to use ([.since]_Jaybird 5.0.2_ [.since]_Firebird 5.0_)
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `org.firebirdsql.gds.ISCConstants`).
