@@ -9588,7 +9588,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 <dl>
 <dt class="hdlist1"><code>jdk.net.useFastTcpLoopback</code></dt>
 <dd>
-<p><em class="since">Firebird 3.0.2</em> <em class="since">Jave 8 update 60</em> <em class="since">Windows 8 / Windows Server 2012</em>
+<p><em class="since">Firebird 3.0.2</em> <em class="until">Firebird 5.0</em> <em class="since">Jave 8 update 60</em> <em class="since">Windows 8 / Windows Server 2012</em>
 Set to true on Windows to enable &#8220;TCP Loopback Fast Path&#8221; (<code>SIO_LOOPBACK_FAST_PATH</code> socket option).
 &#8220;TCP Loopback Fast Path&#8221; can improve performance for localhost connections.<br>
 Java only has an 'all-or-nothing' support for the &#8220;TCP Loopback Fast Path&#8221;, so Jaybird cannot enable this for you: you must specify this property on JVM startup.
@@ -9602,6 +9602,9 @@ This has the benefit that this works for all Jaybird versions, as long as you us
 <td class="content">
 <div class="paragraph">
 <p>Microsoft has deprecated the <code>SIO_LOOPBACK_FAST_PATH</code> and recommends not to use it.</p>
+</div>
+<div class="paragraph">
+<p>Support was removed in Firebird 5.0.</p>
 </div>
 </td>
 </tr>
@@ -12380,7 +12383,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-04-04 16:43:52 UTC
+Last updated 2023-04-08 08:33:40 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
