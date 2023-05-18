@@ -7,6 +7,8 @@ Jaybird provides a number of system properties to control global behaviour of Ja
 [[systemproperties-logging]]
 === Logging
 
+[.until]_Jaybird 6_
+
 To configure logging, the following system properties are available. 
 See <<ref-logging>> for details.
 
@@ -18,6 +20,11 @@ Set to true to disable logging
 Fully-qualified name of `org.firebirdsql.logging.Logger` implementation to use for logging
 
 These properties need to be set before Jaybird is loaded and used.
+
+[NOTE]
+====
+These properties are not available in Jaybird 6 or later.
+====
 
 [[systemproperties-processinfo]]
 === Process information

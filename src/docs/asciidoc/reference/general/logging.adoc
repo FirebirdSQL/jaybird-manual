@@ -25,10 +25,23 @@ For logging, jaybird uses the following log levels:
 
 |_fatal_
 |severe/fatal errors (though in general, level _error_ will be used instead of _fatal_)
+
+[.until]_Jaybird 6_
 |===
+
+==== Java Platform Logging API
+
+[.since]_Jaybird 6_
+
+Since Jaybird 6, the Java Platform Logging API (https://openjdk.org/jeps/264[JEP 264^]) is used.
+
+The Java Platform Logging API by default logs to `java.util.logging`, but it is possible to plugin different logging platforms.
+For example, Log4j provides the `log4j-jpl` dependency which will replace the default binding to `java.util.logging` with one to Log4j.
 
 [[ref-logging-jul]]
 ==== java.util.logging
+
+[.until]_Jaybird 6_
 
 Jaybird uses `java.util.logging` by default.
 
@@ -59,18 +72,39 @@ Jaybird applies the following mapping for its log levels:
 [[ref-logging-disable]]
 ==== Disable logging
 
-To disable logging, specify system property `org.firebirdsql.jdbc.disableLogging` with value `true`.
+[.since]_Jaybird 6_ To disable logging, configure your logging library.
+For example, when using `java.util.logging`, use a properties file (specified with `-Djava.util.logging.config.file=<file>`) including:
+
+[listing]
+----
+org.firebirdsql.level = OFF
+----
+
+Consult the documentation of `java.util.logging` or your actual logging library for other options to disable logging.
+
+[.until]_Jaybird 6_ To disable logging, specify system property `org.firebirdsql.jdbc.disableLogging` with value `true`.
 
 [[ref-logging-console]]
 ==== Console logging
 
-Jaybird can write its logging to the `System.out` for _info_ and lower and `System.err` for _warn_ and above.
-Levels _debug_ and _trace_ are disabled in the implementation.
+[.since]_Jaybird 6_ To write logging to the console, configure your logging library.
+For example, when using `java.util.logging`, use a properties file (specified with `-Djava.util.logging.config.file=<file>`) including:
 
+[listing]
+----
+handlers = java.util.logging.ConsoleHandler
+----
+
+NOTE: Contrary to the solution available under Jaybird 5 and earlier, `java.util.logging` does not provide a (standard) way to log to `System.out` (its `ConsoleHandler` logs to `System.err`), this would require a custom handler implementation.
+
+[.until]_Jaybird 6_ Jaybird can write its logging to the `System.out` for _info_ and lower and `System.err` for _warn_ and above.
+Levels _debug_ and _trace_ are disabled in the implementation.
 To enable logging console, you can set system property `org.firebirdsql.jdbc.forceConsoleLogger` to `true`.
 
 [[ref-logging-custom]]
 ==== Custom logging implementation
+
+[.until]_Jaybird 6_
 
 You can provide your own logging implementation if you don't want to use `java.util.logging` or console logging.
 
@@ -97,3 +131,10 @@ public class CustomLogger implements org.firebirdsql.logging.Logger {
 On the Java command line, specify:
 
  -Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger
+
+[NOTE]
+====
+[.since]_Jaybird 6_ If you need a custom logger implementation under Jaybird 6, you will need to provide an implementation of `java.lang.System.Logger` and `java.lang.System.LoggerFinder` and a service loader definition.
+
+Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the `log4j-jpl` dependency).
+====
