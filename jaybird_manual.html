@@ -7607,12 +7607,29 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>fatal</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">severe/fatal errors (though in general, level <em>error</em> will be used instead of <em>fatal</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">severe/fatal errors (though in general, level <em>error</em> will be used instead of <em>fatal</em>)</p>
+<p class="tableblock"><em class="until">Jaybird 6</em></p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="ref-logging-jul"><a class="anchor" href="#ref-logging-jul"></a>11.1.1. java.util.logging</h4>
+<h4 id="_java_platform_logging_api"><a class="anchor" href="#_java_platform_logging_api"></a>11.1.1. Java Platform Logging API</h4>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 6, the Java Platform Logging API (<a href="https://openjdk.org/jeps/264" target="_blank" rel="noopener">JEP 264</a>) is used.</p>
+</div>
+<div class="paragraph">
+<p>The Java Platform Logging API by default logs to <code>java.util.logging</code>, but it is possible to plugin different logging platforms.
+For example, Log4j provides the <code>log4j-jpl</code> dependency which will replace the default binding to <code>java.util.logging</code> with one to Log4j.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ref-logging-jul"><a class="anchor" href="#ref-logging-jul"></a>11.1.2. java.util.logging</h4>
+<div class="paragraph">
+<p><em class="until">Jaybird 6</em></p>
+</div>
 <div class="paragraph">
 <p>Jaybird uses <code>java.util.logging</code> by default.</p>
 </div>
@@ -7659,23 +7676,57 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-logging-disable"><a class="anchor" href="#ref-logging-disable"></a>11.1.2. Disable logging</h4>
+<h4 id="ref-logging-disable"><a class="anchor" href="#ref-logging-disable"></a>11.1.3. Disable logging</h4>
 <div class="paragraph">
-<p>To disable logging, specify system property <code>org.firebirdsql.jdbc.disableLogging</code> with value <code>true</code>.</p>
+<p><em class="since">Jaybird 6</em> To disable logging, configure your logging library.
+For example, when using <code>java.util.logging</code>, use a properties file (specified with <code>-Djava.util.logging.config.file=&lt;file&gt;</code>) including:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>org.firebirdsql.level = OFF</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Consult the documentation of <code>java.util.logging</code> or your actual logging library for other options to disable logging.</p>
+</div>
+<div class="paragraph">
+<p><em class="until">Jaybird 6</em> To disable logging, specify system property <code>org.firebirdsql.jdbc.disableLogging</code> with value <code>true</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-logging-console"><a class="anchor" href="#ref-logging-console"></a>11.1.3. Console logging</h4>
+<h4 id="ref-logging-console"><a class="anchor" href="#ref-logging-console"></a>11.1.4. Console logging</h4>
 <div class="paragraph">
-<p>Jaybird can write its logging to the <code>System.out</code> for <em>info</em> and lower and <code>System.err</code> for <em>warn</em> and above.
-Levels <em>debug</em> and <em>trace</em> are disabled in the implementation.</p>
+<p><em class="since">Jaybird 6</em> To write logging to the console, configure your logging library.
+For example, when using <code>java.util.logging</code>, use a properties file (specified with <code>-Djava.util.logging.config.file=&lt;file&gt;</code>) including:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>handlers = java.util.logging.ConsoleHandler</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Contrary to the solution available under Jaybird 5 and earlier, <code>java.util.logging</code> does not provide a (standard) way to log to <code>System.out</code> (its <code>ConsoleHandler</code> logs to <code>System.err</code>), this would require a custom handler implementation.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>To enable logging console, you can set system property <code>org.firebirdsql.jdbc.forceConsoleLogger</code> to <code>true</code>.</p>
+<p><em class="until">Jaybird 6</em> Jaybird can write its logging to the <code>System.out</code> for <em>info</em> and lower and <code>System.err</code> for <em>warn</em> and above.
+Levels <em>debug</em> and <em>trace</em> are disabled in the implementation.
+To enable logging console, you can set system property <code>org.firebirdsql.jdbc.forceConsoleLogger</code> to <code>true</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-logging-custom"><a class="anchor" href="#ref-logging-custom"></a>11.1.4. Custom logging implementation</h4>
+<h4 id="ref-logging-custom"><a class="anchor" href="#ref-logging-custom"></a>11.1.5. Custom logging implementation</h4>
+<div class="paragraph">
+<p><em class="until">Jaybird 6</em></p>
+</div>
 <div class="paragraph">
 <p>You can provide your own logging implementation if you don&#8217;t want to use <code>java.util.logging</code> or console logging.</p>
 </div>
@@ -7709,6 +7760,23 @@ public class CustomLogger implements org.firebirdsql.logging.Logger {
 <div class="content">
 <pre>-Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger</pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em> If you need a custom logger implementation under Jaybird 6, you will need to provide an implementation of <code>java.lang.System.Logger</code> and <code>java.lang.System.LoggerFinder</code> and a service loader definition.</p>
+</div>
+<div class="paragraph">
+<p>Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the <code>log4j-jpl</code> dependency).</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -9360,6 +9428,9 @@ See <a href="#transactions-isolation-levels">Transaction Isolation Levels</a> fo
 <div class="sect2">
 <h3 id="systemproperties-logging"><a class="anchor" href="#systemproperties-logging"></a>B.1. Logging</h3>
 <div class="paragraph">
+<p><em class="until">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
 <p>To configure logging, the following system properties are available.
 See <a href="#ref-logging">Logging</a> for details.</p>
 </div>
@@ -9381,6 +9452,20 @@ See <a href="#ref-logging">Logging</a> for details.</p>
 </div>
 <div class="paragraph">
 <p>These properties need to be set before Jaybird is loaded and used.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These properties are not available in Jaybird 6 or later.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -12383,7 +12468,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-04-08 08:33:40 UTC
+Last updated 2023-05-18 13:14:24 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
