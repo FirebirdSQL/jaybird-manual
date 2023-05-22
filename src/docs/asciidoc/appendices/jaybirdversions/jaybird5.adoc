@@ -44,7 +44,7 @@ Jaybird 5 does not support sending blobs as part of batch execution.
 
 Jaybird 5 only supports the ChaCha wire encryption plugin using the Java 11 version of the driver.
 Jaybird 5 does not support the ChaCha64 wire encryption plugin.
-This may be added in a future major or point release.
+Support for ChaCha64 will be added in Jaybird 6.
 
 See also <<jb5-firebird3>>
 
