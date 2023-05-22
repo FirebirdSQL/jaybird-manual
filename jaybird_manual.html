@@ -794,7 +794,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>5.0.0.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
+Version: <code>5.0.1.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -804,7 +804,7 @@ Version: <code>5.0.0.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.0.java11&lt;/version&gt;
+  &lt;version&gt;5.0.1.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11437,7 +11437,7 @@ Jaybird 5 does not support sending blobs as part of batch execution.</p>
 <div class="paragraph">
 <p>Jaybird 5 only supports the ChaCha wire encryption plugin using the Java 11 version of the driver.
 Jaybird 5 does not support the ChaCha64 wire encryption plugin.
-This may be added in a future major or point release.</p>
+Support for ChaCha64 will be added in Jaybird 6.</p>
 </div>
 <div class="paragraph">
 <p>See also <a href="#jb5-firebird3">Notes on Firebird 3.0 support</a></p>
@@ -11509,7 +11509,7 @@ For native or embedded connections, JNA 5.12.1 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.0.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.1.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
@@ -11551,7 +11551,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.0.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.1.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -11564,7 +11564,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.0.java11&lt;/version&gt;
+  &lt;version&gt;5.0.1.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11715,13 +11715,13 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.8.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.9.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.
 Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.8.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.9.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.
 Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
@@ -11768,7 +11768,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>4.0.8.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code>, <code>java8</code> or <code>java7</code>)</p>
+<p><code>4.0.9.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code>, <code>java8</code> or <code>java7</code>)</p>
 </td>
 </tr>
 </table>
@@ -11781,7 +11781,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.8.java11&lt;/version&gt;
+  &lt;version&gt;4.0.9.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11793,7 +11793,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.8.java11&lt;/version&gt;
+  &lt;version&gt;4.0.9.java11&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -12468,7 +12468,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-05-18 13:14:24 UTC
+Last updated 2023-05-22 09:52:29 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
