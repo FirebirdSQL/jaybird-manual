@@ -99,7 +99,7 @@ NOTE: Contrary to the solution available under Jaybird 5 and earlier, `java.util
 
 [.until]_Jaybird 6_ Jaybird can write its logging to the `System.out` for _info_ and lower and `System.err` for _warn_ and above.
 Levels _debug_ and _trace_ are disabled in the implementation.
-To enable logging console, you can set system property `org.firebirdsql.jdbc.forceConsoleLogger` to `true`.
+To enable logging to the console, you can set system property `org.firebirdsql.jdbc.forceConsoleLogger` to `true`.
 
 [[ref-logging-custom]]
 ==== Custom logging implementation
