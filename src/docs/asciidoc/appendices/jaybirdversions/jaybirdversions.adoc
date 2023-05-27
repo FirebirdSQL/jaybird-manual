@@ -11,3 +11,7 @@ include::jaybird4.adoc[]
 include::jaybird3.adoc[]
 
 include::jaybird22.adoc[]
+
+=== Pre-release versions
+
+include::jaybird6.adoc[leveloffset=+1]

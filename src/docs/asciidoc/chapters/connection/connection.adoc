@@ -291,6 +291,8 @@ When using `javax.sql.DataSource` implementation, you can specify either `"PURE_
 [[driver-native]]
 ==== NATIVE and LOCAL types
 
+[.since]_Jaybird 6_ Native connections require the `jaybird-native` artifact on the classpath.
+
 The `NATIVE` and `LOCAL` types (JDBC Type 2) use a JNA proxy to access the Firebird client library and requires installation of the Firebird client.
 The `NATIVE` driver type is used to access the remote database server, the `LOCAL` type (Windows only) accesses the database server running on the same host by means of IPC (Inter-Process Communication).
 Performance of `NATIVE` driver is approximately 10% lower compared to the `PURE_JAVA` driver, but `LOCAL` type has up to 30% higher performance compared to the `PURE_JAVA` driver when connecting the server on the same host.
@@ -390,6 +392,8 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 
 [[driver-embedded]]
 ==== EMBEDDED type
+
+[.since]_Jaybird 6_ Embedded connections require the `jaybird-native` artifact on the classpath.
 
 The Embedded server JDBC driver is a Type 2 JDBC driver that, rather than using the Firebird client library, loads the Firebird embedded server library instead.
 This is the highest performance type of JDBC driver for accessing local databases, as the Java code accesses the database file directly.
