@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - master
+
+permissions:
+  contents: read
+
 jobs:
   build:
     if: github.repository == 'FirebirdSQL/jaybird-manual'
