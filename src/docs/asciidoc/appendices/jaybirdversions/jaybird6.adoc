@@ -79,7 +79,7 @@ Jaybird has no required runtime dependencies.
 
 For native or embedded connections, the `jaybird-native` artifact and JNA 5.12.1 need to be on the classpath.
 
-For ChaCha64 wire encryption, the `chacha64-plugin` artifact and `bcprov-jdk18on` (Bouncy Castle JCE provider) need to on the classpath.
+For ChaCha64 wire encryption, the `chacha64-plugin` artifact and `bcprov-jdk18on` (Bouncy Castle JCE provider) need to be on the classpath.
 
 ////
 // No downloads available at this time
