@@ -11,16 +11,6 @@ We also provide a print-friendly PDF on https://firebirdsql.github.io/jaybird-ma
 
 These documents are automatically built for each change on master.
 
-Release for Jaybird 2.1
-=======================
-
-An old version for Jaybird 2.1 is [Jaybird 2.1 JDBC driver Java Programmer's Manual](https://www.firebirdsql.org/file/documentation/drivers_documentation/Jaybird_2_1_JDBC_driver_manual.pdf)
-
-This version was created from the old ODT version; its rendering doesn't match
-the rendering of the current asciidoc version.
-
-We recommend using the snapshot instead.
-
 Style
 =====
 
