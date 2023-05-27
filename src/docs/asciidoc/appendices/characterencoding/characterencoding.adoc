@@ -323,17 +323,17 @@ The below table lists the available character encodings in the default Firebird 
 |WIN1255
 |Cp1255
 |1
-|{nbsp}
+|Windows Hebrew
 
 |WIN1256
 |Cp1256
 |1
-|{nbsp}
+|Windows Arabic
 
 |WIN1257
 |Cp1257
 |1
-|{nbsp}
+|Windows Baltic
 
 |===
 
