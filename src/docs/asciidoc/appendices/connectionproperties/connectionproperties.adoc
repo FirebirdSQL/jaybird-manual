@@ -272,6 +272,18 @@ See <<ref-enable-protocol>> for more information.
 a|`parallelWorkers` +
 `parallel_workers`, `isc_dpb_parallel_workers`
 |The number of parallel workers to use ([.since]_Jaybird 5.0.2_ [.since]_Firebird 5.0_)
+
+a|`nativeLibraryPath`
+a|Jaybird specific property. ([.since]_Jaybird 6_)
+
+Specifies a directory to try and load the client library for native (`fbclient`) or embedded (`fbembed` or `fbclient`) connections.
+If a file name is specified instead of a directory name, the parent directory will be used.
+
+[CAUTION]
+====
+This property only works for the *first* native or embedded connection (to a database or service) created inside a JVM.
+Any subsequent connection uses the library that was loaded by the first connection.
+====
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `org.firebirdsql.gds.ISCConstants`).
