@@ -286,8 +286,8 @@ Any subsequent connection uses the library that was loaded by the first connecti
 ====
 |===
 
-In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `org.firebirdsql.gds.ISCConstants`).
-The current Firebird API has almost 90 DPB parameters, however only few of them are interesting for regular users.
+In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).
+The current Firebird API has over 100 DPB parameters, however only few of them are interesting for regular users.
 If a DPB item called `isc_dpb_XXX` exists, then Jaybird allows these to be specified as `isc_dpb_XXX` and `XXX`. 
 By default properties are mapped as string DPB items. 
 If a DPB item requires another type, it will need to be explicitly defined in Jaybird.
