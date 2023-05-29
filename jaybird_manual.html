@@ -9397,8 +9397,8 @@ Any subsequent connection uses the library that was loaded by the first connecti
 </tbody>
 </table>
 <div class="paragraph">
-<p>In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird&#8217;s <code>org.firebirdsql.gds.ISCConstants</code>).
-The current Firebird API has almost 90 DPB parameters, however only few of them are interesting for regular users.
+<p>In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird&#8217;s <code>DpbItems</code> and <code>SpbItems</code> (<em class="since">Jaybird 5</em>), or <code>ISCConstants</code> (<em class="until">Jaybird 5</em>)).
+The current Firebird API has over 100 DPB parameters, however only few of them are interesting for regular users.
 If a DPB item called <code>isc_dpb_XXX</code> exists, then Jaybird allows these to be specified as <code>isc_dpb_XXX</code> and <code>XXX</code>.
 By default properties are mapped as string DPB items.
 If a DPB item requires another type, it will need to be explicitly defined in Jaybird.</p>
@@ -12712,7 +12712,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-05-29 11:31:19 UTC
+Last updated 2023-05-29 12:11:45 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
