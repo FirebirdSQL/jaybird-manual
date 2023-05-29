@@ -9367,6 +9367,33 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The number of parallel workers to use (<em class="since">Jaybird 5.0.2</em> <em class="since">Firebird 5.0</em>)</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>nativeLibraryPath</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property. (<em class="since">Jaybird 6</em>)</p>
+</div>
+<div class="paragraph">
+<p>Specifies a directory to try and load the client library for native (<code>fbclient</code>) or embedded (<code>fbembed</code> or <code>fbclient</code>) connections.
+If a file name is specified instead of a directory name, the parent directory will be used.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This property only works for the <strong>first</strong> native or embedded connection (to a database or service) created inside a JVM.
+Any subsequent connection uses the library that was loaded by the first connection.</p>
+</div>
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -12420,7 +12447,7 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <p>For native or embedded connections, the <code>jaybird-native</code> artifact and JNA 5.12.1 need to be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> (Bouncy Castle JCE provider) need to on the classpath.</p>
+<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> (Bouncy Castle JCE provider) need to be on the classpath.</p>
 </div>
 <div class="sect5">
 <h6 id="jb6-distribution-maven"><a class="anchor" href="#jb6-distribution-maven"></a>Maven</h6>
@@ -12685,7 +12712,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-05-27 11:21:22 UTC
+Last updated 2023-05-29 11:31:19 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
