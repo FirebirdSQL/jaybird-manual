@@ -170,14 +170,14 @@ Set property to `true` to disable usage of procedure type metadata to decide to 
 See <<ref-callable-ignore-proctype>> for more information.
 
 a|`scrollableCursor`
-a|Jaybird specific property ([.since]_Jaybird 5_).
+a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 5.0_).
 Allowed values: `EMULATED`, `SERVER` (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <<ref-scrollable-cursor>> for more information. +
 Default: `EMULATED`
 
 a|`useServerBatch`
-a|Jaybird specific property ([.since]_Jaybird 5_).
+a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 4.0_).
 Boolean property.
 Value `true` enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to `false` to always use emulated batch updates.
@@ -185,7 +185,7 @@ See <<ref-batch-use-server-batch>> for more information. +
 Default value: `true`
 
 a|`serverBatchBufferSize`
-a|Jaybird specific property ([.since]_Jaybird 5_).
+a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 4.0_).
 Size in bytes of the server-side batch buffer.
 Value `< 0` -- server-side default, `0` -- server-side maximum, `> 0` -- size (capped at server-side maximum)
 See <<ref-batch-server-batch-buffer-size>> for more information. +
@@ -219,7 +219,7 @@ See <<ref-decfloat-traps-round>> for more information.
 
 a|`useStandarUdf` +
 `use_standard_udf`
-|Jaybird specific property ([.until]_Jaybird 5_)
+|Jaybird specific property ([.until]_Jaybird 5_).
 Boolean property. 
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
@@ -257,13 +257,13 @@ Unused since at least Jaybird 2.2, removed in Jaybird 4.
 
 a|`useTranslation` +
 `mapping_path`
-|Jaybird specific property. ([.until]_Jaybird 4_)
+|Jaybird specific property ([.until]_Jaybird 4_).
 Deprecated, removed in Jaybird 4.
 This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
 Value is the path to a mapping properties file.
 
 a|`enableProtocol`
-|Jaybird specific property. ([.since]_Jaybird 6_)
+|Jaybird specific property ([.since]_Jaybird 6_).
 Enable unsupported protocol versions, if available.
 Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
 The value `"*"` will enable all available protocol versions.
@@ -274,7 +274,7 @@ a|`parallelWorkers` +
 |The number of parallel workers to use ([.since]_Jaybird 5.0.2_ [.since]_Firebird 5.0_)
 
 a|`nativeLibraryPath`
-a|Jaybird specific property. ([.since]_Jaybird 6_)
+a|Jaybird specific property ([.since]_Jaybird 6_).
 
 Specifies a directory to try and load the client library for native (`fbclient`) or embedded (`fbembed` or `fbclient`) connections.
 If a file name is specified instead of a directory name, the parent directory will be used.
@@ -284,6 +284,13 @@ If a file name is specified instead of a directory name, the parent directory wi
 This property only works for the *first* native or embedded connection (to a database or service) created inside a JVM.
 Any subsequent connection uses the library that was loaded by the first connection.
 ====
+
+a|`useCatalogAsPackage`
+a|Jaybird specific property ([.since]_Jaybird 6_ [.since]_Firebird 3.0_).
+Boolean property.
+Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
+See <<ref-catalog-as-package>> for more information.
+
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).

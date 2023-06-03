@@ -22,6 +22,8 @@ include::connection/datatypebind.adoc[]
 
 include::connection/enableprotocol.adoc[]
 
+include::connection/catalogaspackage.adoc[]
+
 // TODO client-info
 
 [[ref-statement]]

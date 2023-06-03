@@ -1,0 +1,37 @@
+[#ref-catalog-as-package]
+=== Opt-in feature for package information in DatabaseMetaData
+
+[.since]_Jaybird 6_ +
+[.since]_Firebird 3.0_
+
+Firebird 3.0 added packages, which can contain stored procedures and functions.
+The JDBC API does not provide a "`standard`" way of accessing information about packages, or the routines defined in packages.
+Instead of adding additional Jaybird-specific metadata methods, we've added an "`opt-in`" feature that provides access through normal metadata methods, using the "`catalog`" to report packages.
+
+This feature can be enabled by setting the connection property `useCatalogAsPackage` to `true`.
+When this connection property is enabled, the `DatabaseMetaData` of that connection will have the following changes in behaviour:
+
+* `getCatalogs()` lists packages, with package names in `TABLE_CAT`.
+* `getFunctions`, `getFunctionColumns`, `getProcedures`, and `getProcedureColumns` include information on procedures or functions in packages
+** Columns `FUNCTION_CAT`/`PROCEDURE_CAT` will report:
+*** For packaged procedures and functions -- the package name
+*** For normal (non-package) procedures and functions -- an empty string instead of `null` (because of the following rule)
+** If parameter `catalog` is `++""++` (empty string), only normal stored procedures or stored functions are reported.
+** If parameter `catalog` is `null`, both packaged and normal stored procedures or stored functions are reported.
+** For other values of parameter `catalog`, these metadata methods will only return procedures, functions, or their columns of the specified package (exact match, case-sensitive; not a `LIKE` pattern)
+** For normal (non-package) procedures and functions, the `SPECIFIC_NAME` column will be the unquoted function or procedure name (same as when `useCatalogAsPackage` is not enabled), and for packaged procedures and functions, it will be `__quoted-package-name__ + '.' + __quoted-routine-name__` (e.g. ``"SOME_PACKAGE"."SOME_FUNCTION"``)
+* `getCatalogSeparator()` returns `"."` (string with period).
+* `getCatalogTerm()` returns `"PACKAGE"`.
+* `isCatalogAtStart()` returns `true`.
+* `getMaxCatalogNameLength()` returns 31 or 63 depending on the max identifier length of the database.
+* `supportsCatalogsInDataManipulation()` returns `true` (i.e. access selectable stored procedures and functions from packages).
+* `supportsCatalogsInProcedureCalls()` returns `true`.
+* The other `supportsCatalogsIn__type__()` methods continue to return `false`.
+* Other metadata methods with a `catalog` parameter continue to ignore it, just like they do when `useCatalogAsPackage` is disabled.
+
+The `useCatalogAsPackage` connection property does not result in any other behaviour.
+
+Keep in mind, that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
+This feature may be discontinued and removed in the future if Jaybird needs to implement "`real`" catalogs (e.g. because Firebird started supporting catalogs).
+
+See also https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2023-09-use-catalog-as-package.adoc[jdp-2023-08: Use Catalog as Package^]
