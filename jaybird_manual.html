@@ -584,6 +584,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-processinfo">9.7. Process information</a></li>
 <li><a href="#ref-datatypebind">9.8. Data type bind support</a></li>
 <li><a href="#ref-enable-protocol">9.9. Enabling unsupported protocol versions</a></li>
+<li><a href="#ref-catalog-as-package">9.10. Opt-in feature for package information in DatabaseMetaData</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -6869,6 +6870,95 @@ We recommend upgrading your Firebird version, or downgrading to a Jaybird versio
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.10. Opt-in feature for package information in DatabaseMetaData</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em><br>
+<em class="since">Firebird 3.0</em></p>
+</div>
+<div class="paragraph">
+<p>Firebird 3.0 added packages, which can contain stored procedures and functions.
+The JDBC API does not provide a &#8220;standard&#8221; way of accessing information about packages, or the routines defined in packages.
+Instead of adding additional Jaybird-specific metadata methods, we&#8217;ve added an &#8220;opt-in&#8221; feature that provides access through normal metadata methods, using the &#8220;catalog&#8221; to report packages.</p>
+</div>
+<div class="paragraph">
+<p>This feature can be enabled by setting the connection property <code>useCatalogAsPackage</code> to <code>true</code>.
+When this connection property is enabled, the <code>DatabaseMetaData</code> of that connection will have the following changes in behaviour:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getCatalogs()</code> lists packages, with package names in <code>TABLE_CAT</code>.</p>
+</li>
+<li>
+<p><code>getFunctions</code>, <code>getFunctionColumns</code>, <code>getProcedures</code>, and <code>getProcedureColumns</code> include information on procedures or functions in packages</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Columns <code>FUNCTION_CAT</code>/<code>PROCEDURE_CAT</code> will report:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For packaged procedures and functions&#8201;&#8212;&#8201;the package name</p>
+</li>
+<li>
+<p>For normal (non-package) procedures and functions&#8201;&#8212;&#8201;an empty string instead of <code>null</code> (because of the following rule)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If parameter <code>catalog</code> is <code>""</code> (empty string), only normal stored procedures or stored functions are reported.</p>
+</li>
+<li>
+<p>If parameter <code>catalog</code> is <code>null</code>, both packaged and normal stored procedures or stored functions are reported.</p>
+</li>
+<li>
+<p>For other values of parameter <code>catalog</code>, these metadata methods will only return procedures, functions, or their columns of the specified package (exact match, case-sensitive; not a <code>LIKE</code> pattern)</p>
+</li>
+<li>
+<p>For normal (non-package) procedures and functions, the <code>SPECIFIC_NAME</code> column will be the unquoted function or procedure name (same as when <code>useCatalogAsPackage</code> is not enabled), and for packaged procedures and functions, it will be <code><em>quoted-package-name</em> + '.' + <em>quoted-routine-name</em></code> (e.g. <code>"SOME_PACKAGE"."SOME_FUNCTION"</code>)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>getCatalogSeparator()</code> returns <code>"."</code> (string with period).</p>
+</li>
+<li>
+<p><code>getCatalogTerm()</code> returns <code>"PACKAGE"</code>.</p>
+</li>
+<li>
+<p><code>isCatalogAtStart()</code> returns <code>true</code>.</p>
+</li>
+<li>
+<p><code>getMaxCatalogNameLength()</code> returns 31 or 63 depending on the max identifier length of the database.</p>
+</li>
+<li>
+<p><code>supportsCatalogsInDataManipulation()</code> returns <code>true</code> (i.e. access selectable stored procedures and functions from packages).</p>
+</li>
+<li>
+<p><code>supportsCatalogsInProcedureCalls()</code> returns <code>true</code>.</p>
+</li>
+<li>
+<p>The other <code>supportsCatalogsIn<em>type</em>()</code> methods continue to return <code>false</code>.</p>
+</li>
+<li>
+<p>Other metadata methods with a <code>catalog</code> parameter continue to ignore it, just like they do when <code>useCatalogAsPackage</code> is disabled.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>useCatalogAsPackage</code> connection property does not result in any other behaviour.</p>
+</div>
+<div class="paragraph">
+<p>Keep in mind, that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
+This feature may be discontinued and removed in the future if Jaybird needs to implement &#8220;real&#8221; catalogs (e.g. because Firebird started supporting catalogs).</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2023-09-use-catalog-as-package.adoc" target="_blank" rel="noopener">jdp-2023-08: Use Catalog as Package</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -9211,7 +9301,7 @@ See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureT
 <p><code>scrollableCursor</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 5.0</em>).
 Allowed values: <code>EMULATED</code>, <code>SERVER</code> (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <a href="#ref-scrollable-cursor">Connection property scrollableCursor</a> for more information.<br>
@@ -9223,7 +9313,7 @@ Default: <code>EMULATED</code></p>
 <p><code>useServerBatch</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 4.0</em>).
 Boolean property.
 Value <code>true</code> enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to <code>false</code> to always use emulated batch updates.
@@ -9236,7 +9326,7 @@ Default value: <code>true</code></p>
 <p><code>serverBatchBufferSize</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em>).
+<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 4.0</em>).
 Size in bytes of the server-side batch buffer.
 Value <code>&lt; 0</code>&#8201;&#8212;&#8201;server-side default, <code>0</code>&#8201;&#8212;&#8201;server-side maximum, <code>&gt; 0</code>&#8201;&#8212;&#8201;size (capped at server-side maximum)
 See <a href="#ref-batch-server-batch-buffer-size">Connection property serverBatchBufferSize</a> for more information.<br>
@@ -9286,7 +9376,7 @@ See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding<
 <p><code>useStandarUdf</code><br>
 <code>use_standard_udf</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 5</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 5</em>).
 Boolean property.
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls.
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
@@ -9345,7 +9435,7 @@ Unused since at least Jaybird 2.2, removed in Jaybird 4.</p></td>
 <p><code>useTranslation</code><br>
 <code>mapping_path</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property. (<em class="until">Jaybird 4</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 4</em>).
 Deprecated, removed in Jaybird 4.
 This allows mapping of characters to be overridden (see <code>translation/hpux.properties</code> in Jaybird jar for example).
 Value is the path to a mapping properties file.</p></td>
@@ -9354,7 +9444,7 @@ Value is the path to a mapping properties file.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>enableProtocol</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property. (<em class="since">Jaybird 6</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 6</em>).
 Enable unsupported protocol versions, if available.
 Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
 The value <code>"*"</code> will enable all available protocol versions.
@@ -9372,7 +9462,7 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 <p><code>nativeLibraryPath</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property. (<em class="since">Jaybird 6</em>)</p>
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).</p>
 </div>
 <div class="paragraph">
 <p>Specifies a directory to try and load the client library for native (<code>fbclient</code>) or embedded (<code>fbembed</code> or <code>fbclient</code>) connections.
@@ -9392,6 +9482,17 @@ Any subsequent connection uses the library that was loaded by the first connecti
 </td>
 </tr>
 </table>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>useCatalogAsPackage</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em> <em class="since">Firebird 3.0</em>).
+Boolean property.
+Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
+See <a href="#ref-catalog-as-package">Opt-in feature for package information in DatabaseMetaData</a> for more information.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -12712,7 +12813,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-05-29 12:11:45 UTC
+Last updated 2023-06-03 16:46:53 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
