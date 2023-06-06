@@ -226,10 +226,9 @@ With recent versions of Firebird, it is advisable to not specify this property a
 See <<jdbcescape>> for more information.
 
 a|`timestampUsesLocalTimezone` 
-|Jaybird specific property.
+|Jaybird specific property ([.until]_Jaybird 6_).
 Boolean property.
-Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations. 
-**TODO**: Improve documentation on exact effect
+Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations.
 
 a|`num_buffers` +
 `isc_dpb_num_buffers`
