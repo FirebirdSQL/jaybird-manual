@@ -15,7 +15,9 @@ If this permission check fails, Jaybird will silently ignore it and not set the 
 Since Firebird 3.0, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`.
 Jaybird will report its full version (eg `Jaybird 3.0.5-JDK_1.8`).
 
-WARNING: Do not use this information for security decisions. 
+[.since]_Jaybird 6_ The process name is returned from `Connection.getClientInfo("ApplicationName")`, if the client info property `ApplicationName` has not been set explicitly with `Connection.setClientInfo`, and/or if there is no property `ApplicationName` in the `USER_SESSION` context.
+
+WARNING: Do not use the process name and process id information for security decisions.
 Treat it as informational only, as clients can report fake information.
 
 Native connections will always report the actual process ID, if a fbclient of Firebird 2.1 or higher is used.
@@ -42,7 +44,7 @@ It is also possible to specify the process information through connection proper
 `processId`:: Process id (alias: `process_id`)
 +
 This property is ignored on native connections, which will always report the actual process id.
-`processName`:: Process name (alias: `process_name`)
+`processName`:: Process name (alias: `process_name`, `ApplicationName`, `applicationName`)
 
 Since Jaybird 5, these properties are exposed on data sources.
 In earlier versions, these properties were not exposed on the data sources.

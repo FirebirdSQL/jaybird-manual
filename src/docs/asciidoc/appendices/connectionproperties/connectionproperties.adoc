@@ -61,7 +61,7 @@ a|`processId` +
 See <<ref-processinfo>> for more information.
 
 a|`processName` +
-`process_name`, `isc_dpb_process_name`
+`process_name`, `isc_dpb_process_name`, `ApplicationName` ([.since]_Jaybird 6_), `applicationName` ([.since]_Jaybird 6_)
 |Specifies the process name reported to Firebird.
 See <<ref-processinfo>> for more information.
 |===

@@ -24,7 +24,7 @@ include::connection/enableprotocol.adoc[]
 
 include::connection/catalogaspackage.adoc[]
 
-// TODO client-info
+include::connection/clientinfoproperties.adoc[]
 
 [[ref-statement]]
 == Statement reference

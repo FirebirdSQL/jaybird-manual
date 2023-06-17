@@ -1,0 +1,109 @@
+[#ref-client-info]
+=== Client info properties
+
+Client info properties allow you to set properties on a connection for informational purposes, or as the JDBC API documentation says "`__used for accounting, diagnostics and debugging purposes only__`"{zwsp}footnote:[from https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/Connection.html#setClientInfo(java.lang.String,java.lang.String)[`java.sql.Connection#setClientInfo(String,String)`^]].
+
+[#ref-client-info-jb5]
+==== Support in Jaybird 5 and earlier
+
+Support for client info properties was introduced in Jaybird 2.2, storing properties in the `USER_SESSION` context of `RDB$GET/SET_CONTEXT`.
+Support is quite limited, allowing you to:
+
+* Set properties individually or collectively using a `Properties` object (`Connection#setClientInfo(String,String)`, `Connection#setClientInfo(Properties)`)
+* Clear properties individually (setting them to `null`) (`Connection#setClientInfo(String,String)`
+* Get individual properties (`Connection#getClientInfo(String)`)
+
+Properties are always stored in `USER_SESSION`.
+Properties are retrieved from `USER_TRANSACTION`, falling back to `USER_SESSION` if the property was not present in `USER_TRANSACTION.
+
+Absent is support to:
+
+* Get properties collectively (`Connection#getClientInfo()` always returns an empty `Properties` object)
+* Collectively clear properties by not including them in the `Properties` object passed to `Connection#setClientInfo(Properties)`
+* retrieving supported client property names from `DatabaseMetaData#getClientInfoProperties()` (always returns an empty result set)
+
+[#ref-client-info-jb6]
+==== Support in Jaybird 6 and later
+
+[.since] Jaybird 6
+
+In Jaybird 6, the client info properties support was rewritten, improving and extending support of this feature.
+
+The name of a client info property is classified in two types:
+
+. without context;
+_get_/_set_ in `USER_SESSION` context of `RDB$GET/SET_CONTEXT`
+. with context, when the name ends in `@USER_SESSION`, `@USER_TRANSACTION` or `@SYSTEM`;
+_get_/_set_ _without_ that suffix in the specified context.
+Properties with multiple contexts (e.g. `property@SYSTEM@USER_SESSION`) are not allowed to prevent ambiguity.
+Everything else is a property without context.
+
+A property named `<name>@USER_SESSION` is handled identical to `<name>`.
+The "`without context`" name is preferred and recommended for `USER_SESSION` properties, and `Connection.getClientInfo()` will use the "`without context`" name as the key for `USER_SESSION` properties.
+
+A property named `<name>@USER_TRANSACTION` is _set_ and _get_ as `<name>` in context `USER_TRANSACTION`.
+When a connection is in auto-commit mode, attempts to _set_ or _get_ `USER_TRANSACTION` properties are ignored (nothing is stored, and `null` is returned without accessing the database).
+
+A property named `<name>@SYSTEM` is retrieved as `<name>` in the context `SYSTEM`.
+Properties in the `SYSTEM` context are read-only, so they cannot be _set_.
+For `Connection.setClientInfo(String, String)`, attempts to _set_ a `SYSTEM` property result in a `SQLClientInfoException`, for `Connection.setClientInfo(Properties)`, `SYSTEM` properties are silently ignored.
+
+Attempts to retrieve non-existent properties, even from `SYSTEM` will return `null` and will not result in an exception.
+
+A connection registers properties known to that specific connection.
+By default, only the JDBC-specified properties `ApplicationName`, `ClientUser` and `ClientHostName` (see also <<client-info-jdbc-props>> below) are known.
+A successful _get_ or _set_ of a property will register that property as a known property for the current connection only.
+
+The method `Connection.getClientInfo()` will retrieve only known properties (the default properties and those registered for the current connection).
+It will not attempt to query or identify other variables registered in any context.
+
+The method `Connection.setClientInfo(Properties)` clears (sets to `NULL`) known properties in `USER_SESSION` and -- if not in auto-commit -- `USER_TRANSACTION` if they are not included in the `Properties` object.
+
+`DatabaseMetaData.getClientInfoProperties()` reports the JDBC-specified properties only;
+it will not report the additional properties registered for the current connection.
+
+See also https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2023-11-new-design-client-info-properties.adoc[jdp-2023-11: New design client info properties^]
+
+[#client-info-jdbc-props]
+===== JDBC-specified properties
+
+The JDBC-specified properties are:
+
+[quote,,JDBC API documentation of java.sql.Connection]
+____
+`ApplicationName`::
+The name of the application currently utilizing the connection
+`ClientUser`::
+The name of the user that the application using the connection is performing work for.
+This may not be the same as the user name that was used in establishing the connection.
+`ClientHostname`::
+The hostname of the computer the application using the connection is running on.
+____
+
+All JDBC-specified properties are _get_ and _set_ in `USER_SESSION`.
+On _get_ of `ApplicationName`, if this property is not currently set in `USER_SESSION`, it falls back to _get_ the value from `CLIENT_PROCESS@SYSTEM`.
+The `CLIENT_PROCESS@SYSTEM` value can be specified using the connection property `processName` or system property `org.firebirdsql.jdbc.processName`.
+The `ClientUser` and `ClientHostname` properties are considered application-specific and have no default value or fallback.
+
+[#client-info-pool]
+==== Connection pools and client info properties
+
+[.since]_Jaybird 6_
+
+If you use a connection pool populated from `org.firebirdsql.ds.FBConnectionPoolDataSource` or `org.firebirdsql.ds.FBXADataSource`, the known properties are reset each time the connection is handed out by the pool.
+This assumes the pool uses `getConnection()` from `PooledConnection`/`XAConnection` each time it hands out the connection.
+This reset only removes the property name from the list of known properties of the connection, it does not clear the property values from `USER_SESSION`.
+If properties contain _sensitive_ values you will need to explicitly clear them.
+
+This reset is not applied when using a connection pool which is populated by different means (e.g. from `DriverManager` or from a normal `javax.sql.DataSource` like `org.firebirdsql.ds.FBSimpleDataSource`).
+If your connection pool implementation supports custom code to reset a connection, and you need known properties to reset when a connection is reused, make it call `FirebirdConnection.resetKnownClientInfoProperties()`, or call it yourself:
+
+[source,java]
+----
+if (connection.isWrapperFor(FirebirdConnection.class)) {
+    connection.unwrap(FirebirdConnection.class)
+            .resetKnownClientInfoProperties();
+}
+----
+
+In the future, Jaybird may be changed to also perform this reset in `Connection.beginRequest()` and/or `Connection.endRequest()`.
