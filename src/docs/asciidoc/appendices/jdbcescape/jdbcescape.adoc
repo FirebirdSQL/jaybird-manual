@@ -68,7 +68,7 @@ Below you will find the list of JDBC functions and whether they have a correspon
 |DEGREES(number)
 |X
 |{nbsp}
-|Degrees in `number` radians ([.since]_Jaybird 4_)
+|Degrees in `number` radians
 
 |EXP(float)
 |X
@@ -108,7 +108,7 @@ Below you will find the list of JDBC functions and whether they have a correspon
 |RADIANS(number)
 |X
 |{nbsp}
-|Radians in `number` degrees ([.since]_Jaybird 4_)
+|Radians in `number` degrees
 
 |RAND(integer)
 |{nbsp}
@@ -178,7 +178,7 @@ Legend: X -- available in this mode.
 |CHAR_LENGTH(string, OCTETS)
 |X
 |{nbsp}
-|Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8, alias for `OCTET_LENGTH` ([.since]_Jaybird 4_)
+|Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8, alias for `OCTET_LENGTH`
 
 |CHARACTER_LENGTH( string [,CHARACTERS])
 |Xfootnote:[Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher]
@@ -188,7 +188,7 @@ Legend: X -- available in this mode.
 |CHARACTER_LENGTH(string, OCTETS)
 |X
 |{nbsp}
-|Alias for `CHAR_LENGTH`, `OCTET_LENGTH` ([.since]_Jaybird 4_)
+|Alias for `CHAR_LENGTH`, `OCTET_LENGTH`
 
 |CONCAT(string1, string2)
 |X
@@ -223,15 +223,15 @@ Legend: X -- available in this mode.
 |LENGTH(string, OCTETS])
 |Xfootnote:[The `OCTETS` parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type]
 |{nbsp}
-|Number of characters in `string`, excluding trailing blanks ([.since]_Jaybird 4_)
+|Number of characters in `string`, excluding trailing blanks
 
 |LOCATE(string1, string2 [,start])
-|Xfootnote:[In Jaybird 3, start is required, start is optional since Jaybird 4]
+|X
 |{nbsp}
 |Position in `string2` of the first occurrence of `string1`, searching from the beginning of `string2`;
 if `start` is specified, the search begins from position `start`.
 0 is returned if `string2` does not contain `string1`. 
-Position 1 is the first character in `string2` ([.since]_Jaybird 3_ with `start` required, [.since]_Jaybird 4_ with `start` optional)
+Position 1 is the first character in `string2`
 
 |LTRIM(string)
 |X
@@ -244,14 +244,14 @@ Position 1 is the first character in `string2` ([.since]_Jaybird 3_ with `start`
 |Returns the length in bytes of the string expression whose result is the smallest integer not less than the number of bits divided by 8
 
 |POSITION(substring IN string [,CHARACTERS])
-|Xfootnote:[In Jaybird 3 and earlier only supported without the `CHARACTERS` parameter]
+|X
 |{nbsp}
-|Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 3_ without `CHARACTERS`, [.since]_Jaybird 4_ with optional `CHARACTERS`)
+|Returns the position of first occurrence of `substr` in `string` (with optional `CHARACTERS`)
 
 |POSITION(substring IN string, OCTETS)
 |Xfootnote:[Parameter `OCTETS` is ignored]
 |{nbsp}
-|Returns the position of first occurrence of `substr` in `string` ([.since]_Jaybird 4_ with caveat)
+|Returns the position of first occurrence of `substr` in `string` (with caveat)
 
 |REPEAT(string, count)
 |X
@@ -333,10 +333,10 @@ Legend: X -- available in this mode.
 |The current local time as a time value
 
 |DAYNAME(date)
-|Xfootnote:[Always returns English full names (eg Sunday)]
+|Xfootnote:[Always returns English full names (e.g. Sunday)]
 |{nbsp}
 |A character string representing the day component of `date`;
-the name for the day is specific to the data source ([.since]_Jaybird 4_)
+the name for the day is specific to the data source
 
 |DAYOFMONTH(date)
 |X
@@ -380,7 +380,7 @@ The value for field may be one of the following: `YEAR`, `MONTH`, `DAY`, `HOUR`,
 |Xfootnote:[Always returns English full names (e.g. "`January`")]
 |{nbsp}
 |A character string representing the month component of `date`;
-the name for the month is specific to the data source ([.since]_Jaybird 4_)
+the name for the month is specific to the data source
 
 |NOW()
 |X
@@ -391,7 +391,7 @@ the name for the month is specific to the data source ([.since]_Jaybird 4_)
 |X
 |{nbsp}
 |An integer from 1 to 4 representing the quarter in `date`;
-1 represents January 1 through March 31 ([.since]_Jaybird 4_)
+1 represents January 1 through March 31
 
 |SECOND(time)
 |X
@@ -401,12 +401,12 @@ the name for the month is specific to the data source ([.since]_Jaybird 4_)
 |TIMESTAMPADD( interval, count, timestamp)
 |X
 |{nbsp}
-|A timestamp calculated by adding `count` number of `interval`(s) to `timestamp` ([.since]_Jaybird 4_)
+|A timestamp calculated by adding `count` number of `interval`(s) to `timestamp`
 
 |TIMESTAMPDIFF( interval, timestamp1, timestamp2)
 |X
 |{nbsp}
-|An integer representing the number of `interval` by which `timestamp2` is greater than `timestamp1` ([.since]_Jaybird 4_)
+|An integer representing the number of `interval` by which `timestamp2` is greater than `timestamp1`
 
 |WEEK(date)
 |X
@@ -431,7 +431,7 @@ Legend: X -- available in this mode.
 |DATABASE()
 |Xfootnote:[Either the full path of the database or the alias. See documentation of `RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')` for details.]
 |{nbsp}
-|Name of the database ([.since]_Jaybird 4_)
+|Name of the database
 
 |IFNULL(expression, value)
 |X
@@ -462,44 +462,43 @@ Legend: X -- available in this mode.
 a|`value` converted to `SQLtype` where `SQLtype` may be one of the following SQL types:
 
 * `BIGINT`
-* `BINARY` ([.since]_Jaybird 4_)
-* `BLOB` ([.since]_Jaybird 4_)
+* `BINARY`
+* `BLOB`
 * `CHAR`
-* `CLOB` ([.since]_Jaybird 4_)
+* `CLOB`
 * `DATE`
-* `DECFLOAT` ([.since]_Jaybird 4_)
+* `DECFLOAT`
 * `DECIMAL`
-* `DOUBLE` ([.since]_Jaybird 4_)
+* `DOUBLE`
 * `DOUBLE PRECISION`
 * `FLOAT`
 * `INTEGER`
-* `LONGNVARCHAR` ([.since]_Jaybird 4_)
-* `LONGVARBINARY` ([.since]_Jaybird 4_)
-* `LONGVARCHAR` ([.since]_Jaybird 4_)
-* `NCHAR` ([.since]_Jaybird 4_)
-* `NCLOB` ([.since]_Jaybird 4_)
-* `NVARCHAR` ([.since]_Jaybird 4_)
+* `LONGNVARCHAR`
+* `LONGVARBINARY`
+* `LONGVARCHAR`
+* `NCHAR`
+* `NCLOB`
+* `NVARCHAR`
 * `REAL`
 * `SMALLINT`
 * `TIME`
-* `TIME_WITH_TIMEZONE` ([.since]_Jaybird 4_)
-* `TIME_WITH_TIME_ZONE` ([.since]_Jaybird 4_)
+* `TIME_WITH_TIMEZONE`
+* `TIME_WITH_TIME_ZONE`
 * `TIMESTAMP`
-* `TIMESTAMP_WITH_TIMEZONE` ([.since]_Jaybird 4_)
-* `TIMESTAMP_WITH_TIME_ZONE` ([.since]_Jaybird 4_)
-* `TINYINT` ([.since]_Jaybird 4_)
-* `VARBINARY` ([.since]_Jaybird 4_)
+* `TIMESTAMP_WITH_TIMEZONE`
+* `TIMESTAMP_WITH_TIME_ZONE`
+* `TINYINT`
+* `VARBINARY`
 * `VARCHAR`
 
-Since Jaybird 4, these type names can also be prefixed with `SQL_`.
+These type names can also be prefixed with `SQL_`.
 
 |===
 
 Legend: X -- available in this mode.
 
-([.since]_Jaybird 4_) The following improvements where added to `CONVERT` support in Jaybird 4:
+The `CONVERT` escape provides some additional features, or deviates from the JDBC defined behaviour:
 
-* Both the `SQL_<datatype>` and `<datatype>` mapping is now supported
 * Contrary to the JDBC specification, we allow explicit length or precision and scale parameters
 * `(SQL_)VARCHAR`, `(SQL_)NVARCHAR` (and _value_ not a parameter (`?`)) without explicit length is converted using `TRIM(TRAILING FROM value)`, which means the result is `VARCHAR` except for blobs where this will result in a blob;
 national character set will be lost.

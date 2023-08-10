@@ -39,7 +39,7 @@ For such cases, applications should maintain a change tracking table where the I
 
 === Posting events
 
-Events are posted from PSQL procedural code (trigger, stored procedure, execute block, function) using the `POST_EVENT` command.
+Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the `POST_EVENT` command.
 It is possible to create a stored procedure with the sole purpose of posting events:
 
 [source,sql]
@@ -51,7 +51,7 @@ AS BEGIN
 END
 ----
 
-Firebird 2.0 introduced a new command `EXECUTE BLOCK` which allows to execute PSQL statements within DSQL code:
+The `EXECUTE BLOCK` statement can be used to execute PSQL statements within DSQL code:
 
 [source,sql]
 .Using EXECUTE BLOCK to post events
@@ -71,34 +71,34 @@ there is a central manager-class that establishes a database connection and prov
 
 Applications have to configure the following properties before starting use of the implementation `EventManager` interface:
 
-[cols="1,2,4",options="header",]
+[cols="1m,2m,4",options="header",]
 |===
 |Name |Type |Description
 
 a|`host` +
 `serverName`
-|`java.lang.String`
+|String
 |Name or the IP address of the host to which we subscribe for events. __Required__.
 
 a|`port` +
 `portNumber`
-|`int`
+|int
 |Port to which we connect to, 3050 by default.
 
 |`database` +
 `databaseName`
-|`java.lang.String`
+|String
 |Path to the database.
 The path is specified for the remote host but must be absolute. __Required__.
 
 3+a|NOTE: [.since]_Jaybird 5_ `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `databaseName`, which have been deprecated for removal in Jaybird 6.
 
-|`user`
-|`java.lang.String`
+|user
+|String
 |Name of the user on behalf of which we connect to the database. __Required__.
 
-|`password`
-|`java.lang.String`
+|password
+|String
 |Password corresponding to the specified user. __Required__.
 
 |roleName
@@ -112,7 +112,7 @@ Value is a database path or alias the user can connect to. _Optional_.
 
 |authPlugins
 |String
-a|[.since]_Jaybird 4_ Comma-separated list of authentication plugins to use (ignored for Firebird 2.5 or earlier).
+a|Comma-separated list of authentication plugins to use (ignored for Firebird 2.5 or earlier).
 Use `null` (the default) to use Jaybird defaults.
 
 |processId
@@ -152,7 +152,7 @@ See <<ref-dbcrypt>> for details.
 
 |wireCompression
 |boolean
-a|[.since]_Jaybird 4_ Enable wire compression (requires Firebird 3.0 or higher).
+a|Enable wire compression (requires Firebird 3.0 or higher).
 Default is `false`.
 
 This property only affects the primary connection, not the event channel (secondary connection).
@@ -160,9 +160,9 @@ This property only affects the primary connection, not the event channel (second
 |===
 
 After configuring these properties, the application has to invoke the `connect()` method to establish a physical connection to the database.
-At this point the `EventManager` is ready to receive the event notifications.
+At this point the `EventManager` is ready to receive event notifications.
 
-Now the application developer has two choices: use asynchronous event notification or use methods that will block until an event is delivered or timeout occurs.
+Now the application developer has two choices: use asynchronous event notification or use methods that will block until an event is delivered or a timeout occurs.
 
 ==== Asynchronous event notification
 
@@ -174,8 +174,7 @@ The code below shows an example of using asynchronous event notification.
 [source,java]
 .Example of registering an event listener for asynchronous event notification
 ----
-EventManager eventManager = new FBEventManager();
-
+var eventManager = new FBEventManager();
 eventManager.setServerName("localhost");
 eventManager.setUser("SYSDBA");
 eventManager.setPassword("masterkey");
@@ -184,14 +183,9 @@ eventManager.setDatabaseName("c:/database/employee.fdb");
 eventManager.connect();
 
 eventManager.addEventListener("test_event", 
-    new EventListener() {
-      public void eventOccurred(DatabaseEvent event){
-        System.out.println("Event [" +
-            event.getEventName() + "] occured " + 
-            event.getEventCount() + " time(s)");
-      }
-    }
-);
+    event ->
+        System.out.printf("Event [%s] occured %d time(s)%n",
+            event.getEventName(), event.getEventCount()));
 ----
 
 ==== Using blocking methods

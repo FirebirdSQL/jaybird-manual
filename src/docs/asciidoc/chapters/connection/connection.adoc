@@ -183,9 +183,7 @@ Connection connection = DriverManager.getConnection(
 [[connection-drivermanager-props-urlencoding]]
 ===== URL encoding in query part of JDBC URL
 
-[.since]_Jaybird 4_
-
-Jaybird 4 and higher support UTF-8 URL encoded values (and keys) in the query part of the JDBC URL.
+UTF-8 URL encoded values (and keys) can be used in the query part of the JDBC URL.
 
 As a result of this change, the following previously unsupported characters can be used in a connection property value when escaped:
 

@@ -9,9 +9,7 @@ See the Firebird 4.0 documentation for details on this datatype.
 [[ref-decfloat-jb4]]
 ==== Decfloat support in Jaybird 4 and higher
 
-[.since]_Jaybird 4_
-
-Jaybird 4 introduces support for the `DECFLOAT` datatype mapping to `java.math.BigDecimal`.
+Jaybird 4 introduced support for the `DECFLOAT` datatype mapping to `java.math.BigDecimal`.
 For more information, see <<ref-decfloat-support>>.
 
 [[ref-decfloat-jb3]]
@@ -81,9 +79,7 @@ See also <<ref-datatypebind>>.
 [[ref-decfloat-support]]
 ==== DECFLOAT support
 
-[.since]_Jaybird 4_
-
-Jaybird 4 introduces support for the `DECFLOAT` datatype.
+Jaybird 4 introduced support for the `DECFLOAT` datatype.
 The 'default' object type for `DECFLOAT` is a `java.math.BigDecimal`, but conversion from and to the following datatypes is supported:
 
 - `java.math.BigDecimal` (see note <<decfloat-note-1,1>>)
@@ -100,7 +96,7 @@ The 'default' object type for `DECFLOAT` is a `java.math.BigDecimal`, but conver
 
 The `DECFLOAT` type is not yet defined in the JDBC specification. 
 For the time being, Jaybird defines a Jaybird specific type code with value `-6001`.
-This value is available through constant `org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT`, or - for JDBC 4.2 and higher - `org.firebirdsql.jdbc.JaybirdType.DECFLOAT`, which is an enum implementing `java.sql.SQLType`.
+This value is available through constant `org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT`, or -- for JDBC 4.2 and higher -- `org.firebirdsql.jdbc.JaybirdType.DECFLOAT`, which is an enum implementing `java.sql.SQLType`.
 
 If you need to use the type code, we suggest you use these constants.
 If a `DECFLOAT` type constant gets added to the JDBC standard, we will update the value.
@@ -150,7 +146,7 @@ We get exponent = round(1234567890123456 / 10^11^) = 12346 and exponent = -409 +
 +    
 The resulting value is now `12346E-398` or `1.2346E-394`, or in other words, we sacrificed precision to make the value fit.
     
-  2. If after the previous step, the magnitude is still too low, we have what is called an underflow, and the value is truncated to 0 with the minimum exponent and preserving sign, eg for `DECFLOAT(16)`, the value will become +0E+398 or -0E-398 (see note <<decfloat-note-19,19>>). 
+  2. If after the previous step, the magnitude is still too low, we have what is called an underflow, and the value is truncated to 0 with the minimum exponent and preserving sign, e.g. for `DECFLOAT(16)`, the value will become +0E+398 or -0E-398 (see note <<decfloat-note-19,19>>).
   Technically, this is just a special case of the previous step.
     
 * If the magnitude (or exponent) is too high, then the following steps are applied:
@@ -196,7 +192,7 @@ The support for these special values is currently under discussion and may be re
 
 2. [[decfloat-note-2]]`byte` in Java is signed, and historically Jaybird has preserved sign when storing byte values, and it considers values outside -128 and +127 out of range.
 
-3. [[decfloat-note-3]]All integral values are - if within range - first converted to `long` using `BigDecimal.longValue()`, which discards any fractional parts (rounding by truncation).
+3. [[decfloat-note-3]]All integral values are -- if within range -- first converted to `long` using `BigDecimal.longValue()`, which discards any fractional parts (rounding by truncation).
 
 4. [[decfloat-note-4]]When storing a `long` in `DECFLOAT(16)`, rounding will be applied using `RoundingMode.HALF_EVEN` for values larger than `9999999999999999L` or smaller than `-9999999999999999L`.
 
@@ -220,19 +216,19 @@ These are all mapped to `Double.NaN` (or `Float.NaN`), Java NaN values are mappe
 10. [[decfloat-note-10]]Setting `boolean` values will set `0` (or `0E+0`) for `false` and `1` (or `1E+0`) for `true`.
 
 11. [[decfloat-note-11]]Retrieving as `boolean` will return `true` for `1` (exactly `1E+0`) and `false` for **all other values**.
-Be aware that this means that `1.0E+0` (or `10E-1`) etc will be **`false`** (_this may change before Jaybird 4 final to `getLong() == 1L` or similar, which truncates the value_).
+Be aware that this means that `1.0E+0` (or `10E-1`) etc will be **`false`**.
 +
 This behavior may change in the future and only allow `0` for `false` and exactly `1` for `true` and throw an `SQLException` for all other values, or maybe `true` for everything other than `0`.
-In general we advise to not use numerical types for boolean values, and especially not to retrieve the result of a calculation as a boolean value.
+In general, we advise to not use numerical types for boolean values, and especially not to retrieve the result of a calculation as a boolean value.
 Instead, use a real `BOOLEAN`.
 
-12. [[decfloat-note-12]]Setting values as `String` is supported following the format rules of `new BigDecimal(String)`, with extra support for special values `+NaN`, `-NaN`, `+sNaN`, `-sNaN`, `+Infinity` and `-Infinity` (case insensitive). 
+12. [[decfloat-note-12]]Setting values as `String` is supported following the format rules of `new BigDecimal(String)`, with extra support for special values `+NaN`, `-NaN`, `+sNaN`, `-sNaN`, `+Infinity` and `-Infinity` (case-insensitive).
 Other non-numerical strings throw an `SQLException` with a `NumberFormatException` as cause.
 Out of range values are handled as described in <<ref-decfloat-precision-range>>.
 
 13. [[decfloat-note-13]]Getting values as `String` will be equivalent to `BigDecimal.toString()`, with extra support for the special values mentioned in the previous note.
 
-14. [[decfloat-note-14]]As mentioned in earlier notes, support for the special values is under discussion, and may be removed in the final Jaybird 4 or Firebird 4 release, or might change in future versions.
+14. [[decfloat-note-14]]As mentioned in earlier notes, support for the special values is under discussion, and may change in future versions of Firebird and/or Jaybird.
 
 15. [[decfloat-note-15]]Getting as `BigInteger` will behave as `BigDecimal.toBigInteger()`, which discards the fractional part (rounding by truncation), and may add `(-1 * scale - precision)` least-significant zeroes if the scale exceeds precision.
 Be aware that use of `BigInteger` for large values may result in significant memory consumption. 
@@ -246,5 +242,5 @@ Be aware that this is an implementation detail that might change in future Jaybi
 
 18. [[decfloat-note-18]]Setting a `Decimal128` on a `DECFLOAT(16)`, or a `Decimal32` on a `DECFLOAT(16)` or `DECFLOAT(34)`, or retrieving a `Decimal32` from a `DECFLOAT(16)` or `DECFLOAT(34)`, or a `Decimal64` from a `DECFLOAT(34)` will apply the rules described in <<ref-decfloat-precision-range>>.
 
-19. [[decfloat-note-19]]Zero values can have a sign (eg `-0` vs `0` (`+0`)), this can only be set or retrieved using `String` or the `DecimalXX` types, or the result of rounding.
-This behaviour is subject to change, and future releases may 'round' to `0` (aka `+0`).
+19. [[decfloat-note-19]]Zero values can have a sign (e.g. `-0` vs `0` (`+0`)), this can only be set or retrieved using `String` or the `DecimalXX` types, or the result of rounding.
+This behaviour is subject to change, and future releases may 'round' to `0` (a.k.a. `+0`).

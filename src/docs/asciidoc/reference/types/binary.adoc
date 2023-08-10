@@ -5,7 +5,7 @@ The JDBC (and SQL standard) types `BINARY` and `VARBINARY` are called `CHAR(n) C
 
 ([.since]_Firebird 4.0_) Firebird 4.0 introduces the names `BINARY` and `VARBINARY`/`BINARY VARYING` as aliases for `(VAR)CHAR(n) CHARACTER SET OCTETS`.
 
-In Java binary and varbinary are usually handled with byte arrays and `InputStream`/`OutputStream`.
+In Java, binary and varbinary are usually handled with byte arrays and `InputStream`/`OutputStream`.
 
 [[ref-binary-always]]
 ==== Always BINARY/VARBINARY
@@ -23,7 +23,7 @@ The getters (on result set/callable statement), setters (prepared/callable state
 * `get/set/updateString` (using the default encoding or connection encoding)
 * `get/set/updateCharacterStream` (using the default encoding or connection encoding)
 * `get/set/updateObject` (with `String`, `byte[]`, `InputStream`, `Reader`)
-* `get/setObject` with a `java.sql.RowId` ([.since]_Jaybird 4_)
-* `get/setRowId` ([.since]_Jaybird 4_)
+* `get/setObject` with a `java.sql.RowId`
+* `get/setRowId`
 
 Other getters/setters/updaters or object types supported for 'normal' `(VAR)CHAR` fields are not available.

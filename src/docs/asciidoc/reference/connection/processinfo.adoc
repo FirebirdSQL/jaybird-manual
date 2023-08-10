@@ -4,16 +4,16 @@
 Firebird 2.1 introduced the `MON$ATTACHMENTS` table.
 This table includes the columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` which report the process id and process name of the connected process.
 
-[.until]_Jaybird 6_ Jaybird 5 and earlier do not provide this information, except for the process ID of native connections.
-This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just 'java' (or similar), which is not very useful.
+Jaybird 5 and earlier do not provide this information, except for the process ID of native connections.
+This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just "`java`" (or similar), which is not very useful.
 
 [.since]_Jaybird 6_ Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
-No default process name is provided as in most cases the process name is just 'java' (or similar), which is not very useful.
+No default process name is provided as in most cases the process name is just "`java`" (or similar), which is not very useful.
 When a `SecurityManager` is installed, the entire call-chain needs to have the `RuntimePermission("manageProcess")` to obtain the process ID in pure Java connections.
 If this permission check fails, Jaybird will silently ignore it and not set the `isc_dpb_process_id` based on the actual process ID.
 
 Since Firebird 3.0, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`.
-Jaybird will report its full version (eg `Jaybird 3.0.5-JDK_1.8`).
+Jaybird will report its full version (e.g. `Jaybird 3.0.5-JDK_1.8`).
 
 [.since]_Jaybird 6_ The process name is returned from `Connection.getClientInfo("ApplicationName")`, if the client info property `ApplicationName` has not been set explicitly with `Connection.setClientInfo`, and/or if there is no property `ApplicationName` in the `USER_SESSION` context.
 

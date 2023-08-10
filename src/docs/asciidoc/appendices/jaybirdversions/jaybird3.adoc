@@ -42,7 +42,7 @@ Longer object names are supported.
 The new data types introduced in Firebird 4.0 are not supported.
 Support for data types like `DECFLOAT` and `NUMERIC`/`DECIMAL` with precision higher than 18 will be introduced in Jaybird 4.
 
-The Srp256 authentication plugin is supported ([.since]_Jaybird 3.0.5_), but the other SrpNNN plugins are not.
+The Srp256 authentication plugin is supported, but the other SrpNNN plugins are not.
 
 Jaybird 3 does not support the Firebird 4.0 zlib compression.
 

@@ -38,7 +38,7 @@ a|`roleName` +
 
 a|`authPlugins` +
 `auth_plugin_list`
-|Jaybird specific property ([.since]_Jaybird 4_).
+|Jaybird specific property.
 The comma-separated list of authentication plugins to try.
 See <<ref-auth-plugins>> for more information. +
 Default: `Srp256,Srp`
@@ -106,10 +106,11 @@ a|`useFirebirdAutocommit`
 |Jaybird specific property.
 Boolean property.
 Enable experimental feature to use Firebird auto-commit for JDBC auto-commit mode.
+**Do not use this unless you really know what you're doing.**
 See <<ref-firebirdautocommit>> for more information.
 
 a|`generatedKeysEnabled`
-|Jaybird specific property ([.since]_Jaybird 4_).
+|Jaybird specific property.
 Configure generated keys support behaviour.
 See <<ref-generatedkeys-config>> for more information.
 
@@ -146,7 +147,7 @@ In the JNA implementation (native protocol) the connect timeout works as the DPB
 This means that -- for the native protocol -- the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
-|Jaybird specific property ([.since]_Jaybird 4_ [.since]_Firebird 3.0_).
+|Jaybird specific property ([.since]_Firebird 3.0_).
 Boolean property.
 Set property to `true` to enable zlib wire compression.
 See <<ref-wirecompression>> for more information.
@@ -205,17 +206,17 @@ a|`sessionTimeZone`
 In Jaybird 3, only configures the Firebird 4 server-side session time zone.
 In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <<ref-datetime-sessiontimezone>> for more information. +
-Default: not set (Jaybird 3 and earlier), or the JVM default time zone ([.since]_Jaybird 4_)
+Default: not set (Jaybird 3 and earlier), or the JVM default time zone.
 
 a|`decfloatRound` +
 `decfloat_round`
-|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4.0_)
+|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Firebird 4.0_)
 Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
 See <<ref-decfloat-traps-round>> for more information.
 
 a|`decfloatTraps` +
 `decfloat_traps`
-|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Jaybird 4_ [.since]_Firebird 4.0_)
+|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Firebird 4.0_)
 Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
 See <<ref-decfloat-traps-round>> for more information.
 
@@ -250,18 +251,6 @@ a|`set_db_sql_dialect` +
 a|`set_db_charset` +
 `isc_dpb_set_db_charset`
 |Set the default character set of the database.
-
-a|`noResultSetTracking`
-|Jaybird specific property. ([.until]_Jaybird 4_)
-Boolean property.
-Unused since at least Jaybird 2.2, removed in Jaybird 4.
-
-a|`useTranslation` +
-`mapping_path`
-|Jaybird specific property ([.until]_Jaybird 4_).
-Deprecated, removed in Jaybird 4.
-This allows mapping of characters to be overridden (see `translation/hpux.properties` in Jaybird jar for example).
-Value is the path to a mapping properties file.
 
 a|`enableProtocol`
 |Jaybird specific property ([.since]_Jaybird 6_).

@@ -4,13 +4,11 @@
 
 === Mapping between JDBC, Firebird and Java Types
 
-The below table describes a mapping of the JDBC data types defined in
-`java.sql.Types` class to the Firebird data types. Also, for each JDBC
-data type a class instance of which is returned by `ResultSet.getObject`
-method is provided.
+The below table describes a mapping of the JDBC data types defined in `java.sql.Types` class to the Firebird data types.
+Also, for each JDBC data type a class instance of which is returned by `ResultSet.getObject` method is provided.
 
 [cols=",,",options="header",]
-|================================================
+|===
 |JDBC Type |Firebird Type |Java Object Type
 |`CHAR` 
 |`CHAR` 
@@ -35,34 +33,34 @@ a|`NUMERIC` +
 
 |`SMALLINT` 
 |`SMALLINT` 
-|`java.lang.Short`
+|`Integer`
 
 |`INTEGER` 
 |`INTEGER` 
-|`java.lang.Integer`
+|`Integer`
 
 |`BIGINT` 
 |`BIGINT` 
-|`java.lang.Long`
+|`Long`
 
 |`REAL` 
 |footnote:[A Firebird `REAL` is an alias for `FLOAT` and by default handled as `java.sql.Types.FLOAT`]
-|`java.lang.Float`
+|{nbsp}
 
 |`FLOAT` 
 |`FLOAT` 
-|`java.lang.Double`
+|`Double`
 
 |`DOUBLE` 
 |`DOUBLE PRECISION` 
-|`java.lang.Double`
+|`Double`
 
-|`BINARY` ([.since]_Jaybird 4_)
+|`BINARY`
 a|`CHAR CHARACTER SET OCTETS` +
 `BINARY` ([.since]_Firebird 4.0_)
 |`byte[]`
 
-|`VARBINARY` ([.since]_Jaybird 4_)
+|`VARBINARY`
 a|`VARCHAR CHARACTER SET OCTETS` +
 `VARBINARY` ([.since]_Firebird 4.0_)
 |`byte[]`
@@ -79,7 +77,7 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`TIME` 
 |`java.sql.Time`
 
-|`TIME_WITH_TIMEZONE` ([.since]_Jaybird 4_)
+|`TIME_WITH_TIMEZONE`
 |`TIME WITH TIME ZONE` ([.since]_Firebird 4.0_)
 |`java.time.OffsetTime`
 
@@ -87,7 +85,7 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`TIMESTAMP` 
 |`java.sql.Timestamp`
 
-|`TIMESTAMP_WITH_TIMEZONE` ([.since]_Jaybird 4_)
+|`TIMESTAMP_WITH_TIMEZONE`
 |`TIMESTAMP WITH TIME ZONE` ([.since]_Firebird 4.0_)
 |`java.time.OffsetDateTime`
 
@@ -97,12 +95,12 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 
 |`BOOLEAN`
 |`BOOLEAN` ([.since]_Firebird 3.0_)
-|`java.lang.Boolean`
+|`Boolean`
 
-|`JaybirdTypeCodes.DECFLOAT` ([.since]_Jaybird 4_)footnote:[JDBC does not yet define a `java.sql.Types` code for `DECFLOAT`]
+|``JaybirdTypeCodes.DECFLOAT``footnote:[JDBC does not yet define a `java.sql.Types` code for `DECFLOAT`]
 |`DECFLOAT` ([.since]_Firebird 4.0_)
 |`java.math.BigDecimal`
-|================================================
+|===
 
 === Data Type Conversions
 
@@ -110,7 +108,7 @@ This table specifies the compatible conversions between the Firebird and
 Java types.
 
 [.wide-table,cols="5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1",options="header",]
-|=======================================================================
+|===
 | |`SMALLINT` |`INTEGER` |`BIGINT` |`REAL` |`FLOAT` |`DOUBLE` |`DECIMAL` |`NUMERIC` |`CHAR` |`VARCHAR` |`BLOB SUB_TYPE 1` |`BLOB SUB_TYPE 0` |`BLOB SUB_TYPE < 0` |`DATE` |`TIME` |`TIMESTAMP` | `BOOLEAN` | `DECFLOAT`
 
 |`String` |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X |X
@@ -136,5 +134,5 @@ Java types.
 |`Time` | | | | | | | | | | | | | | |X | | |
 
 |`Timestamp` | | | | | | | | | | | | | |X | |X | |
-|=======================================================================
+|===
 

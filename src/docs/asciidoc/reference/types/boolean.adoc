@@ -58,15 +58,15 @@ For non-boolean types, Jaybird supports the following conversions with `setBoole
 |Type | `getBoolean` | `setBoolean`
 
 |`(VAR)CHAR(<5)`
-|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case-insensitive), everything else is false
 |true sets `'Y'`, false sets `'N'`
 
 |`(VAR)CHAR(>=5)`
-|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case-insensitive), everything else is false
 |true sets `'true'`, false sets `'false'`
 
 |`BLOB SUB_TYPE TEXT`
-|`'Y'`/`'T'`/`'1'`/`'true'` is true (case insensitive), everything else is false
+|`'Y'`/`'T'`/`'1'`/`'true'` is true (case-insensitive), everything else is false
 |true sets `'true'`, false sets `'false'`
 
 |`SMALLINT`/`INTEGER`/`BIGINT`

@@ -8,18 +8,18 @@ Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in th
 The current implementation is simple and only supports replying with a static value from a connection property. 
 Be aware that a static value response for database encryption is not very secure as it can easily lead to replay attacks or unintended key exposure. 
 
-Future versions of Jaybird (likely 4, maybe 5) will introduce plugin support for database encryption plugins that require a more complex callback.
+Future versions of Jaybird may introduce plugin support for database encryption plugins that require a more complex callback.
 
 The static response value of the encryption callback can be set through the `dbCryptConfig` connection property. 
 Data sources and `ServiceManager` implementations have an equivalent property with the same name. 
 This property can be set as follows:
 
-* Absent or empty value: empty response to callback (depending on the database encryption plugin this may just work or yield an error later).
-* Strings prefixed with `base64:`: rest of the string is decoded as _base64_ to bytes.
+* Absent or empty value -- empty response to callback (depending on the database encryption plugin this may just work or yield an error later).
+* Strings prefixed with `base64:` -- rest of the string is decoded as _base64_ to bytes.
 The `=` padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).
-* [.since]_Jaybird 5_ Strings prefixed with `base64url:`: rest of the string is decoded as _base64url_ to bytes (using "`Base 64 URL and Filename safe`" alphabet).
+* [.since]_Jaybird 5_ Strings prefixed with `base64url:` -- rest of the string is decoded as _base64url_ to bytes (using "`Base 64 URL and Filename safe`" alphabet).
 As `base64:`, the `=` padding characters are optional
-* Plain string value: string is encoded to bytes using UTF-8, and these bytes are used as the response.
+* Plain string value -- string is encoded to bytes using UTF-8, and these bytes are used as the response.
     
 Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with `&` or `;`. 
 Likewise, avoid `:` so that we can support other prefixes similar to `base64:` and `base64url:` in the future.
@@ -38,12 +38,9 @@ Be aware that some service operations on encrypted databases are not supported b
 Other warnings and limitations
 
 * Database encryption callback support is only available in the pure Java implementation. 
-Support for native and embedded connections will be added in a future version.
+Support for native and embedded connections may be added in a future version.
 * The database encryption callback does not require an encrypted connection, so the key can be exchanged unencrypted if wire protocol encryption has been disabled client-side or server-side, or if legacy authentication is used.
 Consider setting connection property `wireCrypt=REQUIRED` to force encryption (caveat: see the next point).
-* Firebird may ask for the database encryption key before the connection has been encrypted (for example if the encrypted database itself is used as the security database). 
-_This applies to v15 protocol support, which is not yet available._
-* The improvements of the versions 14 and 15 wire protocol are not implemented, and as a result encrypted security databases (external or security database hosted in the database itself) will not work unless the encryption plugin does not require a callback. 
-Support for the version 15 wire protocol will be added in a future version.
+* Firebird may ask for the database encryption key before the connection has been encrypted (for example if the encrypted database itself is used as the security database).
 * We cannot guarantee that the `dbCryptConfig` value cannot be obtained by someone with access to your application or the machine hosting your application (although that in itself would already imply a severe security breach).
 ====

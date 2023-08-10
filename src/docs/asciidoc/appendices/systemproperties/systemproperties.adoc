@@ -123,11 +123,11 @@ The following system properties control other global behaviour of Jaybird.
 
 `org.firebirdsql.jna.syncWrapNativeLibrary`::
 Set to true to add a synchronization proxy around the native client library.
-`org.firebirdsql.datatypeCoderCacheSize`:: [.since]_Jaybird 4_ 
+`org.firebirdsql.datatypeCoderCacheSize`::
 Integer value for the number of encoding specific data type coders cached (default and minimum is 1). 
 Setting to a higher value may improve performance, most common use case is connection character set `NONE` with a database that uses more than one character set for its columns. 
 Jaybird will log a warning (_"Cleared encoding specific datatype coder cache [..]"_) when the cache size was exceeded.
-`org.firebirdsql.nativeResourceShutdownDisabled`:: [.since]_Jaybird 4_ 
+`org.firebirdsql.nativeResourceShutdownDisabled`::
 Set to true to disable automatic shutdown and unload of native libraries and other native resources.
 Normally you should only use this if the automatic shutdown misbehaves and causes application errors. 
 If you need to set this to true, we'd appreciate it if you post a message to the https://groups.google.com/g/firebird-java[firebird-java Google Group^] with details on why you needed to enable this, so we can improve or fix this feature.

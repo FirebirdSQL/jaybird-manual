@@ -48,7 +48,7 @@ See section on <<ref-auth-plugins-default-jb5>> for further details.
 [[ref-auth-plugins-default-jb3]]
 ===== Jaybird 3
 
-Jaybird 3 will try - in order - `Srp` and `Legacy_Auth`, or - [.since]_Jaybird 3.0.5_ - `Srp256`, `Srp` and `Legacy_Auth`.
+Jaybird 3 will try -- in order -- `Srp256`, `Srp` and `Legacy_Auth`.
 It is not possible to specify a different configuration in Jaybird 3.
 
 Firebird 2.5 and earlier will always use legacy authentication.
@@ -56,16 +56,14 @@ Firebird 2.5 and earlier will always use legacy authentication.
 [[ref-auth-plugins-config]]
 ==== Configure authentication plugins
 
-[.since]_Jaybird 4_
-
-Jaybird 4 introduces the connection property `authPlugins` (alias `auth_plugin_list`) to specify the authentication plugins to try when connecting.
+The connection property `authPlugins` (alias `auth_plugin_list`) specifies the authentication plugins to try when connecting.
 The value of this property is a comma-separated list with the plugin names.
 
 [NOTE]
 ====
-The `authPlugins` values can be separated by comma, space, tab, or semi-colon.
+The `authPlugins` values can be separated by comma, space, tab, or semicolon.
 We recommend using comma as the separator.
-The semi-colon should not be used in a JDBC URL as there the semi-colon is a separator between connection properties.
+The semicolon should not be used in a JDBC URL as there the semicolon is a separator between connection properties.
 ====
 
 Unknown or unsupported plugins will be logged and skipped. 
@@ -105,9 +103,7 @@ The property is also supported by the data sources, service managers and event m
 [[ref-auth-plugins-external]]
 ==== External authentication plugin support (experimental)
 
-[.since]_Jaybird 4_
-
-If you develop your own Firebird authentication plugin (or use a third-party authentication plugin), it is possible - for pure Java only - to add your own authentication plugin by implementing the interfaces 
+If you develop your own Firebird authentication plugin (or use a third-party authentication plugin), it is possible -- for pure Java only -- to add your own authentication plugin by implementing the interfaces
  
 * `org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi`
 * `org.firebirdsql.gds.ng.wire.auth.AuthenticationPlugin`

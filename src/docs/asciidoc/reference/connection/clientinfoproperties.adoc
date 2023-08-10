@@ -25,7 +25,7 @@ Absent is support to:
 [#ref-client-info-jb6]
 ==== Support in Jaybird 6 and later
 
-[.since] Jaybird 6
+[.since]_Jaybird 6_
 
 In Jaybird 6, the client info properties support was rewritten, improving and extending support of this feature.
 

@@ -17,5 +17,5 @@ The property is called:
 [WARNING]
 ====
 The price for using this feature is that each holdable result set will be fully cached in memory. 
-The memory occupied by this result set will be released when the statement that produced the result set is either closed or re-executed.
+The memory occupied by this result set will be released when the result is closed, or the statement that produced the result set is closed or re-executed.
 ====

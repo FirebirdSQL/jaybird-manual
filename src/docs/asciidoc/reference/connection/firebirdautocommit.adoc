@@ -1,6 +1,16 @@
 [[ref-firebirdautocommit]]
 === Firebird auto commit mode (experimental)
 
+[CAUTION]
+====
+This functionality is experimental, and will remain so unless Firebird changes how its auto-commit mode works.
+**Do not use this unless you really know what you're doing.**
+
+Incorrect use can result in excessive growth of the database due to increases in back-version chains, which can also cause performance degradation.
+When used with an isolation level other than READ COMMITTED, the connection will only see changes committed at the time the initial transaction was started;
+the auto-commit barrier will not make new committed changes visible.
+====
+
 This option is enabled by specifying the connection property `useFirebirdAutocommit=true`.
 
 With this option, Jaybird will configure the transaction to use `isc_tpb_autocommit` with `autoCommit=true`. 

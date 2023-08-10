@@ -123,7 +123,7 @@ If there is more than one column matching the specified name (even if the origin
 
 When getters for primitive types are used and the value in the result set is `NULL`, the driver returns the default value for that type.
 For example, `getInt()` method will return `0`.
-In order to know whether the value is really `0` or `NULL`, you have to call `ResultSet.wasNull()` method *after* calling the _get_ method.
+To know whether the value is really `0` or `NULL`, you have to call `ResultSet.wasNull()` method *after* calling the _get_ method.
 
 Getters that return object values (`getString`, `getDate`, `getObject`, etc.) will return a `null` value for columns containing `NULL`.
 Calling `wasNull` after object _get_ methods is possible but unnecessary.
@@ -152,25 +152,24 @@ Scrollable cursors are especially useful when result of some query is displayed 
 [source,java]
 .Example of using scrollable and updatable result sets
 ----
-Statement scrollStatement = connection.createStatement(
-    ResultSet.TYPE_SCROLL_INSENSITIVE,
-    ResultSet.CONCUR_UPDATABLE);
-    
-ResultSet rs = scrollStatement.executeQuery(
-    "SELECT id, name, price FROM myTable");
-    
-rs.absolute(1);                  // move to the first row 
-rs.updateString(2, anotherName); // update the name
-rs.updateRow();                  // post changes to the db
+try (Statement scrollStatement = connection.createStatement(
+         ResultSet.TYPE_SCROLL_INSENSITIVE,
+         ResultSet.CONCUR_UPDATABLE);
+     ResultSet rs = scrollStatement.executeQuery(
+         "SELECT id, name, price FROM myTable");
+  rs.absolute(1);                  // move to the first row
+  rs.updateString(2, anotherName); // update the name
+  rs.updateRow();                  // post changes to the db
 
-rs.moveToInsertRow();
-rs.updateInt(1, newId);
-rs.updateString(2, newName);
-rs.updateDouble(3, newPrice);
-rs.insertRow();
-rs.moveToCurrentRow();
+  rs.moveToInsertRow();
+  rs.updateInt(1, newId);
+  rs.updateString(2, newName);
+  rs.updateDouble(3, newPrice);
+  rs.insertRow();
+  rs.moveToCurrentRow();
 
-rs.relative(-2);
+  rs.relative(-2);
+}
 ----
 
 The code example above shows how to update first row, insert new one and after that move two records backwards.
