@@ -824,7 +824,7 @@ Version: <code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 </div>
 </div>
 <div class="paragraph">
-<p>We plan to make native and embedded support a separate library in future releases.</p>
+<p>In Jaybird 6, native and embedded support will be in a separate library.</p>
 </div>
 <div class="paragraph">
 <p>The Firebird client library is available as a Maven dependencies, see <a href="#driver-native-maven">Maven dependency for native client</a>.
@@ -957,7 +957,7 @@ The driver manager then checks which driver(s)&#8201;&#8212;&#8201;if any&#8201;
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>jdbc:firebirdsql://localhost:3050/c:/database/example.fdb</pre>
+<pre>jdbc:firebird://localhost:3050/c:/database/example.fdb</pre>
 </div>
 </div>
 <div class="ulist">
@@ -967,8 +967,8 @@ The driver manager then checks which driver(s)&#8201;&#8212;&#8201;if any&#8201;
 JDBC protocol</p>
 </li>
 <li>
-<p><code>firebirdsql</code><br>
-JDBC subprotocol, identifies driver to use</p>
+<p><code>firebird</code> or <code>firebirdsql</code><br>
+JDBC subprotocol, identifies driver to use, in this case Jaybird</p>
 </li>
 <li>
 <p><code>//localhost:3050/c:/database/example.fdb</code></p>
@@ -979,7 +979,7 @@ JDBC subprotocol, identifies driver to use</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The first part, <code>jdbc:firebirdsql:</code> is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
+<p>The first part, <code>jdbc:firebird:</code> or <code>jdbc:firebirdsql:</code>, is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
 In other words, the type of connection that the application wants to obtain, in this example it is a connection to a Firebird database.</p>
 </div>
 <div class="paragraph">
@@ -999,7 +999,7 @@ public class HelloServer {
     Class.forName("org.firebirdsql.jdbc.FBDriver"); <i class="conum" data-value="1"></i><b>(1)</b>
 
     Connection connection = DriverManager.getConnection(
-        "jdbc:firebirdsql://localhost:3050/c:/db/employee.fdb",
+        "jdbc:firebird://localhost:3050/c:/db/employee.fdb",
         "SYSDBA", "masterkey"); <i class="conum" data-value="2"></i><b>(2)</b>
 
     // do something here
@@ -1091,7 +1091,7 @@ On Unix and Linux platform, you can use only <code>/</code> as the path separato
 </div>
 <div class="paragraph">
 <p>On Unix platforms the path must include the root, as the path is otherwise interpreted relative to a server-dependent folder.
-Having to include the root has the effect that a database in <code>/var/firebird/employee.fdb</code> needs to use a double <code>//</code> after the host name (and port) in the connection string: <code>jdbc:firebirdsql://localhost//var/firebird/employee.fdb</code>.</p>
+Having to include the root has the effect that a database in <code>/var/firebird/employee.fdb</code> needs to use a double <code>//</code> after the host name (and port) in the connection string: <code>jdbc:firebird://localhost//var/firebird/employee.fdb</code>.</p>
 </div>
 <div class="paragraph">
 <p>It is possible to specify a relative path, but as this depends on the server configuration, this may be confusing or easily lead to errors.
@@ -1121,7 +1121,7 @@ public class HelloServerWithEncoding {
     props.setProperty("encoding", "UTF8");
 
     try (Connection connection = DriverManager.getConnection(
-            "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb",
+            "jdbc:firebird://localhost:3050/C:/db/employee.fdb",
             props)) {
 
         // do something here
@@ -1145,7 +1145,7 @@ Jaybird also provides a possibility to specify extended properties in the JDBC U
 <div class="literalblock">
 <div class="title">Extended JDBC URL format</div>
 <div class="content">
-<pre>jdbc:firebirdsql://host[:port]/&lt;path to db&gt;?&lt;properties&gt;
+<pre>jdbc:firebird://host[:port]/&lt;path to db&gt;?&lt;properties&gt;
 &lt;properties&gt; ::= &lt;property&gt;[{&amp; | ;}&lt;properties&gt;]
 &lt;property&gt;   ::= &lt;name&gt;[=&lt;value&gt;]</pre>
 </div>
@@ -1177,7 +1177,7 @@ Jaybird only supports URL encoding in Jaybird 4 and higher.
 ...
 
 Connection connection = DriverManager.getConnection(
-    "jdbc:firebirdsql://localhost:3050/C:/db/employee.fdb?encoding=UTF8",
+    "jdbc:firebird://localhost:3050/C:/db/employee.fdb?encoding=UTF8",
     "SYSDBA",
     "masterkey");</code></pre>
 </div>
@@ -1233,14 +1233,52 @@ URL encoding should not be applied for connection properties set through <code>j
 <div class="sect3">
 <h4 id="connection-datasource"><a class="anchor" href="#connection-datasource"></a>2.1.2. Obtaining a connection via javax.sql.DataSource</h4>
 <div class="paragraph">
-<p>The JDBC 2.0 specification introduced a mechanism to obtain database connections without requiring the application to know any specifics of the underlying JDBC driver.
-The application is only required to know the logical name to find an instance of the <code>javax.sql.DataSource</code> interface using Java Naming and Directory Interface (JNDI).
-This is a common way to obtain connections in web and application servers.
-Alternatively, the <code>DataSource</code> may be injected by CDI or Spring.</p>
+<p>The interface <code>javax.sql.DataSource</code> defines a simple API for a factory of <code>java.sql.Connection</code> objects.
+Data sources can be created and configured using code or bean introspection, looked up from JNDI, or injected by CDI or Spring.</p>
 </div>
 <div class="paragraph">
-<p>In order to obtain a connection via a <code>DataSource</code> object, you can use the code shown below.
-This code assumes that you have correctly configured the JNDI properties.
+<p>Jaybird itself provides one <code>javax.sql.DataSource</code> implementation, <code>org.firebirdsql.ds.FBSimpleDataSource</code>, which is a plain factory of connections, without connection pooling.</p>
+</div>
+<div class="paragraph">
+<p>A simple example of creating a data source and obtaining a connection via a <code>DataSource</code> object is shown below.</p>
+</div>
+<div class="listingblock">
+<div class="title">Obtaining a JDBC connection from a DataSource</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package hello;
+
+import java.sql.*;
+import org.firebirdsql.ds.*;
+
+public class HelloServerDataSource {
+
+  public static void main(String[] args) throws Exception {
+    var ds = new FBSimpleDataSource();
+    ds.setUser("SYSDBA");
+    ds.setPassword("masterkey");
+    // in a single property
+    ds.setDatabaseName("//localhost:3050/C:/database/employee.fdb");
+    // or split out over serverName, portNumber and databaseName
+    ds.setServerName("localhost");
+    ds.setPortNumber(3050);
+    ds.setDatabaseName("C:/database/employee.fdb");
+
+    try (Connection connection = ds.getConnection()) {
+      // do something here...
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="connection-datasource-njdi"><a class="anchor" href="#connection-datasource-njdi"></a>Using JNDI to look up a javax.sql.DataSource</h5>
+<div class="paragraph">
+<p>The JDBC 2.0 specification introduced a mechanism to obtain database connections without requiring the application to know any specifics of the underlying JDBC driver.
+The application is only required to know the logical name to find an instance of the <code>javax.sql.DataSource</code> interface using Java Naming and Directory Interface (JNDI).
+This was a common way to obtain connections in web and application servers before the introduction of CDI.</p>
+</div>
+<div class="paragraph">
+<p>This code assumes that you have correctly configured the JNDI properties.
 For more information about configuring JNDI please refer to the documentation provided with your web or application server.</p>
 </div>
 <div class="listingblock">
@@ -1255,8 +1293,8 @@ import javax.naming.*;
 public class HelloServerJNDI {
 
   public static void main(String[] args) throws Exception {
-    InitialContext ctx = new InitialContext();
-    DataSource ds = (DataSource)ctx.lookup("jdbc/SomeDB");
+    var ctx = new InitialContext();
+    DataSource ds = (DataSource) ctx.lookup("jdbc/SomeDB");
 
     try (Connection connection = ds.getConnection()) {
       // do something here...
@@ -1276,19 +1314,35 @@ You can use this code snippet for this purpose:</p>
 <pre class="prettyprint highlight"><code data-lang="java">import javax.naming.*;
 import org.firebirdsql.ds.*;
 ...
-FBSimpleDataSource ds = new FBSimpleDataSource();
+var ds = new FBSimpleDataSource();
 
 ds.setDatabaseName("//localhost:3050/C:/database/employee.fdb");
 ds.setUser("SYSDBA");
 ds.setPassword("masterkey");
 
-InitialContext ctx = new InitialContext();
+var ctx = new InitialContext();
 
 ctx.bind("jdbc/SomeDB", ds);</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The <code>DataSource</code> implementation supports all connection properties available to the <code>DriverManager</code> interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Manually binding to JNDI like shown above is uncommon.
+If you find yourself copying this code, rethink what you&#8217;re doing.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -1311,15 +1365,69 @@ No installation is required except adding the JDBC driver to the class path.
 This type of driver provides the best performance when connecting to a remote server.</p>
 </div>
 <div class="paragraph">
-<p>In order to obtain a connection using the <code>PURE_JAVA</code> driver type you have to use a JDBC URL as shown in <a href="#connection-drivermanager">Obtaining connection java.sql.DriverManager</a>:</p>
+<p>To obtain a connection using the <code>PURE_JAVA</code> driver type you have to use a JDBC URL as shown in <a href="#connection-drivermanager">Obtaining connection java.sql.DriverManager</a>.</p>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>The following JDBC URL syntax is supported (<em>serverName</em> became optional in Jaybird 5)</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>jdbc:firebirdsql://host[:port]/&lt;path to database&gt;</pre>
+<pre>&lt;pure-java-url&gt; ::=
+  jdbc:firebird[sql]:[java:]&lt;database-coordinates&gt;
+
+&lt;database-coordinates&gt; ::=
+    //[<em>serverName</em>[:<em>portNumber</em>]]/<em>databaseName</em>
+  | &lt;legacy-url&gt;
+
+&lt;legacy-url&gt; ::=
+  [<em>serverName</em>[/<em>portNumber</em>]:]<em>databaseName</em></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>If <em>serverName</em> is not specified, it defaults to <code>localhost</code>.<br>
+If <em>portNumber</em> is not specified, it defaults to <code>3050</code>.</p>
+</div>
+<div class="paragraph">
+<p>In theory, even <code>&lt;database-coordinates&gt;</code> and <em>databaseName</em> are optional, but this requires specifying the database name using connection property <code>databaseName</code>, which is possible, but not recommended.</p>
+</div>
+<div class="paragraph">
 <p>When using <code>javax.sql.DataSource</code> implementation, you can specify either <code>"PURE_JAVA"</code> or <code>"TYPE4"</code> driver type, however this type is used by default.</p>
+</div>
+<div class="paragraph">
+<p>Some URL examples</p>
+</div>
+<div class="listingblock">
+<div class="title">Pure Java URL examples</div>
+<div class="content">
+<pre>// Connect to db alias employee on localhost, port 3050
+jdbc:firebird://localhost/employee
+jdbc:firebird://localhost:3050/employee
+jdbc:firebird:///employee
+
+// Same using the legacy URL format
+jdbc:firebird:localhost:employee
+jdbc:firebird:localhost/3050:employee
+jdbc:firebird:employee</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The legacy URL format is the historic URL format used by Firebird itself.
+We recommend not using this format, as it can be ambiguous.</p>
+</div>
+<div class="paragraph">
+<p>For example, say you have a server called <code>java</code>, then <code>jdbc:firebird:java:employee</code> will attempt to open the <code>employee</code> db alias on <code>localhost</code>, not on <code>java</code>.
+With <code>jdbc:firebird://java/employee</code>, this ambiguity does not exist.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -1334,19 +1442,39 @@ Performance of <code>NATIVE</code> driver is approximately 10% lower compared to
 This is mostly due to the fact that TCP/IP stack is not involved in this mode.</p>
 </div>
 <div class="paragraph">
-<p>To create a connection using the <code>NATIVE</code> JDBC driver to connect to a remote server you have to use the following JDBC URL with the native subprotocol:</p>
+<p>To create a connection using the <code>NATIVE</code> JDBC driver to connect to a remote server you have to use the following JDBC URL with the native subprotocol.</p>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>The following JDBC URL syntax is supported:</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>jdbc:firebirdsql:native:host[/port]:&lt;path to database&gt;</pre>
+<pre>&lt;native-url&gt; ::=
+  jdbc:firebird[sql]:native:&lt;database-coordinates&gt;
+
+&lt;database-coordinates&gt; ::=
+    //[<em>serverName</em>[:<em>portNumber</em>]]/<em>databaseName</em>
+  | &lt;fbclient-url&gt;
+
+&lt;fbclient-url&gt;
+    inet://<em>serverName</em>[:<em>portNumber</em>]/<em>databaseName</em>
+  | inet4://<em>serverName</em>[:<em>portNumber</em>]/<em>databaseName</em>
+  | inet6://<em>serverName</em>[:<em>portNumber</em>]/<em>databaseName</em>
+  | wnet://[<em>serverName</em>[:<em>portNumber</em>]/]<em>databaseName</em>
+  | xnet://<em>databaseName</em>
+  | [<em>serverName</em>[/<em>portNumber</em>]:]<em>databaseName</em></pre>
 </div>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5</em> Since Jaybird 5, all URLs supported by fbclient can be used.
+The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support will be removed in Firebird 5).</p>
 </div>
 <div class="paragraph">
 <p>When connecting to a local database server using the <code>LOCAL</code> driver, you should use following:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>jdbc:firebirdsql:local:&lt;absolute path to database&gt;</pre>
+<pre>jdbc:firebird:local:&lt;absolute path to database&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1366,14 +1494,14 @@ To ensure local access, use a connection string using XNET (Windows only!):</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>jdbc:firebirdsql:native:xnet://&lt;path to database&gt;</pre>
+<pre>jdbc:firebird:native:xnet://&lt;path to database&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This requires a Firebird 3.0 or later <code>fbclient.dll</code>.</p>
 </div>
 <div class="paragraph">
-<p>Support for this type of URLs was introduced in Jaybird 5, so this syntax cannot be used in earlier versions.</p>
+<p>Support for this type of URL was introduced in Jaybird 5, so this syntax cannot be used in earlier versions.</p>
 </div>
 <div class="paragraph">
 <p>As XNET is Windows only, on other platforms, consider using an <a href="#driver-embedded">EMBEDDED</a> connection instead.</p>
@@ -1381,6 +1509,31 @@ To ensure local access, use a connection string using XNET (Windows only!):</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="listingblock">
+<div class="title">Native URL examples</div>
+<div class="content">
+<pre>// Connect to db alias employee on localhost, port 3050
+jdbc:firebird:native://localhost/employee
+jdbc:firebird:native://localhost:3050/employee
+jdbc:firebird:native:///employee
+
+jdbc:firebird:native:inet://localhost/employee
+// Require IPv4
+jdbc:firebird:native:inet4://localhost/employee
+// Require IPv6
+jdbc:firebird:native:inet6://localhost/employee
+// Using WNET
+jdbc:firebird:native:wnet://localhost/employee
+// Using XNET
+jdbc:firebird:native:xnet://employee
+
+// Same using the legacy URL format
+jdbc:firebird:native:localhost:employee
+jdbc:firebird:native:localhost/3050:employee
+// May use XNET, INET or embedded access
+jdbc:firebird:native:employee</pre>
+</div>
 </div>
 <div class="sect4">
 <h5 id="driver-native-maven"><a class="anchor" href="#driver-native-maven"></a>Maven dependency for native client</h5>
@@ -1441,20 +1594,20 @@ Some distributions will only have, for example, <code>libfbclient.so.2.5</code>.
 In that case you may need to add a symlink from <code>libfbclient.so</code> to the client on your system.</p>
 </div>
 <div class="paragraph">
-<p>Alternatively you can specify the directory containing the library in the <code>jna.library.path</code> Java system property.
+<p>Alternatively, you can specify the directory containing the library in the <code>jna.library.path</code> Java system property.
 See the Windows example above for more details.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="driver-native-limitations"><a class="anchor" href="#driver-native-limitations"></a>Limitations</h5>
 <div class="paragraph">
-<p>Older versions of the Firebird client library may not be thread-safe when connecting to a local database server using IPC.
+<p>Older versions of the Firebird client library&#8201;&#8212;&#8201;as far as we are aware, Firebird 2.1 or older&#8201;&#8212;&#8201;may not be thread-safe when connecting to a local database server using IPC.
 By default, Jaybird does not provide synchronization, but it can be enabled with the system property <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> set to true.
 However, this synchronization is local to the classloader that has loaded the Jaybird classes.</p>
 </div>
 <div class="paragraph">
-<p>In order to guarantee correct synchronization, the Jaybird driver must be loaded by the top-most classloader.
-For example, when using the Type 2 JDBC driver with a web or application server, you have to add the Jaybird classes to the main classpath (for example, to the <code>lib/</code> directory of your web or application server), but <strong>not</strong> to the web or Jave EE/Jakarta EE application, e.g. the <code>WEB-INF/lib</code> directory.</p>
+<p>To guarantee correct synchronization, the Jaybird driver must be loaded by the top-most classloader.
+For example, when using the Type 2 JDBC driver with a web or application server, you have to add the Jaybird classes to the main classpath (for example, to the <code>lib/</code> directory of your web or application server), but <strong>not</strong> to the web or Java EE/Jakarta EE application, e.g. the <code>WEB-INF/lib</code> directory.</p>
 </div>
 </div>
 </div>
@@ -1468,33 +1621,34 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 This is the highest performance type of JDBC driver for accessing local databases, as the Java code accesses the database file directly.</p>
 </div>
 <div class="paragraph">
-<p>In order to obtain a connection via DriverManager you have to use following URL:</p>
+<p>The following JDBC URL syntax is supported:</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>jdbc:firebirdsql:embedded:&lt;path to database&gt;
-
-jdbc:firebirdsql:embedded:host[/port]:&lt;path to database&gt;</pre>
+<pre>&lt;embedded-url&gt; ::=
+  jdbc:firebird[sql]:embedded:_dbname-or-alias_</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When host and, optionally, port is specified, embedded server acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").</p>
+<p>In practice, the URL accepts the same <code>&lt;fbclient-url&gt;</code> values as described for <code>NATIVE</code>.
+That is, the embedded server acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").</p>
 </div>
 <div class="paragraph">
-<p>This driver tries to load <code>fbembed.dll/libfbembed.so</code> and <code>fbclient.dll/libfbclient.so</code>, the last&#8201;&#8212;&#8201;of course&#8201;&#8212;&#8201;only works if that fbclient provides Firebird embedded.</p>
+<p>This driver tries to load <code>fbembed.dll/libfbembed.so</code> (the name used in Firebird 2.5 and earlier) and <code>fbclient.dll/libfbclient.so</code>.</p>
 </div>
 <div class="paragraph">
 <p>See also the <a href="#driver-native">NATIVE and LOCAL types</a> section.</p>
 </div>
 <div class="paragraph">
-<p>When using Firebird 3.0 embedded, you will need to make sure the necessary plugins like <code>engine12.dll/libengine12.so</code> are accessible to the client library, consult the Firebird 3.0 documentation for more information.
+<p>When using Firebird 3.0 and higher embedded, you will need to make sure the necessary plugins like <code>engineNN.dll/libengineNN.so</code> (<em>NN</em> is 12 for Firebird 3.0, 13 for Firebird 4.0 and Firebird 5.0) are accessible to the client library, consult the Firebird 3.0 documentation for more information.
 For an example, see the article <a href="https://www.lawinegevaar.nl/firebird/jaybird_embedded_example.html" target="_blank" rel="noopener">Jaybird with Firebird embedded example</a>.</p>
 </div>
 <div class="sect4">
 <h5 id="driver-embedded-limitations"><a class="anchor" href="#driver-embedded-limitations"></a>Limitations</h5>
 <div class="paragraph">
-<p>Older versions of the Firebird embedded server for Linux are not thread safe.
-Jaybird can provide the needed synchronization in Java code, similar to the one described for the Type 2 JDBC driver.
+<p>Older versions of the Firebird embedded server for Linux are not thread safe;
+as far as we know this concerns Firebird 2.1 or older.
+Jaybird can provide the needed synchronization in Java code, as described for <a href="#driver-native-limitations">NATIVE type</a>.
 This implies the same restrictions on the classloader that will load the Jaybird classes.</p>
 </div>
 <div class="paragraph">
@@ -1525,11 +1679,12 @@ It addresses some differences in interpretation of the JDBC specification, and p
 </table>
 </div>
 <div class="paragraph">
-<p>In order to obtain a connection you have to use following URL:</p>
+<p>To obtain a connection you have to use following URL:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>jdbc:firebirdsql:oo://host[:port]/&lt;path to database&gt;</pre>
+<pre>jdbc:firebirdsql:oo://host[:port]/&lt;path to database&gt;
+jdbc:firebird:oo://host[:port]/&lt;path to database&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1558,11 +1713,91 @@ To connect to Firebird, use LibreOffice Base with connection option &#8220;Fireb
 <div class="paragraph">
 <p>Each time a connection is opened via <code>DriverManager</code>, a new physical connection to server is opened.
 It is closed when the connection is closed.
-In order to avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.</p>
+To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.</p>
 </div>
 <div class="paragraph">
 <p>Since Jaybird 3, Jaybird no longer provides a connection pool.
 If you need a <code>javax.sql.DataSource</code> implementation that provides a connection pool, either use the connection pool support of your application server, or consider using <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>, <a href="https://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">DBCP</a>, or <a href="https://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="connection-pooling-hikaricp"><a class="anchor" href="#connection-pooling-hikaricp"></a>2.3.1. HikariCP example</h4>
+<div class="paragraph">
+<p>This example shows how to configure <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a> to connect to Firebird.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package example;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.firebirdsql.ds.FBSimpleDataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class HikariConnectExample {
+
+  public static void main(String[] args) {
+    HikariDataSource hikariDataSource = initDataSource();
+
+    try (Connection connection = hikariDataSource.getConnection()) {
+      // use connection
+    } catch (SQLException e) {
+      System.getLogger("HikariConnectExample")
+          .log(System.Logger.Level.ERROR, "Could not connect", e);
+    }
+
+    hikariDataSource.close();
+  }
+
+  private static HikariDataSource initDataSource() {
+    var firebirdDataSource = new FBSimpleDataSource();
+    firebirdDataSource.setServerName("localhost");
+    firebirdDataSource.setDatabaseName("employee");
+    firebirdDataSource.setUser("sysdba");
+    firebirdDataSource.setPassword("masterkey");
+    firebirdDataSource.setCharSet("utf-8");
+
+    var config = new HikariConfig();
+    config.setDataSource(firebirdDataSource);
+    return new HikariDataSource(config);
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>HikariCP provides multiple ways to configure the connection.
+Some examples:</p>
+</div>
+<div class="listingblock">
+<div class="title">Indirect use of <code>FBSimpleDataSource</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static HikariDataSource initDataSourceAlternative1() {
+  var config = new HikariConfig();
+  config.setDataSourceClassName("org.firebirdsql.ds.FBSimpleDataSource");
+  config.setUsername("sysdba");
+  config.setPassword("masterkey");
+  config.addDataSourceProperty("serverName", "localhost");
+  config.addDataSourceProperty("databaseName", "employee");
+  config.addDataSourceProperty("charSet", "utf-8");
+  return new HikariDataSource(config);
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using the Jaybird JDBC driver instead of a data source</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static HikariDataSource initDataSourceAlternative2() {
+  var config = new HikariConfig();
+  config.setDriverClassName("org.firebirdsql.jdbc.FBDriver");
+  config.setJdbcUrl("jdbc:firebird://localhost/employee");
+  config.setUsername("sysdba");
+  config.setPassword("masterkey");
+  config.addDataSourceProperty("charSet", "utf-8");
+  return new HikariDataSource(config);
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1603,7 +1838,7 @@ For a logical connection from a connection pool, <code>close()</code> will inval
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Use a connection for the shortest scope (and time) necessary for correct behaviour.
+<p>Use a connection for the shortest scope, and time, necessary for correct behaviour.
 Get a connection, and close it as soon as you&#8217;re done.
 When using a connection pool, this has the added benefit that just a few connections can serve the needs of the application.</p>
 </div>
@@ -1630,7 +1865,8 @@ Closing this logical connection returns the physical connection back into the po
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Contrary to its name, a <code>ConnectionPoolDataSource</code> is not a connection pool!</p>
+<p>Contrary to its name, a <code>ConnectionPoolDataSource</code> is not a connection pool!
+It is a factory for physical connections that can be used by a connection pool.</p>
 </div>
 </td>
 </tr>
@@ -13005,7 +13241,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-08-10 06:58:03 UTC
+Last updated 2023-08-10 09:08:39 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
