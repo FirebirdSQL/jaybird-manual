@@ -4880,7 +4880,7 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <p><code>String</code> or <code>WireCrypt</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em> Wire encryption level (<code>DISABLED</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DEFAULT</code>).
+<p>Wire encryption level (<code>DISABLED</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DEFAULT</code>).
 In Jaybird 3.0.4+ and Jaybird 4, the property is type <code>WireCrypt</code>.
 In Jaybird 5, the property is type <code>String</code>.</p>
 </div></div></td>
@@ -4896,7 +4896,7 @@ In Jaybird 5, the property is type <code>String</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dbCryptConfig</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em> Database encryption config.
+<p>Database encryption config.
 See <a href="#ref-dbcrypt">Database encryption support</a> for details.</p>
 </div></div></td>
 </tr>
@@ -6292,7 +6292,7 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <p><code>String</code> or <code>WireCrypt</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em> Wire encryption level (<code>DISABLED</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DEFAULT</code>).
+<p>Wire encryption level (<code>DISABLED</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DEFAULT</code>).
 In Jaybird 3.0.4+ and Jaybird 4, the property is type <code>WireCrypt</code>.
 In Jaybird 5, the property is type <code>String</code>.</p>
 </div></div></td>
@@ -6308,7 +6308,7 @@ In Jaybird 5, the property is type <code>String</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">dbCryptConfig</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em> Database encryption config.
+<p>Database encryption config.
 See <a href="#ref-dbcrypt">Database encryption support</a> for details.</p>
 </div></div></td>
 </tr>
@@ -6604,8 +6604,7 @@ they may change with point-releases (although we will try to avoid that)</p>
 <div class="sect2">
 <h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.2. Wire encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em><br>
-<em class="since">Firebird 3.0</em></p>
+<p><em class="since">Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3.0 and higher have support for encrypting the data sent over the network.
@@ -6702,8 +6701,7 @@ This may change in future versions of Jaybird to be enabled by default.</p>
 <div class="sect2">
 <h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.4. Database encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.4</em><br>
-<em class="since">Firebird 3.0</em></p>
+<p><em class="since">Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in the pure Java implementation of the version 13 protocol.</p>
@@ -6744,7 +6742,7 @@ Likewise, avoid <code>:</code> so that we can support other prefixes similar to 
 If you need these characters, consider using a base64 encoded value instead.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.9</em> Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded.
+<p>Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded.
 When the <em>base64</em> encoded value contains <code>&#43;</code>, it must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
 Jaybird 5 introduced <em>base64url</em>, an alternative to <em>base64</em>, which doesn&#8217;t use <code>&#43;</code>, thus avoiding the need to escape.</p>
 </div>
@@ -6961,8 +6959,7 @@ To set on data sources in Jaybird 4 or earlier, use <code>setNonStandardProperty
 <div class="sect2">
 <h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.8. Data type bind support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.9</em><br>
-<em class="since">Firebird 4.0</em></p>
+<p><em class="since">Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 4.0 introduced the <code>SET BIND</code> statement and <code>isc_dpb_set_bind</code> DPB item.
@@ -7928,9 +7925,6 @@ For example with <code>UPDATE</code> statements that touch multiple records and&
 <div class="sect2">
 <h3 id="ref-callable-ignore-proctype"><a class="anchor" href="#ref-callable-ignore-proctype"></a>10.2. Connection property ignoreProcedureType</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.6</em></p>
-</div>
-<div class="paragraph">
 <p>On Firebird 2.1 and higher, Jaybird will use the procedure type information from the database metadata to decide how to execute <code>CallableStatement</code>.
 When a procedure is selectable, Jaybird will automatically transform a call-escape or <code>EXECUTE PROCEDURE</code> statement to a <code>SELECT</code>.</p>
 </div>
@@ -8522,8 +8516,7 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 See the Firebird 4.0 release notes and <code>doc/sql.extensions/README.time_zone.md</code> in the Firebird installation for details on these types.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.9</em><br>
-Since Jaybird 3.0.9, two connection properties, <code>dataTypeBind</code> and <code>sessionTimeZone</code>, are available to provide limited support for these types.
+<p>Two connection properties, <code>dataTypeBind</code> and <code>sessionTimeZone</code>, are available to provide limited support for these types.
 See <a href="#ref-datetime-timezonebind">Defining time zone data type bind</a> and <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for details.</p>
 </div>
 <div class="paragraph">
@@ -8777,9 +8770,6 @@ If there is interest, we may add them in the future.</p>
 <div class="sect4">
 <h5 id="ref-datetime-timezonebind"><a class="anchor" href="#ref-datetime-timezonebind"></a>Defining time zone data type bind</h5>
 <div class="paragraph">
-<p><em class="since">Jaybird 3.0.9</em></p>
-</div>
-<div class="paragraph">
 <p>Jaybird 3.0.9 added the connection property <code>dataTypeBind</code> to defining data type mappings.
 This can be used to configure conversion of <code>WITH TIME ZONE</code> types to a different datatype.
 When configured, Firebird will present columns or parameters of <code>TIME(STAMP) WITH TIME ZONE</code> as the specified type, allowing clients without support for <code>WITH TIME ZONE</code> to read or set values.</p>
@@ -8825,7 +8815,7 @@ As mentioned earlier, the support for 'extended' time zone types will behave ide
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>specifies the Firebird 4.0 session time zone (<em class="since">Jaybird 3.0.6</em>),</p>
+<p>specifies the Firebird 4.0 session time zone,</p>
 </li>
 <li>
 <p>specifies the time zone to use when converting values of without time zone types to the legacy JDBC datetime types on all Firebird versions (<em class="since">Jaybird 4</em>).</p>
@@ -9027,9 +9017,6 @@ The effect of the <code>SET BIND</code> statement will be reset to the default w
 </div>
 <div class="sect3">
 <h4 id="ref-decfloat-bind"><a class="anchor" href="#ref-decfloat-bind"></a>12.4.3. Defining decfloat data type bind</h4>
-<div class="paragraph">
-<p><em class="since">Jaybird 3.0.9</em></p>
-</div>
 <div class="paragraph">
 <p>Jaybird 3.0.9 added the connection property <code>dataTypeBind</code> to defining data type mappings.
 This can be used to configure conversion of <code>DECFLOAT</code> to a different datatype.
@@ -9510,9 +9497,9 @@ Default: <code>Srp256,Srp</code></p></td>
 <p><code>wireCrypt</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
-Allowed values: <code>DEFAULT</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DISABLED</code> (case insensitive).
-Configures Firebird 3.0 wire encryption behaviour.
+<p>Jaybird specific property.
+Allowed values: <code>DEFAULT</code>, <code>ENABLED</code>, <code>REQUIRED</code>, <code>DISABLED</code> (case-insensitive).
+Configures Firebird 3.0 and higher wire encryption behaviour.
 See <a href="#ref-wirecrypt">Wire encryption support</a> for more information.<br>
 Default: <code>DEFAULT</code>.</p>
 </div></div></td>
@@ -9521,8 +9508,8 @@ Default: <code>DEFAULT</code>.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>dbCryptConfig</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 3.0.4</em>).
-Configures Firebird 3.0 database encryption support.
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
+Configures Firebird 3.0 and higher database encryption support.
 See <a href="#ref-dbcrypt">Database encryption support</a> for more information.</p></td>
 </tr>
 <tr>
@@ -9566,6 +9553,7 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
+In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>, not both.
 For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.<br>
 Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
 </div></div></td>
@@ -9577,7 +9565,8 @@ Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Character set for the connection using Java character set name.
-Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.</p></td>
+Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
+In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>, not both.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9585,7 +9574,7 @@ Similar to the previous property, however instead of Firebird-specific name allo
 <code>dialect</code>, <code>sql_dialect</code>, <code>isc_dpb_sql_dialect</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>SQL dialect, can be 1, 2 and 3.<br>
+<p>SQL dialect, can be 1, 2 or 3.<br>
 Default: 3</p>
 </div></div></td>
 </tr>
@@ -9625,7 +9614,7 @@ See <a href="#ref-generatedkeys-config">Configuring generated keys support</a> f
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Jaybird specific property.
 Specify the default transaction isolation level.
-Accepted values are: <code>TRANSACTION_NONE</code>, <code>TRANSACTION_READ_UNCOMMITTED</code>, <code>TRANSACTION_READ_COMMITTED</code>, <code>TRANSACTION_REPEATABLE_READ</code>, <code>TRANSACTION_SERIALIZABLE</code> (case sensitive).
+Accepted values are: <code>TRANSACTION_NONE</code>, <code>TRANSACTION_READ_UNCOMMITTED</code>, <code>TRANSACTION_READ_COMMITTED</code>, <code>TRANSACTION_REPEATABLE_READ</code>, <code>TRANSACTION_SERIALIZABLE</code> (case-sensitive).
 Although <code>TRANSACTION_NONE</code> and <code>TRANSACTION_READ_UNCOMMITTED</code> are allowed values, these behave the same as <code>TRANSACTION_READ_COMMITTED</code>.<br>
 Default: <code>TRANSACTION_READ_COMMITTED</code></p>
 </div></div></td>
@@ -9637,7 +9626,7 @@ Default: <code>TRANSACTION_READ_COMMITTED</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Tells Jaybird Type 4 driver the size of the socket buffer.
-Should be used on the systems where default socket buffer provided by JVM is not correct.</p></td>
+Should be used on the systems where default socket buffer provided by JVM is not correct, or for tuning.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9663,7 +9652,7 @@ Only has effect on Type 4 (pure Java) connections.</p></td>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Connect timeout in seconds.
 For the Java wire protocol the connect timeout will detect unreachable hosts.
-In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
+In the JNA implementation (native protocol) the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
 This means that&#8201;&#8212;&#8201;for the native protocol&#8201;&#8212;&#8201;the connect timeout will not detect unreachable hosts within the timeout.</p></td>
 </tr>
 <tr>
@@ -9701,7 +9690,7 @@ Jaybird 4 and earlier: <code>false</code> (segmented BLOBs)</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>ignoreProcedureType</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 3.0.6</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Boolean property.
 Set property to <code>true</code> to disable usage of procedure type metadata to decide to use <code>SELECT</code> for selectable procedure instead of <code>EXECUTE PROCEDURE</code>.
 See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureType</a> for more information.</p></td>
@@ -9748,7 +9737,7 @@ Default value: <code>0</code></p>
 <p><code>dataTypeBind</code><br>
 <code>set_bind</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines data type bind from one type to a different type. (<em class="since">Jaybird 3.0.9</em> <em class="since">Firebird 4.0</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines data type bind from one type to a different type. (<em class="since">Firebird 4.0</em>)
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using <code>%3B</code>.
 See <a href="#ref-datatypebind">Data type bind support</a> for more information.</p></td>
@@ -9757,7 +9746,7 @@ See <a href="#ref-datatypebind">Data type bind support</a> for more information.
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>sessionTimeZone</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Configures the session time zone. (<em class="since">Jaybird 3.0.6</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures the session time zone.
 In Jaybird 3, only configures the Firebird 4 server-side session time zone.
 In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for more information.<br>
@@ -10047,8 +10036,7 @@ This information can be specified in connection properties, or globally using th
 </dd>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.requireConnectionEncoding</code></dt>
 <dd>
-<p><em class="since">Jaybird 3.0.2</em>
-Set to true to disallow connections without an explicit connection character set.
+<p>Set to true to disallow connections without an explicit connection character set.
 This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectionEncoding</code> has been set.</p>
 </dd>
 </dl>
@@ -13241,7 +13229,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-08-10 09:08:39 UTC
+Last updated 2023-08-10 09:33:04 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
