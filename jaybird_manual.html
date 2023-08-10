@@ -797,7 +797,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>5.0.1.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
+Version: <code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -807,7 +807,7 @@ Version: <code>5.0.1.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.1.java11&lt;/version&gt;
+  &lt;version&gt;5.0.2.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11817,7 +11817,7 @@ For native or embedded connections, JNA 5.12.1 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.1.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.2.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
@@ -11859,7 +11859,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.1.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -11872,7 +11872,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.1.java11&lt;/version&gt;
+  &lt;version&gt;5.0.2.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -12634,7 +12634,23 @@ Currently, that means we support Java 17 and 20.</p>
 <p>Jaybird 6 provides libraries for Java 17.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 6 is not modularized, but all versions declare the automatic module name <code>org.firebirdsql.jaybird</code>.</p>
+<p>Jaybird 6 is modularized, and provides the following modules:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jaybird</code></dt>
+<dd>
+<p>main Jaybird driver (artifact <code>org.firebirdsql.jdbc:jaybird</code>)</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jaybird.chacha64</code></dt>
+<dd>
+<p>ChaCha64 wire encryption implementation (artifact <code>org.firebirdsql.jdbc:chacha64-plugin</code>)</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jna</code></dt>
+<dd>
+<p>native and embedded protocol implementation using JNA (artifact <code>org.firebirdsql.jdbc:jaybird-native</code>)</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect4">
@@ -12648,7 +12664,7 @@ To connect to earlier versions, unsupported protocols have to be enabled explici
 </div>
 <div class="paragraph">
 <p>Formal support for Firebird 2.5 has been dropped, and some things may no longer work (especially <code>DatabaseMetaData</code> methods), if features of Firebird 3.0 have been used.
-The Type 2 and embedded server JDBC drivers require a separate artifact, <code>jaybird-native</code>, JNA to access the Firebird client or embedded library.</p>
+The Type 2 and embedded server JDBC drivers require a separate artifact, <code>jaybird-native</code>, and JNA to access the Firebird client or embedded library.</p>
 </div>
 <div class="sect5">
 <h6 id="jb6-firebird3"><a class="anchor" href="#jb6-firebird3"></a>Notes on Firebird 3.0 support</h6>
@@ -12718,7 +12734,7 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <p>Jaybird has no required runtime dependencies.</p>
 </div>
 <div class="paragraph">
-<p>For native or embedded connections, the <code>jaybird-native</code> artifact and JNA 5.12.1 need to be on the classpath.</p>
+<p>For native or embedded connections, the <code>jaybird-native</code> artifact and JNA 5.13.0 need to be on the classpath.</p>
 </div>
 <div class="paragraph">
 <p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> (Bouncy Castle JCE provider) need to be on the classpath.</p>
@@ -12989,7 +13005,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-06-17 10:59:30 UTC
+Last updated 2023-08-10 06:58:03 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
