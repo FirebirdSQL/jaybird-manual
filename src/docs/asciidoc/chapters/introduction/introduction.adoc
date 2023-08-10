@@ -96,7 +96,7 @@ If you want to use Type 2 support (native or embedded), you need to explicitly i
 </dependency>
 ----
 
-We plan to make native and embedded support a separate library in future releases.
+In Jaybird 6, native and embedded support will be in a separate library.
 
 The Firebird client library is available as a Maven dependencies, see <<driver-native-maven>>.
 In the future, a Maven dependency for Firebird embedded may become available as well.
