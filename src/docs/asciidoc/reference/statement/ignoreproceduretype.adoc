@@ -3,8 +3,6 @@
 
 // TODO Maybe should be part of a callable statement reference page
 
-[.since]_Jaybird 3.0.6_
-
 On Firebird 2.1 and higher, Jaybird will use the procedure type information from the database metadata to decide how to execute `CallableStatement`.
 When a procedure is selectable, Jaybird will automatically transform a call-escape or `EXECUTE PROCEDURE` statement to a `SELECT`.
 

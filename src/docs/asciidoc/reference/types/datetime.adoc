@@ -11,8 +11,7 @@
 Firebird 4.0 introduced time zone types, with types `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE`.
 See the Firebird 4.0 release notes and `doc/sql.extensions/README.time_zone.md` in the Firebird installation for details on these types.
 
-[.since]_Jaybird 3.0.9_ +
-Since Jaybird 3.0.9, two connection properties, `dataTypeBind` and `sessionTimeZone`, are available to provide limited support for these types.
+Two connection properties, `dataTypeBind` and `sessionTimeZone`, are available to provide limited support for these types.
 See <<ref-datetime-timezonebind>> and <<ref-datetime-sessiontimezone>> for details.
 
 [.since]_Jaybird 4_ +
@@ -119,8 +118,6 @@ If there is interest, we may add them in the future.
 [[ref-datetime-timezonebind]]
 ===== Defining time zone data type bind
 
-[.since]_Jaybird 3.0.9_
-
 Jaybird 3.0.9 added the connection property `dataTypeBind` to defining data type mappings.
 This can be used to configure conversion of `WITH TIME ZONE` types to a different datatype.
 When configured, Firebird will present columns or parameters of `TIME(STAMP) WITH TIME ZONE` as the specified type, allowing clients without support for `WITH TIME ZONE` to read or set values.
@@ -155,7 +152,7 @@ See also <<ref-datatypebind>>.
 
 The connection property `sessionTimeZone` (alias `session_time_zone`) does two things: 
 
-1.  specifies the Firebird 4.0 session time zone ([.since]_Jaybird 3.0.6_),
+1.  specifies the Firebird 4.0 session time zone,
 2.  specifies the time zone to use when converting values of without time zone types to the legacy JDBC datetime types on all Firebird versions ([.since]_Jaybird 4_).  
 
 See <<ref-datetime-sessiontimezone-fb>> for information on the effects of `sessionTimeZone` on the server-side.

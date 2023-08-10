@@ -1,7 +1,6 @@
 [[ref-wirecrypt]]
 === Wire encryption support
 
-[.since]_Jaybird 3.0.4_ +
 [.since]_Firebird 3.0_
 
 Firebird 3.0 and higher have support for encrypting the data sent over the network.

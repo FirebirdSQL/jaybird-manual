@@ -1,7 +1,6 @@
 [[ref-datatypebind]]
 === Data type bind support
 
-[.since]_Jaybird 3.0.9_ +
 [.since]_Firebird 4.0_
 
 Firebird 4.0 introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.

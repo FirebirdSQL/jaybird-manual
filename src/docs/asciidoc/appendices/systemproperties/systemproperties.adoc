@@ -46,7 +46,7 @@ The following system properties control character set behaviour for connections.
 
 `org.firebirdsql.jdbc.defaultConnectionEncoding`::
 Firebird character set name to use as connection character set when no explicit connection character set is configured (defaults to `NONE` when not set)
-`org.firebirdsql.jdbc.requireConnectionEncoding`:: [.since]_Jaybird 3.0.2_ 
+`org.firebirdsql.jdbc.requireConnectionEncoding`::
 Set to true to disallow connections without an explicit connection character set.
 This property will have no effect if `org.firebirdsql.jdbc.defaultConnectionEncoding` has been set.
 

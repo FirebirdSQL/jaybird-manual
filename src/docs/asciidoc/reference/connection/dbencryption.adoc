@@ -1,7 +1,6 @@
 [[ref-dbcrypt]]
 === Database encryption support
 
-[.since]_Jaybird 3.0.4_ +
 [.since]_Firebird 3.0_
 
 Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in the pure Java implementation of the version 13 protocol.
@@ -26,7 +25,7 @@ Because of the limitation of connection URL parsing, we strongly suggest to avoi
 Likewise, avoid `:` so that we can support other prefixes similar to `base64:` and `base64url:` in the future.
 If you need these characters, consider using a base64 encoded value instead.
 
-[.since]_Jaybird 3.0.9_ Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded. 
+Jaybird 3.0.9 and higher expects keys and values in the JDBC URL to be URL encoded.
 When the _base64_ encoded value contains `{plus}`, it must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
 Jaybird 5 introduced _base64url_, an alternative to _base64_, which doesn't use `{plus}`, thus avoiding the need to escape.
 

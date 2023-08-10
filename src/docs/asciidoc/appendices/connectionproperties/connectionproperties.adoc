@@ -44,15 +44,15 @@ See <<ref-auth-plugins>> for more information. +
 Default: `Srp256,Srp`
 
 a|`wireCrypt`
-a|Jaybird specific property ([.since]_Jaybird 3.0.4_).
-Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED` (case insensitive).
-Configures Firebird 3.0 wire encryption behaviour.
+a|Jaybird specific property.
+Allowed values: `DEFAULT`, `ENABLED`, `REQUIRED`, `DISABLED` (case-insensitive).
+Configures Firebird 3.0 and higher wire encryption behaviour.
 See <<ref-wirecrypt>> for more information. +
 Default: `DEFAULT`.
 
 a|`dbCryptConfig`
-|Jaybird specific property ([.since]_Jaybird 3.0.4_).
-Configures Firebird 3.0 database encryption support.
+|Jaybird specific property.
+Configures Firebird 3.0 and higher database encryption support.
 See <<ref-dbcrypt>> for more information.
 
 a|`processId` +
@@ -78,6 +78,7 @@ a|`encoding` +
 `lc_ctype`, `isc_dpb_lc_ctype`
 a|Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
+In general, only specify `charSet` _or_ `encoding`, not both.
 For a list of the available encodings see <<Available Encodings>>. +
 Default: `NONE` (unless `charSet` is specified).
 
@@ -86,10 +87,11 @@ a|`charSet` +
 |Jaybird specific property.
 Character set for the connection using Java character set name.
 Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
+In general, only specify `charSet` _or_ `encoding`, not both.
 
 a|`sqlDialect` +
 `dialect`, `sql_dialect`, `isc_dpb_sql_dialect`
-a|SQL dialect, can be 1, 2 and 3. +
+a|SQL dialect, can be 1, 2 or 3. +
 Default: 3
 
 a|`defaultHoldable` +
@@ -115,7 +117,7 @@ a|`isolation` +
 `defaultIsolation`
 a|Jaybird specific property.
 Specify the default transaction isolation level.
-Accepted values are: `TRANSACTION_NONE`, `TRANSACTION_READ_UNCOMMITTED`, `TRANSACTION_READ_COMMITTED`, `TRANSACTION_REPEATABLE_READ`, `TRANSACTION_SERIALIZABLE` (case sensitive). 
+Accepted values are: `TRANSACTION_NONE`, `TRANSACTION_READ_UNCOMMITTED`, `TRANSACTION_READ_COMMITTED`, `TRANSACTION_REPEATABLE_READ`, `TRANSACTION_SERIALIZABLE` (case-sensitive).
 Although `TRANSACTION_NONE` and `TRANSACTION_READ_UNCOMMITTED` are allowed values, these behave the same as `TRANSACTION_READ_COMMITTED`. +
 Default: `TRANSACTION_READ_COMMITTED`
 
@@ -123,7 +125,7 @@ a|`socketBufferSize` +
 `socket_buffer_size`
 |Jaybird specific property. 
 Tells Jaybird Type 4 driver the size of the socket buffer.
-Should be used on the systems where default socket buffer provided by JVM is not correct.
+Should be used on the systems where default socket buffer provided by JVM is not correct, or for tuning.
 
 a|`blobBufferSize` +
 `blob_buffer_size`
@@ -140,7 +142,7 @@ a|`connectTimeout` +
 `connect_timeout`, `isc_dpb_connect_timeout`
 |Connect timeout in seconds.
 For the Java wire protocol the connect timeout will detect unreachable hosts. 
-In the JNI/JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol. 
+In the JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol.
 This means that -- for the native protocol -- the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
@@ -164,7 +166,7 @@ Default: Jaybird 5 and higher: `true` (stream BLOBS) +
 Jaybird 4 and earlier: `false` (segmented BLOBs)
 
 a|`ignoreProcedureType`
-|Jaybird specific property ([.since]_Jaybird 3.0.6_).
+|Jaybird specific property.
 Boolean property.
 Set property to `true` to disable usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
 See <<ref-callable-ignore-proctype>> for more information.
@@ -193,13 +195,13 @@ Default value: `0`
 
 a|`dataTypeBind` +
 `set_bind`
-|Defines data type bind from one type to a different type. ([.since]_Jaybird 3.0.9_ [.since]_Firebird 4.0_)
+|Defines data type bind from one type to a different type. ([.since]_Firebird 4.0_)
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using `%3B`.
 See <<ref-datatypebind>> for more information.
 
 a|`sessionTimeZone`
-| Configures the session time zone. ([.since]_Jaybird 3.0.6_)
+| Configures the session time zone.
 In Jaybird 3, only configures the Firebird 4 server-side session time zone.
 In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <<ref-datetime-sessiontimezone>> for more information. +

@@ -100,7 +100,7 @@ a|[.since]_Jaybird 5_ Socket connect timeout in milliseconds (`0` is OS default 
 
 |wireCrypt
 a|`String` or `WireCrypt`
-a|[.since]_Jaybird 3.0.4_ Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
+a|Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
 In Jaybird 3.0.4+ and Jaybird 4, the property is type `WireCrypt`.
 In Jaybird 5, the property is type `String`.
 
@@ -110,7 +110,7 @@ a|[.since]_Jaybird 5_ Alternative to `WireCrypt` to use `WireCrypt` enum.
 
 |dbCryptConfig
 |String
-a|[.since]_Jaybird 3.0.4_ Database encryption config.
+a|Database encryption config.
 See <<ref-dbcrypt>> for details.
 
 |wireCompression

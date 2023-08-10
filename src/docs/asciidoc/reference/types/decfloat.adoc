@@ -45,8 +45,6 @@ WARNING: The effect of the `SET BIND` statement will be reset to the default whe
 [[ref-decfloat-bind]]
 ==== Defining decfloat data type bind
 
-[.since]_Jaybird 3.0.9_
-
 Jaybird 3.0.9 added the connection property `dataTypeBind` to defining data type mappings.
 This can be used to configure conversion of `DECFLOAT` to a different datatype.
 When set Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
