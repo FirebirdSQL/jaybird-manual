@@ -1,6 +1,6 @@
 plugins {
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'org.asciidoctor.jvm.pdf' version '3.3.2'
+    id 'org.asciidoctor.jvm.convert' version '4.0.0-alpha.1'
+    id 'org.asciidoctor.jvm.pdf' version '4.0.0-alpha.1'
 }
 
 defaultTasks 'clean', 'asciidoctor'
@@ -14,21 +14,15 @@ configurations {
 }
 
 dependencies {
-    // Needed to make the docExtensions work on Gradle 7.6, likely no longer needed when asciidoctor-gradle 4.0
+    // Needed to make the docExtensions work on Gradle 7.6, likely no longer needed with asciidoctor-gradle 4.0 (but not yet in 4.0.0-alpha.1)
     asciidocExtensions gradleApi()
 }
 
 asciidoctorj {
-    version = '2.5.7'
+    version = '2.5.9'
     modules {
         pdf {
-            version '2.3.3'
-        }
-        groovyDsl {
-            // Default of asciidoctor-gradle-plugin 3.3.2 depends on 2.0.0 which is not on Maven Central.
-            // Remove once newer version of the plugin is released.
-            // see also https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/620
-            version '2.0.2'
+            version '2.3.9'
         }
     }
     docExtensions {
@@ -67,9 +61,8 @@ asciidoctor {
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'revnumber': null, 
-        'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
-        'docinfo': 'shared', 'docinfodir': file('src/docs/theme/jaybird-html/docinfo')
+    attributes 'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
+            'docinfo': 'shared', 'docinfodir': file('src/docs/theme/jaybird-html/docinfo')
     forkOptions {
         jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
     }
@@ -88,7 +81,7 @@ asciidoctorPdf {
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'revnumber': null, 'source-highlighter': 'rouge', 'media': 'prepress', 
+    attributes 'source-highlighter': 'rouge', 'media': 'prepress',
         'compress': '', 'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
     theme 'jaybird'
     forkOptions {
