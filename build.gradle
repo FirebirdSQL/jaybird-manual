@@ -90,8 +90,8 @@ asciidoctorPdf {
 }
 
 // Create the HTML and PDF output and copy them to the build/pages folder
-// Primarily intended for the travis-ci build to deploy to GitHub pages
-task makePages {
+// Primarily intended for the GitHub Actions build to deploy to GitHub pages
+tasks.register('makePages') {
     dependsOn asciidoctor, asciidoctorPdf
     doLast {
         copy {
