@@ -131,8 +131,8 @@ Should be used on the systems where default socket buffer provided by JVM is not
 a|`blobBufferSize` +
 `blob_buffer_size`
 |Jaybird specific property. 
-Tells the driver the size of the buffer that is used to transfer BLOB content.
-It is recommended to keep the value equal to `n * <database page size>` (and preferably also socket buffer size).
+Size of the buffer used to transfer BLOB content.
+Specifying a size greater than 65535 may result in additional server roundtrips per read, but may also waste memory for larger buffers than used in some cases.
 
 a|`soTimeout`
 |Jaybird specific property.
