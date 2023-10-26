@@ -7,8 +7,8 @@ Jaybird has a number of connection properties that can be used to configure a co
 This appendix provides a list of most connection properties and a short explanation to each of them.
 The properties listed below are usable as JDBC connection properties.
 
-The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, but also without a value, or with an empty value.
-For readability, we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit values like `true`.
+The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false` ([.since]_Jaybird 5_), but also without a value, or with an empty value (which will both signify `true`).
+For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like `true` or `false`.
 
 In Jaybird 4 and earlier, the default for all _boolean_ properties is `false`. +
 In Jaybird 5 and higher, the default of _boolean_ properties varies (but unless explicitly mentioned, the default is `false`).
@@ -78,21 +78,21 @@ a|`encoding` +
 `lc_ctype`, `isc_dpb_lc_ctype`
 a|Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
-In general, only specify `charSet` _or_ `encoding`, not both.
 For a list of the available encodings see <<Available Encodings>>. +
+In general, only specify `charSet` _or_ `encoding`, not both. +
 Default: `NONE` (unless `charSet` is specified).
 
 a|`charSet` +
-`localEncoding`
+`localEncoding`, `charset` ([.since]_Jaybird 5_)
 |Jaybird specific property.
 Character set for the connection using Java character set name.
-Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
+Similar to the previous property, but instead of Firebird-specific name accepts a Java character set name. +
 In general, only specify `charSet` _or_ `encoding`, not both.
 
 a|`sqlDialect` +
 `dialect`, `sql_dialect`, `isc_dpb_sql_dialect`
 a|SQL dialect, can be 1, 2 or 3. +
-Default: 3
+Default: `3`
 
 a|`defaultHoldable` +
 `defaultResultSetHoldable`
@@ -124,15 +124,18 @@ Default: `TRANSACTION_READ_COMMITTED`
 
 a|`socketBufferSize` +
 `socket_buffer_size`
-|Jaybird specific property. 
-Tells Jaybird Type 4 driver the size of the socket buffer.
-Should be used on the systems where default socket buffer provided by JVM is not correct, or for tuning.
+|Jaybird specific property.
+Size in bytes of the socket buffer.
+Only has effect on Type 4 (pure Java) connections.
+Can be used for performance tuning, or when the default socket buffer provided by the JVM or OS is not correct (e.g. too small).
 
 a|`blobBufferSize` +
 `blob_buffer_size`
 |Jaybird specific property. 
-Size of the buffer used to transfer BLOB content.
+Size in bytes of the buffer used to transfer BLOB content.
 Specifying a size greater than 65535 may result in additional server roundtrips per read, but may also waste memory for larger buffers than used in some cases.
+Values lower than 512 will use 512 ([.since]_Jaybird 6_). +
+Default: `16384`
 
 a|`soTimeout`
 |Jaybird specific property.
@@ -142,34 +145,34 @@ Only has effect on Type 4 (pure Java) connections.
 a|`connectTimeout` +
 `connect_timeout`, `isc_dpb_connect_timeout`
 |Connect timeout in seconds.
-For the Java wire protocol the connect timeout will detect unreachable hosts. 
-In the JNA implementation (native protocol) the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol.
-This means that -- for the native protocol -- the connect timeout will not detect unreachable hosts within the timeout.
+For Type 4 (pure Java) connections, the connect timeout will detect unreachable hosts.
+For Type 2 (native) connections, the connect timeout works as the DPB item `isc_dpb_connect_timeout` which only works after connecting to the server for the `op_accept` phase of the protocol.
+This means that for native connections the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
 |Jaybird specific property ([.since]_Firebird 3.0_).
 Boolean property.
-Set property to `true` to enable zlib wire compression.
+Enables zlib wire compression.
 See <<ref-wirecompression>> for more information.
 
 a|`columnLabelForName`
 |Jaybird specific property.
 Boolean property.
-Set property to `true` for backwards compatible behaviour (`getColumnName()` returns the column label). 
+Backwards-compatible behaviour of `getColumnName()` (return the column label instead of the column name).
 Don't set the property or set it to `false` for JDBC-compliant behaviour (recommended).
 
 a|`useStreamBlobs` +
 `use_stream_blobs`
 a|Jaybird specific property.
 Boolean property.
-Tells the driver to create stream BLOBs. +
+BLOBs are created as stream BLOBs. +
 Default: Jaybird 5 and higher: `true` (stream BLOBS) +
 Jaybird 4 and earlier: `false` (segmented BLOBs)
 
 a|`ignoreProcedureType`
 |Jaybird specific property.
 Boolean property.
-Set property to `true` to disable usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
+Value `true` disables usage of procedure type metadata to decide to use `SELECT` for selectable procedure instead of `EXECUTE PROCEDURE`.
 See <<ref-callable-ignore-proctype>> for more information.
 
 a|`scrollableCursor`
@@ -182,7 +185,7 @@ Default: `EMULATED`
 a|`useServerBatch`
 a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 4.0_).
 Boolean property.
-Value `true` enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
+Value `true` enables server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to `false` to always use emulated batch updates.
 See <<ref-batch-use-server-batch>> for more information. +
 Default value: `true`
@@ -202,11 +205,11 @@ When used in a JDBC url, the semicolon must be escaped using `%3B`.
 See <<ref-datatypebind>> for more information.
 
 a|`sessionTimeZone`
-| Configures the session time zone.
+|Configures the session time zone.
 In Jaybird 3, only configures the Firebird 4 server-side session time zone.
-In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
+In Jaybird 4 and higher, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <<ref-datetime-sessiontimezone>> for more information. +
-Default: not set (Jaybird 3 and earlier), or the JVM default time zone.
+Default: the JVM default time zone (Jaybird 4 or higher), or not set (Jaybird 3 or earlier)
 
 a|`decfloatRound` +
 `decfloat_round`
