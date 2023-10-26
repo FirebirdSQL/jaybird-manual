@@ -9401,8 +9401,8 @@ This way most tools should be able to handle the full range of values of without
 The properties listed below are usable as JDBC connection properties.</p>
 </div>
 <div class="paragraph">
-<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, but also without a value, or with an empty value.
-For readability, we suggest that you only specify these properties explicitly when you want to enable them, and if you do, to use explicit values like <code>true</code>.</p>
+<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, <code>false</code> (<em class="since">Jaybird 5</em>), but also without a value, or with an empty value (which will both signify <code>true</code>).
+For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like <code>true</code> or <code>false</code>.</p>
 </div>
 <div class="paragraph">
 <p>In Jaybird 4 and earlier, the default for all <em>boolean</em> properties is <code>false</code>.<br>
@@ -9518,19 +9518,19 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Character encoding for the connection using the Firebird character set name.
 This property tells the database server the encoding in which it expects character content.
-In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>, not both.
 For a list of the available encodings see <a href="#_available_encodings">Available Encodings</a>.<br>
+In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>, not both.<br>
 Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>charSet</code><br>
-<code>localEncoding</code></p>
+<code>localEncoding</code>, <code>charset</code> (<em class="since">Jaybird 5</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Character set for the connection using Java character set name.
-Similar to the previous property, however instead of Firebird-specific name allows using a Java character set name.
+Similar to the previous property, but instead of Firebird-specific name accepts a Java character set name.<br>
 In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>, not both.</p></td>
 </tr>
 <tr>
@@ -9540,7 +9540,7 @@ In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>,
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>SQL dialect, can be 1, 2 or 3.<br>
-Default: 3</p>
+Default: <code>3</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -9591,8 +9591,9 @@ Default: <code>TRANSACTION_READ_COMMITTED</code></p>
 <code>socket_buffer_size</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
-Tells Jaybird Type 4 driver the size of the socket buffer.
-Should be used on the systems where default socket buffer provided by JVM is not correct, or for tuning.</p></td>
+Size in bytes of the socket buffer.
+Only has effect on Type 4 (pure Java) connections.
+Can be used for performance tuning, or when the default socket buffer provided by the JVM or OS is not correct (e.g. too small).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9600,8 +9601,10 @@ Should be used on the systems where default socket buffer provided by JVM is not
 <code>blob_buffer_size</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
-Tells the driver the size of the buffer that is used to transfer BLOB content.
-It is recommended to keep the value equal to <code>n * &lt;database page size&gt;</code> (and preferably also socket buffer size).</p></td>
+Size in bytes of the buffer used to transfer BLOB content.
+Specifying a size greater than 65535 may result in additional server roundtrips per read, but may also waste memory for larger buffers than used in some cases.
+Values lower than 512 will use 512 (<em class="since">Jaybird 6</em>).<br>
+Default: <code>16384</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9617,9 +9620,9 @@ Only has effect on Type 4 (pure Java) connections.</p></td>
 <code>connect_timeout</code>, <code>isc_dpb_connect_timeout</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Connect timeout in seconds.
-For the Java wire protocol the connect timeout will detect unreachable hosts.
-In the JNA implementation (native protocol) the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
-This means that&#8201;&#8212;&#8201;for the native protocol&#8201;&#8212;&#8201;the connect timeout will not detect unreachable hosts within the timeout.</p></td>
+For Type 4 (pure Java) connections, the connect timeout will detect unreachable hosts.
+For Type 2 (native) connections, the connect timeout works as the DPB item <code>isc_dpb_connect_timeout</code> which only works after connecting to the server for the <code>op_accept</code> phase of the protocol.
+This means that for native connections the connect timeout will not detect unreachable hosts within the timeout.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -9627,7 +9630,7 @@ This means that&#8201;&#8212;&#8201;for the native protocol&#8201;&#8212;&#8201;
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Firebird 3.0</em>).
 Boolean property.
-Set property to <code>true</code> to enable zlib wire compression.
+Enables zlib wire compression.
 See <a href="#ref-wirecompression">Wire compression</a> for more information.</p></td>
 </tr>
 <tr>
@@ -9636,7 +9639,7 @@ See <a href="#ref-wirecompression">Wire compression</a> for more information.</p
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Boolean property.
-Set property to <code>true</code> for backwards compatible behaviour (<code>getColumnName()</code> returns the column label).
+Backwards-compatible behaviour of <code>getColumnName()</code> (return the column label instead of the column name).
 Don&#8217;t set the property or set it to <code>false</code> for JDBC-compliant behaviour (recommended).</p></td>
 </tr>
 <tr>
@@ -9647,7 +9650,7 @@ Don&#8217;t set the property or set it to <code>false</code> for JDBC-compliant 
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Jaybird specific property.
 Boolean property.
-Tells the driver to create stream BLOBs.<br>
+BLOBs are created as stream BLOBs.<br>
 Default: Jaybird 5 and higher: <code>true</code> (stream BLOBS)<br>
 Jaybird 4 and earlier: <code>false</code> (segmented BLOBs)</p>
 </div></div></td>
@@ -9658,7 +9661,7 @@ Jaybird 4 and earlier: <code>false</code> (segmented BLOBs)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Boolean property.
-Set property to <code>true</code> to disable usage of procedure type metadata to decide to use <code>SELECT</code> for selectable procedure instead of <code>EXECUTE PROCEDURE</code>.
+Value <code>true</code> disables usage of procedure type metadata to decide to use <code>SELECT</code> for selectable procedure instead of <code>EXECUTE PROCEDURE</code>.
 See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureType</a> for more information.</p></td>
 </tr>
 <tr>
@@ -9680,7 +9683,7 @@ Default: <code>EMULATED</code></p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 4.0</em>).
 Boolean property.
-Value <code>true</code> enable server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
+Value <code>true</code> enables server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to <code>false</code> to always use emulated batch updates.
 See <a href="#ref-batch-use-server-batch">Connection property useServerBatch</a> for more information.<br>
 Default value: <code>true</code></p>
@@ -9714,9 +9717,9 @@ See <a href="#ref-datatypebind">Data type bind support</a> for more information.
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configures the session time zone.
 In Jaybird 3, only configures the Firebird 4 server-side session time zone.
-In Jaybird 4, also configures the time zone used for legacy datetime conversion on all Firebird versions.
+In Jaybird 4 and higher, also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <a href="#ref-datetime-sessiontimezone">Connection property sessionTimeZone</a> for more information.<br>
-Default: not set (Jaybird 3 and earlier), or the JVM default time zone.</p></td>
+Default: the JVM default time zone (Jaybird 4 or higher), or not set (Jaybird 3 or earlier)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -13167,7 +13170,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-08-18 13:02:07 UTC
+Last updated 2023-10-26 16:14:02 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
