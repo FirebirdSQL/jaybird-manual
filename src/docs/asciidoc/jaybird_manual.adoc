@@ -11,10 +11,10 @@ Roman Rokytskyy; Mark Rotteveel
 :imagesdir: images
 :icons: font
 :jaybird6-full-version: 6.0.0-SNAPSHOT
-:jaybird5-full-version: 5.0.2
+:jaybird5-full-version: 5.0.3
 :jaybird5-template-version: {jaybird5-full-version}.<java>
 :jaybird5-example-version: {jaybird5-full-version}.java11
-:jaybird4-full-version: 4.0.9
+:jaybird4-full-version: 4.0.10
 :jaybird4-template-version: {jaybird4-full-version}.<java>
 :jaybird4-example-version: {jaybird4-full-version}.java11
 :jaybird3-full-version: 3.0.12
