@@ -797,7 +797,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
+Version: <code>5.0.3.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -807,7 +807,7 @@ Version: <code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.2.java11&lt;/version&gt;
+  &lt;version&gt;5.0.3.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -11860,7 +11860,7 @@ With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 8, 11, 17 and 19.</p>
+Currently, that means we support Java 8, 11, 17, and 21.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -11985,7 +11985,7 @@ For native or embedded connections, JNA 5.12.1 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.2.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.3.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
@@ -12027,7 +12027,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.2.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.3.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -12040,7 +12040,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.2.java11&lt;/version&gt;
+  &lt;version&gt;5.0.3.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -12073,8 +12073,8 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Jaybird 4 is supported at least until the end of 2023.
-However, we recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
+<p>Jaybird 4 is end-of-life and will not receive further updates.
+We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </div>
 </td>
 </tr>
@@ -12086,11 +12086,11 @@ However, we recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 <p>Jaybird 4 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).</p>
 </div>
 <div class="paragraph">
-<p>Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the most recent LTS version and the latest release.
-Currently, that means we support Java 11, Java 17 and Java 18.</p>
+<p>Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the recent LTS versions and the latest release.
+Currently, that means we support Java 7, 8, 11, 17, and 21<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="#_footnotedef_46" title="View footnote.">46</a>]</sup>.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 4 provides libraries for Java 7, Java 8 and Java 11.
+<p>Jaybird 4 provides libraries for Java 7, Java 8, and Java 11.
 The Java 8 builds have the same source and all JDBC 4.3 related functionality and can be used on Java 9 and higher as well.</p>
 </div>
 <div class="paragraph">
@@ -12191,13 +12191,13 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.9.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-4.0.10.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the JCA connection manager, the Services API and event
 management classes.
 Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.9.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-full-4.0.10.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same as above, but including the JCA 1.5 dependency.
 Where <code>&lt;java&gt;</code> is either <code>java7</code>, <code>java8</code> or <code>java11</code>.</p></td>
 </tr>
@@ -12244,7 +12244,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>4.0.9.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code>, <code>java8</code> or <code>java7</code>)</p>
+<p><code>4.0.10.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code>, <code>java8</code> or <code>java7</code>)</p>
 </td>
 </tr>
 </table>
@@ -12257,7 +12257,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.9.java11&lt;/version&gt;
+  &lt;version&gt;4.0.10.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -12269,7 +12269,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;4.0.9.java11&lt;/version&gt;
+  &lt;version&gt;4.0.10.java11&lt;/version&gt;
   &lt;exclusions&gt;
     &lt;exclusion&gt;
       &lt;groupId&gt;javax.resource&lt;/groupId&gt;
@@ -12796,7 +12796,7 @@ We do not recommend their use in production environments.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 17 and 20.</p>
+Currently, that means we support Java 17, and 21.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 provides libraries for Java 17.</p>
@@ -13014,8 +13014,10 @@ you may only use this Documentation if you comply with the terms of this License
 A copy of the License is available at <a href="https://www.firebirdsql.org/en/public-documentation-license/" class="bare">https://www.firebirdsql.org/en/public-documentation-license/</a>.</p>
 </div>
 <div class="paragraph">
-<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s Manual.
-The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright &#169; 2004-2008.
+<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s Manual.</p>
+</div>
+<div class="paragraph">
+<p>The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright &#169; 2004-2008.
 All Rights Reserved.
 (Initial Writer contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
 </div>
@@ -13167,10 +13169,13 @@ All Rights Reserved.
 <div class="footnote" id="_footnotedef_45">
 <a href="#_footnoteref_45">45</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
 </div>
+<div class="footnote" id="_footnotedef_46">
+<a href="#_footnoteref_46">46</a>. The support for Java 21 comes with one caveat: some tests weren&#8217;t run due to lack of support for Java 21 in test libraries used for testing Jaybird, and we did not want to invest time to upgrade or replace those libraries.
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-26 16:14:02 UTC
+Last updated 2023-11-24 15:37:43 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
