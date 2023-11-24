@@ -7,6 +7,7 @@ you may only use this Documentation if you comply with the terms of this License
 A copy of the License is available at https://www.firebirdsql.org/en/public-documentation-license/.
 
 The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer's Manual.
+
 The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright (C) 2004-2008.
 All Rights Reserved.
 (Initial Writer contact(s): roman@rokytskyy.de).
@@ -19,6 +20,6 @@ All Rights Reserved.
 
 ////
 Portions created by ..... are Copyright (C).....[Insert year(s)].
-All Rights Reserved. (Contributor contact(s):...............[Insert
-hyperlink/alias]).
+All Rights Reserved.
+(Contributor contact(s):...............[Insert hyperlink/alias/address]).
 ////
