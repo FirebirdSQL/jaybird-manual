@@ -1,6 +1,6 @@
 plugins {
-    id 'org.asciidoctor.jvm.convert' version '4.0.0-alpha.1'
-    id 'org.asciidoctor.jvm.pdf' version '4.0.0-alpha.1'
+    id 'org.asciidoctor.jvm.convert' version '4.0.2'
+    id 'org.asciidoctor.jvm.pdf' version '4.0.2'
 }
 
 defaultTasks 'clean', 'asciidoctor'
@@ -9,19 +9,8 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    asciidocExtensions
-}
-
-dependencies {
-    // Needed to make the docExtensions work on Gradle 7.6+, likely no longer needed with asciidoctor-gradle 4.0 (but not yet in 4.0.0-alpha.1)
-    asciidocExtensions gradleApi()
-}
-
 asciidoctorj {
     version = '2.5.9'
-    // Needed to solve error "bad SnakeYAML version 2.0, required 1.21 or higher; check your CLASSPATH for a conflicting jar" after upgrade to Gradle 8.2.1
-    jrubyVersion = '9.4.1.0'
     modules {
         pdf {
             version '2.3.9'
@@ -58,14 +47,14 @@ asciidoctorj {
 }
 
 asciidoctor {
-    configurations 'asciidocExtensions'
     baseDirFollowsSourceDir()
+    executionMode = OUT_OF_PROCESS
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
+    attributes 'revnumber': false, 'stylesdir': file('src/docs/theme/jaybird-html'), 'stylesheet': 'firebird.css',
             'docinfo': 'shared', 'docinfodir': file('src/docs/theme/jaybird-html/docinfo')
-    forkOptions {
+    jvm {
         jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
     }
 }
@@ -78,15 +67,15 @@ pdfThemes {
 }
 
 asciidoctorPdf {
-    configurations 'asciidocExtensions'
     baseDirFollowsSourceDir()
+    executionMode = OUT_OF_PROCESS
     sources {
         include 'jaybird_manual.adoc'
     }
-    attributes 'source-highlighter': 'rouge', 'media': 'prepress',
-        'compress': '', 'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
+    attributes 'revnumber': false, 'source-highlighter': 'rouge', 'media': 'prepress', 'compress': '',
+            'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
     theme 'jaybird'
-    forkOptions {
+    jvm {
         jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
     }
 }
