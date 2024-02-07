@@ -14,7 +14,7 @@ All Rights Reserved.
 
 Contributor(s): Mark Rotteveel.
 
-Portions created by Mark Rotteveel are Copyright (C) 2014-2023.
+Portions created by Mark Rotteveel are Copyright (C) 2014-2024.
 All Rights Reserved.
 (Contributor contact(s): mrotteveel@users.sourceforge.net).
 
