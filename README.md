@@ -28,6 +28,8 @@ How to build
 Run `./gradlew` or its full equivalent `./gradlew clean asciidoctor`. 
 Add `asciidoctorPdf` for the PDF version.
 
+Building the documentation requires Java 9 or higher, use of Java 17 or higher is advisable.
+
 Supporting information
 ======================
 

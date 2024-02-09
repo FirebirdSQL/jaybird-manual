@@ -7,14 +7,17 @@ preprocessor {
         }
         def pattern = ~/\[\.(since|until)\]_([^_]+?)_/
         def allLines = reader.readLines()
+        // 290 requires a resize, and 300 is sufficient, taking some extra slack, so: 320
+        def buffer = new StringBuilder(320)
         def replacement = allLines.collect { line ->
             def matcher = pattern.matcher(line)
             if (matcher.find()) {
-                def buffer = new StringBuffer(line.length() + 16)
+                // Reset buffer for reuse
+                buffer.setLength(0)
                 while (true) {
                     def replacement = matcher.group(1) == "since" ? /[.since]_**Since:** $2_/ : /[.until]_**Removed in:** $2_/
                     matcher.appendReplacement(buffer, replacement)
-                    if (!matcher.find()) break;
+                    if (!matcher.find()) break
                 }
                 matcher.appendTail(buffer)
                 return buffer.toString()
