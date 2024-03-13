@@ -3547,6 +3547,13 @@ As a workaround, use <code>execute procedure</code> or <code>{call procedure_nam
 <p>Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the <code>RETURNING</code> clause.</p>
 </li>
 <li>
+<p><em class="since">Jaybird 5.0.5</em> Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.</p>
+<div class="paragraph">
+<p>In Jaybird 5.0.0 - 5.0.4 this results in error &#8220;Statement used in batch must have parameters&#8221; (<code>isc_batch_param</code>, <code>335545186</code>).
+The workaround is to connect with property <code>useServerBatch</code> set to <code>false</code>, or to not use a prepared statement, or not use batch execution, for parameterless statements.</p>
+</div>
+</li>
+<li>
 <p>Firebird 4.0 has additional facilities to send <code>BLOB</code> values as part of the batch update, but this is not yet used by Jaybird.</p>
 </li>
 </ul>
@@ -13153,7 +13160,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-10 15:20:44 UTC
+Last updated 2024-03-13 10:47:39 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
