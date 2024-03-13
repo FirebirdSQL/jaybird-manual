@@ -725,6 +725,10 @@ This support comes with a number of limitations:
 The implementation might be rewritten in a future Jaybird version, if there is sufficient demand.
 As a workaround, use `execute procedure` or `++{call procedure_name(...)}++` from a `PreparedStatement`.
 * Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the `RETURNING` clause.
+* [.since]_Jaybird 5.0.5_ Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.
++
+In Jaybird 5.0.0 - 5.0.4 this results in error "`Statement used in batch must have parameters`" (`isc_batch_param`, `335545186`).
+The workaround is to connect with property `useServerBatch` set to `false`, or to not use a prepared statement, or not use batch execution, for parameterless statements.
 * Firebird 4.0 has additional facilities to send `BLOB` values as part of the batch update, but this is not yet used by Jaybird.
 
 When server-side batch support is unavailable, either because the server doesn't support it, or because of above limitations, or if the <<ref-batch-use-server-batch,connection property `useServerBatch`>> is `false`, Jaybird will fall back to the emulated behaviour.
