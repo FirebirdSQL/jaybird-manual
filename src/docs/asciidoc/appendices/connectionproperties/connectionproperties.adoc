@@ -284,6 +284,13 @@ Boolean property.
 Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
 See <<ref-catalog-as-package>> for more information.
 
+a|`allowTxStmts`
+a|Jaybird specific property ([.since]_Jaybird 6_).
+Boolean property.
+Enables support for executing `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION`.
+Default is `false`.
+See <<ref-allowtxstmts>> for more information.
+
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).

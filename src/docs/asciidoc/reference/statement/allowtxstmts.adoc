@@ -1,0 +1,40 @@
+[#ref-allowtxstmts]
+=== Connection property allowTxStmts
+
+[.since]_Jaybird 6_
+
+Enables support for the transaction management statements `COMMIT [WORK]`, `ROLLBACK [WORK]` (without retain or savepoint) and `SET TRANSACTION`.
+
+When disabled (`false`, the default), Jaybird will reject attempts to execute or prepare these statements with one of the following errors:
+
+[horizontal]
+`337248313`::
+"`__Execution of COMMIT statement is not allowed, use Connection.commit(), or set connection property allowTxStmts to true__`"
+`337248314`::
+"`__Execution of ROLLBACK statement is not allowed, use Connection.rollback(), or set connection property allowTxStmts to true__`"
+`337248315`::
+"`__Execution of SET TRANSACTION statement is not allowed, use Connection.setTransactionIsolation(int) or FirebirdConnection.setTransactionParameters(..), or set connection property allowTxStmts to true__`"
+
+When enabled (`true`), Jaybird will support these statements under the following conditions:
+
+* Execution with the `execute`, `executeUpdate` or `executeLargeUpdate` methods of `Statement` or `PreparedStatement`.
+* For `PreparedStatement`, the statement is prepared with one of the `prepareStatement` methods of `Connection`.
+* When auto-commit is disabled, executing `COMMIT` or `ROLLBACK` will commit or rollback the current transaction, or do nothing if there is no current transaction.
+The implementation doesn't execute the actual statements, but instead calls `Connection.commit()` or `Connection.rollback()`.
+* For the `SET TRANSACTION` statement, if there is no active transaction.
+The implementation executes the statement using "`execute immediate`", which means it is not executed through the statement handle.
+
+These statements will throw an `SQLException` under the following conditions:
+
+* Execution when auto-commit mode is enabled.
+* Execution when the connection is participating in a distributed transaction.
+* For the `SET TRANSACTION` statement, execution while there is an active transaction.
+* Preparing with the `prepareCall` methods of `Connection`.
+* Execution with the `executeQuery` methods of `Statement` or `PreparedStatement`.
+* Adding to a batch (using the `addBatch` methods of `Statement` or `PreparedStatement`).
+
+The `allowTxStmts` connection property has no effect on the other transaction management statements, i.e. `COMMIT [WORK] RETAIN`, `ROLLBACK [WORK] RETAIN`, `ROLLBACK [WORK] TO [SAVEPOINT] __name__`, `SAVEPOINT __name__` and `RELEASE SAVEPOINT __name__ [ONLY]`.
+These statements can always be executed.
+However, for the savepoint related methods it is advisable to use the relevant JDBC API methods instead.
+
+See also <<transactions-mgmt-stmts>>, and https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-01-explicit-support-for-transaction-statements.adoc[jdp-2024-01: Explicit support for transaction statements^].

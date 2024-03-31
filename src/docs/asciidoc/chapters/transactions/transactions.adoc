@@ -470,3 +470,24 @@ The lock conflict table depends on the isolation level of the transactions and h
 * `isc_tpb_lock_write` mode always conflicts with another `isc_tpb_lock_write` mode regardless of the lock type and transaction isolation mode;
 * `isc_tpb_lock_write` always conflicts with another `isc_tpb_lock_read` mode if both transactions have `consistency` isolation, but has no conflict with shared-read locks if the other transaction has either `concurrency` or `read_committed` isolation level;
 * `isc_tpb_lock_read` mode never conflicts with `isc_tpb_lock_read` mode.
+
+[#transactions-mgmt-stmts]
+=== Transaction management statements
+
+The Firebird syntax also defines a number of transaction management statements.
+In this section we discuss the `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION` statements, which have a hard transaction boundary (either ending or starting a transaction).
+
+In general, you should not execute these methods with Jaybird (or any other JDBC driver).
+The JDBC specification formally discourages use of statements or functionality which is accessible through the JDBC API:
+
+[quote,java.sql.Connection,JDBC API documentation]
+____
+*Note:* When configuring a `Connection`, JDBC applications should use the appropriate `Connection` method such as `setAutoCommit` or `setTransactionIsolation`.
+Applications should not invoke SQL commands directly to change the connection's configuration when there is a JDBC method available.
+____
+
+In Jaybird 5 and older, the `COMMIT` and `ROLLBACK` statements can -- sometimes -- be executed, but they bring the connection in an inconsistent state, which will prevent further use of the connection, and execution of the `SET TRANSACTION` statement will always fail as the statement is executed with an active transaction.
+
+Since Jaybird 6, these statements are rejected by default, but support can be enabled with the <<ref-allowtxstmts,connection property `allowTxStmts`>>.
+
+Allowing execution of these statements can sometimes be helpful, for example for executing scripts, or simplifying access to more advanced features of transaction configuration like <<transactions-table-reservation>>.
