@@ -528,6 +528,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#transactions-savepoints">6.5. Savepoints</a></li>
 <li><a href="#transactions-tpb">6.6. Transaction Parameter Buffer</a></li>
 <li><a href="#transactions-table-reservation">6.7. Table Reservation</a></li>
+<li><a href="#transactions-mgmt-stmts">6.8. Transaction management statements</a></li>
 </ul>
 </li>
 <li><a href="#services">7. Working with Services</a>
@@ -573,6 +574,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-scrollable-cursor">10.3. Connection property scrollableCursor</a></li>
 <li><a href="#ref-batch-use-server-batch">10.4. Connection property useServerBatch</a></li>
 <li><a href="#ref-batch-server-batch-buffer-size">10.5. Connection property serverBatchBufferSize</a></li>
+<li><a href="#ref-allowtxstmts">10.6. Connection property allowTxStmts</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -4695,6 +4697,38 @@ The fifth call specifies the type of the lock to obtain, in our case the protect
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="transactions-mgmt-stmts"><a class="anchor" href="#transactions-mgmt-stmts"></a>6.8. Transaction management statements</h3>
+<div class="paragraph">
+<p>The Firebird syntax also defines a number of transaction management statements.
+In this section we discuss the <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> and <code>SET TRANSACTION</code> statements, which have a hard transaction boundary (either ending or starting a transaction).</p>
+</div>
+<div class="paragraph">
+<p>In general, you should not execute these methods with Jaybird (or any other JDBC driver).
+The JDBC specification formally discourages use of statements or functionality which is accessible through the JDBC API:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Note:</strong> When configuring a <code>Connection</code>, JDBC applications should use the appropriate <code>Connection</code> method such as <code>setAutoCommit</code> or <code>setTransactionIsolation</code>.
+Applications should not invoke SQL commands directly to change the connection&#8217;s configuration when there is a JDBC method available.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; java.sql.Connection<br>
+<cite>JDBC API documentation</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>In Jaybird 5 and older, the <code>COMMIT</code> and <code>ROLLBACK</code> statements can&#8201;&#8212;&#8201;sometimes&#8201;&#8212;&#8201;be executed, but they bring the connection in an inconsistent state, which will prevent further use of the connection, and execution of the <code>SET TRANSACTION</code> statement will always fail as the statement is executed with an active transaction.</p>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 6, these statements are rejected by default, but support can be enabled with the <a href="#ref-allowtxstmts">connection property <code>allowTxStmts</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Allowing execution of these statements can sometimes be helpful, for example for executing scripts, or simplifying access to more advanced features of transaction configuration like <a href="#transactions-table-reservation">Table Reservation</a>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8024,6 +8058,100 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 <p>See <a href="#stmt-batch-server-side">Server-side Batch Updates</a> for more information.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.6. Connection property allowTxStmts</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>Enables support for the transaction management statements <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> (without retain or savepoint) and <code>SET TRANSACTION</code>.</p>
+</div>
+<div class="paragraph">
+<p>When disabled (<code>false</code>, the default), Jaybird will reject attempts to execute or prepare these statements with one of the following errors:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<code>337248313</code>
+</td>
+<td class="hdlist2">
+<p>&#8220;<em>Execution of COMMIT statement is not allowed, use Connection.commit(), or set connection property allowTxStmts to true</em>&#8221;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>337248314</code>
+</td>
+<td class="hdlist2">
+<p>&#8220;<em>Execution of ROLLBACK statement is not allowed, use Connection.rollback(), or set connection property allowTxStmts to true</em>&#8221;</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>337248315</code>
+</td>
+<td class="hdlist2">
+<p>&#8220;<em>Execution of SET TRANSACTION statement is not allowed, use Connection.setTransactionIsolation(int) or FirebirdConnection.setTransactionParameters(..), or set connection property allowTxStmts to true</em>&#8221;</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When enabled (<code>true</code>), Jaybird will support these statements under the following conditions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Execution with the <code>execute</code>, <code>executeUpdate</code> or <code>executeLargeUpdate</code> methods of <code>Statement</code> or <code>PreparedStatement</code>.</p>
+</li>
+<li>
+<p>For <code>PreparedStatement</code>, the statement is prepared with one of the <code>prepareStatement</code> methods of <code>Connection</code>.</p>
+</li>
+<li>
+<p>When auto-commit is disabled, executing <code>COMMIT</code> or <code>ROLLBACK</code> will commit or rollback the current transaction, or do nothing if there is no current transaction.
+The implementation doesn&#8217;t execute the actual statements, but instead calls <code>Connection.commit()</code> or <code>Connection.rollback()</code>.</p>
+</li>
+<li>
+<p>For the <code>SET TRANSACTION</code> statement, if there is no active transaction.
+The implementation executes the statement using &#8220;execute immediate&#8221;, which means it is not executed through the statement handle.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These statements will throw an <code>SQLException</code> under the following conditions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Execution when auto-commit mode is enabled.</p>
+</li>
+<li>
+<p>Execution when the connection is participating in a distributed transaction.</p>
+</li>
+<li>
+<p>For the <code>SET TRANSACTION</code> statement, execution while there is an active transaction.</p>
+</li>
+<li>
+<p>Preparing with the <code>prepareCall</code> methods of <code>Connection</code>.</p>
+</li>
+<li>
+<p>Execution with the <code>executeQuery</code> methods of <code>Statement</code> or <code>PreparedStatement</code>.</p>
+</li>
+<li>
+<p>Adding to a batch (using the <code>addBatch</code> methods of <code>Statement</code> or <code>PreparedStatement</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>allowTxStmts</code> connection property has no effect on the other transaction management statements, i.e. <code>COMMIT [WORK] RETAIN</code>, <code>ROLLBACK [WORK] RETAIN</code>, <code>ROLLBACK [WORK] TO [SAVEPOINT] <em>name</em></code>, <code>SAVEPOINT <em>name</em></code> and <code>RELEASE SAVEPOINT <em>name</em> [ONLY]</code>.
+These statements can always be executed.
+However, for the savepoint related methods it is advisable to use the relevant JDBC API methods instead.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#transactions-mgmt-stmts">Transaction management statements</a>, and <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-01-explicit-support-for-transaction-statements.adoc" target="_blank" rel="noopener">jdp-2024-01: Explicit support for transaction statements</a>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -9827,6 +9955,18 @@ Any subsequent connection uses the library that was loaded by the first connecti
 Boolean property.
 Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
 See <a href="#ref-catalog-as-package">Opt-in feature for package information in DatabaseMetaData</a> for more information.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>allowTxStmts</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+Boolean property.
+Enables support for executing <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> and <code>SET TRANSACTION</code>.
+Default is <code>false</code>.
+See <a href="#ref-allowtxstmts">Connection property allowTxStmts</a> for more information.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -13160,7 +13300,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-13 10:47:39 UTC
+Last updated 2024-03-31 13:44:39 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
