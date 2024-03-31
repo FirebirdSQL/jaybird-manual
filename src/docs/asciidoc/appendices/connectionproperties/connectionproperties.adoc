@@ -291,6 +291,13 @@ Enables support for executing `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSA
 Default is `false`.
 See <<ref-allowtxstmts>> for more information.
 
+a|`extendedMetadata`
+a|Jaybird specific property ([.since]_Jaybird 6_).
+Boolean property.
+Enables support for retrieving extended metadata.
+Default is `true`.
+See <<ref-extendedmetadata>> for more information.
+
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).

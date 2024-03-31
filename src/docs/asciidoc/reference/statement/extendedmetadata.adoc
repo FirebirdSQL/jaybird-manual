@@ -1,0 +1,20 @@
+[#ref-extendedmetadata]
+=== Connection property extendedMetadata
+
+[.since]_Jaybird 6_
+
+By default, Jaybird queries extended metadata information.
+This can be disabled by setting the connection property `extendedMetadata` to `false`.
+
+This setting only affects the following methods:
+
+`ResultSetMetaData.getPrecision(int)`::
+When enabled, the actual precision of `NUMERIC` and `DECIMAL` columns is queried.
+When disabled, the precision will be estimated.
+`ResultSetMetaData.isAutoIncrement(true)`::
+When enabled ([.since]_Jaybird 6_), the identity state of `INTEGER`, `BIGINT` and `SMALLINT` columns is queried on Firebird 3.0 and higher.
+When disabled, the result is always `false`.
+
+Invocation of either of these methods will query the extended metadata needed for _both_ methods.
+
+Setting `extendedMetadata` to `false` may improve performance of these methods in exchange for an estimated precision, and not being able to determine the auto-increment state of a column.
