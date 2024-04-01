@@ -1,7 +1,7 @@
 [#ref-extendedmetadata]
 === Connection property extendedMetadata
 
-[.since]_Jaybird 6_
+[.since]_Jaybird 5.0.5_
 
 By default, Jaybird queries extended metadata information.
 This can be disabled by setting the connection property `extendedMetadata` to `false`.

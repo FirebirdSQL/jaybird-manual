@@ -292,7 +292,7 @@ Default is `false`.
 See <<ref-allowtxstmts>> for more information.
 
 a|`extendedMetadata`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property ([.since]_Jaybird 5.0.5_).
 Boolean property.
 Enables support for retrieving extended metadata.
 Default is `true`.
