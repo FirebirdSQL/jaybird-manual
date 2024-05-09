@@ -43,6 +43,8 @@ include::statement/serverbatchbuffersize.adoc[]
 
 include::statement/allowtxstmts.adoc[]
 
+include::statement/extendedmetadata.adoc[]
+
 // TODO: Document closeOnCompletion support?
 
 ////
