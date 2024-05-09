@@ -298,6 +298,12 @@ Enables support for retrieving extended metadata.
 Default is `true`.
 See <<ref-extendedmetadata>> for more information.
 
+a|`createDatabaseIfNotExist`
+a|Jaybird specific property ([.since]_Jaybird 6_).
+Boolean property.
+Attempts to create a database if it does not exist.
+See <<ref-create-database-if-not-exist>> for more information.
+
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).

@@ -26,6 +26,8 @@ include::connection/catalogaspackage.adoc[]
 
 include::connection/clientinfoproperties.adoc[]
 
+include::connection/createdatabaseifnotexist.adoc[]
+
 [[ref-statement]]
 == Statement reference
 
