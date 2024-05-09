@@ -565,6 +565,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-enable-protocol">9.9. Enabling unsupported protocol versions</a></li>
 <li><a href="#ref-catalog-as-package">9.10. Opt-in feature for package information in DatabaseMetaData</a></li>
 <li><a href="#ref-client-info">9.11. Client info properties</a></li>
+<li><a href="#ref-create-database-if-not-exist">9.12. Create database if it does not exist</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -575,6 +576,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-batch-use-server-batch">10.4. Connection property useServerBatch</a></li>
 <li><a href="#ref-batch-server-batch-buffer-size">10.5. Connection property serverBatchBufferSize</a></li>
 <li><a href="#ref-allowtxstmts">10.6. Connection property allowTxStmts</a></li>
+<li><a href="#ref-extendedmetadata">10.7. Connection property extendedMetadata</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -7366,6 +7368,62 @@ If your connection pool implementation supports custom code to reset a connectio
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.12. Create database if it does not exist</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>The Boolean connection property <code>createDatabaseIfNotExist</code> instructs Jaybird to attempt to create the database if it does not exist yet.
+This property can be used in the JDBC URL, in the <code>Properties</code> object passed to <code>DriverManager</code>, and can be set on data sources.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird also allows you to create databases using <code>org.firebirdsql.management.FBManager</code>, but this is not always accessible, for example in tools or libraries that only expose or use the JDBC API.
+This property provides an alternative to create databases in those cases.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird also allows you to set or override connection properties specifically for creating the database by suffixing the property name with <code>@create</code> (case-sensitive).
+This can be used to set configuration properties that are only relevant for creating the database, or&#8201;&#8212;&#8201;for example&#8201;&#8212;&#8201;to use a different user or role for creating the database than used for normal connections.</p>
+</div>
+<div class="paragraph">
+<p>As an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>String jdbcUrl = "jdbc:firebird://localhost/exampledb" +
+    "?createDatabaseIfNotExist=true&amp;" +
+    "user@create=sysdba&amp;password@create=masterkey";
+try (Connection connection = DriverManager.getConnection(
+    jdbcUrl, "normaluser", "password")) {
+  // ...
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the database already exists, the connection will be made with user <code>normaluser</code>, but if the database does not exist, the database will be created with user <code>sysdba</code>.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The errors Firebird returns do not make it possible to determine definitively if the database does not exist, or if there is another reason that the connection failed.
+Jaybird applies some simple rules to exclude some classes of errors, and not attempt to create a database in those cases.</p>
+</div>
+<div class="paragraph">
+<p>If you find cases where you think Jaybird should not (or on the contrary should) attempt to create a database, please report them on <a href="https://github.com/FirebirdSQL/jaybird/issues" class="bare" target="_blank" rel="noopener">https://github.com/FirebirdSQL/jaybird/issues</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more information, see also <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-02-create-database-through-jdbc-url.adoc" target="_blank" rel="noopener">jdp-2024-02: Create database through JDBC URL</a>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -8150,6 +8208,39 @@ However, for the savepoint related methods it is advisable to use the relevant J
 </div>
 <div class="paragraph">
 <p>See also <a href="#transactions-mgmt-stmts">Transaction management statements</a>, and <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-01-explicit-support-for-transaction-statements.adoc" target="_blank" rel="noopener">jdp-2024-01: Explicit support for transaction statements</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.7. Connection property extendedMetadata</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5.0.5</em></p>
+</div>
+<div class="paragraph">
+<p>By default, Jaybird queries extended metadata information.
+This can be disabled by setting the connection property <code>extendedMetadata</code> to <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>This setting only affects the following methods:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ResultSetMetaData.getPrecision(int)</code></dt>
+<dd>
+<p>When enabled, the actual precision of <code>NUMERIC</code> and <code>DECIMAL</code> columns is queried.
+When disabled, the precision will be estimated.</p>
+</dd>
+<dt class="hdlist1"><code>ResultSetMetaData.isAutoIncrement(true)</code></dt>
+<dd>
+<p>When enabled (<em class="since">Jaybird 6</em>), the identity state of <code>INTEGER</code>, <code>BIGINT</code> and <code>SMALLINT</code> columns is queried on Firebird 3.0 and higher.
+When disabled, the result is always <code>false</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Invocation of either of these methods will query the extended metadata needed for <em>both</em> methods.</p>
+</div>
+<div class="paragraph">
+<p>Setting <code>extendedMetadata</code> to <code>false</code> may improve performance of these methods in exchange for an estimated precision, and not being able to determine the auto-increment state of a column.</p>
 </div>
 </div>
 </div>
@@ -9978,7 +10069,18 @@ See <a href="#ref-allowtxstmts">Connection property allowTxStmts</a> for more in
 Boolean property.
 Enables support for retrieving extended metadata.
 Default is <code>true</code>.
-See <a href="#ref-extendedmetadata">[ref-extendedmetadata]</a> for more information.</p>
+See <a href="#ref-extendedmetadata">Connection property extendedMetadata</a> for more information.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>createDatabaseIfNotExist</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+Boolean property.
+Attempts to create a database if it does not exist.
+See <a href="#ref-create-database-if-not-exist">Create database if it does not exist</a> for more information.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -13312,7 +13414,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-20 07:35:46 UTC
+Last updated 2024-05-09 11:48:00 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
