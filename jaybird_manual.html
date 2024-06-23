@@ -3835,7 +3835,7 @@ Server-side scrollable cursors do not support the holdable behaviour.</p>
 <h3 id="_resultset_manipulation"><a class="anchor" href="#_resultset_manipulation"></a>5.2. ResultSet manipulation</h3>
 <div class="paragraph">
 <p><code>ResultSet</code> objects are created when either <code>Statement.executeQuery(String)</code> or <code>Statement.getResultSet()</code> methods are called, or when obtaining the generated keys from <code>Statement.getGeneratedKeys()</code>.
-<code>Statement.getResultSet()</code> is used in combination with <code>Statement.execute(String)</code> and can be called only once per result set (see the following two examples).</p>
+<code>Statement.getResultSet()</code> is used in combination with <code>Statement.execute(String)</code> and can be called only once per result set (see the following two examples; <em class="until">Jaybird 5.0.5</em>).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3845,8 +3845,10 @@ Server-side scrollable cursors do not support the holdable behaviour.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The current implementation does not allow calls to the <code>getResultSet()</code> method after using the <code>executeQuery(String)</code> method of the <code>Statement</code> class.
-The JDBC specification is unclear on this topic and JDBC drivers of different vendors treat it differently.</p>
+<p><em class="until">Jaybird 5.0.5</em> The implementation in Jaybird 5.0.4 and older does not allow calls to the <code>getResultSet()</code> method after using an <code>executeQuery</code> or the <code>getResultSet()</code> method of the <code>Statement</code> class.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 5.0.5</em> Starting with Jaybird 5.0.5, calls to <code>getResultSet()</code> will return the current result set, even if the result set was returned before by an <code>executeQuery</code> or the <code>getResultSet()</code> method.</p>
 </div>
 </td>
 </tr>
@@ -4005,7 +4007,7 @@ In auto-commit mode, the result set is closed automatically if any statement is 
 <div class="sectionbody">
 <div class="paragraph">
 <p>Transactions are used to group SQL statements into a single block that satisfies so-called ACID properties: atomicity, consistency, isolation and durability.
-In other words, all statements executed within transaction will either succeed and their results will be permanently stored in the database or the effect of the statement execution will be undone.</p>
+In other words, all statements executed within a transaction either succeed and their results will be permanently stored in the database, or the effect of the statement execution will be undone.</p>
 </div>
 <div class="sect2">
 <h3 id="_jdbc_transactions"><a class="anchor" href="#_jdbc_transactions"></a>6.1. JDBC transactions</h3>
@@ -4101,33 +4103,62 @@ Do not rely on the garbage collector for this.</p>
 In other words, the duration of the transaction is limited by the duration of statement execution, or more formally&#8201;&#8212;&#8201;the transaction is ended when the statement is completed.
 The point when statement execution is considered complete, is defined in the specification as:</p>
 </div>
-<div class="ulist">
+<div class="quoteblock">
 <div class="title">Rules when the statement is completed in auto-commit mode</div>
-<ul>
-<li>
-<p>For insert, update, delete and DDL statements, the statement is complete as soon as it has finished executing.</p>
-</li>
-<li>
-<p>For select statements, statement is complete when the associated result set is closed.
-The result set is closed as soon as one of the following occurs:</p>
+<blockquote>
+<div class="paragraph">
+<p>A <code>ResultSet</code> object is explicitly closed when</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>all rows have been retrieved</p>
+<p>The <code>close</code> method on the <code>ResultSet</code> is executed, thereby releasing any external resources</p>
 </li>
 <li>
-<p>the associated Statement object is re-executed</p>
-</li>
-<li>
-<p>another Statement object is executed on the same connection</p>
+<p>The <code>Statement</code> or <code>Connection</code> object that produced the <code>ResultSet</code> is explictly [sic] closed</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>A <code>ResultSet</code> object is implicitly closed when</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The associated <code>Statement</code> object is re-executed</p>
 </li>
 <li>
-<p>For CallableStatement objects, the statement is complete, when all associated result sets have been closed.</p>
+<p>The <code>ResultSet</code> is created with a Holdability of <code>CLOSE_CURSORS_AT_COMMIT</code> and an implicit or explicit commit occurs</p>
 </li>
 </ul>
+</div>
+<hr>
+<div class="paragraph">
+<p>Note – Some JDBC driver implementations may also implicitly <code>close</code> the <code>ResultSet</code> when the <code>ResultSet</code> type is <code>TYPE_FORWARD_ONLY</code> and the <code>next</code> method of <code>ResultSet</code> returns <code>false</code>.</p>
+</div>
+<hr>
+</blockquote>
+<div class="attribution">
+&#8212; JDBC 4.3 Specification
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><em class="until">Jaybird 6</em> In Jaybird 5 and earlier, in auto-commit mode a <code>TYPE_FORWARD_ONLY</code> result set was implicitly closed when <code>next()</code> returned false.
+This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em> In auto-commit mode, a result set will now remain open until explicitly closed using <code>ResultSet.close()</code>, when any statement is executed, when the auto-commit mode is disabled, or by the close of the <code>Statement</code> or <code>Connection</code>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.</p>
@@ -13414,7 +13445,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-14 14:43:44 UTC
+Last updated 2024-06-23 10:11:50 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
