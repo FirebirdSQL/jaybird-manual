@@ -75,12 +75,13 @@ Server-side scrollable cursors do not support the holdable behaviour.
 === ResultSet manipulation
 
 `ResultSet` objects are created when either `Statement.executeQuery(String)` or `Statement.getResultSet()` methods are called, or when obtaining the generated keys from `Statement.getGeneratedKeys()`.
-`Statement.getResultSet()` is used in combination with `Statement.execute(String)` and can be called only once per result set (see the following two examples).
+`Statement.getResultSet()` is used in combination with `Statement.execute(String)` and can be called only once per result set (see the following two examples; [.until]_Jaybird 5.0.5_).
 
 [NOTE]
 ====
-The current implementation does not allow calls to the `getResultSet()` method after using the `executeQuery(String)` method of the `Statement` class.
-The JDBC specification is unclear on this topic and JDBC drivers of different vendors treat it differently.
+[.until]_Jaybird 5.0.5_ The implementation in Jaybird 5.0.4 and older does not allow calls to the `getResultSet()` method after using an `executeQuery` or the `getResultSet()` method of the `Statement` class.
+
+[.since]_Jaybird 5.0.5_ Starting with Jaybird 5.0.5, calls to `getResultSet()` will return the current result set, even if the result set was returned before by an `executeQuery` or the `getResultSet()` method.
 ====
 
 [source,java]
