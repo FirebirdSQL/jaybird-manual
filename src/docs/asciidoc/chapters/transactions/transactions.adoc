@@ -2,7 +2,7 @@
 == Using transactions
 
 Transactions are used to group SQL statements into a single block that satisfies so-called ACID properties: atomicity, consistency, isolation and durability.
-In other words, all statements executed within transaction will either succeed and their results will be permanently stored in the database or the effect of the statement execution will be undone.
+In other words, all statements executed within a transaction either succeed and their results will be permanently stored in the database, or the effect of the statement execution will be undone.
 
 === JDBC transactions
 
@@ -73,13 +73,31 @@ In other words, the duration of the transaction is limited by the duration of st
 The point when statement execution is considered complete, is defined in the specification as:
 
 .Rules when the statement is completed in auto-commit mode
-* For insert, update, delete and DDL statements, the statement is complete as soon as it has finished executing.
-* For select statements, statement is complete when the associated result set is closed.
-The result set is closed as soon as one of the following occurs:
-** all rows have been retrieved
-** the associated Statement object is re-executed
-** another Statement object is executed on the same connection
-* For CallableStatement objects, the statement is complete, when all associated result sets have been closed.
+[quote,JDBC 4.3 Specification]
+____
+A `ResultSet` object is explicitly closed when
+
+* The `close` method on the `ResultSet` is executed, thereby releasing any external resources
+* The `Statement` or `Connection` object that produced the `ResultSet` is explictly [sic] closed
+
+A `ResultSet` object is implicitly closed when
+
+* The associated `Statement` object is re-executed
+* The `ResultSet` is created with a Holdability of `CLOSE_CURSORS_AT_COMMIT` and an implicit or explicit commit occurs
+
+'''
+Note – Some JDBC driver implementations may also implicitly `close` the `ResultSet` when the `ResultSet` type is `TYPE_FORWARD_ONLY` and the `next` method of `ResultSet` returns `false`.
+
+'''
+____
+
+[NOTE]
+====
+[.until]_Jaybird 6_ In Jaybird 5 and earlier, in auto-commit mode a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
+This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.
+
+[.since]_Jaybird 6_ In auto-commit mode, a result set will now remain open until explicitly closed using `ResultSet.close()`, when any statement is executed, when the auto-commit mode is disabled, or by the close of the `Statement` or `Connection`.
+====
 
 If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.
 
