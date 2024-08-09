@@ -6900,22 +6900,19 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 <div class="sect2">
 <h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.7. Process information</h3>
 <div class="paragraph">
-<p>Firebird 2.1 introduced the <code>MON$ATTACHMENTS</code> table.
-This table includes the columns <code>MON$REMOTE_PID</code> and <code>MON$REMOTE_PROCESS</code> which report the process id and process name of the connected process.</p>
+<p>Introduced in Firebird 2.1, the <code>MON$ATTACHMENTS</code> monitoring table contains information about database attachments, including information about the client process.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 5 and earlier do not provide this information, except for the process ID of native connections.
+<p>The columns <code>MON$REMOTE_PID</code> and <code>MON$REMOTE_PROCESS</code> report the process id and process name of the connected process.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 5 and earlier do not provide this information by default, except for the process ID of native connections, but they can be specified with system or connection properties (see below).
 This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just &#8220;java&#8221; (or similar), which is not very useful.</p>
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em> Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
-No default process name is provided as in most cases the process name is just &#8220;java&#8221; (or similar), which is not very useful.
 When a <code>SecurityManager</code> is installed, the entire call-chain needs to have the <code>RuntimePermission("manageProcess")</code> to obtain the process ID in pure Java connections.
 If this permission check fails, Jaybird will silently ignore it and not set the <code>isc_dpb_process_id</code> based on the actual process ID.</p>
-</div>
-<div class="paragraph">
-<p>Since Firebird 3.0, the <code>MON$ATTACHMENTS</code> table also includes the column <code>MON$CLIENT_VERSION</code>.
-Jaybird will report its full version (e.g. <code>Jaybird 3.0.5-JDK_1.8</code>).</p>
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em> The process name is returned from <code>Connection.getClientInfo("ApplicationName")</code>, if the client info property <code>ApplicationName</code> has not been set explicitly with <code>Connection.setClientInfo</code>, and/or if there is no property <code>ApplicationName</code> in the <code>USER_SESSION</code> context.</p>
@@ -6938,6 +6935,10 @@ Treat it as informational only, as clients can report fake information.
 This cannot be overridden using the options below.</p>
 </div>
 <div class="paragraph">
+<p>Since Firebird 3.0, the <code>MON$ATTACHMENTS</code> table also includes the column <code>MON$CLIENT_VERSION</code>.
+Jaybird will report its full version (e.g. <code>Jaybird jaybird-5.0.1.java11</code>).</p>
+</div>
+<div class="paragraph">
 <p>It is possible to specify the process name and process id in two ways:</p>
 </div>
 <div class="sect3">
@@ -6950,6 +6951,9 @@ This cannot be overridden using the options below.</p>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.pid</code></dt>
 <dd>
 <p>Process id</p>
+<div class="paragraph">
+<p>This property is ignored on native connections, which will always report the actual process id.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.processName</code></dt>
 <dd>
@@ -6959,7 +6963,11 @@ This cannot be overridden using the options below.</p>
 </div>
 <div class="paragraph">
 <p>In Jaybird 5 and earlier, this is the preferred method because you only need to specify it once.
-For Jaybird 6 and later, the preferred method is to not set any option and use the actual process ID.</p>
+For Jaybird 6 and later, in case of the process id, the preferred method is to not set any option and use the actual process ID.</p>
+</div>
+<div class="paragraph">
+<p>These properties are read every time a connection is created, so they can be changed during the lifetime of a program.
+Changes to these system properties will only affect connections created after the change.</p>
 </div>
 </div>
 <div class="sect3">
@@ -6983,9 +6991,11 @@ For Jaybird 6 and later, the preferred method is to not set any option and use t
 </dl>
 </div>
 <div class="paragraph">
-<p>Since Jaybird 5, these properties are exposed on data sources.
-In earlier versions, these properties were not exposed on the data sources.
-To set on data sources in Jaybird 4 or earlier, use <code>setNonStandardProperty</code>.</p>
+<p>The connection properties take precedence over the system properties.</p>
+</div>
+<div class="paragraph">
+<p>Since Jaybird 5, these properties are also exposed on data sources.
+In earlier versions, use <code>setNonStandardProperty</code>.</p>
 </div>
 </div>
 </div>
@@ -13445,7 +13455,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-23 10:11:50 UTC
+Last updated 2024-08-09 12:24:56 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
