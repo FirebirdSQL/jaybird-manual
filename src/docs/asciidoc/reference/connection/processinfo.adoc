@@ -1,19 +1,16 @@
 [[ref-processinfo]]
 === Process information
 
-Firebird 2.1 introduced the `MON$ATTACHMENTS` table.
-This table includes the columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` which report the process id and process name of the connected process.
+Introduced in Firebird 2.1, the `MON$ATTACHMENTS` monitoring table contains information about database attachments, including information about the client process.
 
-Jaybird 5 and earlier do not provide this information, except for the process ID of native connections.
+The columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` report the process id and process name of the connected process.
+
+Jaybird 5 and earlier do not provide this information by default, except for the process ID of native connections, but they can be specified with system or connection properties (see below).
 This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just "`java`" (or similar), which is not very useful.
 
 [.since]_Jaybird 6_ Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
-No default process name is provided as in most cases the process name is just "`java`" (or similar), which is not very useful.
 When a `SecurityManager` is installed, the entire call-chain needs to have the `RuntimePermission("manageProcess")` to obtain the process ID in pure Java connections.
 If this permission check fails, Jaybird will silently ignore it and not set the `isc_dpb_process_id` based on the actual process ID.
-
-Since Firebird 3.0, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`.
-Jaybird will report its full version (e.g. `Jaybird 3.0.5-JDK_1.8`).
 
 [.since]_Jaybird 6_ The process name is returned from `Connection.getClientInfo("ApplicationName")`, if the client info property `ApplicationName` has not been set explicitly with `Connection.setClientInfo`, and/or if there is no property `ApplicationName` in the `USER_SESSION` context.
 
@@ -23,6 +20,9 @@ Treat it as informational only, as clients can report fake information.
 Native connections will always report the actual process ID, if a fbclient of Firebird 2.1 or higher is used.
 This cannot be overridden using the options below.
 
+Since Firebird 3.0, the `MON$ATTACHMENTS` table also includes the column `MON$CLIENT_VERSION`.
+Jaybird will report its full version (e.g. `Jaybird jaybird-5.0.1.java11`).
+
 It is possible to specify the process name and process id in two ways:
 
 [[ref-processinfo-systemprop]]
@@ -31,10 +31,15 @@ It is possible to specify the process name and process id in two ways:
 It is possible to specify the process information through Java system properties:
 
 `org.firebirdsql.jdbc.pid`:: Process id
++
+This property is ignored on native connections, which will always report the actual process id.
 `org.firebirdsql.jdbc.processName`:: Process name
 
 In Jaybird 5 and earlier, this is the preferred method because you only need to specify it once.
-For Jaybird 6 and later, the preferred method is to not set any option and use the actual process ID.
+For Jaybird 6 and later, in case of the process id, the preferred method is to not set any option and use the actual process ID.
+
+These properties are read every time a connection is created, so they can be changed during the lifetime of a program.
+Changes to these system properties will only affect connections created after the change.
 
 [[ref-processinfo-connprops]]
 ==== Connection properties for process information
@@ -46,6 +51,7 @@ It is also possible to specify the process information through connection proper
 This property is ignored on native connections, which will always report the actual process id.
 `processName`:: Process name (alias: `process_name`, `ApplicationName`, `applicationName`)
 
-Since Jaybird 5, these properties are exposed on data sources.
-In earlier versions, these properties were not exposed on the data sources.
-To set on data sources in Jaybird 4 or earlier, use `setNonStandardProperty`.
+The connection properties take precedence over the system properties.
+
+Since Jaybird 5, these properties are also exposed on data sources.
+In earlier versions, use `setNonStandardProperty`.
