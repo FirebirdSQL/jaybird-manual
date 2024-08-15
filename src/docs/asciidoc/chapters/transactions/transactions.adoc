@@ -55,8 +55,8 @@ Alternatively, you can use an external table to store the audit log.
 
 When a connection uses explicit transaction control, each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
 If a transaction was not finished, but the `close` method is called, the active transaction is rolled back automatically.
-This also happens when the transaction was not finished, the connection was not closed explicitly and that `Connection` object became eligible for garbage collection.
-[.until]_Jaybird 5_ In this case, the `close()` method is implicitly invoked by the class finalizer, which in turn rolls the transaction back.
+This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that `Connection` object became eligible for garbage collection.
+[.until]_Jaybird 5_ In this case, the class finalizer implicitly invokes the `close()` method, which in turn rolls the transaction back.
 
 [WARNING]
 ====
@@ -91,13 +91,10 @@ Note – Some JDBC driver implementations may also implicitly `close` the `Resul
 '''
 ____
 
-[NOTE]
-====
-[.until]_Jaybird 6_ In Jaybird 5 and earlier, in auto-commit mode a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
+[.until]_Jaybird 6_ In Jaybird 5 and earlier, in auto-commit mode, a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
 This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.
 
 [.since]_Jaybird 6_ In auto-commit mode, a result set will now remain open until explicitly closed using `ResultSet.close()`, when any statement is executed, when the auto-commit mode is disabled, or by the close of the `Statement` or `Connection`.
-====
 
 If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.
 
@@ -233,11 +230,8 @@ Connection connection = DriverManager.getConnection(
     props);
 ----
 
-[NOTE]
-====
-The property accepts the "`short`" names as shown, or the "`long`" names with the `isc_dpb_` prefix, as defined in `org.firebirdsql.jaybird.fb.constants.TpbItems` (Jaybird 5) or `org.firebirdsql.gds.ISCConstants` (older versions).
+The property accepts the "`short`" names as shown, or the "`long`" names with the `isc_dpb_` prefix, as defined in `org.firebirdsql.jaybird.fb.constants.TpbItems` (Jaybird 5 and higher) or `org.firebirdsql.gds.ISCConstants` (older versions).
 For readability, we recommend using the "`short`" names.
-====
 
 The overridden mapping is used for all transactions started within the database connection.
 If the default mapping is overridden via the data source configuration, it will be used for all connections created by the data source.
@@ -318,12 +312,9 @@ fbConnection.setTransactionParameters(tpb);
 
 The above presents an example of populating the TPB with custom parameters.
 
-[NOTE]
-====
 The constants used in the examples in this chapter were introduced in Jaybird 5.
 Earlier versions have constants of the same name defined in `org.firebirdsql.gds.ISCConstants`, and similarly named constants in `org.firebirdsql.gds.TransactionParameterBuffer` (i.e. without `isc_tpb_` prefix and fully capitalized).
 Those older constants will be removed in Jaybird 6 in favour of `org.firebirdsql.jaybird.fb.constants.TpbItems`.
-====
 
 ==== Isolation level
 

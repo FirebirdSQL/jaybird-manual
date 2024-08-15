@@ -104,6 +104,15 @@ To enable logging to the console, you can set system property `org.firebirdsql.j
 [[ref-logging-custom]]
 ==== Custom logging implementation
 
+[[ref-logging-custom-after-6]]
+===== Custom logging in Jaybird 6 and higher
+
+[.since]_Jaybird 6_ If you need a custom logger implementation under Jaybird 6 or higher, you will need to provide an implementation of `java.lang.System.Logger` and `java.lang.System.LoggerFinder` and a service loader definition.
+
+Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the `log4j-jpl` dependency).
+
+[[ref-logging-custom-before-6]]
+===== Custom logging in Jaybird 5 and earlier
 [.until]_Jaybird 6_
 
 You can provide your own logging implementation if you don't want to use `java.util.logging` or console logging.
@@ -131,10 +140,3 @@ public class CustomLogger implements org.firebirdsql.logging.Logger {
 On the Java command line, specify:
 
  -Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger
-
-[NOTE]
-====
-[.since]_Jaybird 6_ If you need a custom logger implementation under Jaybird 6, you will need to provide an implementation of `java.lang.System.Logger` and `java.lang.System.LoggerFinder` and a service loader definition.
-
-Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the `log4j-jpl` dependency).
-====

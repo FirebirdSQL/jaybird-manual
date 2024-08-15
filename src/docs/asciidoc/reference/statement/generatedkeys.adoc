@@ -29,15 +29,12 @@ If you previously relied on absence of ANTLR to disable generated keys support, 
 
 This functionality is available for `INSERT`, `UPDATE`, `UPDATE OR INSERT` and `DELETE`, and for `MERGE` ([.since]_Firebird 3.0_).
 
-[NOTE] 
-====
 Generated keys retrieval modifies the statement to add a `RETURNING`-clause.
 Firebird 4.0 and earlier only support `RETURNING` for DML operations that affect a single row.
 Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error _"multiple rows in singleton select"_.
 
 [.since]_Jaybird 5/Firebird 5.0_ Support for multi-row `RETURNING` is introduced in Firebird 5.0.
 Support for multi-row `RETURNING` is available in Jaybird 5.
-====
 
 The examples in this section use the following (Firebird 3.0) table:
 
@@ -155,7 +152,7 @@ The values in the `int[]` parameter are the ordinal positions of the columns as 
 In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
 In Jaybird 4, this behaviour has changed and instead will throw an exception with message _"Generated keys array columnIndexes was empty or null. A non-empty array is required."_
 
-In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing `new int[] { 1, 5, 6 }` will work, even though we don't have sixth column.
+In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing `new int[] { 1, 5, 6 }` will work, even if there is no sixth column.
 In Jaybird 4, this behavior has changed and instead will throw an exception with message _"Generated keys column position <position> does not exist for table <tablename>. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values."_
 ====
 

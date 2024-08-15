@@ -61,12 +61,13 @@ There, the driver is not on the system class path, so it will need to be loaded 
 
 We will leave out usages of `Class.forName` in further examples, they will work because of automatic driver loading.
 
+[aside]
 .Registering the JDBC driver
-[NOTE]
-====
+****
 There are several ways to register JDBC driver:
 
-1. `DriverManager` loads the drivers from the system class path. This happens automatically.
+1. `DriverManager` loads the drivers from the system class path.
+This happens automatically.
 
 2. The application explicitly loads the driver's class.
 This is only necessary if the automatic loading (see previous item) is not available.
@@ -88,7 +89,7 @@ java\
   -classpath jaybird-full-{jaybird-example-version}.jar;C:/myproject/classes\
   my.company.SomeJavaExample
 ....
-====
+****
 
 The second statement of the example tells the `java.sql.DriverManager` to open a database connection to the Firebird server running on localhost, and the path to the database is `c:/database/employee.fdb`.
 
@@ -557,6 +558,8 @@ This can be changed by the `ServerMode` setting in `firebird.conf`.
 
 [[driver-ooremote]]
 ==== OOREMOTE type
+
+[.until]_Jaybird 6_
 
 The `OOREMOTE` type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
 It addresses some differences in interpretation of the JDBC specification, and provides alternative metadata in certain cases to allow OpenOffice.org and LibreOffice to function correctly.

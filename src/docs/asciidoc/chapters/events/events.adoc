@@ -30,12 +30,9 @@ Such mechanism allows Firebird to keep the event notification table very smallfo
 For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.]
 and to reduce the number of messages sent to the application.
 
-[NOTE]
-====
 It is not possible to pass parameters with the event, e.g. an ID of the modified records.
 It is also not possible to encode such information in the event names, wildcards are not supported.
 For such cases, applications should maintain a change tracking table where the IDs of the modified records are stored and the event mechanism is used to tell the application that new records were added to the table.
-====
 
 === Posting events
 

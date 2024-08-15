@@ -213,8 +213,6 @@ This method also clears the path specified in `backupPath` property.
 This method also clears the path specified in the database property.
 |===
 
-[NOTE]
-====
 All paths specified are paths specifications on the remote server.
 This has the following implications:
 
@@ -223,7 +221,6 @@ This has the following implications:
 . it is not possible to restore from the local or network drive unless it is mounted on the remote server.
 
 The `FBStreamingBackupManager` can be used to perform remote backup and restore, see <<services-backup-and-restore-gbak-streaming>>.
-====
 
 After specifying all the needed properties, the application developer can use `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` methods to perform the backup and restore tasks.
 These methods will block until the operation is finished.
@@ -770,7 +767,7 @@ After this operation database can be backed up and restored to a different place
 
 [CAUTION]
 ====
-The presence of the checksum errors and subsequent use of `markCorruptedRecords()` method will mark all corrupted data as unused space.
+The presence of checksum errors and subsequent use of `markCorruptedRecords()` method will mark all corrupted data as unused space.
 You have to perform a careful check after backup/restore cycle to assess the damage.
 ====
 

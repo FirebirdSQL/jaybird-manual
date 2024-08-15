@@ -70,7 +70,7 @@ The code below contains a short example which first performs a select to find th
 
 [WARNING]
 ====
-The concatenation of values into a query string as done in this example is not a good practice as it can leave your code vulnerable to SQL injection.
+Concatenation of values into a query string as done in this example is not a good practice as it can leave your code vulnerable to SQL injection.
 
 In this specific case it is safe to do as the values are integers.
 In general: don't do this, use a prepared statement with parameters instead.
