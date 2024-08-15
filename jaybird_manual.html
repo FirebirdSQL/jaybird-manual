@@ -1001,13 +1001,8 @@ There, the driver is not on the system class path, so it will need to be loaded 
 <div class="paragraph">
 <p>We will leave out usages of <code>Class.forName</code> in further examples, they will work because of automatic driver loading.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+<div class="sidebarblock">
+<div class="content">
 <div class="title">Registering the JDBC driver</div>
 <div class="paragraph">
 <p>There are several ways to register JDBC driver:</p>
@@ -1015,7 +1010,8 @@ There, the driver is not on the system class path, so it will need to be loaded 
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><code>DriverManager</code> loads the drivers from the system class path. This happens automatically.</p>
+<p><code>DriverManager</code> loads the drivers from the system class path.
+This happens automatically.</p>
 </li>
 <li>
 <p>The application explicitly loads the driver&#8217;s class.
@@ -1047,9 +1043,7 @@ Multiple drivers can be separated using a colon (<code>:</code>).</p>
 </li>
 </ol>
 </div>
-</td>
-</tr>
-</table>
+</div>
 </div>
 <div class="paragraph">
 <p>The second statement of the example tells the <code>java.sql.DriverManager</code> to open a database connection to the Firebird server running on localhost, and the path to the database is <code>c:/database/employee.fdb</code>.</p>
@@ -1639,6 +1633,9 @@ This can be changed by the <code>ServerMode</code> setting in <code>firebird.con
 </div>
 <div class="sect3">
 <h4 id="driver-ooremote"><a class="anchor" href="#driver-ooremote"></a>2.2.4. OOREMOTE type</h4>
+<div class="paragraph">
+<p><em class="until">Jaybird 6</em></p>
+</div>
 <div class="paragraph">
 <p>The <code>OOREMOTE</code> type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
 It addresses some differences in interpretation of the JDBC specification, and provides alternative metadata in certain cases to allow OpenOffice.org and LibreOffice to function correctly.</p>
@@ -2711,7 +2708,7 @@ The code below contains a short example which first performs a select to find th
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The concatenation of values into a query string as done in this example is not a good practice as it can leave your code vulnerable to SQL injection.</p>
+<p>Concatenation of values into a query string as done in this example is not a good practice as it can leave your code vulnerable to SQL injection.</p>
 </div>
 <div class="paragraph">
 <p>In this specific case it is safe to do as the values are integers.
@@ -3731,13 +3728,6 @@ Jaybird allows an application to ask for this type of result set, however in com
 </li>
 </ul>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>Due to a missing support of scrollable cursors in Firebird 4.0 and earlier, support for scrollable results set (<code>TYPE_SCROLL_INSENSITIVE</code> result set type) is implemented by fetching the complete result set to the client.
 Scrolling happens in memory on the client.
@@ -3751,10 +3741,6 @@ This can have adverse effect on the system memory usage and performance when the
 <p>Starting with Firebird 5.0, server-side scrollable cursors are supported.
 Jaybird 5 introduced support for scrolling non-holdable result set when the connection property <code>scrollableCursor</code> is set to value <code>SERVER</code>, and the connection is a pure Java connection (not native or embedded).
 A future version may enable this behaviour by default.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect3">
@@ -3807,7 +3793,7 @@ It is not possible to tell the server to keep a result set open over commit unle
 This mode is global for the complete connection and is not suitable for holdability control on a statement level.
 Use of "commit retaining" mode is believed to have an undesired side effect for read-write transactions as it inhibits garbage collection.
 Because of these reasons "commit retaining" is not used in Jaybird during normal execution.
-Applications are able to commit the transaction keeping the result sets open by executing a &#8220;COMMIT RETAIN&#8221; SQL statement.</p>
+Applications can commit the transaction keeping the result sets open by executing a &#8220;COMMIT RETAIN&#8221; SQL statement.</p>
 </div>
 <div class="paragraph">
 <p>To support holdable result sets, Jaybird will upgrade the result set to <code>TYPE_SCROLL_INSENSITIVE</code> to cache all rows locally, even if you asked for a <code>TYPE_FORWARD_ONLY</code>
@@ -4074,8 +4060,8 @@ Alternatively, you can use an external table to store the audit log.</p>
 <div class="paragraph">
 <p>When a connection uses explicit transaction control, each transaction must be finished by calling the <code>commit()</code> or <code>rollback()</code> methods of the <code>Connection</code> object before the connection is closed.
 If a transaction was not finished, but the <code>close</code> method is called, the active transaction is rolled back automatically.
-This also happens when the transaction was not finished, the connection was not closed explicitly and that <code>Connection</code> object became eligible for garbage collection.
-<em class="until">Jaybird 5</em> In this case, the <code>close()</code> method is implicitly invoked by the class finalizer, which in turn rolls the transaction back.</p>
+This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that <code>Connection</code> object became eligible for garbage collection.
+<em class="until">Jaybird 5</em> In this case, the class finalizer implicitly invokes the <code>close()</code> method, which in turn rolls the transaction back.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -4142,23 +4128,12 @@ The point when statement execution is considered complete, is defined in the spe
 &#8212; JDBC 4.3 Specification
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em> In Jaybird 5 and earlier, in auto-commit mode a <code>TYPE_FORWARD_ONLY</code> result set was implicitly closed when <code>next()</code> returned false.
+<p><em class="until">Jaybird 6</em> In Jaybird 5 and earlier, in auto-commit mode, a <code>TYPE_FORWARD_ONLY</code> result set was implicitly closed when <code>next()</code> returned false.
 This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.</p>
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em> In auto-commit mode, a result set will now remain open until explicitly closed using <code>ResultSet.close()</code>, when any statement is executed, when the auto-commit mode is disabled, or by the close of the <code>Statement</code> or <code>Connection</code>.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.</p>
@@ -4341,20 +4316,9 @@ Connection connection = DriverManager.getConnection(
     props);</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>The property accepts the &#8220;short&#8221; names as shown, or the &#8220;long&#8221; names with the <code>isc_dpb_</code> prefix, as defined in <code>org.firebirdsql.jaybird.fb.constants.TpbItems</code> (Jaybird 5) or <code>org.firebirdsql.gds.ISCConstants</code> (older versions).
+<p>The property accepts the &#8220;short&#8221; names as shown, or the &#8220;long&#8221; names with the <code>isc_dpb_</code> prefix, as defined in <code>org.firebirdsql.jaybird.fb.constants.TpbItems</code> (Jaybird 5 and higher) or <code>org.firebirdsql.gds.ISCConstants</code> (older versions).
 For readability, we recommend using the &#8220;short&#8221; names.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>The overridden mapping is used for all transactions started within the database connection.
@@ -4457,21 +4421,10 @@ fbConnection.setTransactionParameters(tpb);</code></pre>
 <div class="paragraph">
 <p>The above presents an example of populating the TPB with custom parameters.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>The constants used in the examples in this chapter were introduced in Jaybird 5.
 Earlier versions have constants of the same name defined in <code>org.firebirdsql.gds.ISCConstants</code>, and similarly named constants in <code>org.firebirdsql.gds.TransactionParameterBuffer</code> (i.e. without <code>isc_tpb_</code> prefix and fully capitalized).
 Those older constants will be removed in Jaybird 6 in favour of <code>org.firebirdsql.jaybird.fb.constants.TpbItems</code>.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="sect3">
 <h4 id="_isolation_level"><a class="anchor" href="#_isolation_level"></a>6.6.1. Isolation level</h4>
@@ -5100,13 +5053,6 @@ This method also clears the path specified in the database property.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>All paths specified are paths specifications on the remote server.
 This has the following implications:</p>
@@ -5123,10 +5069,6 @@ This has the following implications:</p>
 </div>
 <div class="paragraph">
 <p>The <code>FBStreamingBackupManager</code> can be used to perform remote backup and restore, see <a href="#services-backup-and-restore-gbak-streaming">Gbak streaming backup and restore</a>.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>After specifying all the needed properties, the application developer can use <code>backupDatabase()</code>, <code>backupMetadata()</code> and <code>restoreDatabase()</code> methods to perform the backup and restore tasks.
@@ -5837,7 +5779,7 @@ After this operation database can be backed up and restored to a different place
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The presence of the checksum errors and subsequent use of <code>markCorruptedRecords()</code> method will mark all corrupted data as unused space.
+<p>The presence of checksum errors and subsequent use of <code>markCorruptedRecords()</code> method will mark all corrupted data as unused space.
 You have to perform a careful check after backup/restore cycle to assess the damage.</p>
 </div>
 </td>
@@ -6144,21 +6086,10 @@ Another thread checks the table periodically and notifies the application about 
 Such mechanism allows Firebird to keep the event notification table very small<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnotedef_18" title="View footnote.">18</a>]</sup>
 and to reduce the number of messages sent to the application.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>It is not possible to pass parameters with the event, e.g. an ID of the modified records.
 It is also not possible to encode such information in the event names, wildcards are not supported.
 For such cases, applications should maintain a change tracking table where the IDs of the modified records are stored and the event mechanism is used to tell the application that new records were added to the table.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect2">
@@ -6871,23 +6802,23 @@ the auto-commit barrier will not make new committed changes visible.</p>
 <p>This option is enabled by specifying the connection property <code>useFirebirdAutocommit=true</code>.</p>
 </div>
 <div class="paragraph">
-<p>With this option, Jaybird will configure the transaction to use <code>isc_tpb_autocommit</code> with <code>autoCommit=true</code>.
+<p>With this option, a connection in auto-commit mode will configure the transaction to use <code>isc_tpb_autocommit</code>.
 This means that Firebird server will internally commit the transaction after each statement completion.
-Jaybird itself will not commit until connection close (or switching to <code>autoCommit=false</code>).
-The exception is if the statement was of type <code>isc_info_sql_stmt_ddl</code>, in that case Jaybird will commit on statement success and rollback on statement failure (just like it does for all statements in normal auto commit mode).
+Jaybird itself will not commit until connection close (or disabling auto-commit).
+The exception is if the statement was of type <code>isc_info_sql_stmt_ddl</code>, in that case Jaybird will commit on statement success and rollback on statement failure (just like it does for all statements in normal auto-commit mode).
 The reason is that Firebird for some DDL commands only executes at a real commit boundary and relying on the Firebird auto-commit is insufficient.</p>
 </div>
 <div class="paragraph">
 <p>On statement completion (as specified in JDBC), result sets will still close unless they are holdable over commit.
-The result set is only closed client side, which means that the cursor remains open server side to prevent roundtrips.
-This may lead to additional resource usage server side unless explicitly closed in the code.
+The result set is only closed client-side, which means that the cursor remains open server-side to prevent roundtrips.
+This may lead to additional resource usage server-side unless explicitly closed in the code.
 Note that any open blobs will be closed client- and server-side (until this is improved with <a href="https://github.com/FirebirdSQL/jaybird/issues/442" target="_blank" rel="noopener">jaybird#442</a>).</p>
 </div>
 <div class="paragraph">
 <p>A connection can be interrogated using <code>FirebirdConnection.isUseFirebirdAutocommit()</code> if it uses <code>isc_tpb_autocommit</code>.</p>
 </div>
 <div class="paragraph">
-<p>If you manually add <code>isc_tpb_autocommit</code> to the transaction parameter buffer and you enable this option, the <code>isc_tpb_autocommit</code> will be removed from the TPB if <code>autoCommit=false</code>.</p>
+<p>If you manually add <code>isc_tpb_autocommit</code> to the transaction parameter buffer, and you enable this option, the <code>isc_tpb_autocommit</code> will be removed from the TPB on <code>setAutoCommit(false)</code>.</p>
 </div>
 <div class="paragraph">
 <p>Artificial testing with repeated inserts (using a prepared statement) against a Firebird server on localhost shows that this leads to a reduction of execution time of +/- 7%.</p>
@@ -7530,13 +7461,6 @@ If you previously relied on absence of ANTLR to disable generated keys support, 
 <div class="paragraph">
 <p>This functionality is available for <code>INSERT</code>, <code>UPDATE</code>, <code>UPDATE OR INSERT</code> and <code>DELETE</code>, and for <code>MERGE</code> (<em class="since">Firebird 3.0</em>).</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>Generated keys retrieval modifies the statement to add a <code>RETURNING</code>-clause.
 Firebird 4.0 and earlier only support <code>RETURNING</code> for DML operations that affect a single row.
@@ -7545,10 +7469,6 @@ Attempting to use generated keys retrieval with a statement that affects multipl
 <div class="paragraph">
 <p><em class="since">Jaybird 5/Firebird 5.0</em> Support for multi-row <code>RETURNING</code> is introduced in Firebird 5.0.
 Support for multi-row <code>RETURNING</code> is available in Jaybird 5.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>The examples in this section use the following (Firebird 3.0) table:</p>
@@ -7733,7 +7653,7 @@ This makes sense if you consider that once prepared, the statement can be reused
 In Jaybird 4, this behaviour has changed and instead will throw an exception with message <em>"Generated keys array columnIndexes was empty or null. A non-empty array is required."</em></p>
 </div>
 <div class="paragraph">
-<p>In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even though we don&#8217;t have sixth column.
+<p>In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even if there is no sixth column.
 In Jaybird 4, this behavior has changed and instead will throw an exception with message <em>"Generated keys column position &lt;position&gt; does not exist for table &lt;tablename&gt;. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values."</em></p>
 </div>
 </td>
@@ -8448,6 +8368,17 @@ To enable logging to the console, you can set system property <code>org.firebird
 </div>
 <div class="sect3">
 <h4 id="ref-logging-custom"><a class="anchor" href="#ref-logging-custom"></a>11.1.5. Custom logging implementation</h4>
+<div class="sect4">
+<h5 id="ref-logging-custom-after-6"><a class="anchor" href="#ref-logging-custom-after-6"></a>Custom logging in Jaybird 6 and higher</h5>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em> If you need a custom logger implementation under Jaybird 6 or higher, you will need to provide an implementation of <code>java.lang.System.Logger</code> and <code>java.lang.System.LoggerFinder</code> and a service loader definition.</p>
+</div>
+<div class="paragraph">
+<p>Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the <code>log4j-jpl</code> dependency).</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="ref-logging-custom-before-6"><a class="anchor" href="#ref-logging-custom-before-6"></a>Custom logging in Jaybird 5 and earlier</h5>
 <div class="paragraph">
 <p><em class="until">Jaybird 6</em></p>
 </div>
@@ -8485,22 +8416,6 @@ public class CustomLogger implements org.firebirdsql.logging.Logger {
 <pre>-Dorg.firebirdsql.jdbc.loggerImplementation=org.example.jaybird.logging.CustomLogger</pre>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><em class="since">Jaybird 6</em> If you need a custom logger implementation under Jaybird 6, you will need to provide an implementation of <code>java.lang.System.Logger</code> and <code>java.lang.System.LoggerFinder</code> and a service loader definition.</p>
-</div>
-<div class="paragraph">
-<p>Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the <code>log4j-jpl</code> dependency).</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -13455,7 +13370,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-09 12:24:56 UTC
+Last updated 2024-08-15 15:41:44 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
