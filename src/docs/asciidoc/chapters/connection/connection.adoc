@@ -459,7 +459,7 @@ jdbc:firebird:native:employee
 ===== Maven dependency for native client
 
 When using Jaybird 3 and later, you can use a library to provide the Firebird client library for the `native` and `local` protocol.
-For Windows and Linux, you can add the `org.firebirdsql.jdbc:fbclient` dependency on your classpath.
+For Windows, Linux, and macOS, you can add the `org.firebirdsql.jdbc:fbclient` dependency on your classpath.
 This dependency does not support the `embedded` protocol.
 
 [source,xml,subs="verbatim,attributes"]
