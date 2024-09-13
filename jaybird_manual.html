@@ -1516,13 +1516,31 @@ For Windows, Linux, and macOS, you can add the <code>org.firebirdsql.jdbc:fbclie
 This dependency does not support the <code>embedded</code> protocol.</p>
 </div>
 <div class="listingblock">
+<div class="title">Native libraries for all supported OS and architectures</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
-    &lt;version&gt;5.0.1.0&lt;/artifactId&gt;
+    &lt;version&gt;5.0.1.1&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Since version 5.0.1.1, you can also specify the desired OS, or OS and architecture using the <code>classifier</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Only native libraries for Linux (all supported architectures)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+    &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
+    &lt;version&gt;5.0.1.1&lt;/artifactId&gt;
+    &lt;classifier&gt;linux&lt;/classifier&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://github.com/mrotteveel/jaybird-fbclient#os-specific-packages">mrotteveel/jaybird-fbclient</a> for the available classifiers.</p>
 </div>
 <div class="paragraph">
 <p>You can also download the library (see <a href="https://github.com/mrotteveel/jaybird-fbclient#download">mrotteveel/jaybird-fbclient</a> for download link) and add it your classpath.</p>
@@ -13370,7 +13388,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-09-13 10:43:17 UTC
+Last updated 2024-09-13 12:11:24 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
