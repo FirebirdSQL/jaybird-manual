@@ -1,6 +1,6 @@
 plugins {
-    id 'org.asciidoctor.jvm.convert' version '4.0.2'
-    id 'org.asciidoctor.jvm.pdf' version '4.0.2'
+    id 'org.asciidoctor.jvm.convert' version '4.0.3'
+    id 'org.asciidoctor.jvm.pdf' version '4.0.3'
 }
 
 defaultTasks 'clean', 'asciidoctor'
@@ -10,10 +10,11 @@ repositories {
 }
 
 asciidoctorj {
-    version = '2.5.11'
+    // asciidoctorj 3.0.0 doesn't seem to work with asciidoctor-gradle-plugin 4.0.3
+    version = '2.5.13'
     modules {
         pdf {
-            version '2.3.10'
+            version '2.3.18'
         }
     }
     docExtensions file('doc-extension.groovy')
