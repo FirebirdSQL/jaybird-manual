@@ -26,6 +26,7 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird-template-version: {jaybird5-template-version}
 :jna-version: 5.14.0
 :min-support-firebird: 2.5
+:fb-canonical-html: https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
 :is-snapshot:
 
 ifdef::is-snapshot[]
