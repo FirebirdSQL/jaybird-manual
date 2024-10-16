@@ -780,7 +780,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>5.0.5.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
+Version: <code>5.0.6.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -790,19 +790,19 @@ Version: <code>5.0.5.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.5.java11&lt;/version&gt;
+  &lt;version&gt;5.0.6.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you want to use Type 2 support (native or embedded), you need to explicitly include JNA 5.14.0 as a dependency:</p>
+<p>If you want to use Type 2 support (native or embedded), you need to explicitly include JNA 5.15.0 as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
   &lt;artifactId&gt;jna&lt;/artifactId&gt;
-  &lt;version&gt;5.14.0&lt;/version&gt;
+  &lt;version&gt;5.15.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1452,7 +1452,7 @@ The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 5.14.0 needs to be on the classpath.</p>
+<p>In addition to Jaybird, this requires a native Firebird client library, and JNA 5.15.0 needs to be on the classpath.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -12074,7 +12074,7 @@ With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 8, 11, 17, 21, and 22.</p>
+Currently, that means we support Java 8, 11, 17, 21, and 23.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -12176,7 +12176,7 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <h4 id="jb5-distribution"><a class="anchor" href="#jb5-distribution"></a>F.1.4. Distribution</h4>
 <div class="paragraph">
 <p>Jaybird has no required runtime dependencies.
-For native or embedded connections, JNA 5.14.0 needs to be on the class path.</p>
+For native or embedded connections, JNA 5.15.0 needs to be on the class path.</p>
 </div>
 <div class="sect4">
 <h5 id="jb5-distribution-package"><a class="anchor" href="#jb5-distribution-package"></a>Distribution package</h5>
@@ -12199,12 +12199,12 @@ For native or embedded connections, JNA 5.14.0 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.5.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.6.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-5.14.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-5.15.0.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, or embedded protocols</p></td>
 </tr>
 </tbody>
@@ -12241,7 +12241,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.5.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.6.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -12254,7 +12254,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.5.java11&lt;/version&gt;
+  &lt;version&gt;5.0.6.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -12266,7 +12266,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
   &lt;artifactId&gt;jna&lt;/artifactId&gt;
-  &lt;version&gt;5.14.0&lt;/version&gt;
+  &lt;version&gt;5.15.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13389,7 +13389,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-10-13 11:10:43 UTC
+Last updated 2024-10-16 14:41:24 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
