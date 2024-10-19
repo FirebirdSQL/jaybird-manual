@@ -701,12 +701,9 @@ NFS shares.], which can be used as a primary database if the main
 database server crashes. Shadows can be defined using `CREATE SHADOW`
 SQL command and are characterized by a _mode_ parameter:
 
-* in the AUTO mode database continues operating even if shadow becomes
-unavailable (disk or file system failure, remote node is not accessible,
-etc.)
-* in the MANUAL mode all database operations are halted until the
-problem is fixed. Usually it means that DBA has to kill the unavailable
-shadow and define a new one.
+* in `AUTO` mode, the database continues operating even if the shadow becomes unavailable (disk or file system failure, remote node is not accessible, etc.)
+* in `MANUAL` mode all database operations are halted until the problem is fixed.
+Usually this means that the DBA has to kill the unavailable shadow and define a new one.
 
 The `MaintenanceManager` provides a `killUnavailableShadows()` method to
 kill the unavailable shadows. This is equivalent to the `gfix -kill`
@@ -722,18 +719,18 @@ which the management class is connected.
 
 ==== Database validation and repair
 
-The Firebird server does its best to keep the database file in a consistent form.
-This is achieved by a special algorithm called _careful writes_, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
-Unfortunately, it is still possible that under certain conditions, e.g. crash of the file system or hardware failure, the database file might become corrupted.
+The Firebird server does its best to keep the database file in a consistent state.
+This is achieved by an algorithm called _careful writes_, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
+Unfortunately, it is still possible that under certain conditions, e.g. a crash of the file system or hardware failure, the database file becomes corrupted.
 Firebird server can detect such cases including
 
 * Orphan pages.
 These are database pages that were allocated for subsequent write, but due to a crash were not used.
-Such pages have to be marked as unused to return storage space back to the application;
+Such pages have to be marked as unused, so the server can use them again;
 * Corrupted pages.
 These are database pages that were corrupted/damaged by operating system or hardware failures.
 
-The `MaintenanceManager` class provides a `validateDatabase()` method to perform simple health check of the database, and releasing the orphan pages if needed.
+The `MaintenanceManager` class provides a `validateDatabase()` method to perform a simple health check of the database, releasing orphan pages if needed.
 It also reports presence of the checksum errors.
 The output of the routine is written to the output stream configured in the `logger` property.
 
@@ -768,20 +765,21 @@ After this operation database can be backed up and restored to a different place
 [CAUTION]
 ====
 The presence of checksum errors and subsequent use of `markCorruptedRecords()` method will mark all corrupted data as unused space.
-You have to perform a careful check after backup/restore cycle to assess the damage.
+You have to perform a careful check after a backup and restore cycle to assess the damage.
 ====
 
 ==== Limbo transactions
 
-Limbo transactions are transactions that were prepared for commit but were never committed.
-This can happen when, for example, the database was accessed by JTA-enabled applications from Javafootnote:[
+Limbo transactions -- or in-limbo transactions -- are transactions that were prepared for commit but were never committed or rolled back;
+or in other words, an incomplete two-phase commit.
+This can happen, for example, with a database used by JTA-enabled applications from Javafootnote:[
 Another reason for limbo transactions are multi-database transactions which can be initiated via the native Firebird API.
 However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.].
-The in-limbo transactions affect the normal database operation, since the records that were modified in that transactions are not available, Firebird does not know whether the new version will be committed or rolled back and blocks access to them.
-Also, in-limbo transactions prevent garbage collection, since the garbage collector does not know whether it can discard the record versions of the in-limbo transaction.
+A limbo transactions affects the normal database operation, since the records that were modified in that transactions are not available, as Firebird does not know whether the new version will be committed or rolled back and blocks access to them.
+Also, limbo transactions prevent garbage collection, since the garbage collector does not know whether it can discard the record versions of the limbo transaction.
 
-Jaybird contains functionality to allow the JTA-enabled transaction coordinator to recover the in-limbo transactions and either commit them or perform a rollback.
-For the cases when this is not possible, `MaintenanceManager` provides the following methods to perform this in interactive mode:
+Jaybird contains functionality to allow the JTA-enabled transaction coordinator to recover the limbo transactions and either commit them or perform a rollback.
+For cases where this is not possible, `MaintenanceManager` provides the following methods to perform this in interactive mode:
 
 [cols="1m,2",options="header",]
 |===
@@ -814,11 +812,11 @@ Another type are transactions are those that were finished by "`rollback`" and t
 Such transactions are marked as "rollback" transactions on the Transaction Inventory Page and this prevents advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
 On each access to the records, Firebird has to check all the record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
 To solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes the changes made by the rolled back transactions and moves forward the OIT.footnote:[
-For more information please read article by Ann Harrison "`Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep`", available, for example, at https://www.ibphoenix.com/resources/documents/design/doc_21]
+For more information please read the following article by Ann Harrison, https://web.archive.org/web/20231004130607/https://www.ibphoenix.com/resources/documents/design/doc_21["`Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep`"^]]
 
 The sweep process is controlled by a threshold parameter, a difference between the Next Transaction and OIT, by default it is set to 20,000.
 While this value is OK for the average database, a DBA can decide to increase or decrease the number to fit the database usage scenario.
-Alternatively, a DBA can trigger the sweep process manually, regardless of the current difference between Next Transaction and OIT.
+Alternatively, a DBA can trigger the sweep process manually, regardless of the current difference between Next Transaction and OIT, for example during a maintenance window or hours with low load on the server.
 
 The `MaintenanceManager` provides following methods to help with database sweeping:
 
@@ -854,7 +852,7 @@ Please note, only read-only databases can be placed on read-only media, read-wri
 
 |setDatabaseDialect(int)
 |Change the database SQL dialect.
-The allowed values can be either 1 or 3.
+Allowed values are 1 (deprecated) and 3.
 
 |setDefaultCacheBuffer(int)
 |Change the number of database pages to cache.
@@ -872,9 +870,10 @@ However, in case of OS or hardware crashes, the database might get corrupted.
 a|Set the page fill factor.
 
 Firebird leaves 20% of free space on each database page for future record versions.
-It is possible to tell Firebird not to reserve the space, this makes sense for read-only databases, since more data fit the page, which increases performance.
+It is possible to tell Firebird not to reserve the space.
+This makes sense for read-only databases, since more data fit the page, which increases performance.
 
-Possible values are:
+Allowed values are:
 
 * `PAGE_FILL_FULL` -- do not reserve additional space for future versions;
 * `PAGE_FILL_RESERVE` -- reserve the free space for future record versions.

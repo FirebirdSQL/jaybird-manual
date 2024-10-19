@@ -49,11 +49,9 @@ The JCA layer is an implementation of the Java Connector Architecture specificat
 * [.since]_Jaybird 5_ The XCA layer is a replacement of the JCA layer of previous versions.
 * The JDBC layer is an implementation of the JDBC specification.
 
-In addition, the Services API allows you to manage the database and the server 
-itself. The Manager component represents a JMX compatible implementation
-that utilizes the Services API. Currently only calls to create and drop database 
-are available in the Manager component, other class provide features for database 
-backup/restore, user management, statistics gathering, etc.
+In addition, the Services API allows you to manage the database and the server itself.
+The manager component represents a JMX compatible implementation that utilizes the Services API.
+Currently, only calls to create and drop database are available in the Manager component, other classes provide features for database backup/restore, user management, statistics gathering, etc.
 
 [[distribution]]
 === Jaybird Distribution
@@ -107,20 +105,24 @@ The Jaybird team uses JUnit test cases to assure the quality of the released dri
 During development unit tests are extensively used. 
 Committing a code change to the source control is not allowed until it passes all existing unit tests. 
 Each reproducible bug usually gets its own test case. 
-This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs. 
-Currently there are more than 9000 test cases covering most of the driver code.
+This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.
+
+Currently, there are more than 9000 test cases covering most of the driver code.
+A subset of the tests are automatically run -- through a GitHub Action -- for each push to the repository.
 
 === Useful resources
 
 ==== JDBC
 
-For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[^].
+For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[Java SE Technologies - Database^].
+
+For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.3).
 
 ==== Firebird
 
-General information about the Firebird database is available from the Firebird website (https://www.firebirdsql.org/[^]).
+General information about the Firebird database is available from the Firebird website (https://firebirdsql.org/[^]).
 
-For information about using SQL in Firebird, see the https://www.firebirdsql.org/file/documentation/html/en/refdocs/fblangref40/firebird-40-language-reference.html[Firebird 4.0 Language Reference^] and other documents available from the https://www.firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird website.
+For information about using SQL in Firebird, see the https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html[Firebird 5.0 Language Reference^] and other documents available from the https://firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird website.
 
 ==== Jaybird Support
 
@@ -130,7 +132,7 @@ Support for Jaybird is available through the following channels:
 +
 You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account).
 Alternatively, you can join the group at https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
-* On https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html[Jaybird Frequently Asked Questions^].
+* On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^].
 * On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
 * On https://stackoverflow.com/[Stack Overflow^], please tag your questions with
 *jaybird* and *firebird*
@@ -142,11 +144,11 @@ see https://stackoverflow.com/tour[Stack Overflow Tour^] and https://stackoverfl
 
 There are several ways you can contribute to Jaybird or Firebird in general:
 
-* Participate on the mailing lists (see https://www.firebirdsql.org/en/mailing-lists/[^])
+* Participate on the mailing lists (see https://firebirdsql.org/en/mailing-lists/[^])
 * Report bugs or submit patches on the tracker (see <<intro-reporting-bugs>>)
 * Create pull requests on GitHub (https://github.com/FirebirdSQL/jaybird[^])
 * Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use the https://groups.google.com/g/firebird-devel[firebird-devel Google Group^])
-* Become a paying member or sponsor of the Firebird Foundation (see https://www.firebirdsql.org/en/firebird-foundation/[^])
+* Become a paying member or sponsor of the Firebird Foundation (see https://firebirdsql.org/en/firebird-foundation/[^])
 
 [[intro-reporting-bugs]]
 ==== Reporting Bugs
@@ -157,8 +159,8 @@ List members may be able to help out to determine if it is an actual bug, provid
 
 You can report bugs in the https://github.com/FirebirdSQL/jaybird/issues[Jaybird bug tracker^] on GitHub.
 
-When reporting bugs, please provide a minimal, but complete reproduction, including databases and 
-source code to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is 
-against a recent master version of the code. You can also fork the jaybird repository and create pull 
-requests.
+When reporting bugs, please provide a minimal, but complete reproduction, including databases and source code to reproduce the problem.
+Patches or pull requests to fix bugs are also appreciated.
+Make sure the patch is against a recent master version of the code.
+You can also fork the https://github.com/FirebirdSQL/jaybird[jaybird repository^] and create pull requests.
 

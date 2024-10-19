@@ -46,7 +46,7 @@ These issues were addressed in Firebird 2.0 and at the moment nothing prevents d
 A developer must ensure two things to enable use of Unicode characters in the database and the application:
 
 . The database objects must be defined with the `UTF8` character set;
-this can be done by either creating database with default `UTF8` character set or by adding `CHARACTER SET UTF8` clause to the column or domain definitions.
+this can be done by either creating the database with a default character set of `UTF8`, or by adding the `CHARACTER SET UTF8` clause to column or domain definitions.
 . The `encoding` connection property in the JDBC driver has to be set to `UTF8`;
 this can be done in several ways: the easiest one is to add the appropriate parameter to the JDBC URL (see the first example), another possibility is to use appropriate method of the `DriverManager` class (see the second example).
 Applications that use `DataSource` interface to obtain the database connections also have access to the
@@ -77,10 +77,10 @@ There are a few limitations related to using the `UTF8` character set:
 
 * It is not possible to create Unicode columns longer than 8191 Unicode characters;
 this limitation is caused by the fact that the longest possible `VARCHAR` column can occupy 32765 bytes (32767 for `CHAR` columns) and a single `UTF8` character can occupy up to four bytes.
-* It is not possible to index Unicode columns longer than 1023 characters -- or 2047 characters in Firebird 4.0 with a page size of 32 kilobytes;
-this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which has a maximum of 16k ([.since]_Firebird 4.0_ 32k) and the before mentioned fact that each `UTF8` character can occupy up to four bytes.
+* It is not possible to index Unicode columns longer than 2047 characters -- this requires a page size of 32 kilobytes;
+this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which has a maximum of 32k and the fact that each `UTF8` character can occupy up to four bytes.
 
-It should be mentioned that using Unicode character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
+Using the `UTF8` character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
 This mainly applies to the cases when non-latin characters are stored in the database, as those characters will require two or more bytes, which in turn might cause additional roundtrips to the server to fetch data.
 
 ==== The NONE character set
@@ -91,7 +91,7 @@ When the `NONE` character set is used, Jaybird does not know how to interpret th
 The only choice that is left to Jaybird is to construct a string using the default character set of the JVM, which usually matches the regional settings of the operating system and can be accessed from within the JVM through the `file.encoding` system property.
 
 With connection character set `NONE`, Jaybird uses the explicit character set of `CHAR`, `VARCHAR` and `BLOB SUB_TYPE TEXT` columns for the conversion.
-This addresses most of the problems described in this paragraph, except for columns without an explicit character set (i.e. their character set is `NONE`).
+This addresses most of the problems described in this section, except for columns without an explicit character set (i.e. their character set is `NONE`).
 
 It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
 One application running on the computer with, for example, Russian regional settings saves the Russian text (the default character set of the JVM is Cp1251) and another application running on computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
@@ -99,9 +99,9 @@ However, when all client applications run on the same OS with the same regional 
 
 On Linux and other Unix platforms, it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").
 
-Therefore, application should use `NONE` character encoding as an encoding for a database and a connection only when at least one of the following is met:
+Therefore, an application should only use `NONE` character encoding as an encoding for a database and a connection when at least one of the following is met:
 
-* Database will contain only ASCII characters,
+* The database will contain only ASCII characters,
 * It is guaranteed that all Java Virtual Machines accessing the database will have the same default encoding that can correctly handle all characters stored in the database,
 * All columns have an explicit character set.
 When columns have an explicit character set (other than `NONE`) and connection character set `NONE` is used, Firebird will send an identifier of the character set of each column, and Jaybird will use that character set for the conversion.

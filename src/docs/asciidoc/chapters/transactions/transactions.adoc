@@ -150,8 +150,8 @@ In general, this makes little sense for Firebird, because of its multi-generatio
 However, in some cases it can be useful.
 
 It is not allowed to connect with a read-write transaction to a database located on a read-only media, for example, a CD-ROM.
-The reason is that, to guarantee consistency of the read-write transactions, Firebird has to increase the transaction identifier when transaction ends, and to store the new value on the so-called Transaction Inventory Page even if no changes were made in that transaction.
-This requirement can be relaxed if transaction is declared read-only and the engine ensures that no data can be modified.
+The reason is that, to guarantee consistency of the read-write transactions, Firebird has to increase the transaction identifier when the transaction starts, and store the new value on the so-called Transaction Inventory Page even if no changes are made in that transaction.
+This requirement can be relaxed if a transaction is declared read-only and the engine ensures that no data can be modified.
 
 Another reason is that long-running read-write transactions inhibit the process of collecting garbage, i.e. a process of identifying previous versions of the database records that are no longer needed and releasing the occupied space for the new versions.
 Without garbage collection the database size will grow very fast and the speed of the database operations will decrease, because the database engine will have to check all available record versions to determine the appropriate one.
@@ -240,7 +240,7 @@ If the default mapping is overridden via the data source configuration, it will 
 === Savepoints
 
 Savepoints provide finer-grained control over transactions by providing intermediate steps within a larger transaction.
-Once a savepoint has been set, a transaction can be rollback to that point without affecting preceding work.
+Once a savepoint has been set, a transaction can be rolled back to that point without affecting preceding work.
 
 To set a savepoint, use the following code:
 
@@ -270,7 +270,7 @@ try (Statement stmt = connection.createStatement()) {
 Note, rolling back to the savepoint automatically releases and invalidates any savepoints that were created after the released savepoint.
 
 If the savepoint is no longer needed, you can use the `Connection.releaseSavepoint` method to release system resources.
-After releasing a savepoint it is no longer possible to roll back the current transaction to that savepoint.
+After releasing a savepoint, it is no longer possible to roll back the current transaction to that savepoint.
 Attempts to call the `rollback(Savepoint)` method will result in an `SQLException`.
 Savepoints that have been created within a transaction are automatically released when that transaction is committed or rolled back.
 
@@ -486,7 +486,7 @@ The lock conflict table depends on the isolation level of the transactions and h
 The Firebird syntax also defines a number of transaction management statements.
 In this section we discuss the `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION` statements, which have a hard transaction boundary (either ending or starting a transaction).
 
-In general, you should not execute these methods with Jaybird (or any other JDBC driver).
+In general, you should not execute these methods with Jaybird.
 The JDBC specification formally discourages use of statements or functionality which is accessible through the JDBC API:
 
 [quote,java.sql.Connection,JDBC API documentation]

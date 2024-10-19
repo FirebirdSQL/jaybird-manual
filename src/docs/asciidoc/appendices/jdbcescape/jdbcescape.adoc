@@ -333,7 +333,7 @@ Legend: X -- available in this mode.
 |The current local time as a time value
 
 |DAYNAME(date)
-|Xfootnote:[Always returns English full names (e.g. Sunday)]
+|Xfootnote:[Always returns English full names (e.g. "`Sunday`")]
 |{nbsp}
 |A character string representing the day component of `date`;
 the name for the day is specific to the data source
@@ -510,5 +510,6 @@ With explicit length, `CHARACTER SET OCTETS` is appended.
 * `(SQL_)LONGVARBINARY`, `(SQL_)BLOB` will be cast to `BLOB SUB_TYPE BINARY`
 * `(SQL_)TINYINT` is mapped to `SMALLINT`
 * `(SQL_)ROWID` is not supported as length of `DB_KEY` values depend on the context
-* `(SQL_)DECIMAL` and `(SQL_)NUMERIC` without precision and scale are passed as is, in current Firebird versions, this means the value will be equivalent to `DECIMAL(9,0)` (which is equivalent to `INTEGER`)
+* `(SQL_)DECIMAL` and `(SQL_)NUMERIC` without precision and scale are passed as is.
+In current Firebird versions, this means the value will be equivalent to `DECIMAL(9,0)`/`NUMERIC(9,0)`, which is equivalent to `INTEGER`.
 * Unsupported/unknown _SQLtype_ values (or invalid length or precision and scale) are passed as is to cast, resulting in an error from the Firebird engine if the resulting cast is invalid

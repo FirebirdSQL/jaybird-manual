@@ -6,20 +6,13 @@ directly affects the stability of the application. Correct handling of
 the error cases guarantees correct functioning of the client code as
 well as the database server. 
 
-All methods of the interfaces defined in the JDBC specification throw instances of
-`java.sql.SQLException` to notify about error conditions that happen
-during request processing. The `SQLException` is a checked exception,
-which forces Java programmers to either handle it with the try/catch
-clause or redeclare it in the method signature.
+All methods of the interfaces defined in the JDBC specification throw instances of `java.sql.SQLException` -- or a subclass -- to notify about error conditions that happen during request processing.
+`SQLException` is a checked exception, which forces Java programmers to either handle it with the try/catch clause or redeclare it in the method signature.
 
 === Working with exceptions
 
-Exception handling becomes even more important if we consider that
-this topic is either ignored or presented in incorrect form in most
-JDBC tutorials. The https://docs.oracle.com/javase/tutorial/jdbc/index.html[official JDBC tutorial from Oracle] 
-briefly mentions that exceptions should be handled by using try/catch blocks
-only at the end of the course, but neither reasons for doing this nor the
-best practices are presented.
+Exception handling becomes even more important if we consider that this topic is either ignored or presented in incorrect form in most JDBC tutorials.
+The https://docs.oracle.com/javase/tutorial/jdbc/index.html[official JDBC tutorial from Oracle^] briefly mentions that exceptions should be handled by using try/catch blocks only at the end of the course, but neither reasons for doing this nor the best practices are presented.
 
 There are good reasons to think about exception handling in your
 applications before you start coding. First of all, it is very hard to
@@ -34,7 +27,7 @@ By checking the error code which is sent with the exception, an application can 
 And last but not least, there is resource management.
 When an exception happens in a method, the execution flow of Java code differs from the normal flow, and only correctly coded application will ensure that all allocated resources will be released.
 The resources in our case are JDBC connections, statements, result sets, etc.
-All these objects not only take memory in the Java Virtual Machine of the application, but also consume memory on the server, which, worst case, can lead to an unintended Denial-of-Service attack, as the database server can no longer service requests.
+All these objects not only take memory in the Java Virtual Machine of the application, but also consume memory and possibly hold locks on the server, which, worst case, can lead to an unintended Denial-of-Service attack, as the database server can no longer service requests.
 
 A good exception handling strategy requires you do distinguish three
 kinds of error conditions:

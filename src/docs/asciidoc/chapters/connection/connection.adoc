@@ -6,7 +6,8 @@ Jaybird is a regular JDBC driver and supports two primary ways to obtain connect
 [[connection-drivermanager]]
 === Obtaining connection java.sql.DriverManager
 
-`java.sql.DriverManager` was the first connection factory in Java. It is based on the concept of the JDBC URL, a string that uniquely identifies the database to connect.
+`java.sql.DriverManager` is a database connection factory introduced with JDBC 1.
+It is based on the concept of the JDBC URL, a string that uniquely identifies the database to connect.
 The driver manager then checks which driver(s) -- if any -- can establish a connection.
 
 There is also support to specify additional connection parameters, like username and password.
@@ -19,14 +20,14 @@ jdbc:firebird://localhost:3050/c:/database/example.fdb
 
 * `jdbc` +
 JDBC protocol
-* `firebird` or `firebirdsql` +
+* `firebird` (also supported: `firebirdsql`) +
 JDBC subprotocol, identifies driver to use, in this case Jaybird
 * `//localhost:3050/c:/database/example.fdb` 
 +
 This is a database specific part, and identifies the database for the driver to connect, in the case of Jaybird that is `//<host>:<port>/<path to database>`
 
 The first part, `jdbc:firebird:` or `jdbc:firebirdsql:`, is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
-In other words, the type of connection that the application wants to obtain, in this example it is a connection to a Firebird database.
+In other words, it specifies the type of connection that the application wants to obtain, in this example, a connection to a Firebird database.
 
 An example of obtaining a connection is shown below.
 
@@ -40,14 +41,13 @@ import java.sql.*;
 public class HelloServer {
 
   public static void main(String[] args) throws Exception {
-  
     Class.forName("org.firebirdsql.jdbc.FBDriver"); // <1>
     
-    Connection connection = DriverManager.getConnection( 
-        "jdbc:firebird://localhost:3050/c:/db/employee.fdb",
-        "SYSDBA", "masterkey"); // <2>
-      
-    // do something here
+    try (Connection connection = DriverManager.getConnection(
+           "jdbc:firebird://localhost:3050/c:/db/employee.fdb",
+           "SYSDBA", "masterkey")) { // <2>
+      // use connection here
+    }
   }
 }
 ----
@@ -56,7 +56,7 @@ The first line of this code is important -- it tells Java to load the Jaybird JD
 As required by the JDBC specification, at this point driver registers itself with `java.sql.DriverManager`.
 
 Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.firebirdsql.jdbc.FBDriver")` is no longer necessary, except when the driver is not on the system class path.
-Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment.
+Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment (e.g. in `WEB-INF/lib` of the WAR).
 There, the driver is not on the system class path, so it will need to be loaded explicitly.
 
 We will leave out usages of `Class.forName` in further examples, they will work because of automatic driver loading.
@@ -78,8 +78,8 @@ The JDBC specification requires that during class initialization the driver regi
 ....
 Class.forName("org.firebirdsql.jdbc.FBDriver");
 ....
-3. The JDBC driver name is listed in the `jdbc.drivers` system property.
-Multiple drivers can be separated using a colon (`:`).
+3. The JDBC driver class name is listed in the `jdbc.drivers` system property.
+Multiple drivers can be separated using a colon ('```:```').
 +
 You can specify the value of this property during JVM startup:
 +
@@ -129,8 +129,7 @@ import java.util.*;
 public class HelloServerWithEncoding {
 
   public static void main(String[] args) throws Exception {
-    Properties props = new Properties();
-    
+    var props = new Properties();
     props.setProperty("user", "SYSDBA");
     props.setProperty("password", "masterkey");
     props.setProperty("encoding", "UTF8");
@@ -138,9 +137,7 @@ public class HelloServerWithEncoding {
     try (Connection connection = DriverManager.getConnection(
             "jdbc:firebird://localhost:3050/C:/db/employee.fdb",
             props)) {
-      
-        // do something here
-    
+        // use connection here
     }
   }
 }
@@ -149,10 +146,10 @@ public class HelloServerWithEncoding {
 The `user` and `password` properties are defined in JDBC. All other property names, like `encoding` here, are driver-specific.
 
 Additional properties, for example the SQL role for the connection can be added to the `props` object.
-The list of properties available in Jaybird can be found in <<Extended connection properties>>.
+The list of properties available in Jaybird can be found in <<connectionproperties>>.
 
-It is not always possible to use the above described method.
-Jaybird also provides a possibility to specify extended properties in the JDBC URL.
+It is not always possible to use the above described method to add properties.
+Jaybird also provides a possibility to specify connection properties in the JDBC URL.
 
 .Extended JDBC URL format
 ....
@@ -163,10 +160,8 @@ jdbc:firebird://host[:port]/<path to db>?<properties>
 
 The example below shows the specification for extended JDBC properties in the URL.
 
-In this case extended properties are passed together with the URL using the HTTP-like parameter passing scheme: first comes the main part of the URL, then `"?"`, then name-value pairs separated with `&` or `;`.
-This example is equivalent to the previous example.
-
-NOTE: Jaybird only supports URL encoding in Jaybird 4 and higher.
+In this case extended properties are passed together with the URL using the HTTP-like parameter passing scheme: first comes the main part of the URL, then '```?```', then name-value pairs separated with '```&```' or '```;```'.
+The following example is equivalent to the previous example.
 
 [source,java]
 .Specifying extended properties in the JDBC URL
@@ -184,20 +179,24 @@ Connection connection = DriverManager.getConnection(
 [[connection-drivermanager-props-urlencoding]]
 ===== URL encoding in query part of JDBC URL
 
+NOTE: Jaybird only supports URL encoding in Jaybird 4 and higher.
+
 UTF-8 URL encoded values (and keys) can be used in the query part of the JDBC URL.
 
-As a result of this change, the following previously unsupported characters can be used in a connection property value when escaped:
+This can be used to include otherwise unsupported characters in a connection property value:
 
 * `;` escaped as `%3B`
 * `&` escaped as `%26`
+* `{plus}` escaped as `%2B`
++
+A {plus} in the query part means _space_ (0x20), so occurrences of `{plus}` (_plus_) need to be escaped;
+make sure to do this for _base64_ encoded values of `dbCryptConfig`, or better yet use the _base64url_ encoding instead.
+* `%` escaped as `%25`.
++
+A `%` in the query part introduces an escape, so occurrences of `%` (_percent_) need to be escaped.
+* Optionally, a _space_ (0x20) can be escaped as {plus}
 
-In addition, the following characters must also be escaped:
-
-* `{plus}` in the query part now means _space_ (0x20), so occurrences of `{plus}` (_plus_) need to be escaped as `%2B`;
-make sure to do this for _base64_ encoded values of `dbCryptConfig` (or use the _base64url_ encoding instead)
-* `%` in the query part now introduces an escape, so occurrences of `%` (_percent_) need to be escaped as `%25`
-
-URL encoding can also be used to encode any unicode character in the query string.
+URL encoding can also be used to encode any Unicode codepoint in the query string.
 Jaybird will always use UTF-8 for decoding.
 
 Invalid URL encoded values will throw a `SQLNonTransientConnectionException`.
@@ -212,6 +211,15 @@ The interface `javax.sql.DataSource` defines a simple API for a factory of `java
 Data sources can be created and configured using code or bean introspection, looked up from JNDI, or injected by CDI or Spring.
 
 Jaybird itself provides one `javax.sql.DataSource` implementation, `org.firebirdsql.ds.FBSimpleDataSource`, which is a plain factory of connections, without connection pooling.
+
+[TIP]
+====
+If you need connection pooling, use a third-party connection pool library like https://brettwooldridge.github.io/HikariCP/[HikariCP^], https://commons.apache.org/proper/commons-dbcp/[DBCP^], or https://www.mchange.com/projects/c3p0/[c3p0^].
+Application servers, and for example Tomcat, also provide built-in connection pool support.
+Consult their documentation for more information.
+
+See also <<connection-pooling>>.
+====
 
 A simple example of creating a data source and obtaining a connection via a `DataSource` object is shown below.
 
@@ -237,7 +245,7 @@ public class HelloServerDataSource {
     ds.setDatabaseName("C:/database/employee.fdb");
 
     try (Connection connection = ds.getConnection()) {
-      // do something here...
+      // use connection here
     }
   }
 }
@@ -302,6 +310,8 @@ The `DataSource` implementation supports all connection properties available to 
 ====
 Manually binding to JNDI like shown above is uncommon.
 If you find yourself copying this code, rethink what you're doing.
+
+In fact, use of JNDI is extremely uncommon these days.
 ====
 
 [[driver-types]]
@@ -320,6 +330,7 @@ The `PURE_JAVA` type (JDBC Type 4) uses a pure Java implementation of the Firebi
 This type is recommended for connecting to a remote database server using TCP/IP sockets.
 No installation is required except adding the JDBC driver to the class path.
 This type of driver provides the best performance when connecting to a remote server.
+Some Jaybird features are only available in the pure Java implementation.
 
 To obtain a connection using the `PURE_JAVA` driver type you have to use a JDBC URL as shown in <<Obtaining connection java.sql.DriverManager>>.
 
@@ -343,9 +354,7 @@ If _portNumber_ is not specified, it defaults to `3050`.
 
 In theory, even `<database-coordinates>` and _databaseName_ are optional, but this requires specifying the database name using connection property `databaseName`, which is possible, but not recommended.
 
-When using `javax.sql.DataSource` implementation, you can specify either `"PURE_JAVA"` or `"TYPE4"` driver type, however this type is used by default.
-
-Some URL examples
+When using `javax.sql.DataSource` implementation, you can specify either `"PURE_JAVA"` or `"TYPE4"` driver type, however this type is already used by default.
 
 .Pure Java URL examples
 [listing]
@@ -403,7 +412,7 @@ The following JDBC URL syntax is supported:
 ----
 
 [.since]_Jaybird 5_ Since Jaybird 5, all URLs supported by fbclient can be used.
-The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support will be removed in Firebird 5).
+The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support has been removed in Firebird 5).
 
 When connecting to a local database server using the `LOCAL` driver, you should use following:
 
@@ -545,11 +554,11 @@ The following JDBC URL syntax is supported:
 [listing,subs=+quotes]
 ----
 <embedded-url> ::=
-  jdbc:firebird[sql]:embedded:_dbname-or-alias_
+  jdbc:firebird[sql]:embedded:__dbname-or-alias__
 ----
 
 In practice, the URL accepts the same `<fbclient-url>` values as described for `NATIVE`.
-That is, the embedded server acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").
+That is, the embedded server also acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").
 
 This driver tries to load `fbembed.dll/libfbembed.so` (the name used in Firebird 2.5 and earlier) and `fbclient.dll/libfbclient.so`.
 
@@ -570,7 +579,7 @@ This implies the same restrictions on the classloader that will load the Jaybird
 
 By default, the Firebird embedded library opens databases in exclusive mode.
 This means that this particular database is accessible only to one Java virtual machine.
-This can be changed by the `ServerMode` setting in `firebird.conf`.
+This can be changed with the `ServerMode` setting in `firebird.conf`.
 
 [[driver-ooremote]]
 ==== OOREMOTE type
@@ -608,7 +617,7 @@ Each time a connection is opened via `DriverManager`, a new physical connection 
 It is closed when the connection is closed.
 To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.
 
-Since Jaybird 3, Jaybird no longer provides a connection pool.
+Since Jaybird 3, Jaybird no longer provides its own connection pool implementation.
 If you need a `javax.sql.DataSource` implementation that provides a connection pool, either use the connection pool support of your application server, or consider using https://brettwooldridge.github.io/HikariCP/[HikariCP^], https://commons.apache.org/proper/commons-dbcp/[DBCP^], or https://www.mchange.com/projects/c3p0/[c3p0^].
 
 [[connection-pooling-hikaricp]]

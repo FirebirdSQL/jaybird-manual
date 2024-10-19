@@ -123,6 +123,8 @@ The following system properties control other global behaviour of Jaybird.
 
 `org.firebirdsql.jna.syncWrapNativeLibrary`::
 Set to true to add a synchronization proxy around the native client library.
++
+This can be used to address thread-safety issues with older client libraries (Firebird 2.1 and older, as far as we know).
 `org.firebirdsql.datatypeCoderCacheSize`::
 Integer value for the number of encoding specific data type coders cached (default and minimum is 1). 
 Setting to a higher value may improve performance, most common use case is connection character set `NONE` with a database that uses more than one character set for its columns. 

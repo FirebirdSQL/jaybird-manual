@@ -59,13 +59,15 @@ statements and returns the number of updated rows.
 If the specified statement is a query or otherwise produces a result set, an `SQLException` is thrown.
 * `Statement.execute(String)` -- executes a statement and returns `true` when the statement returned a result set, otherwise an update was executed and `false` is returned.
 You can use `Statement.getResultSet()` method to get the result of the executed query, or you can use `Statement.getUpdateCount()` when you have executed update statement.
++
+Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.
 
 These `execute` methods have several variants for additional features covered in the reference section <<ref-generatedkeys>>.
 
 A statement is closed by calling the `Statement.close()` method, or by using a try-with-resources which calls `close()` behind the scenes.
 After a close, the statement object is invalid and cannot be used anymore.
 
-It is allowed to use the same statement object to execute different types of queries one after another.
+It is allowed to use the same statement object to execute different types of queries, one after another.
 The code below contains a short example which first performs a select to find the ID of the user 'Joe Doe', and if the record is found, it enables his account.
 
 [WARNING]
@@ -105,7 +107,7 @@ try (Statement stmt = connection.createStatement();
 The way the code is constructed is quite tricky because of the result set lifetime constraints that are defined by the JDBC specification, please read the chapter <<resultsets>> for more details.
 
 However, here it is done intentionally to emphasize that a single object is used to execute `SELECT` and `UPDATE`/`INSERT` statements.
-It also shows how to check whether the executed statement modified expected number of rows -- the application first tries to update the account and only if no rows were updated, it inserts new record into the `accounts` table.
+It also shows how to check whether the executed statement modified the expected number of rows -- the application first tries to update the account and only if no rows were updated, it inserts new record into the `accounts` table.
 
 [TIP]
 ======
@@ -142,14 +144,16 @@ try (Statement stmt = connection.createStatement()) {
 }
 ----
 
-It is worth mentioning that according to the JDBC specification `getResultSet()` and `getUpdateCount()` methods can be only called once per result, and in case of using Firebird, that means once per executed statement, since Firebird does not support multiple results from a single statement.
-Calling the methods the second time will cause an exception.
+According to the JDBC specification, the `getResultSet()` and `getUpdateCount()` methods can be only called once per result.
+
+[.until]_Jaybird 5.0.5_ In Jaybird 5.0.4 and earlier, calling the `getResultset()` method a second time will throw an exception. +
+[.since]_Jaybird 5.0.5_ Since Jaybird 5.0.5, calling `getResultSet()` multiple times will return the same instance of `ResultSet` it returned from the first call to `getResultSet()` or from `executeQuery()`.
 
 // TODO May need some revision to address retrieval of update counts after the result set
 
 === Statement behind the scenes
 
-The previous examples requires us to discuss the statement object dynamics, its life cycle and how it affects other subsystems in details.
+The previous examples requires us to discuss the statement object dynamics, its lifecycle and how it affects other subsystems in details.
 
 ==== Statement dynamics
 
@@ -198,13 +202,13 @@ Jaybird could allocate a new statement handle, however the JDBC specification do
 
 Step 2 (compiling the SQL statement) in the previous section is probably the most important, and usually, most expensive part of the statement execution life cycle.
 
-When Firebird server receives the "prepare statement" call, it parses the SQL statement and converts it into the executable form: BLR.
-BLR, or Binary Language Representation, contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.
+When Firebird server receives a "prepare statement" call, it parses the SQL statement and converts it into the executable form: BLR, or Binary Language Representation.
+BLR contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.
 
 When a statement is prepared, it holds the references to all database object definitions that are used during that statement execution.
 This mechanism preserves the database schema consistency, it saves the statement objects from "surprises" like accessing a database table that has been removed by another application.
 
-However, holding a reference on the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
+However, holding references to the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
 In other words, if two application are running and one is trying to modify the table, view, procedure or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 "`object is in use`".
 
 To avoid this problem, it is strongly recommended to close the statement as soon as it is no longer needed.
@@ -225,7 +229,7 @@ An object that implements this interface represents a precompiled statement that
 If we use the execution flow described in the "<<Statement dynamics>>" section, it allows us to go directly to step 4 for repeated executions.
 
 However, executing the same statement with the same values makes little sense, unless we want to fill the table with the same data, which usually is not the case.
-Therefore, JDBC provides support for parametrized statements -- SQL statements where literals are replaced with question marks (`?`), so-called positional parameters.
+Therefore, JDBC provides support for parametrized statements -- SQL statements where literals are replaced with question marks ('```?```'), so-called positional parameters.
 The application then assigns values to the parameters before executing the statement.
 
 Our first example in this chapter can be rewritten as shown below.
@@ -514,7 +518,7 @@ The latter example additionally contains the OUT parameter in the call.
 We have used the `CallableStatement.registerOutParameter` method to tell the driver that the second parameter in our call is an OUT parameter of type INTEGER.
 Parameters that were not marked as OUT are considered by Jaybird as IN parameters.
 Finally, the `EXECUTE PROCEDURE factorial(?)` SQL statement is prepared and executed.
-After executing the procedure call we get the result from the appropriate getter method.
+After executing the procedure call, we get the result from the appropriate getter method.
 
 It is worth mentioning that the stored procedure call preparation happens in the `CallableStatement.execute` method, and not in the `prepareCall` method of the `Connection` object.
 Reason for this deviation from the specification is that Firebird does not allow to prepare a procedure without specifying parameters and set them only after the statement is prepared.
@@ -632,7 +636,7 @@ Firebird 3.0 and earlier did not provide support for such functionality, so Jayb
 ==== Batch Updates with java.sql.Statement interface
 
 The `Statement` interface defines three methods for batch updates: `addBatch`, `executeBatch` and `clearBatch`.
-It is allowed to add arbitrary `INSERT`/`UPDATE`/`DELETE` or DDL statement to the batch group.
+You can add arbitrary `INSERT`/`UPDATE`/`DELETE` or DDL statement to the batch group.
 Adding a statement that returns a result set is an error.
 
 [source,java]
@@ -800,7 +804,7 @@ where the outer join is specified as
 ....
 <outer join> ::=
     <table name> {LEFT|RIGHT|FULL} OUTER JOIN
-    {<table name> | <outer join>} ON >search condition>
+    {<table name> | <outer join>} ON <search condition>
 ....
 
 An example SQL statement would look like this:
@@ -817,7 +821,7 @@ The escaped syntax for stored procedures is described in details in section <<ca
 ==== LIKE Escaped Characters
 
 The percent sign ('```%```') and underscore ('```_```') characters are wild cards in the LIKE predicate of SQL.
-To interpret them literally they must be preceded by the backslash character ('```\```') that is called the escape character.
+To interpret them literally they must be escaped using the escape character.
 The escaped syntax for this case identifies which character is used as an escape character:
 
 ....
