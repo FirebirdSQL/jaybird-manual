@@ -753,11 +753,9 @@ Additionally, this layer adapts the GDS API and proxies the calls to the GDS imp
 </ul>
 </div>
 <div class="paragraph">
-<p>In addition, the Services API allows you to manage the database and the server
-itself. The Manager component represents a JMX compatible implementation
-that utilizes the Services API. Currently only calls to create and drop database
-are available in the Manager component, other class provide features for database
-backup/restore, user management, statistics gathering, etc.</p>
+<p>In addition, the Services API allows you to manage the database and the server itself.
+The manager component represents a JMX compatible implementation that utilizes the Services API.
+Currently, only calls to create and drop database are available in the Manager component, other classes provide features for database backup/restore, user management, statistics gathering, etc.</p>
 </div>
 </div>
 <div class="sect2">
@@ -822,8 +820,11 @@ In the future, a Maven dependency for Firebird embedded may become available as 
 During development unit tests are extensively used.
 Committing a code change to the source control is not allowed until it passes all existing unit tests.
 Each reproducible bug usually gets its own test case.
-This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.
-Currently there are more than 9000 test cases covering most of the driver code.</p>
+This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.</p>
+</div>
+<div class="paragraph">
+<p>Currently, there are more than 9000 test cases covering most of the driver code.
+A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub Action&#8201;&#8212;&#8201;for each push to the repository.</p>
 </div>
 </div>
 <div class="sect2">
@@ -831,16 +832,19 @@ Currently there are more than 9000 test cases covering most of the driver code.<
 <div class="sect3">
 <h4 id="_jdbc"><a class="anchor" href="#_jdbc"></a>1.6.1. JDBC</h4>
 <div class="paragraph">
-<p>For JDBC documentation, see <a href="https://www.oracle.com/java/technologies/javase/javase-tech-database.html" class="bare" target="_blank" rel="noopener">https://www.oracle.com/java/technologies/javase/javase-tech-database.html</a>.</p>
+<p>For JDBC documentation, see <a href="https://www.oracle.com/java/technologies/javase/javase-tech-database.html" target="_blank" rel="noopener">Java SE Technologies - Database</a>.</p>
+</div>
+<div class="paragraph">
+<p>For the JDBC specification, see <a href="https://jcp.org/en/jsr/detail?id=221" target="_blank" rel="noopener">JSR 221: JDBC<sup>TM</sup> 4.0 API Specification</a> (covers JDBC 4.0 - 4.3).</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_firebird"><a class="anchor" href="#_firebird"></a>1.6.2. Firebird</h4>
 <div class="paragraph">
-<p>General information about the Firebird database is available from the Firebird website (<a href="https://www.firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/</a>).</p>
+<p>General information about the Firebird database is available from the Firebird website (<a href="https://firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/</a>).</p>
 </div>
 <div class="paragraph">
-<p>For information about using SQL in Firebird, see the <a href="https://www.firebirdsql.org/file/documentation/html/en/refdocs/fblangref40/firebird-40-language-reference.html" target="_blank" rel="noopener">Firebird 4.0 Language Reference</a> and other documents available from the <a href="https://www.firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird website.</p>
+<p>For information about using SQL in Firebird, see the <a href="https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html" target="_blank" rel="noopener">Firebird 5.0 Language Reference</a> and other documents available from the <a href="https://firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird website.</p>
 </div>
 </div>
 <div class="sect3">
@@ -858,7 +862,7 @@ Alternatively, you can join the group at <a href="https://groups.google.com/g/fi
 </div>
 </li>
 <li>
-<p>On <a href="https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html" target="_blank" rel="noopener">Jaybird Frequently Asked Questions</a>.</p>
+<p>On <a href="https://firebirdsql.org/docs/drivers/java/faq.html" target="_blank" rel="noopener">Jaybird Frequently Asked Questions</a>.</p>
 </li>
 <li>
 <p>On <a href="https://github.com/FirebirdSQL/jaybird/wiki/" target="_blank" rel="noopener">Jaybird wiki</a>.</p>
@@ -883,7 +887,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 <div class="ulist">
 <ul>
 <li>
-<p>Participate on the mailing lists (see <a href="https://www.firebirdsql.org/en/mailing-lists/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/en/mailing-lists/</a>)</p>
+<p>Participate on the mailing lists (see <a href="https://firebirdsql.org/en/mailing-lists/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/mailing-lists/</a>)</p>
 </li>
 <li>
 <p>Report bugs or submit patches on the tracker (see <a href="#intro-reporting-bugs">Reporting Bugs</a>)</p>
@@ -895,7 +899,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 <p>Become a developer (for Jaybird contact us on <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a>, for Firebird in general, use the <a href="https://groups.google.com/g/firebird-devel" target="_blank" rel="noopener">firebird-devel Google Group</a>)</p>
 </li>
 <li>
-<p>Become a paying member or sponsor of the Firebird Foundation (see <a href="https://www.firebirdsql.org/en/firebird-foundation/" class="bare" target="_blank" rel="noopener">https://www.firebirdsql.org/en/firebird-foundation/</a>)</p>
+<p>Become a paying member or sponsor of the Firebird Foundation (see <a href="https://firebirdsql.org/en/firebird-foundation/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/firebird-foundation/</a>)</p>
 </li>
 </ul>
 </div>
@@ -910,10 +914,10 @@ List members may be able to help out to determine if it is an actual bug, provid
 <p>You can report bugs in the <a href="https://github.com/FirebirdSQL/jaybird/issues" target="_blank" rel="noopener">Jaybird bug tracker</a> on GitHub.</p>
 </div>
 <div class="paragraph">
-<p>When reporting bugs, please provide a minimal, but complete reproduction, including databases and
-source code to reproduce the problem. Patches to fix bugs are also appreciated. Make sure the patch is
-against a recent master version of the code. You can also fork the jaybird repository and create pull
-requests.</p>
+<p>When reporting bugs, please provide a minimal, but complete reproduction, including databases and source code to reproduce the problem.
+Patches or pull requests to fix bugs are also appreciated.
+Make sure the patch is against a recent master version of the code.
+You can also fork the <a href="https://github.com/FirebirdSQL/jaybird" target="_blank" rel="noopener">jaybird repository</a> and create pull requests.</p>
 </div>
 </div>
 </div>
@@ -929,7 +933,8 @@ requests.</p>
 <div class="sect2">
 <h3 id="connection-drivermanager"><a class="anchor" href="#connection-drivermanager"></a>2.1. Obtaining connection java.sql.DriverManager</h3>
 <div class="paragraph">
-<p><code>java.sql.DriverManager</code> was the first connection factory in Java. It is based on the concept of the JDBC URL, a string that uniquely identifies the database to connect.
+<p><code>java.sql.DriverManager</code> is a database connection factory introduced with JDBC 1.
+It is based on the concept of the JDBC URL, a string that uniquely identifies the database to connect.
 The driver manager then checks which driver(s)&#8201;&#8212;&#8201;if any&#8201;&#8212;&#8201;can establish a connection.</p>
 </div>
 <div class="paragraph">
@@ -950,7 +955,7 @@ The driver manager then checks which driver(s)&#8201;&#8212;&#8201;if any&#8201;
 JDBC protocol</p>
 </li>
 <li>
-<p><code>firebird</code> or <code>firebirdsql</code><br>
+<p><code>firebird</code> (also supported: <code>firebirdsql</code>)<br>
 JDBC subprotocol, identifies driver to use, in this case Jaybird</p>
 </li>
 <li>
@@ -963,7 +968,7 @@ JDBC subprotocol, identifies driver to use, in this case Jaybird</p>
 </div>
 <div class="paragraph">
 <p>The first part, <code>jdbc:firebird:</code> or <code>jdbc:firebirdsql:</code>, is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
-In other words, the type of connection that the application wants to obtain, in this example it is a connection to a Firebird database.</p>
+In other words, it specifies the type of connection that the application wants to obtain, in this example, a connection to a Firebird database.</p>
 </div>
 <div class="paragraph">
 <p>An example of obtaining a connection is shown below.</p>
@@ -978,14 +983,13 @@ import java.sql.*;
 public class HelloServer {
 
   public static void main(String[] args) throws Exception {
-
     Class.forName("org.firebirdsql.jdbc.FBDriver"); <i class="conum" data-value="1"></i><b>(1)</b>
 
-    Connection connection = DriverManager.getConnection(
-        "jdbc:firebird://localhost:3050/c:/db/employee.fdb",
-        "SYSDBA", "masterkey"); <i class="conum" data-value="2"></i><b>(2)</b>
-
-    // do something here
+    try (Connection connection = DriverManager.getConnection(
+           "jdbc:firebird://localhost:3050/c:/db/employee.fdb",
+           "SYSDBA", "masterkey")) { <i class="conum" data-value="2"></i><b>(2)</b>
+      // use connection here
+    }
   }
 }</code></pre>
 </div>
@@ -996,7 +1000,7 @@ As required by the JDBC specification, at this point driver registers itself wit
 </div>
 <div class="paragraph">
 <p>Since Java 6 (JDBC 4), explicitly loading the driver using <code>Class.forName("org.firebirdsql.jdbc.FBDriver")</code> is no longer necessary, except when the driver is not on the system class path.
-Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment.
+Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment (e.g. in <code>WEB-INF/lib</code> of the WAR).
 There, the driver is not on the system class path, so it will need to be loaded explicitly.</p>
 </div>
 <div class="paragraph">
@@ -1028,8 +1032,8 @@ This can be necessary because the driver <code>jar</code> is loaded dynamically,
 </div>
 </li>
 <li>
-<p>The JDBC driver name is listed in the <code>jdbc.drivers</code> system property.
-Multiple drivers can be separated using a colon (<code>:</code>).</p>
+<p>The JDBC driver class name is listed in the <code>jdbc.drivers</code> system property.
+Multiple drivers can be separated using a colon (&#8216;<code>:</code>&#8217;).</p>
 <div class="paragraph">
 <p>You can specify the value of this property during JVM startup:</p>
 </div>
@@ -1091,8 +1095,7 @@ import java.util.*;
 public class HelloServerWithEncoding {
 
   public static void main(String[] args) throws Exception {
-    Properties props = new Properties();
-
+    var props = new Properties();
     props.setProperty("user", "SYSDBA");
     props.setProperty("password", "masterkey");
     props.setProperty("encoding", "UTF8");
@@ -1100,9 +1103,7 @@ public class HelloServerWithEncoding {
     try (Connection connection = DriverManager.getConnection(
             "jdbc:firebird://localhost:3050/C:/db/employee.fdb",
             props)) {
-
-        // do something here
-
+        // use connection here
     }
   }
 }</code></pre>
@@ -1116,8 +1117,8 @@ public class HelloServerWithEncoding {
 The list of properties available in Jaybird can be found in <a href="#connectionproperties">Extended connection properties</a>.</p>
 </div>
 <div class="paragraph">
-<p>It is not always possible to use the above described method.
-Jaybird also provides a possibility to specify extended properties in the JDBC URL.</p>
+<p>It is not always possible to use the above described method to add properties.
+Jaybird also provides a possibility to specify connection properties in the JDBC URL.</p>
 </div>
 <div class="literalblock">
 <div class="title">Extended JDBC URL format</div>
@@ -1131,20 +1132,8 @@ Jaybird also provides a possibility to specify extended properties in the JDBC U
 <p>The example below shows the specification for extended JDBC properties in the URL.</p>
 </div>
 <div class="paragraph">
-<p>In this case extended properties are passed together with the URL using the HTTP-like parameter passing scheme: first comes the main part of the URL, then <code>"?"</code>, then name-value pairs separated with <code>&amp;</code> or <code>;</code>.
-This example is equivalent to the previous example.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Jaybird only supports URL encoding in Jaybird 4 and higher.
-</td>
-</tr>
-</table>
+<p>In this case extended properties are passed together with the URL using the HTTP-like parameter passing scheme: first comes the main part of the URL, then &#8216;<code>?</code>&#8217;, then name-value pairs separated with &#8216;<code>&amp;</code>&#8217; or &#8216;<code>;</code>&#8217;.
+The following example is equivalent to the previous example.</p>
 </div>
 <div class="listingblock">
 <div class="title">Specifying extended properties in the JDBC URL</div>
@@ -1161,11 +1150,23 @@ Connection connection = DriverManager.getConnection(
 </div>
 <div class="sect4">
 <h5 id="connection-drivermanager-props-urlencoding"><a class="anchor" href="#connection-drivermanager-props-urlencoding"></a>URL encoding in query part of JDBC URL</h5>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Jaybird only supports URL encoding in Jaybird 4 and higher.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>UTF-8 URL encoded values (and keys) can be used in the query part of the JDBC URL.</p>
 </div>
 <div class="paragraph">
-<p>As a result of this change, the following previously unsupported characters can be used in a connection property value when escaped:</p>
+<p>This can be used to include otherwise unsupported characters in a connection property value:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1175,24 +1176,26 @@ Connection connection = DriverManager.getConnection(
 <li>
 <p><code>&amp;</code> escaped as <code>%26</code></p>
 </li>
+<li>
+<p><code>&#43;</code> escaped as <code>%2B</code></p>
+<div class="paragraph">
+<p>A &#43; in the query part means <em>space</em> (0x20), so occurrences of <code>&#43;</code> (<em>plus</em>) need to be escaped;
+make sure to do this for <em>base64</em> encoded values of <code>dbCryptConfig</code>, or better yet use the <em>base64url</em> encoding instead.</p>
+</div>
+</li>
+<li>
+<p><code>%</code> escaped as <code>%25</code>.</p>
+<div class="paragraph">
+<p>A <code>%</code> in the query part introduces an escape, so occurrences of <code>%</code> (<em>percent</em>) need to be escaped.</p>
+</div>
+</li>
+<li>
+<p>Optionally, a <em>space</em> (0x20) can be escaped as &#43;</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
-<p>In addition, the following characters must also be escaped:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>&#43;</code> in the query part now means <em>space</em> (0x20), so occurrences of <code>&#43;</code> (<em>plus</em>) need to be escaped as <code>%2B</code>;
-make sure to do this for <em>base64</em> encoded values of <code>dbCryptConfig</code> (or use the <em>base64url</em> encoding instead)</p>
-</li>
-<li>
-<p><code>%</code> in the query part now introduces an escape, so occurrences of <code>%</code> (<em>percent</em>) need to be escaped as <code>%25</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>URL encoding can also be used to encode any unicode character in the query string.
+<p>URL encoding can also be used to encode any Unicode codepoint in the query string.
 Jaybird will always use UTF-8 for decoding.</p>
 </div>
 <div class="paragraph">
@@ -1212,6 +1215,25 @@ Data sources can be created and configured using code or bean introspection, loo
 </div>
 <div class="paragraph">
 <p>Jaybird itself provides one <code>javax.sql.DataSource</code> implementation, <code>org.firebirdsql.ds.FBSimpleDataSource</code>, which is a plain factory of connections, without connection pooling.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you need connection pooling, use a third-party connection pool library like <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>, <a href="https://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">DBCP</a>, or <a href="https://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>.
+Application servers, and for example Tomcat, also provide built-in connection pool support.
+Consult their documentation for more information.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#connection-pooling">Connection Pooling</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>A simple example of creating a data source and obtaining a connection via a <code>DataSource</code> object is shown below.</p>
@@ -1238,7 +1260,7 @@ public class HelloServerDataSource {
     ds.setDatabaseName("C:/database/employee.fdb");
 
     try (Connection connection = ds.getConnection()) {
-      // do something here...
+      // use connection here
     }
   }
 }</code></pre>
@@ -1313,6 +1335,9 @@ ctx.bind("jdbc/SomeDB", ds);</code></pre>
 <p>Manually binding to JNDI like shown above is uncommon.
 If you find yourself copying this code, rethink what you&#8217;re doing.</p>
 </div>
+<div class="paragraph">
+<p>In fact, use of JNDI is extremely uncommon these days.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -1336,7 +1361,8 @@ The type of the JDBC driver for the <code>javax.sql.DataSource</code> is configu
 <p>The <code>PURE_JAVA</code> type (JDBC Type 4) uses a pure Java implementation of the Firebird wire protocol.
 This type is recommended for connecting to a remote database server using TCP/IP sockets.
 No installation is required except adding the JDBC driver to the class path.
-This type of driver provides the best performance when connecting to a remote server.</p>
+This type of driver provides the best performance when connecting to a remote server.
+Some Jaybird features are only available in the pure Java implementation.</p>
 </div>
 <div class="paragraph">
 <p>To obtain a connection using the <code>PURE_JAVA</code> driver type you have to use a JDBC URL as shown in <a href="#connection-drivermanager">Obtaining connection java.sql.DriverManager</a>.</p>
@@ -1365,10 +1391,7 @@ If <em>portNumber</em> is not specified, it defaults to <code>3050</code>.</p>
 <p>In theory, even <code>&lt;database-coordinates&gt;</code> and <em>databaseName</em> are optional, but this requires specifying the database name using connection property <code>databaseName</code>, which is possible, but not recommended.</p>
 </div>
 <div class="paragraph">
-<p>When using <code>javax.sql.DataSource</code> implementation, you can specify either <code>"PURE_JAVA"</code> or <code>"TYPE4"</code> driver type, however this type is used by default.</p>
-</div>
-<div class="paragraph">
-<p>Some URL examples</p>
+<p>When using <code>javax.sql.DataSource</code> implementation, you can specify either <code>"PURE_JAVA"</code> or <code>"TYPE4"</code> driver type, however this type is already used by default.</p>
 </div>
 <div class="listingblock">
 <div class="title">Pure Java URL examples</div>
@@ -1441,7 +1464,7 @@ This is mostly due to the fact that TCP/IP stack is not involved in this mode.</
 </div>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em> Since Jaybird 5, all URLs supported by fbclient can be used.
-The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support will be removed in Firebird 5).</p>
+The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support has been removed in Firebird 5).</p>
 </div>
 <div class="paragraph">
 <p>When connecting to a local database server using the <code>LOCAL</code> driver, you should use following:</p>
@@ -1618,12 +1641,12 @@ This is the highest performance type of JDBC driver for accessing local database
 <div class="listingblock">
 <div class="content">
 <pre>&lt;embedded-url&gt; ::=
-  jdbc:firebird[sql]:embedded:_dbname-or-alias_</pre>
+  jdbc:firebird[sql]:embedded:<em>dbname-or-alias</em></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>In practice, the URL accepts the same <code>&lt;fbclient-url&gt;</code> values as described for <code>NATIVE</code>.
-That is, the embedded server acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").</p>
+That is, the embedded server also acts as client library (i.e. you get the same Type 2 behavior as you would get with using "native").</p>
 </div>
 <div class="paragraph">
 <p>This driver tries to load <code>fbembed.dll/libfbembed.so</code> (the name used in Firebird 2.5 and earlier) and <code>fbclient.dll/libfbclient.so</code>.</p>
@@ -1646,7 +1669,7 @@ This implies the same restrictions on the classloader that will load the Jaybird
 <div class="paragraph">
 <p>By default, the Firebird embedded library opens databases in exclusive mode.
 This means that this particular database is accessible only to one Java virtual machine.
-This can be changed by the <code>ServerMode</code> setting in <code>firebird.conf</code>.</p>
+This can be changed with the <code>ServerMode</code> setting in <code>firebird.conf</code>.</p>
 </div>
 </div>
 </div>
@@ -1711,7 +1734,7 @@ It is closed when the connection is closed.
 To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.</p>
 </div>
 <div class="paragraph">
-<p>Since Jaybird 3, Jaybird no longer provides a connection pool.
+<p>Since Jaybird 3, Jaybird no longer provides its own connection pool implementation.
 If you need a <code>javax.sql.DataSource</code> implementation that provides a connection pool, either use the connection pool support of your application server, or consider using <a href="https://brettwooldridge.github.io/HikariCP/" target="_blank" rel="noopener">HikariCP</a>, <a href="https://commons.apache.org/proper/commons-dbcp/" target="_blank" rel="noopener">DBCP</a>, or <a href="https://www.mchange.com/projects/c3p0/" target="_blank" rel="noopener">c3p0</a>.</p>
 </div>
 <div class="sect3">
@@ -1896,21 +1919,14 @@ the error cases guarantees correct functioning of the client code as
 well as the database server.</p>
 </div>
 <div class="paragraph">
-<p>All methods of the interfaces defined in the JDBC specification throw instances of
-<code>java.sql.SQLException</code> to notify about error conditions that happen
-during request processing. The <code>SQLException</code> is a checked exception,
-which forces Java programmers to either handle it with the try/catch
-clause or redeclare it in the method signature.</p>
+<p>All methods of the interfaces defined in the JDBC specification throw instances of <code>java.sql.SQLException</code>&#8201;&#8212;&#8201;or a subclass&#8201;&#8212;&#8201;to notify about error conditions that happen during request processing.
+<code>SQLException</code> is a checked exception, which forces Java programmers to either handle it with the try/catch clause or redeclare it in the method signature.</p>
 </div>
 <div class="sect2">
 <h3 id="_working_with_exceptions"><a class="anchor" href="#_working_with_exceptions"></a>3.1. Working with exceptions</h3>
 <div class="paragraph">
-<p>Exception handling becomes even more important if we consider that
-this topic is either ignored or presented in incorrect form in most
-JDBC tutorials. The <a href="https://docs.oracle.com/javase/tutorial/jdbc/index.html">official JDBC tutorial from Oracle</a>
-briefly mentions that exceptions should be handled by using try/catch blocks
-only at the end of the course, but neither reasons for doing this nor the
-best practices are presented.</p>
+<p>Exception handling becomes even more important if we consider that this topic is either ignored or presented in incorrect form in most JDBC tutorials.
+The <a href="https://docs.oracle.com/javase/tutorial/jdbc/index.html" target="_blank" rel="noopener">official JDBC tutorial from Oracle</a> briefly mentions that exceptions should be handled by using try/catch blocks only at the end of the course, but neither reasons for doing this nor the best practices are presented.</p>
 </div>
 <div class="paragraph">
 <p>There are good reasons to think about exception handling in your
@@ -1928,7 +1944,7 @@ By checking the error code which is sent with the exception, an application can 
 <p>And last but not least, there is resource management.
 When an exception happens in a method, the execution flow of Java code differs from the normal flow, and only correctly coded application will ensure that all allocated resources will be released.
 The resources in our case are JDBC connections, statements, result sets, etc.
-All these objects not only take memory in the Java Virtual Machine of the application, but also consume memory on the server, which, worst case, can lead to an unintended Denial-of-Service attack, as the database server can no longer service requests.</p>
+All these objects not only take memory in the Java Virtual Machine of the application, but also consume memory and possibly hold locks on the server, which, worst case, can lead to an unintended Denial-of-Service attack, as the database server can no longer service requests.</p>
 </div>
 <div class="paragraph">
 <p>A good exception handling strategy requires you do distinguish three
@@ -2705,6 +2721,9 @@ If the specified statement is a query or otherwise produces a result set, an <co
 <li>
 <p><code>Statement.execute(String)</code>&#8201;&#8212;&#8201;executes a statement and returns <code>true</code> when the statement returned a result set, otherwise an update was executed and <code>false</code> is returned.
 You can use <code>Statement.getResultSet()</code> method to get the result of the executed query, or you can use <code>Statement.getUpdateCount()</code> when you have executed update statement.</p>
+<div class="paragraph">
+<p>Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.</p>
+</div>
 </li>
 </ul>
 </div>
@@ -2716,7 +2735,7 @@ You can use <code>Statement.getResultSet()</code> method to get the result of th
 After a close, the statement object is invalid and cannot be used anymore.</p>
 </div>
 <div class="paragraph">
-<p>It is allowed to use the same statement object to execute different types of queries one after another.
+<p>It is allowed to use the same statement object to execute different types of queries, one after another.
 The code below contains a short example which first performs a select to find the ID of the user 'Joe Doe', and if the record is found, it enables his account.</p>
 </div>
 <div class="admonitionblock warning">
@@ -2768,7 +2787,7 @@ In general: don&#8217;t do this, use a prepared statement with parameters instea
 </div>
 <div class="paragraph">
 <p>However, here it is done intentionally to emphasize that a single object is used to execute <code>SELECT</code> and <code>UPDATE</code>/<code>INSERT</code> statements.
-It also shows how to check whether the executed statement modified expected number of rows&#8201;&#8212;&#8201;the application first tries to update the account and only if no rows were updated, it inserts new record into the <code>accounts</code> table.</p>
+It also shows how to check whether the executed statement modified the expected number of rows&#8201;&#8212;&#8201;the application first tries to update the account and only if no rows were updated, it inserts new record into the <code>accounts</code> table.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -2817,14 +2836,17 @@ The next example shows the creation of database tables using this method.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It is worth mentioning that according to the JDBC specification <code>getResultSet()</code> and <code>getUpdateCount()</code> methods can be only called once per result, and in case of using Firebird, that means once per executed statement, since Firebird does not support multiple results from a single statement.
-Calling the methods the second time will cause an exception.</p>
+<p>According to the JDBC specification, the <code>getResultSet()</code> and <code>getUpdateCount()</code> methods can be only called once per result.</p>
+</div>
+<div class="paragraph">
+<p><em class="until">Jaybird 5.0.5</em> In Jaybird 5.0.4 and earlier, calling the <code>getResultset()</code> method a second time will throw an exception.<br>
+<em class="since">Jaybird 5.0.5</em> Since Jaybird 5.0.5, calling <code>getResultSet()</code> multiple times will return the same instance of <code>ResultSet</code> it returned from the first call to <code>getResultSet()</code> or from <code>executeQuery()</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_statement_behind_the_scenes"><a class="anchor" href="#_statement_behind_the_scenes"></a>4.2. Statement behind the scenes</h3>
 <div class="paragraph">
-<p>The previous examples requires us to discuss the statement object dynamics, its life cycle and how it affects other subsystems in details.</p>
+<p>The previous examples requires us to discuss the statement object dynamics, its lifecycle and how it affects other subsystems in details.</p>
 </div>
 <div class="sect3">
 <h4 id="_statement_dynamics"><a class="anchor" href="#_statement_dynamics"></a>4.2.1. Statement dynamics</h4>
@@ -2914,15 +2936,15 @@ Jaybird could allocate a new statement handle, however the JDBC specification do
 <p>Step 2 (compiling the SQL statement) in the previous section is probably the most important, and usually, most expensive part of the statement execution life cycle.</p>
 </div>
 <div class="paragraph">
-<p>When Firebird server receives the "prepare statement" call, it parses the SQL statement and converts it into the executable form: BLR.
-BLR, or Binary Language Representation, contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.</p>
+<p>When Firebird server receives a "prepare statement" call, it parses the SQL statement and converts it into the executable form: BLR, or Binary Language Representation.
+BLR contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.</p>
 </div>
 <div class="paragraph">
 <p>When a statement is prepared, it holds the references to all database object definitions that are used during that statement execution.
 This mechanism preserves the database schema consistency, it saves the statement objects from "surprises" like accessing a database table that has been removed by another application.</p>
 </div>
 <div class="paragraph">
-<p>However, holding a reference on the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
+<p>However, holding references to the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
 In other words, if two application are running and one is trying to modify the table, view, procedure or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 &#8220;object is in use&#8221;.</p>
 </div>
 <div class="paragraph">
@@ -2950,7 +2972,7 @@ If we use the execution flow described in the "<a href="#_statement_dynamics">St
 </div>
 <div class="paragraph">
 <p>However, executing the same statement with the same values makes little sense, unless we want to fill the table with the same data, which usually is not the case.
-Therefore, JDBC provides support for parametrized statements&#8201;&#8212;&#8201;SQL statements where literals are replaced with question marks (<code>?</code>), so-called positional parameters.
+Therefore, JDBC provides support for parametrized statements&#8201;&#8212;&#8201;SQL statements where literals are replaced with question marks (&#8216;<code>?</code>&#8217;), so-called positional parameters.
 The application then assigns values to the parameters before executing the statement.</p>
 </div>
 <div class="paragraph">
@@ -3285,7 +3307,7 @@ The first example contained only IN parameter on position 1 and the OUT paramete
 We have used the <code>CallableStatement.registerOutParameter</code> method to tell the driver that the second parameter in our call is an OUT parameter of type INTEGER.
 Parameters that were not marked as OUT are considered by Jaybird as IN parameters.
 Finally, the <code>EXECUTE PROCEDURE factorial(?)</code> SQL statement is prepared and executed.
-After executing the procedure call we get the result from the appropriate getter method.</p>
+After executing the procedure call, we get the result from the appropriate getter method.</p>
 </div>
 <div class="paragraph">
 <p>It is worth mentioning that the stored procedure call preparation happens in the <code>CallableStatement.execute</code> method, and not in the <code>prepareCall</code> method of the <code>Connection</code> object.
@@ -3441,7 +3463,7 @@ Firebird 3.0 and earlier did not provide support for such functionality, so Jayb
 <h4 id="_batch_updates_with_java_sql_statement_interface"><a class="anchor" href="#_batch_updates_with_java_sql_statement_interface"></a>4.5.1. Batch Updates with java.sql.Statement interface</h4>
 <div class="paragraph">
 <p>The <code>Statement</code> interface defines three methods for batch updates: <code>addBatch</code>, <code>executeBatch</code> and <code>clearBatch</code>.
-It is allowed to add arbitrary <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> or DDL statement to the batch group.
+You can add arbitrary <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> or DDL statement to the batch group.
 Adding a statement that returns a result set is an error.</p>
 </div>
 <div class="listingblock">
@@ -3682,7 +3704,7 @@ omitted):</p>
 <div class="content">
 <pre>&lt;outer join&gt; ::=
     &lt;table name&gt; {LEFT|RIGHT|FULL} OUTER JOIN
-    {&lt;table name&gt; | &lt;outer join&gt;} ON &gt;search condition&gt;</pre>
+    {&lt;table name&gt; | &lt;outer join&gt;} ON &lt;search condition&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3705,7 +3727,7 @@ omitted):</p>
 <h4 id="_like_escaped_characters"><a class="anchor" href="#_like_escaped_characters"></a>4.6.5. LIKE Escaped Characters</h4>
 <div class="paragraph">
 <p>The percent sign (&#8216;<code>%</code>&#8217;) and underscore (&#8216;<code>_</code>&#8217;) characters are wild cards in the LIKE predicate of SQL.
-To interpret them literally they must be preceded by the backslash character (&#8216;<code>\</code>&#8217;) that is called the escape character.
+To interpret them literally they must be escaped using the escape character.
 The escaped syntax for this case identifies which character is used as an escape character:</p>
 </div>
 <div class="literalblock">
@@ -3721,7 +3743,7 @@ The escaped syntax for this case identifies which character is used as an escape
 <h2 id="resultsets"><a class="anchor" href="#resultsets"></a>5. Working with result sets</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When a SELECT statement is executed, the results of the query are returned through the implementation of the <code>java.sql.ResultSet</code> interface.</p>
+<p>When a <code>SELECT</code> statement is executed, the results of the query are returned through the implementation of the <code>java.sql.ResultSet</code> interface.</p>
 </div>
 <div class="sect2">
 <h3 id="_resultset_properties"><a class="anchor" href="#_resultset_properties"></a>5.1. ResultSet properties</h3>
@@ -3733,7 +3755,7 @@ The escaped syntax for this case identifies which character is used as an escape
 <div class="ulist">
 <ul>
 <li>
-<p><code>TYPE_FORWARD_ONLY</code>&#8201;&#8212;&#8201;the result set is not scrollable, cursor can only move forward.
+<p><code>TYPE_FORWARD_ONLY</code>&#8201;&#8212;&#8201;the result set is not scrollable, the cursor can only move forward.
 When the <code>TRANSACTION_READ_COMMITTED</code> isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which will be every <em>fetch size</em> calls to <code>ResultSet.next()</code>).
 In other cases, the result set will return only rows that were visible at the moment of the transaction start.</p>
 </li>
@@ -3769,7 +3791,8 @@ A future version may enable this behaviour by default.</p>
 Result sets that allow direct modification using the <code>ResultSet.updateXXX</code> methods are usually used in GUI applications which allow in-place editing of the underlying result set.</p>
 </div>
 <div class="paragraph">
-<p>The result set concurrency is specified during statement creation and cannot be changed later. Jaybird supports two types of result set concurrency:</p>
+<p>The result set concurrency is specified during statement creation and cannot be changed later.
+JDBC defines two types of result set concurrency, which are both supported by Jaybird:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4218,8 +4241,8 @@ However, in some cases it can be useful.</p>
 </div>
 <div class="paragraph">
 <p>It is not allowed to connect with a read-write transaction to a database located on a read-only media, for example, a CD-ROM.
-The reason is that, to guarantee consistency of the read-write transactions, Firebird has to increase the transaction identifier when transaction ends, and to store the new value on the so-called Transaction Inventory Page even if no changes were made in that transaction.
-This requirement can be relaxed if transaction is declared read-only and the engine ensures that no data can be modified.</p>
+The reason is that, to guarantee consistency of the read-write transactions, Firebird has to increase the transaction identifier when the transaction starts, and store the new value on the so-called Transaction Inventory Page even if no changes are made in that transaction.
+This requirement can be relaxed if a transaction is declared read-only and the engine ensures that no data can be modified.</p>
 </div>
 <div class="paragraph">
 <p>Another reason is that long-running read-write transactions inhibit the process of collecting garbage, i.e. a process of identifying previous versions of the database records that are no longer needed and releasing the occupied space for the new versions.
@@ -4348,7 +4371,7 @@ If the default mapping is overridden via the data source configuration, it will 
 <h3 id="transactions-savepoints"><a class="anchor" href="#transactions-savepoints"></a>6.5. Savepoints</h3>
 <div class="paragraph">
 <p>Savepoints provide finer-grained control over transactions by providing intermediate steps within a larger transaction.
-Once a savepoint has been set, a transaction can be rollback to that point without affecting preceding work.</p>
+Once a savepoint has been set, a transaction can be rolled back to that point without affecting preceding work.</p>
 </div>
 <div class="paragraph">
 <p>To set a savepoint, use the following code:</p>
@@ -4381,7 +4404,7 @@ try (Statement stmt = connection.createStatement()) {
 </div>
 <div class="paragraph">
 <p>If the savepoint is no longer needed, you can use the <code>Connection.releaseSavepoint</code> method to release system resources.
-After releasing a savepoint it is no longer possible to roll back the current transaction to that savepoint.
+After releasing a savepoint, it is no longer possible to roll back the current transaction to that savepoint.
 Attempts to call the <code>rollback(Savepoint)</code> method will result in an <code>SQLException</code>.
 Savepoints that have been created within a transaction are automatically released when that transaction is committed or rolled back.</p>
 </div>
@@ -4709,7 +4732,7 @@ The fifth call specifies the type of the lock to obtain, in our case the protect
 In this section we discuss the <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> and <code>SET TRANSACTION</code> statements, which have a hard transaction boundary (either ending or starting a transaction).</p>
 </div>
 <div class="paragraph">
-<p>In general, you should not execute these methods with Jaybird (or any other JDBC driver).
+<p>In general, you should not execute these methods with Jaybird.
 The JDBC specification formally discourages use of statements or functionality which is accessible through the JDBC API:</p>
 </div>
 <div class="quoteblock">
@@ -5700,14 +5723,11 @@ SQL command and are characterized by a <em>mode</em> parameter:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>in the AUTO mode database continues operating even if shadow becomes
-unavailable (disk or file system failure, remote node is not accessible,
-etc.)</p>
+<p>in <code>AUTO</code> mode, the database continues operating even if the shadow becomes unavailable (disk or file system failure, remote node is not accessible, etc.)</p>
 </li>
 <li>
-<p>in the MANUAL mode all database operations are halted until the
-problem is fixed. Usually it means that DBA has to kill the unavailable
-shadow and define a new one.</p>
+<p>in <code>MANUAL</code> mode all database operations are halted until the problem is fixed.
+Usually this means that the DBA has to kill the unavailable shadow and define a new one.</p>
 </li>
 </ul>
 </div>
@@ -5729,9 +5749,9 @@ which the management class is connected.</p>
 <div class="sect3">
 <h4 id="_database_validation_and_repair"><a class="anchor" href="#_database_validation_and_repair"></a>7.4.3. Database validation and repair</h4>
 <div class="paragraph">
-<p>The Firebird server does its best to keep the database file in a consistent form.
-This is achieved by a special algorithm called <em>careful writes</em>, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
-Unfortunately, it is still possible that under certain conditions, e.g. crash of the file system or hardware failure, the database file might become corrupted.
+<p>The Firebird server does its best to keep the database file in a consistent state.
+This is achieved by an algorithm called <em>careful writes</em>, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
+Unfortunately, it is still possible that under certain conditions, e.g. a crash of the file system or hardware failure, the database file becomes corrupted.
 Firebird server can detect such cases including</p>
 </div>
 <div class="ulist">
@@ -5739,7 +5759,7 @@ Firebird server can detect such cases including</p>
 <li>
 <p>Orphan pages.
 These are database pages that were allocated for subsequent write, but due to a crash were not used.
-Such pages have to be marked as unused to return storage space back to the application;</p>
+Such pages have to be marked as unused, so the server can use them again;</p>
 </li>
 <li>
 <p>Corrupted pages.
@@ -5748,7 +5768,7 @@ These are database pages that were corrupted/damaged by operating system or hard
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>MaintenanceManager</code> class provides a <code>validateDatabase()</code> method to perform simple health check of the database, and releasing the orphan pages if needed.
+<p>The <code>MaintenanceManager</code> class provides a <code>validateDatabase()</code> method to perform a simple health check of the database, releasing orphan pages if needed.
 It also reports presence of the checksum errors.
 The output of the routine is written to the output stream configured in the <code>logger</code> property.</p>
 </div>
@@ -5799,7 +5819,7 @@ After this operation database can be backed up and restored to a different place
 <td class="content">
 <div class="paragraph">
 <p>The presence of checksum errors and subsequent use of <code>markCorruptedRecords()</code> method will mark all corrupted data as unused space.
-You have to perform a careful check after backup/restore cycle to assess the damage.</p>
+You have to perform a careful check after a backup and restore cycle to assess the damage.</p>
 </div>
 </td>
 </tr>
@@ -5809,14 +5829,15 @@ You have to perform a careful check after backup/restore cycle to assess the dam
 <div class="sect3">
 <h4 id="_limbo_transactions"><a class="anchor" href="#_limbo_transactions"></a>7.4.4. Limbo transactions</h4>
 <div class="paragraph">
-<p>Limbo transactions are transactions that were prepared for commit but were never committed.
-This can happen when, for example, the database was accessed by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnotedef_16" title="View footnote.">16</a>]</sup>.
-The in-limbo transactions affect the normal database operation, since the records that were modified in that transactions are not available, Firebird does not know whether the new version will be committed or rolled back and blocks access to them.
-Also, in-limbo transactions prevent garbage collection, since the garbage collector does not know whether it can discard the record versions of the in-limbo transaction.</p>
+<p>Limbo transactions&#8201;&#8212;&#8201;or in-limbo transactions&#8201;&#8212;&#8201;are transactions that were prepared for commit but were never committed or rolled back;
+or in other words, an incomplete two-phase commit.
+This can happen, for example, with a database used by JTA-enabled applications from Java<sup class="footnote">[<a id="_footnoteref_16" class="footnote" href="#_footnotedef_16" title="View footnote.">16</a>]</sup>.
+A limbo transactions affects the normal database operation, since the records that were modified in that transactions are not available, as Firebird does not know whether the new version will be committed or rolled back and blocks access to them.
+Also, limbo transactions prevent garbage collection, since the garbage collector does not know whether it can discard the record versions of the limbo transaction.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird contains functionality to allow the JTA-enabled transaction coordinator to recover the in-limbo transactions and either commit them or perform a rollback.
-For the cases when this is not possible, <code>MaintenanceManager</code> provides the following methods to perform this in interactive mode:</p>
+<p>Jaybird contains functionality to allow the JTA-enabled transaction coordinator to recover the limbo transactions and either commit them or perform a rollback.
+For cases where this is not possible, <code>MaintenanceManager</code> provides the following methods to perform this in interactive mode:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5867,7 +5888,7 @@ To solve the issue, Firebird periodically starts a database sweeping process, th
 <div class="paragraph">
 <p>The sweep process is controlled by a threshold parameter, a difference between the Next Transaction and OIT, by default it is set to 20,000.
 While this value is OK for the average database, a DBA can decide to increase or decrease the number to fit the database usage scenario.
-Alternatively, a DBA can trigger the sweep process manually, regardless of the current difference between Next Transaction and OIT.</p>
+Alternatively, a DBA can trigger the sweep process manually, regardless of the current difference between Next Transaction and OIT, for example during a maintenance window or hours with low load on the server.</p>
 </div>
 <div class="paragraph">
 <p>The <code>MaintenanceManager</code> provides following methods to help with database sweeping:</p>
@@ -5936,7 +5957,7 @@ Possible values are:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setDatabaseDialect(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Change the database SQL dialect.
-The allowed values can be either 1 or 3.</p></td>
+Allowed values are 1 (deprecated) and 3.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setDefaultCacheBuffer(int)</code></p></td>
@@ -5957,10 +5978,11 @@ However, in case of OS or hardware crashes, the database might get corrupted.</p
 </div>
 <div class="paragraph">
 <p>Firebird leaves 20% of free space on each database page for future record versions.
-It is possible to tell Firebird not to reserve the space, this makes sense for read-only databases, since more data fit the page, which increases performance.</p>
+It is possible to tell Firebird not to reserve the space.
+This makes sense for read-only databases, since more data fit the page, which increases performance.</p>
 </div>
 <div class="paragraph">
-<p>Possible values are:</p>
+<p>Allowed values are:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6600,7 +6622,7 @@ This <em>wire encryption</em> is configured using the connection property <code>
 </dl>
 </div>
 <div class="paragraph">
-<p>The default value acts as <code>ENABLED</code> for pure Java connections, for JNA (native) connections this wil use the fbclient default (either <code>Enabled</code> or the configured value of <code>WireCrypt</code> from a <code>firebird.conf</code> read by the native library).</p>
+<p>The default value acts as <code>ENABLED</code> for pure Java connections, for native connections this wil use the fbclient default (either <code>Enabled</code> or the configured value of <code>WireCrypt</code> from a <code>firebird.conf</code> read by the native library).</p>
 </div>
 <div class="paragraph">
 <p>Connection property <code>wireCrypt=REQUIRED</code> will <strong>not</strong> reject unencrypted connections when connecting to Firebird 2.5 or lower.
@@ -6611,7 +6633,7 @@ The value will also be ignored when using native connections with a Firebird 2.5
 <p>Using <code>wireCrypt=DISABLED</code> when Firebird 3.0 or higher uses setting <code>WireCrypt = Required</code> (or vice versa) will yield error <em>"Incompatible wire encryption levels requested on client and server"</em> (error: <em>isc_wirecrypt_incompatible / 335545064</em>).</p>
 </div>
 <div class="paragraph">
-<p>The same error is raised when connecting to Firebird 3.0 and higher with a legacy authentication user with connection property <code>wireCrypt=REQUIRED</code>.</p>
+<p>The same error is raised when connecting to Firebird 3.0 and higher with a legacy authentication user with connection property <code>wireCrypt=REQUIRED</code>, as the legacy authentication does not provide an encryption key to establish an encrypted connection.</p>
 </div>
 <div class="paragraph">
 <p>Alternative wire encryption plugins are currently not supported, although we made some preparations to support this.
@@ -6756,7 +6778,7 @@ Consider setting connection property <code>wireCrypt=REQUIRED</code> to force en
 <h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.5. Default holdable result sets</h3>
 <div class="paragraph">
 <p>This connection property enables a connection to create holdable result sets by default.
-This propery can be used as a workaround for applications that expect a result to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
+This property can be used as a workaround for applications that expect a result set to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
 </div>
 <div class="paragraph">
 <p>Specifically, such applications open a result set and, while traversing it, execute other statements using the same connection.
@@ -6764,15 +6786,15 @@ According to the JDBC specification the result set has to be closed if another s
 With the default result set holdability, close on commit, doing this yields a <code>SQLException</code> with message <em>"The result set is closed"</em>.</p>
 </div>
 <div class="paragraph">
-<p>The property is called:</p>
+<p>The property is accessible as:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>defaultResultSetHoldable</code> as connection property with no value, empty value or <code>true</code> (aliases: <code>defaultHoldable</code> and <code>result_set_holdable</code>);</p>
+<p>connection property <code>defaultResultSetHoldable</code> with no value, empty value or <code>true</code> (aliases: <code>defaultHoldable</code> and <code>result_set_holdable</code>);</p>
 </li>
 <li>
-<p><code>isc_dpb_result_set_holdable</code> as a DPB member;</p>
+<p><em class="until">Jaybird 5</em> database parameter buffer member <code>isc_dpb_result_set_holdable</code>;</p>
 </li>
 <li>
 <p><code>FirebirdConnectionProperties</code> interface methods <code>isDefaultResultSetHoldable()</code> and <code>setDefaultResultSetHoldable(boolean)</code></p>
@@ -6809,8 +6831,8 @@ The memory occupied by this result set will be released when the result is close
 <strong>Do not use this unless you really know what you&#8217;re doing.</strong></p>
 </div>
 <div class="paragraph">
-<p>Incorrect use can result in excessive growth of the database due to increases in back-version chains, which can also cause performance degradation.
-When used with an isolation level other than READ COMMITTED, the connection will only see changes committed at the time the initial transaction was started;
+<p>Incorrect use of this functionality can result in excessive growth of the database due to increases in back-version chains of records, which can also cause performance degradation.
+Additionally, when used with an isolation level other than READ COMMITTED, the connection will only see changes committed at the time the initial transaction was started;
 the auto-commit barrier will not make new committed changes visible.</p>
 </div>
 </td>
@@ -8012,7 +8034,7 @@ this is the same behaviour as previous Jaybird versions used</p>
 <p>If a connection does not support scrollable cursors, or if holdable cursors are requested, the behaviour will silently fall back to <em>emulated</em> scrollable cursors.</p>
 </div>
 <div class="paragraph">
-<p>Compared to emulated scrollable cursor, server-side scrollable cursors exhibit slightly different behaviour (we may change the behaviour of <em>emulated</em> later in Jaybird 5 or in a future Jaybird release):</p>
+<p>Compared to emulated scrollable cursor, server-side scrollable cursors exhibit slightly different behaviour in Jaybird 5:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -8032,7 +8054,10 @@ This will be corrected when we retrofit the new behaviour for <em>emulated</em> 
 </ul>
 </div>
 <div class="paragraph">
-<p>See also <a href="https://github.com/FirebirdSQL/jaybird/tree/master/devdoc/jdp/jdp-2021-04-real-scrollable-cursor-support.md.md">jdp-2021-04</a>.</p>
+<p>In Jaybird 6 and higher, <em>emulated</em> has been changed to have the same behaviour as <em>server</em>.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://github.com/FirebirdSQL/jaybird/tree/master/devdoc/jdp/jdp-2021-04-real-scrollable-cursor-support.md.md">jdp-2021-04</a> and <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-05-behavior-of-updatable-result-sets.adoc">jdp-2024-05</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -10339,6 +10364,9 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 <dt class="hdlist1"><code>org.firebirdsql.jna.syncWrapNativeLibrary</code></dt>
 <dd>
 <p>Set to true to add a synchronization proxy around the native client library.</p>
+<div class="paragraph">
+<p>This can be used to address thread-safety issues with older client libraries (Firebird 2.1 and older, as far as we know).</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>org.firebirdsql.datatypeCoderCacheSize</code></dt>
 <dd>
@@ -10931,7 +10959,7 @@ These issues were addressed in Firebird 2.0 and at the moment nothing prevents d
 <ol class="arabic">
 <li>
 <p>The database objects must be defined with the <code>UTF8</code> character set;
-this can be done by either creating database with default <code>UTF8</code> character set or by adding <code>CHARACTER SET UTF8</code> clause to the column or domain definitions.</p>
+this can be done by either creating the database with a default character set of <code>UTF8</code>, or by adding the <code>CHARACTER SET UTF8</code> clause to column or domain definitions.</p>
 </li>
 <li>
 <p>The <code>encoding</code> connection property in the JDBC driver has to be set to <code>UTF8</code>;
@@ -10972,13 +11000,13 @@ Connection connection = DriverManager.getConnection(
 this limitation is caused by the fact that the longest possible <code>VARCHAR</code> column can occupy 32765 bytes (32767 for <code>CHAR</code> columns) and a single <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 <li>
-<p>It is not possible to index Unicode columns longer than 1023 characters&#8201;&#8212;&#8201;or 2047 characters in Firebird 4.0 with a page size of 32 kilobytes;
-this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which has a maximum of 16k (<em class="since">Firebird 4.0</em> 32k) and the before mentioned fact that each <code>UTF8</code> character can occupy up to four bytes.</p>
+<p>It is not possible to index Unicode columns longer than 2047 characters&#8201;&#8212;&#8201;this requires a page size of 32 kilobytes;
+this limitation is caused by the fact that the longest index key cannot be longer than a quarter of the database page, which has a maximum of 32k and the fact that each <code>UTF8</code> character can occupy up to four bytes.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>It should be mentioned that using Unicode character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
+<p>Using the <code>UTF8</code> character set might cause noticeable performance degradation when the database is accessed over wide-area networks.
 This mainly applies to the cases when non-latin characters are stored in the database, as those characters will require two or more bytes, which in turn might cause additional roundtrips to the server to fetch data.</p>
 </div>
 </div>
@@ -10992,7 +11020,7 @@ The only choice that is left to Jaybird is to construct a string using the defau
 </div>
 <div class="paragraph">
 <p>With connection character set <code>NONE</code>, Jaybird uses the explicit character set of <code>CHAR</code>, <code>VARCHAR</code> and <code>BLOB SUB_TYPE TEXT</code> columns for the conversion.
-This addresses most of the problems described in this paragraph, except for columns without an explicit character set (i.e. their character set is <code>NONE</code>).</p>
+This addresses most of the problems described in this section, except for columns without an explicit character set (i.e. their character set is <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
 <p>It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
@@ -11003,12 +11031,12 @@ However, when all client applications run on the same OS with the same regional 
 <p>On Linux and other Unix platforms, it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").</p>
 </div>
 <div class="paragraph">
-<p>Therefore, application should use <code>NONE</code> character encoding as an encoding for a database and a connection only when at least one of the following is met:</p>
+<p>Therefore, an application should only use <code>NONE</code> character encoding as an encoding for a database and a connection when at least one of the following is met:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Database will contain only ASCII characters,</p>
+<p>The database will contain only ASCII characters,</p>
 </li>
 <li>
 <p>It is guaranteed that all Java Virtual Machines accessing the database will have the same default encoding that can correctly handle all characters stored in the database,</p>
@@ -12049,7 +12077,8 @@ With explicit length, <code>CHARACTER SET OCTETS</code> is appended.</p>
 <p><code>(SQL_)ROWID</code> is not supported as length of <code>DB_KEY</code> values depend on the context</p>
 </li>
 <li>
-<p><code>(SQL_)DECIMAL</code> and <code>(SQL_)NUMERIC</code> without precision and scale are passed as is, in current Firebird versions, this means the value will be equivalent to <code>DECIMAL(9,0)</code> (which is equivalent to <code>INTEGER</code>)</p>
+<p><code>(SQL_)DECIMAL</code> and <code>(SQL_)NUMERIC</code> without precision and scale are passed as is.
+In current Firebird versions, this means the value will be equivalent to <code>DECIMAL(9,0)</code>/<code>NUMERIC(9,0)</code>, which is equivalent to <code>INTEGER</code>.</p>
 </li>
 <li>
 <p>Unsupported/unknown <em>SQLtype</em> values (or invalid length or precision and scale) are passed as is to cast, resulting in an error from the Firebird engine if the resulting cast is invalid</p>
@@ -13297,7 +13326,7 @@ All Rights Reserved.
 <a href="#_footnoteref_16">16</a>. Another reason for limbo transactions are multi-database transactions which can be initiated via the native Firebird API. However, since Jaybird does not provide methods to initiate them, we do not consider them in this manual.
 </div>
 <div class="footnote" id="_footnotedef_17">
-<a href="#_footnoteref_17">17</a>. For more information please read article by Ann Harrison &#8220;Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep&#8221;, available, for example, at <a href="https://www.ibphoenix.com/resources/documents/design/doc_21" class="bare">https://www.ibphoenix.com/resources/documents/design/doc_21</a>
+<a href="#_footnoteref_17">17</a>. For more information please read the following article by Ann Harrison, <a href="https://web.archive.org/web/20231004130607/https://www.ibphoenix.com/resources/documents/design/doc_21" target="_blank" rel="noopener">&#8220;Firebird for the Database Expert: Episode 4 - OAT, OIT, &amp; Sweep&#8221;</a>
 </div>
 <div class="footnote" id="_footnotedef_18">
 <a href="#_footnoteref_18">18</a>. For example, the effective size for 100 applications subscribed for 100 different events is about 40k in memory.
@@ -13375,7 +13404,7 @@ All Rights Reserved.
 <a href="#_footnoteref_42">42</a>. Parameter <code>OCTETS</code> is ignored
 </div>
 <div class="footnote" id="_footnotedef_43">
-<a href="#_footnoteref_43">43</a>. Always returns English full names (e.g. Sunday)
+<a href="#_footnoteref_43">43</a>. Always returns English full names (e.g. &#8220;Sunday&#8221;)
 </div>
 <div class="footnote" id="_footnotedef_44">
 <a href="#_footnoteref_44">44</a>. Always returns English full names (e.g. &#8220;January&#8221;)
@@ -13389,7 +13418,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-10-16 14:41:24 UTC
+Last updated 2024-10-19 10:31:16 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
