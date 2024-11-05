@@ -11,7 +11,7 @@ When a `SELECT` statement is executed, the results of the query are returned thr
 The JDBC specification defines three types of result sets
 
 * `TYPE_FORWARD_ONLY` -- the result set is not scrollable, the cursor can only move forward.
-When the `TRANSACTION_READ_COMMITTED` isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which will be every _fetch size_ calls to `ResultSet.next()`).
+When the `TRANSACTION_READ_COMMITTED` isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which -- simplified -- will be every _fetch size_ calls to `ResultSet.next()`).
 In other cases, the result set will return only rows that were visible at the moment of the transaction start.
 * `TYPE_SCROLL_INSENSITIVE` -- the result set is scrollable, the cursor can move back and forth, can be positioned on the specified row.
 Only rows satisfying the condition at the time of query execution are visible.
@@ -60,9 +60,9 @@ Use of "commit retaining" mode is believed to have an undesired side effect for 
 Because of these reasons "commit retaining" is not used in Jaybird during normal execution.
 Applications can commit the transaction keeping the result sets open by executing a "`COMMIT RETAIN`" SQL statement.
 
-To support holdable result sets, Jaybird will upgrade the result set to `TYPE_SCROLL_INSENSITIVE` to cache all rows locally, even if you asked for a `TYPE_FORWARD_ONLY`
-result set.
-See also <<resultsets-types>>.
+To support holdable result sets, Jaybird will cache all rows locally. +
+[.until]_Jaybird 6_ In Jaybird 5 and earlier, for `TYPE_FORWARD_ONLY`, this is achieved by upgrading to `TYPE_SCROLL_INSENSITIVE`. See also <<resultsets-types>>. +
+[.since]_Jaybird 6_ Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.
 
 [NOTE]
 ====
