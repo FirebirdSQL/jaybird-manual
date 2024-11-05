@@ -52,6 +52,13 @@ This property will have no effect if `org.firebirdsql.jdbc.defaultConnectionEnco
 
 The property values are read for each connect, so the value can be changed at any time.
 
+[#systemproperties-default-enable-protocol]
+=== Default `enableProtocol` value
+
+`org.firebirdsql.jdbc.defaultEnableProtocol`::
+Configures the default value for the `enableProtocol` connection property.
+See <<ref-enable-protocol>> for more information.
+
 [[systemproperties-wire-buffers]]
 === Wire protocol buffer sizes
 
