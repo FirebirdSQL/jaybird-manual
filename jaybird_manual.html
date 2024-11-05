@@ -611,9 +611,10 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-logging">B.1. Logging</a></li>
 <li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
-<li><a href="#systemproperties-wire-buffers">B.4. Wire protocol buffer sizes</a></li>
-<li><a href="#systemproperties-other">B.5. Other properties</a></li>
-<li><a href="#systemproperties-java">B.6. Useful Java system properties</a></li>
+<li><a href="#systemproperties-default-enable-protocol">B.4. Default <code>enableProtocol</code> value</a></li>
+<li><a href="#systemproperties-wire-buffers">B.5. Wire protocol buffer sizes</a></li>
+<li><a href="#systemproperties-other">B.6. Other properties</a></li>
+<li><a href="#systemproperties-java">B.7. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -7060,6 +7061,12 @@ However, we recommend using the unmasked version (e.g. <code>"12"</code> for pro
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>A different default value of <code>enableProtocol</code> can be set using the system property <a href="#systemproperties-default-enable-protocol"><code>org.firebirdsql.jdbc.defaultEnableProtocol</code></a>.
+This system property is checked each time a connection configuration is created, so it can be changed at runtime.
+If you use a Jaybird <code>DataSource</code> implementation, it uses the value at the time the <code>DataSource</code> is created;
+if you use <code>DriverManager</code>&#8201;&#8212;&#8201;this can include third-party data sources, it uses the value at the time the connection is created.</p>
+</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -10236,7 +10243,19 @@ This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectio
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.4. Wire protocol buffer sizes</h3>
+<h3 id="systemproperties-default-enable-protocol"><a class="anchor" href="#systemproperties-default-enable-protocol"></a>B.4. Default <code>enableProtocol</code> value</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultEnableProtocol</code></dt>
+<dd>
+<p>Configures the default value for the <code>enableProtocol</code> connection property.
+See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> for more information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.5. Wire protocol buffer sizes</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -10355,7 +10374,7 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.5. Other properties</h3>
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.6. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -10388,7 +10407,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.6. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.7. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -13418,7 +13437,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-05 14:52:39 UTC
+Last updated 2024-11-05 16:36:14 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
