@@ -3756,7 +3756,7 @@ The escaped syntax for this case identifies which character is used as an escape
 <ul>
 <li>
 <p><code>TYPE_FORWARD_ONLY</code>&#8201;&#8212;&#8201;the result set is not scrollable, the cursor can only move forward.
-When the <code>TRANSACTION_READ_COMMITTED</code> isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which will be every <em>fetch size</em> calls to <code>ResultSet.next()</code>).
+When the <code>TRANSACTION_READ_COMMITTED</code> isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which&#8201;&#8212;&#8201;simplified&#8201;&#8212;&#8201;will be every <em>fetch size</em> calls to <code>ResultSet.next()</code>).
 In other cases, the result set will return only rows that were visible at the moment of the transaction start.</p>
 </li>
 <li>
@@ -3838,9 +3838,9 @@ Because of these reasons "commit retaining" is not used in Jaybird during normal
 Applications can commit the transaction keeping the result sets open by executing a &#8220;COMMIT RETAIN&#8221; SQL statement.</p>
 </div>
 <div class="paragraph">
-<p>To support holdable result sets, Jaybird will upgrade the result set to <code>TYPE_SCROLL_INSENSITIVE</code> to cache all rows locally, even if you asked for a <code>TYPE_FORWARD_ONLY</code>
-result set.
-See also <a href="#resultsets-types">ResultSet Types</a>.</p>
+<p>To support holdable result sets, Jaybird will cache all rows locally.<br>
+<em class="until">Jaybird 6</em> In Jaybird 5 and earlier, for <code>TYPE_FORWARD_ONLY</code>, this is achieved by upgrading to <code>TYPE_SCROLL_INSENSITIVE</code>. See also <a href="#resultsets-types">ResultSet Types</a>.<br>
+<em class="since">Jaybird 6</em> Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6658,7 +6658,7 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 <p>the ARC4 encryption&#8201;&#8212;&#8201;the default provided by Firebird&#8201;&#8212;&#8201;is considered to be a weak (maybe even broken) cipher these days</p>
 </li>
 <li>
-<p>the encryption cipher uses ARCFOUR with a 160 bits key, this means that the unlimited Cryptographic Jurisdiction Policy needs to be used (or at minimum a custom policy that allows ARCFOUR with 160 bits keys). See also FAQ entry <a href="https://www.firebirdsql.org/file/documentation/drivers_documentation/java/faq.html#encryption-key-did-not-meet-algorithm-requirements-of-symmetricarc4-337248282" target="_blank" rel="noopener">Encryption key did not meet algorithm requirements of Symmetric/Arc4 (337248282)</a></p>
+<p>the encryption cipher uses ARCFOUR with a 160 bits key, this means that the unlimited Cryptographic Jurisdiction Policy needs to be used (or at minimum a custom policy that allows ARCFOUR with 160 bits keys). See also FAQ entry <a href="https://firebirdsql.org/docs/drivers/java/faq.html#encryption-key-did-not-meet-algorithm-requirements-of-symmetricarc4-337248282" target="_blank" rel="noopener">Encryption key did not meet algorithm requirements of Symmetric/Arc4 (337248282)</a></p>
 </li>
 </ul>
 </div>
@@ -13418,7 +13418,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-10-19 10:31:16 UTC
+Last updated 2024-11-05 14:52:39 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
