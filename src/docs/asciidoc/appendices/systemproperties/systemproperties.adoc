@@ -59,6 +59,14 @@ The property values are read for each connect, so the value can be changed at an
 Configures the default value for the `enableProtocol` connection property.
 See <<ref-enable-protocol>> for more information.
 
+[#systemproperties-default-report-sql-warnings]
+
+=== Default `reportSQLWarnings` value
+
+`org.firebirdsql.jdbc.defaultReportSQLWarnings`::
+Configures the default value for the `reportSQLWarnings` connection property.
+See <<ref-report-sql-warnings>> for more information.
+
 [[systemproperties-wire-buffers]]
 === Wire protocol buffer sizes
 

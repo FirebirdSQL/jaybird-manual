@@ -1,0 +1,22 @@
+[#ref-report-sql-warnings]
+=== Reporting of ``SQLWarning``s
+
+The JDBC Specification requires that a JDBC driver reports a `SQLWarning` when it deviates from certain JDBC-specified behaviour (for example, changing a requested result set type), or when the server reports a warning.
+
+These warnings are reported on the `Connection`, `Statement`, or ``ResultSet``footnote:[In the current implementation, Jaybird never has warnings on `ResultSet`], and can be retrieved with `getWarnings()`.
+
+[.since]_Jaybird 6_ The connection property `reportSQLWarnings` can be used to disable the reporting of ``SQLWarning``s.
+
+This connection property supports the following values (case-insensitive):
+
+[horizontal.compact]
+`ALL`::
+(default) report all ``SQLWarning``s
+`NONE`::
+Do not report any ``SQLWarning``s
+
+Invalid values on the connection property will be rejected.
+
+The default value can be overridden with the system property `org.firebirdsql.jdbc.defaultReportSQLWarnings`.
+It supports the same values as connection property `reportSQLWarnings`.
+Invalid values of the system property are ignored.

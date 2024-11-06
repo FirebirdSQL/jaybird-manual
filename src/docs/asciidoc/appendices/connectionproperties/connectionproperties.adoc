@@ -304,6 +304,12 @@ Boolean property.
 Attempts to create a database if it does not exist.
 See <<ref-create-database-if-not-exist>> for more information.
 
+a|`reportSQLWarnings`
+a|Jaybird specific property ([.since]_Jaybird 6_)
+Possible values (case-insensitive): `ALL` (default), `NONE`.
+Can be used to disable reporting of ``SQLWarning``s.
+See <<ref-report-sql-warnings>> for more information.
+
 |===
 
 In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).
