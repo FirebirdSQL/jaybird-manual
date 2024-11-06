@@ -612,9 +612,10 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
 <li><a href="#systemproperties-default-enable-protocol">B.4. Default <code>enableProtocol</code> value</a></li>
-<li><a href="#systemproperties-wire-buffers">B.5. Wire protocol buffer sizes</a></li>
-<li><a href="#systemproperties-other">B.6. Other properties</a></li>
-<li><a href="#systemproperties-java">B.7. Useful Java system properties</a></li>
+<li><a href="#systemproperties-default-report-sql-warnings">B.5. Default <code>reportSQLWarnings</code> value</a></li>
+<li><a href="#systemproperties-wire-buffers">B.6. Wire protocol buffer sizes</a></li>
+<li><a href="#systemproperties-other">B.7. Other properties</a></li>
+<li><a href="#systemproperties-java">B.8. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -10090,6 +10091,17 @@ Attempts to create a database if it does not exist.
 See <a href="#ref-create-database-if-not-exist">Create database if it does not exist</a> for more information.</p>
 </div></div></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>reportSQLWarnings</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>)
+Possible values (case-insensitive): <code>ALL</code> (default), <code>NONE</code>.
+Can be used to disable reporting of <code>SQLWarning</code>s.
+See <a href="#ref-report-sql-warnings">[ref-report-sql-warnings]</a> for more information.</p>
+</div></div></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -10255,7 +10267,19 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.5. Wire protocol buffer sizes</h3>
+<h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.5. Default <code>reportSQLWarnings</code> value</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultReportSQLWarnings</code></dt>
+<dd>
+<p>Configures the default value for the <code>reportSQLWarnings</code> connection property.
+See <a href="#ref-report-sql-warnings">[ref-report-sql-warnings]</a> for more information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.6. Wire protocol buffer sizes</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -10374,7 +10398,7 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.6. Other properties</h3>
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.7. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -10407,7 +10431,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.7. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.8. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -13437,7 +13461,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-05 16:36:14 UTC
+Last updated 2024-11-06 14:37:52 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
