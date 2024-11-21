@@ -920,10 +920,10 @@ It is the responsibility of the application to correctly parse the text output i
 |===
 |Method |Description
 
-|getDatabaseStatistics()
+|getDatabase{zwsp}Statistics()
 |Get complete statistics about the database.
 
-|getDatabaseStatistics(int)
+|getDatabase{zwsp}Statistics(int)
 a|Get the statistical information for the specified options.
 
 Possible values are (bit mask, can be combined):
@@ -933,11 +933,25 @@ Possible values are (bit mask, can be combined):
 * `INDEX_STATISTICS`
 * `RECORD_VERSION_STATISTICS`
 
-|getHeaderPage()
+|getHeader{zwsp}Page()
 |Get information from the header page (e.g. page size, OIT, OAT and Next transaction values, etc.)
 
-|getTableStatistics(String[])
+|getTable{zwsp}Statistics(String[])
 |Get statistic information for the specified tables.
 
 This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.
+
+|getDatabase{zwsp}Transaction{zwsp}Info()
+a|Get transaction information of a database
+
+The returned `DatabaseTransactionInfo` object has the following properties:
+
+* `oldestTransaction`
+* `oldestActiveTransaction`
+* `oldestSnapshotTransaction`
+* `nextTransaction`
+* `activeTransactionCount`
+
+|static getDatabase{zwsp}Transaction{zwsp}Info(Connection)
+|Same as previous, but using an existing connection (must unwrap to `FirebirdConnection`)
 |===
