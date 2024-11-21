@@ -6009,10 +6009,47 @@ This makes sense for read-only databases, since more data fit the page, which in
 <p><em class="since">Jaybird 5</em></p>
 </div>
 <div class="paragraph">
-<p>A new class was added in Jaybird 5, <code>org.firebirdsql.management.FBTableStatisticsManager</code>, which can be used to retrieve the table statistics of a connection.</p>
+<p>The class <code>org.firebirdsql.management.FBTableStatisticsManager</code> can be used to retrieve the table statistics of a connection.</p>
 </div>
 <div class="paragraph">
 <p>Create an instance with <code>FBTableStatisticsManager#of(java.sql.Connection)</code>&#8201;&#8212;&#8201;the connection must unwrap to a <code>FirebirdConnection</code>&#8201;&#8212;&#8201;and retrieve a snapshot of the statistics with <code>FBTableStatisticsManager#getTableStatistics()</code>.</p>
+</div>
+<div class="paragraph">
+<p>The method <code>getTableStatistics()</code> returns a <code>Map&lt;String, TableStatistics&gt;</code>, where the keys are table names, and the values statistics of tables.</p>
+</div>
+<div class="paragraph">
+<p>A <code>TableStatistics</code> object has the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>tableName</code></p>
+</li>
+<li>
+<p><code>readSeqCount</code></p>
+</li>
+<li>
+<p><code>readIdxCount</code></p>
+</li>
+<li>
+<p><code>insertCount</code></p>
+</li>
+<li>
+<p><code>updateCount</code></p>
+</li>
+<li>
+<p><code>deleteCount</code></p>
+</li>
+<li>
+<p><code>backoutCount</code></p>
+</li>
+<li>
+<p><code>purgeCount</code></p>
+</li>
+<li>
+<p><code>expungeCount</code></p>
+</li>
+</ul>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6052,11 +6089,11 @@ It is the responsibility of the application to correctly parse the text output i
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabaseStatistics()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabase&#8203;Statistics()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get complete statistics about the database.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabaseStatistics(int)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabase&#8203;Statistics(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Get the statistical information for the specified options.</p>
 </div>
@@ -6081,13 +6118,45 @@ It is the responsibility of the application to correctly parse the text output i
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getHeaderPage()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getHeader&#8203;Page()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get information from the header page (e.g. page size, OIT, OAT and Next transaction values, etc.)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTableStatistics(String[])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTable&#8203;Statistics(String[])</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Get statistic information for the specified tables.</p>
 <p class="tableblock">This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getDatabase&#8203;Transaction&#8203;Info()</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Get transaction information of a database</p>
+</div>
+<div class="paragraph">
+<p>The returned <code>DatabaseTransactionInfo</code> object has the following properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>oldestTransaction</code></p>
+</li>
+<li>
+<p><code>oldestActiveTransaction</code></p>
+</li>
+<li>
+<p><code>oldestSnapshotTransaction</code></p>
+</li>
+<li>
+<p><code>nextTransaction</code></p>
+</li>
+<li>
+<p><code>activeTransactionCount</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>static getDatabase&#8203;Transaction&#8203;Info(Connection)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as previous, but using an existing connection (must unwrap to <code>FirebirdConnection</code>)</p></td>
 </tr>
 </tbody>
 </table>
@@ -13463,7 +13532,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-07 15:49:08 UTC
+Last updated 2024-11-21 13:37:07 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
