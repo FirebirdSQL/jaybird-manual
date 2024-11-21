@@ -885,9 +885,23 @@ Allowed values are:
 
 [.since]_Jaybird 5_
 
-A new class was added in Jaybird 5, `org.firebirdsql.management.FBTableStatisticsManager`, which can be used to retrieve the table statistics of a connection.
+The class `org.firebirdsql.management.FBTableStatisticsManager` can be used to retrieve the table statistics of a connection.
 
 Create an instance with `FBTableStatisticsManager#of(java.sql.Connection)` -- the connection must unwrap to a `FirebirdConnection` -- and retrieve a snapshot of the statistics with `FBTableStatisticsManager#getTableStatistics()`.
+
+The method `getTableStatistics()` returns a `Map<String, TableStatistics>`, where the keys are table names, and the values statistics of tables.
+
+A `TableStatistics` object has the following properties:
+
+* `tableName`
+* `readSeqCount`
+* `readIdxCount`
+* `insertCount`
+* `updateCount`
+* `deleteCount`
+* `backoutCount`
+* `purgeCount`
+* `expungeCount`
 
 [NOTE]
 ====
