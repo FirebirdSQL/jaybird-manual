@@ -28,6 +28,8 @@ include::connection/clientinfoproperties.adoc[]
 
 include::connection/createdatabaseifnotexist.adoc[]
 
+include::connection/socketfactory.adoc[]
+
 [[ref-statement]]
 == Statement reference
 
