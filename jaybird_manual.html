@@ -569,6 +569,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-catalog-as-package">9.10. Opt-in feature for package information in DatabaseMetaData</a></li>
 <li><a href="#ref-client-info">9.11. Client info properties</a></li>
 <li><a href="#ref-create-database-if-not-exist">9.12. Create database if it does not exist</a></li>
+<li><a href="#ref-socket-factory">9.13. Custom socket factory</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -7516,6 +7517,70 @@ Jaybird applies some simple rules to exclude some classes of errors, and not att
 <p>For more information, see also <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-02-create-database-through-jdbc-url.adoc" target="_blank" rel="noopener">jdp-2024-02: Create database through JDBC URL</a>.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.13. Custom socket factory</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>A custom socket factory can be specified to customize the creation of the <code>java.net.Socket</code> instance of a pure Java database or service connection.</p>
+</div>
+<div class="paragraph">
+<p>The connection property <code>socketFactory</code> accepts the class name of an implementation of <code>javax.net.SocketFactory</code>.
+This socket factory is created anew for each connection.
+If <code>socketFactory</code> is not specified, Jaybird will use <code>SocketFactory.getDefault()</code> as its factory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>SocketFactory</code> implementation must adhere to the following rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The class must have a public constructor accepting a <code>java.util.Properties</code> object, or a public no-arg constructor.</p>
+</li>
+<li>
+<p>The implementation of <code>SocketFactory#createSocket()</code> must return an unconnected socket;
+the other <code>createSocket</code> methods are not called by Jaybird.</p>
+<div class="paragraph">
+<p>If you don&#8217;t want to implement the other <code>createSocket</code> methods, we recommend throwing <code>java.lang.UnsupportedOperationException</code> with a clear message from those methods.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is possible to pass custom connection properties to the socket factory if it has a public single-arg constructor accepting a <code>Properties</code> object.
+Jaybird will instantiate the socket factory with a <code>Properties</code> object containing <em>only</em> the connection properties with the suffix <code>@socketFactory</code> and non-<code>null</code> values;
+non-string values are converted to string.
+In the future, we may also&#8201;&#8212;&#8201;selectively&#8201;&#8212;&#8201;pass other connection properties, but for now we only expose those properties that are explicitly set for the socket factory.</p>
+</div>
+<div class="paragraph">
+<p>For example, say we have some custom socket factory called <code>org.example.CustomProxySocketFactory</code> with a <code>CustomProxySocketFactory(Properties)</code> constructor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">var props = new Properties()
+props.setProperty("user", "sysdba");
+props.setProperty("password", "masterkey");
+props.setProperty("socketFactory", "org.example.CustomProxySocketFactory");
+props.setProperty("proxyHost@socketFactory", "localhost");
+props.setProperty("proxyPort@socketFactory", "1234");
+props.setProperty("proxyUser@socketFactory", "proxy-user");
+props.setProperty("proxyPassword@socketFactory", "proxy-password");
+
+try (var connection = DriverManager.getConnection(
+        "jdbc:firebird://remoteserver.example.org/db", props)) {
+    // use connection
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will create the specified socket factory, passing a <code>Properties</code> object containing <strong>only</strong> the four custom properties ending in <code>@socketFactory</code>.
+The other properties&#8201;&#8212;&#8201;here <code>user</code>, <code>password</code> and <code>socketFactory</code>&#8201;&#8212;&#8201;are <strong>not</strong> passed to the socket factory.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2024-09-custom-socket-factory-for-pure-java-connections.adoc">jdp-2024-09: Custom socket factory for pure Java connections</a></p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -10167,10 +10232,20 @@ See <a href="#ref-create-database-if-not-exist">Create database if it does not e
 <p><code>reportSQLWarnings</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>)
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
 Possible values (case-insensitive): <code>ALL</code> (default), <code>NONE</code>.
 Can be used to disable reporting of <code>SQLWarning</code>s.
 See <a href="#ref-report-sql-warnings">[ref-report-sql-warnings]</a> for more information.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>socketFactory</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+Sets a custom socket factory for pure Java connections.
+See <a href="#ref-socket-factory">Custom socket factory</a> for more information.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -13532,7 +13607,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-21 13:37:07 UTC
+Last updated 2024-12-18 13:06:02 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
