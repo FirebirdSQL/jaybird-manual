@@ -12,10 +12,10 @@ We do not recommend their use in production environments.
 
 Jaybird 6 supports Java 17 and higher (JDBC 4.3).
 
-Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 17, and 21.
+Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
+Currently, that means we support Java 17, 21, and 23.
 
-Jaybird 6 provides libraries for Java 17.
+Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.
 
 Jaybird 6 is modularized, and provides the following modules:
 
@@ -87,9 +87,9 @@ It is not officially JDBC compliant, because we currently don't have access to t
 
 Jaybird has no required runtime dependencies.
 
-For native or embedded connections, the `jaybird-native` artifact and JNA 5.13.0 need to be on the classpath.
+For native or embedded connections, the `jaybird-native` artifact and `jna-jpms` {jaybird6-jna-version} need to be on the classpath.
 
-For ChaCha64 wire encryption, the `chacha64-plugin` artifact and `bcprov-jdk18on` (Bouncy Castle JCE provider) need to be on the classpath.
+For ChaCha64 wire encryption, the `chacha64-plugin` artifact and `bcprov-jdk18on` {jaybird6-bc-version} (Bouncy Castle JCE provider) need to be on the classpath.
 
 ////
 // No downloads available at this time
@@ -110,14 +110,14 @@ Provides only pure Java connections.
 |`chacha64-plugin-{jaybird6-full-version}.jar`
 |Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.
 
-|`lib/bcprov-jdk18on-1.73.jar`
+|`lib/bcprov-jdk18on-{jaybird6-bc-version}.jar`
 |Optional dependency, required for the ChaCha64 support (with `chacha64-plugin`)
 
 |`jaybird-native-{jaybird6-full-version}.jar`
 |Options dependency, support for native and embedded connections.
-Requires `lib/jna-5.12.1.jar`.
+Requires `lib/jna-jpms-{jaybird6-jna-version}.jar`.
 
-|`lib/jna-5.13.0.jar`
+|`lib/jna-jpms-{jaybird6-jna-version}.jar`
 |Optional dependency, required if you want to use Type 2 native, or embedded protocols (with `jaybird-native`)
 
 |===
