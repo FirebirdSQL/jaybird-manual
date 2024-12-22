@@ -52,8 +52,19 @@ This property will have no effect if `org.firebirdsql.jdbc.defaultConnectionEnco
 
 The property values are read for each connect, so the value can be changed at any time.
 
+[#systemproperties-default-async-fetch]
+=== Default `asyncFetch` value
+
+[.since]_Jaybird 6_
+
+`org.firebirdsql.jdbc.defaultAsyncFetch`::
+Configures the default value for the `asyncFetch` connection property.
+See <<ref-async-fetch>> for more information.
+
 [#systemproperties-default-enable-protocol]
 === Default `enableProtocol` value
+
+[.since]_Jaybird 6_
 
 `org.firebirdsql.jdbc.defaultEnableProtocol`::
 Configures the default value for the `enableProtocol` connection property.
@@ -62,6 +73,8 @@ See <<ref-enable-protocol>> for more information.
 [#systemproperties-default-report-sql-warnings]
 
 === Default `reportSQLWarnings` value
+
+[.since]_Jaybird 6_
 
 `org.firebirdsql.jdbc.defaultReportSQLWarnings`::
 Configures the default value for the `reportSQLWarnings` connection property.

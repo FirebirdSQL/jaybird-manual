@@ -4,6 +4,8 @@
 [[ref-connection]]
 == Connection reference
 
+include::connection/asyncfetch.adoc[]
+
 include::connection/authenticationplugins.adoc[]
 
 include::connection/wirecrypt.adoc[]
