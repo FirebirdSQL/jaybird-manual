@@ -13327,11 +13327,11 @@ We do not recommend their use in production environments.</p>
 <p>Jaybird 6 supports Java 17 and higher (JDBC 4.3).</p>
 </div>
 <div class="paragraph">
-<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 17, and 21.</p>
+<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
+Currently, that means we support Java 17, 21, and 23.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 6 provides libraries for Java 17.</p>
+<p>Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 is modularized, and provides the following modules:</p>
@@ -13434,10 +13434,10 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <p>Jaybird has no required runtime dependencies.</p>
 </div>
 <div class="paragraph">
-<p>For native or embedded connections, the <code>jaybird-native</code> artifact and JNA 5.13.0 need to be on the classpath.</p>
+<p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.15.0 need to be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> (Bouncy Castle JCE provider) need to be on the classpath.</p>
+<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.79 (Bouncy Castle JCE provider) need to be on the classpath.</p>
 </div>
 <div class="sect5">
 <h6 id="jb6-distribution-maven"><a class="anchor" href="#jb6-distribution-maven"></a>Maven</h6>
@@ -13707,7 +13707,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-22 13:13:00 UTC
+Last updated 2024-12-22 16:21:17 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
