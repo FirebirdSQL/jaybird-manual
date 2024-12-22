@@ -557,19 +557,20 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel1">
 <li><a href="#ref-connection">9. Connection reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-auth-plugins">9.1. Authentication plugins</a></li>
-<li><a href="#ref-wirecrypt">9.2. Wire encryption support</a></li>
-<li><a href="#ref-wirecompression">9.3. Wire compression</a></li>
-<li><a href="#ref-dbcrypt">9.4. Database encryption support</a></li>
-<li><a href="#ref-defaultholdable">9.5. Default holdable result sets</a></li>
-<li><a href="#ref-firebirdautocommit">9.6. Firebird auto commit mode (experimental)</a></li>
-<li><a href="#ref-processinfo">9.7. Process information</a></li>
-<li><a href="#ref-datatypebind">9.8. Data type bind support</a></li>
-<li><a href="#ref-enable-protocol">9.9. Enabling unsupported protocol versions</a></li>
-<li><a href="#ref-catalog-as-package">9.10. Opt-in feature for package information in DatabaseMetaData</a></li>
-<li><a href="#ref-client-info">9.11. Client info properties</a></li>
-<li><a href="#ref-create-database-if-not-exist">9.12. Create database if it does not exist</a></li>
-<li><a href="#ref-socket-factory">9.13. Custom socket factory</a></li>
+<li><a href="#ref-async-fetch">9.1. Async fetch</a></li>
+<li><a href="#ref-auth-plugins">9.2. Authentication plugins</a></li>
+<li><a href="#ref-wirecrypt">9.3. Wire encryption support</a></li>
+<li><a href="#ref-wirecompression">9.4. Wire compression</a></li>
+<li><a href="#ref-dbcrypt">9.5. Database encryption support</a></li>
+<li><a href="#ref-defaultholdable">9.6. Default holdable result sets</a></li>
+<li><a href="#ref-firebirdautocommit">9.7. Firebird auto commit mode (experimental)</a></li>
+<li><a href="#ref-processinfo">9.8. Process information</a></li>
+<li><a href="#ref-datatypebind">9.9. Data type bind support</a></li>
+<li><a href="#ref-enable-protocol">9.10. Enabling unsupported protocol versions</a></li>
+<li><a href="#ref-catalog-as-package">9.11. Opt-in feature for package information in DatabaseMetaData</a></li>
+<li><a href="#ref-client-info">9.12. Client info properties</a></li>
+<li><a href="#ref-create-database-if-not-exist">9.13. Create database if it does not exist</a></li>
+<li><a href="#ref-socket-factory">9.14. Custom socket factory</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
@@ -614,11 +615,12 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-logging">B.1. Logging</a></li>
 <li><a href="#systemproperties-processinfo">B.2. Process information</a></li>
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
-<li><a href="#systemproperties-default-enable-protocol">B.4. Default <code>enableProtocol</code> value</a></li>
-<li><a href="#systemproperties-default-report-sql-warnings">B.5. Default <code>reportSQLWarnings</code> value</a></li>
-<li><a href="#systemproperties-wire-buffers">B.6. Wire protocol buffer sizes</a></li>
-<li><a href="#systemproperties-other">B.7. Other properties</a></li>
-<li><a href="#systemproperties-java">B.8. Useful Java system properties</a></li>
+<li><a href="#systemproperties-default-async-fetch">B.4. Default <code>asyncFetch</code> value</a></li>
+<li><a href="#systemproperties-default-enable-protocol">B.5. Default <code>enableProtocol</code> value</a></li>
+<li><a href="#systemproperties-default-report-sql-warnings">B.6. Default <code>reportSQLWarnings</code> value</a></li>
+<li><a href="#systemproperties-wire-buffers">B.7. Wire protocol buffer sizes</a></li>
+<li><a href="#systemproperties-other">B.8. Other properties</a></li>
+<li><a href="#systemproperties-java">B.9. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -6469,7 +6471,71 @@ System.out.println(
 <h2 id="ref-connection"><a class="anchor" href="#ref-connection"></a>9. Connection reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.1. Authentication plugins</h3>
+<h3 id="ref-async-fetch"><a class="anchor" href="#ref-async-fetch"></a>9.1. Async fetch</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>For pure Java connections, non-holdable forward-only result sets perform asynchronous fetches by default.
+Asynchronous fetches are implemented for protocol implementation version 11 and higher (i.e. Firebird 2.1 or higher), but are formally only supported for protocol version 13 and higher (i.e. Firebird 3.0 or higher).</p>
+</div>
+<div class="paragraph">
+<p>In normal usage of a result set, the first fetch will be a normal synchronous fetch.
+If certain conditions are met, subsequent fetches will be performed asynchronously.</p>
+</div>
+<div class="paragraph">
+<p>The conditions for using asynchronous fetch are considered an implementation detail and may change in point releases.
+In Jaybird 6.0.0, the conditions to enable asynchronous fetching are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The result set has type <code>FORWARD_ONLY</code>.</p>
+</li>
+<li>
+<p>The result set does not have a cursor name set.</p>
+</li>
+<li>
+<p>Any synchronous fetch on the statement cursor retrieved at least 15 rows.
+Be aware that the server may return fewer rows than the configured fetch size (default is 400), depending on Firebird version, row size and other factors.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the asynchronous fetch is triggered is also an implementation detail and may change in point releases.
+In Jaybird 6.0.0, the conditions to perform an asynchronous fetch are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Size of the row buffer is equal to the &#8220;low-water mark&#8221;.</p>
+<div class="paragraph">
+<p>This &#8220;low-water mark&#8221; is calculated as ~33% of the maximum number of rows returned by previous fetches, with a minimum of 10 rows.</p>
+</div>
+<div class="paragraph">
+<p>As a consequence of this condition, reducing the fetch size equal to or less than the &#8220;low-water mark&#8221; may cause asynchronous fetches to stop being triggered, as the buffer size may remain smaller than this &#8220;low-water mark&#8221; (this effect may be reduced if there is other activity on the connection after the asynchronous fetch was performed).
+In that case, a synchronous fetch is triggered when the buffer is empty.</p>
+</div>
+</li>
+<li>
+<p>Fetch size at time of async fetch is larger than 1.
+This may be the configured fetch size, or the fetch size derived taking into account the configured maximum row count.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Native connections do not support this type of asynchronous fetching, but <code>fbclient</code> itself provides a different form of internal asynchronous fetching for native connections.</p>
+</div>
+<div class="paragraph">
+<p>Asynchronous fetching&#8201;&#8212;&#8201;for pure Java&#8201;&#8212;&#8201;can be disabled with the Boolean connection property <code>asyncFetch</code>, by setting it to <code>false</code>.
+The system property <a href="#systemproperties-default-async-fetch"><code>org.firebirdsql.jdbc.defaultAsyncFetch</code></a> can be used to disable it globally;
+this system property is checked dynamically when the connection configuration is created.
+These properties are primarily intended for troubleshooting or workarounds if it turns out this feature has problems;
+they may be removed in a future Jaybird version once this feature has proven itself.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.2. Authentication plugins</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6498,7 +6564,7 @@ For example, SHA-224 is not supported in Oracle Java 7 by default and may requir
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.1.1. Default authentication plugins</h4>
+<h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.2.1. Default authentication plugins</h4>
 <div class="sect4">
 <h5 id="ref-auth-plugins-default-jb5"><a class="anchor" href="#ref-auth-plugins-default-jb5"></a>Jaybird 5</h5>
 <div class="paragraph">
@@ -6542,7 +6608,7 @@ It is not possible to specify a different configuration in Jaybird 3.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-config"><a class="anchor" href="#ref-auth-plugins-config"></a>9.1.2. Configure authentication plugins</h4>
+<h4 id="ref-auth-plugins-config"><a class="anchor" href="#ref-auth-plugins-config"></a>9.2.2. Configure authentication plugins</h4>
 <div class="paragraph">
 <p>The connection property <code>authPlugins</code> (alias <code>auth_plugin_list</code>) specifies the authentication plugins to try when connecting.
 The value of this property is a comma-separated list with the plugin names.</p>
@@ -6624,7 +6690,7 @@ The setting will also be ignored for native connections when using a fbclient li
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-external"><a class="anchor" href="#ref-auth-plugins-external"></a>9.1.3. External authentication plugin support (experimental)</h4>
+<h4 id="ref-auth-plugins-external"><a class="anchor" href="#ref-auth-plugins-external"></a>9.2.3. External authentication plugin support (experimental)</h4>
 <div class="paragraph">
 <p>If you develop your own Firebird authentication plugin (or use a third-party authentication plugin), it is possible&#8201;&#8212;&#8201;for pure Java only&#8201;&#8212;&#8201;to add your own authentication plugin by implementing the interfaces</p>
 </div>
@@ -6667,7 +6733,7 @@ they may change with point-releases (although we will try to avoid that)</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.2. Wire encryption support</h3>
+<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.3. Wire encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6742,7 +6808,7 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.3. Wire compression</h3>
+<h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.4. Wire compression</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6763,7 +6829,7 @@ This may change in future versions of Jaybird to be enabled by default.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.4. Database encryption support</h3>
+<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.5. Database encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6849,7 +6915,7 @@ Consider setting connection property <code>wireCrypt=REQUIRED</code> to force en
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.5. Default holdable result sets</h3>
+<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.6. Default holdable result sets</h3>
 <div class="paragraph">
 <p>This connection property enables a connection to create holdable result sets by default.
 This property can be used as a workaround for applications that expect a result set to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
@@ -6892,7 +6958,7 @@ The memory occupied by this result set will be released when the result is close
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.6. Firebird auto commit mode (experimental)</h3>
+<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.7. Firebird auto commit mode (experimental)</h3>
 <div class="admonitionblock caution">
 <table>
 <tr>
@@ -6944,7 +7010,7 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.7. Process information</h3>
+<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.8. Process information</h3>
 <div class="paragraph">
 <p>Introduced in Firebird 2.1, the <code>MON$ATTACHMENTS</code> monitoring table contains information about database attachments, including information about the client process.</p>
 </div>
@@ -6988,7 +7054,7 @@ Jaybird will report its full version (e.g. <code>Jaybird jaybird-5.0.1.java11</c
 <p>It is possible to specify the process name and process id in two ways:</p>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.7.1. System properties for process information</h4>
+<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.8.1. System properties for process information</h4>
 <div class="paragraph">
 <p>It is possible to specify the process information through Java system properties:</p>
 </div>
@@ -7017,7 +7083,7 @@ Changes to these system properties will only affect connections created after th
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.7.2. Connection properties for process information</h4>
+<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.8.2. Connection properties for process information</h4>
 <div class="paragraph">
 <p>It is also possible to specify the process information through connection properties:</p>
 </div>
@@ -7046,7 +7112,7 @@ In earlier versions, use <code>setNonStandardProperty</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.8. Data type bind support</h3>
+<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.9. Data type bind support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 4.0</em></p>
 </div>
@@ -7100,7 +7166,7 @@ props.setProperty("dataTypeBind",
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-enable-protocol"><a class="anchor" href="#ref-enable-protocol"></a>9.9. Enabling unsupported protocol versions</h3>
+<h3 id="ref-enable-protocol"><a class="anchor" href="#ref-enable-protocol"></a>9.10. Enabling unsupported protocol versions</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7203,7 +7269,7 @@ We recommend upgrading your Firebird version, or downgrading to a Jaybird versio
 </table>
 </div>
 <div class="sect2">
-<h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.10. Opt-in feature for package information in DatabaseMetaData</h3>
+<h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.11. Opt-in feature for package information in DatabaseMetaData</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em><br>
 <em class="since">Firebird 3.0</em></p>
@@ -7292,12 +7358,12 @@ This feature may be discontinued and removed in the future if Jaybird needs to i
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-client-info"><a class="anchor" href="#ref-client-info"></a>9.11. Client info properties</h3>
+<h3 id="ref-client-info"><a class="anchor" href="#ref-client-info"></a>9.12. Client info properties</h3>
 <div class="paragraph">
 <p>Client info properties allow you to set properties on a connection for informational purposes, or as the JDBC API documentation says &#8220;<em>used for accounting, diagnostics and debugging purposes only</em>&#8221;&#8203;<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
 </div>
 <div class="sect3">
-<h4 id="ref-client-info-jb5"><a class="anchor" href="#ref-client-info-jb5"></a>9.11.1. Support in Jaybird 5 and earlier</h4>
+<h4 id="ref-client-info-jb5"><a class="anchor" href="#ref-client-info-jb5"></a>9.12.1. Support in Jaybird 5 and earlier</h4>
 <div class="paragraph">
 <p>Support for client info properties was introduced in Jaybird 2.2, storing properties in the <code>USER_SESSION</code> context of <code>RDB$GET/SET_CONTEXT</code>.
 Support is quite limited, allowing you to:</p>
@@ -7337,7 +7403,7 @@ Properties are retrieved from <code>USER_TRANSACTION</code>, falling back to <co
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-client-info-jb6"><a class="anchor" href="#ref-client-info-jb6"></a>9.11.2. Support in Jaybird 6 and later</h4>
+<h4 id="ref-client-info-jb6"><a class="anchor" href="#ref-client-info-jb6"></a>9.12.2. Support in Jaybird 6 and later</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7434,7 +7500,7 @@ The <code>ClientUser</code> and <code>ClientHostname</code> properties are consi
 </div>
 </div>
 <div class="sect3">
-<h4 id="client-info-pool"><a class="anchor" href="#client-info-pool"></a>9.11.3. Connection pools and client info properties</h4>
+<h4 id="client-info-pool"><a class="anchor" href="#client-info-pool"></a>9.12.3. Connection pools and client info properties</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7462,7 +7528,7 @@ If your connection pool implementation supports custom code to reset a connectio
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.12. Create database if it does not exist</h3>
+<h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.13. Create database if it does not exist</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7518,7 +7584,7 @@ Jaybird applies some simple rules to exclude some classes of errors, and not att
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.13. Custom socket factory</h3>
+<h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.14. Custom socket factory</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -9860,6 +9926,18 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>asyncFetch</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+Boolean property.
+Enables/disables async fetching for pure Java connections.
+Default is <code>true</code>.
+See <a href="#ref-async-fetch">Async fetch</a> for more information.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>encoding</code><br>
 <code>lc_ctype</code>, <code>isc_dpb_lc_ctype</code></p>
 </div></div></td>
@@ -10224,6 +10302,7 @@ See <a href="#ref-extendedmetadata">Connection property extendedMetadata</a> for
 <p>Jaybird specific property (<em class="since">Jaybird 6</em>).
 Boolean property.
 Attempts to create a database if it does not exist.
+Default is <code>false</code>.
 See <a href="#ref-create-database-if-not-exist">Create database if it does not exist</a> for more information.</p>
 </div></div></td>
 </tr>
@@ -10401,7 +10480,25 @@ This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectio
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-default-enable-protocol"><a class="anchor" href="#systemproperties-default-enable-protocol"></a>B.4. Default <code>enableProtocol</code> value</h3>
+<h3 id="systemproperties-default-async-fetch"><a class="anchor" href="#systemproperties-default-async-fetch"></a>B.4. Default <code>asyncFetch</code> value</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultAsyncFetch</code></dt>
+<dd>
+<p>Configures the default value for the <code>asyncFetch</code> connection property.
+See <a href="#ref-async-fetch">Async fetch</a> for more information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-default-enable-protocol"><a class="anchor" href="#systemproperties-default-enable-protocol"></a>B.5. Default <code>enableProtocol</code> value</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultEnableProtocol</code></dt>
@@ -10413,7 +10510,10 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.5. Default <code>reportSQLWarnings</code> value</h3>
+<h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.6. Default <code>reportSQLWarnings</code> value</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultReportSQLWarnings</code></dt>
@@ -10425,7 +10525,7 @@ See <a href="#ref-report-sql-warnings">[ref-report-sql-warnings]</a> for more in
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.6. Wire protocol buffer sizes</h3>
+<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.7. Wire protocol buffer sizes</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -10544,7 +10644,7 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.7. Other properties</h3>
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.8. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -10577,7 +10677,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.8. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.9. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -13607,7 +13707,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-18 13:06:02 UTC
+Last updated 2024-12-22 13:13:00 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
