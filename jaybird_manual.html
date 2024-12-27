@@ -647,11 +647,11 @@ table.wide-table{font-size:xx-small}
 </li>
 <li><a href="#jaybirdversions">Appendix F: Jaybird versions</a>
 <ul class="sectlevel2">
-<li><a href="#jb5">F.1. Jaybird 5</a></li>
-<li><a href="#jb4">F.2. Jaybird 4</a></li>
-<li><a href="#jb3">F.3. Jaybird 3</a></li>
-<li><a href="#jb22">F.4. Jaybird 2.2</a></li>
-<li><a href="#_pre_release_versions">F.5. Pre-release versions</a></li>
+<li><a href="#jb6">F.1. Jaybird 6</a></li>
+<li><a href="#jb5">F.2. Jaybird 5</a></li>
+<li><a href="#jb4">F.3. Jaybird 4</a></li>
+<li><a href="#jb3">F.4. Jaybird 3</a></li>
+<li><a href="#jb22">F.5. Jaybird 2.2</a></li>
 </ul>
 </li>
 <li><a href="#license">Appendix G: License</a></li>
@@ -12367,9 +12367,253 @@ In current Firebird versions, this means the value will be equivalent to <code>D
 <p>This appendix lists the distribution files and supported specifications of recent Jaybird versions.</p>
 </div>
 <div class="sect2">
-<h3 id="jb5"><a class="anchor" href="#jb5"></a>F.1. Jaybird 5</h3>
+<h3 id="jb6"><a class="anchor" href="#jb6"></a>F.1. Jaybird 6</h3>
 <div class="sect3">
-<h4 id="jb5-java"><a class="anchor" href="#jb5-java"></a>F.1.1. Java support</h4>
+<h4 id="jb6-java"><a class="anchor" href="#jb6-java"></a>F.1.1. Java support</h4>
+<div class="paragraph">
+<p>Jaybird 6 supports Java 17 and higher (JDBC 4.3).</p>
+</div>
+<div class="paragraph">
+<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
+Currently, that means we support Java 17, Java 21, and Java 23.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 is modularized, and provides the following modules:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jaybird</code></dt>
+<dd>
+<p>main Jaybird driver (artifact <code>org.firebirdsql.jdbc:jaybird</code>)</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jaybird.chacha64</code></dt>
+<dd>
+<p>ChaCha64 wire encryption implementation (artifact <code>org.firebirdsql.jdbc:chacha64-plugin</code>)</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jna</code></dt>
+<dd>
+<p>native and embedded protocol implementation using JNA (artifact <code>org.firebirdsql.jdbc:jaybird-native</code>)</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jb6-firebird"><a class="anchor" href="#jb6-firebird"></a>F.1.2. Firebird support</h4>
+<div class="paragraph">
+<p>Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 will&#8201;&#8212;&#8201;by default&#8201;&#8212;&#8201;not connect to Firebird 2.5 or older.
+To connect to earlier versions, unsupported protocols have to be enabled explicitly, see <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> for details.</p>
+</div>
+<div class="paragraph">
+<p>Formal support for Firebird 2.5 has been dropped, and some things may no longer work (especially <code>DatabaseMetaData</code> methods), if features of Firebird 3.0 have been used.
+The Type 2 and embedded server JDBC drivers require a separate artifact, <code>jaybird-native</code>, and JNA to access the Firebird client or embedded library.</p>
+</div>
+<div class="sect4">
+<h5 id="jb6-firebird3"><a class="anchor" href="#jb6-firebird3"></a>Notes on Firebird 3.0 support</h5>
+<div class="paragraph">
+<p>Jaybird 6 supports the Firebird 3.0 and higher zlib compression.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 supports the Arc4 wire encryption plugin out-of-the-box.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="jb6-firebird4"><a class="anchor" href="#jb6-firebird4"></a>Notes on Firebird 4.0 support</h5>
+<div class="paragraph">
+<p>Jaybird 6 supports the protocol improvements of Firebird 4.0 for statement timeouts and server-side batch execution.
+Jaybird 6 does not support sending blobs as part of batch execution.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 supports the Arc4 and ChaCha wire encryption plugin out-of-the-box.
+To support the ChaCha64 wire encryption plugin, the artifact <code>org.firebirdsql.jdbc:chacha64-plugin</code> has to be added to the classpath.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#jb6-firebird3">Notes on Firebird 3.0 support</a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="jb6-firebird5"><a class="anchor" href="#jb6-firebird5"></a>Notes on Firebird 5.0 support</h5>
+<div class="paragraph">
+<p>Jaybird 6 supports Firebird 5.0 server-side scrollable cursors and multi-row <code>RETURNING</code>.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#jb6-firebird4">Notes on Firebird 4.0 support</a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="jb6-spec"><a class="anchor" href="#jb6-spec"></a>F.1.3. Supported Specifications</h4>
+<div class="paragraph">
+<p>Jaybird 6 supports the following specifications:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Specification</th>
+<th class="tableblock halign-left valign-top">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
+It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The driver provides an implementation of the <code>javax.transaction.xa.XAResource</code> interface via a <code>javax.sql.XADataSource</code> implementation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="jb6-distribution"><a class="anchor" href="#jb6-distribution"></a>F.1.4. Distribution</h4>
+<div class="paragraph">
+<p>Jaybird has no required runtime dependencies.</p>
+</div>
+<div class="paragraph">
+<p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.16.0 need to be on the classpath.</p>
+</div>
+<div class="paragraph">
+<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.79 (Bouncy Castle JCE provider) need to be on the classpath.</p>
+</div>
+<div class="sect4">
+<h5 id="jb6-distribution-package"><a class="anchor" href="#jb6-distribution-package"></a>Distribution package</h5>
+<div class="paragraph">
+<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
+</div>
+<div class="paragraph">
+<p>The following files can be found in the distribution package:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The main JDBC driver, the Services API and event management classes.
+Provides only pure Java connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/bcprov-jdk18on-1.79.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required for the ChaCha64 support (with <code>chacha64-plugin</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Options dependency, support for native and embedded connections.
+Requires <code>lib/jna-jpms-5.16.0.jar</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-jpms-5.16.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, or embedded protocols (with <code>jaybird-native</code>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect4">
+<h5 id="jb6-distribution-maven"><a class="anchor" href="#jb6-distribution-maven"></a>Maven</h5>
+<div class="paragraph">
+<p>Alternatively, you can use Maven to automatically download Jaybird and its dependencies.</p>
+</div>
+<div class="paragraph">
+<p>Jaybird 6 is available from Maven central:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+groupId
+</td>
+<td class="hdlist2">
+<p><code>org.firebirdsql.jdbc</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+artifactId
+</td>
+<td class="hdlist2">
+<p><code>jaybird</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+version
+</td>
+<td class="hdlist2">
+<p><code>6.0.0</code></p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want to use ChaCha64 wire encryption, you need to explicitly include <code>chacha64-plugin</code> as a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want to use Type 2 support (native or embedded), you need to explicitly include <code>jaybird-native</code> as a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, for native connections you can use the <code>org.firebirdsql.jdbc:fbclient</code> dependency to provide the client library (<code>fbclient.dll</code>/<code>libfbclient.so</code>) on Windows and Linux.
+See <a href="#driver-native-maven">Maven dependency for native client</a> for details.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="jb5"><a class="anchor" href="#jb5"></a>F.2. Jaybird 5</h3>
+<div class="sect3">
+<h4 id="jb5-java"><a class="anchor" href="#jb5-java"></a>F.2.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).</p>
 </div>
@@ -12405,7 +12649,7 @@ The Java 8 builds have all JDBC 4.3 related functionality and can be used on Jav
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb5-firebird"><a class="anchor" href="#jb5-firebird"></a>F.1.2. Firebird support</h4>
+<h4 id="jb5-firebird"><a class="anchor" href="#jb5-firebird"></a>F.2.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 5 supports Firebird 2.5 and higher.</p>
 </div>
@@ -12445,7 +12689,7 @@ Support for ChaCha64 will be added in Jaybird 6.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb5-spec"><a class="anchor" href="#jb5-spec"></a>F.1.3. Supported Specifications</h4>
+<h4 id="jb5-spec"><a class="anchor" href="#jb5-spec"></a>F.2.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird 5 supports the following specifications:</p>
 </div>
@@ -12474,7 +12718,7 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb5-distribution"><a class="anchor" href="#jb5-distribution"></a>F.1.4. Distribution</h4>
+<h4 id="jb5-distribution"><a class="anchor" href="#jb5-distribution"></a>F.2.4. Distribution</h4>
 <div class="paragraph">
 <p>Jaybird has no required runtime dependencies.
 For native or embedded connections, JNA 5.15.0 needs to be on the class path.</p>
@@ -12579,7 +12823,7 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 </div>
 </div>
 <div class="sect2">
-<h3 id="jb4"><a class="anchor" href="#jb4"></a>F.2. Jaybird 4</h3>
+<h3 id="jb4"><a class="anchor" href="#jb4"></a>F.3. Jaybird 4</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -12596,7 +12840,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb4-java"><a class="anchor" href="#jb4-java"></a>F.2.1. Java support</h4>
+<h4 id="jb4-java"><a class="anchor" href="#jb4-java"></a>F.3.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 4 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).</p>
 </div>
@@ -12613,7 +12857,7 @@ The Java 8 builds have the same source and all JDBC 4.3 related functionality an
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb4-firebird"><a class="anchor" href="#jb4-firebird"></a>F.2.2. Firebird support</h4>
+<h4 id="jb4-firebird"><a class="anchor" href="#jb4-firebird"></a>F.3.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 4 supports Firebird 2.5 and higher.</p>
 </div>
@@ -12646,7 +12890,7 @@ Support for ChaCha has been added in Jaybird 5.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb4-spec"><a class="anchor" href="#jb4-spec"></a>F.2.3. Supported Specifications</h4>
+<h4 id="jb4-spec"><a class="anchor" href="#jb4-spec"></a>F.3.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird supports the following specifications:</p>
 </div>
@@ -12681,7 +12925,7 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb4-distribution"><a class="anchor" href="#jb4-distribution"></a>F.2.4. Distribution</h4>
+<h4 id="jb4-distribution"><a class="anchor" href="#jb4-distribution"></a>F.3.4. Distribution</h4>
 <div class="paragraph">
 <p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.</p>
 </div>
@@ -12820,7 +13064,7 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 </div>
 </div>
 <div class="sect2">
-<h3 id="jb3"><a class="anchor" href="#jb3"></a>F.3. Jaybird 3</h3>
+<h3 id="jb3"><a class="anchor" href="#jb3"></a>F.4. Jaybird 3</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -12837,7 +13081,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb3-java"><a class="anchor" href="#jb3-java"></a>F.3.1. Java support</h4>
+<h4 id="jb3-java"><a class="anchor" href="#jb3-java"></a>F.4.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 3 supports Java 7 (JDBC 4.1), Java 8 (JDBC 4.2), and Java 9 - 11 (JDBC 4.3).</p>
 </div>
@@ -12852,7 +13096,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb3-firebird"><a class="anchor" href="#jb3-firebird"></a>F.3.2. Firebird support</h4>
+<h4 id="jb3-firebird"><a class="anchor" href="#jb3-firebird"></a>F.4.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 3 supports Firebird 2.0 and higher, but is only tested with Firebird 2.5, 3.0 and 4.0.</p>
 </div>
@@ -12888,7 +13132,7 @@ Support for data types like <code>DECFLOAT</code> and <code>NUMERIC</code>/<code
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb3-spec"><a class="anchor" href="#jb3-spec"></a>F.3.3. Supported Specifications</h4>
+<h4 id="jb3-spec"><a class="anchor" href="#jb3-spec"></a>F.4.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird supports the following specifications:</p>
 </div>
@@ -12923,7 +13167,7 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb3-distribution"><a class="anchor" href="#jb3-distribution"></a>F.3.4. Distribution</h4>
+<h4 id="jb3-distribution"><a class="anchor" href="#jb3-distribution"></a>F.4.4. Distribution</h4>
 <div class="paragraph">
 <p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
 Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.</p>
@@ -13069,7 +13313,7 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 </div>
 </div>
 <div class="sect2">
-<h3 id="jb22"><a class="anchor" href="#jb22"></a>F.4. Jaybird 2.2</h3>
+<h3 id="jb22"><a class="anchor" href="#jb22"></a>F.5. Jaybird 2.2</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -13086,7 +13330,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>F.4.1. Java support</h4>
+<h4 id="jb22-java"><a class="anchor" href="#jb22-java"></a>F.5.1. Java support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Java 6 (JDBC 4.0), Java 7 (JDBC 4.1) and Java 8 (JDBC 4.2).
 Java 5 support was dropped in Jaybird 2.2.8.</p>
@@ -13097,7 +13341,7 @@ This guarantees a stable module name for Jaybird, and allows for future modulari
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>F.4.2. Firebird support</h4>
+<h4 id="jb22-firebird"><a class="anchor" href="#jb22-firebird"></a>F.5.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports Firebird 1.0 and higher, but is only tested with Firebird 2.5 and 3.0.</p>
 </div>
@@ -13115,7 +13359,7 @@ Precompiled JNI binaries for Windows and Linux platforms are shipped in the defa
 </div>
 </div>
 <div class="sect3">
-<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>F.4.3. Supported Specifications</h4>
+<h4 id="jb22-spec"><a class="anchor" href="#jb22-spec"></a>F.5.3. Supported Specifications</h4>
 <div class="paragraph">
 <p>Jaybird 2.2 supports the following specifications:</p>
 </div>
@@ -13159,7 +13403,7 @@ framework and a <code>javax.sql.XADataSource</code> implementation.</p></td>
 </table>
 </div>
 <div class="sect3">
-<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>F.4.4. Distribution</h4>
+<h4 id="jb22-distribution"><a class="anchor" href="#jb22-distribution"></a>F.5.4. Distribution</h4>
 <div class="paragraph">
 <p>The Jaybird driver has compile-time and run-time dependencies to JCA 1.5.
 Additionally, if the antlr-runtime classes are found in the class path, it is possible to use generated key retrieval.</p>
@@ -13287,253 +13531,6 @@ Version: <code>2.2.15</code></p>
   &lt;version&gt;1.5&lt;/version&gt;
   &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_pre_release_versions"><a class="anchor" href="#_pre_release_versions"></a>F.5. Pre-release versions</h3>
-<div class="sect3">
-<h4 id="jb6"><a class="anchor" href="#jb6"></a>F.5.1. Jaybird 6</h4>
-<div class="sect4">
-<h5 id="jb6-java"><a class="anchor" href="#jb6-java"></a>Java support</h5>
-<div class="paragraph">
-<p>Jaybird 6 supports Java 17 and higher (JDBC 4.3).</p>
-</div>
-<div class="paragraph">
-<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
-Currently, that means we support Java 17, Java 21, and Java 23.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 is modularized, and provides the following modules:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>org.firebirdsql.jaybird</code></dt>
-<dd>
-<p>main Jaybird driver (artifact <code>org.firebirdsql.jdbc:jaybird</code>)</p>
-</dd>
-<dt class="hdlist1"><code>org.firebirdsql.jaybird.chacha64</code></dt>
-<dd>
-<p>ChaCha64 wire encryption implementation (artifact <code>org.firebirdsql.jdbc:chacha64-plugin</code>)</p>
-</dd>
-<dt class="hdlist1"><code>org.firebirdsql.jna</code></dt>
-<dd>
-<p>native and embedded protocol implementation using JNA (artifact <code>org.firebirdsql.jdbc:jaybird-native</code>)</p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect4">
-<h5 id="jb6-firebird"><a class="anchor" href="#jb6-firebird"></a>Firebird support</h5>
-<div class="paragraph">
-<p>Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 will&#8201;&#8212;&#8201;by default&#8201;&#8212;&#8201;not connect to Firebird 2.5 or older.
-To connect to earlier versions, unsupported protocols have to be enabled explicitly, see <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> for details.</p>
-</div>
-<div class="paragraph">
-<p>Formal support for Firebird 2.5 has been dropped, and some things may no longer work (especially <code>DatabaseMetaData</code> methods), if features of Firebird 3.0 have been used.
-The Type 2 and embedded server JDBC drivers require a separate artifact, <code>jaybird-native</code>, and JNA to access the Firebird client or embedded library.</p>
-</div>
-<div class="sect5">
-<h6 id="jb6-firebird3"><a class="anchor" href="#jb6-firebird3"></a>Notes on Firebird 3.0 support</h6>
-<div class="paragraph">
-<p>Jaybird 6 supports the Firebird 3.0 and higher zlib compression.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 supports the Arc4 wire encryption plugin out-of-the-box.</p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="jb6-firebird4"><a class="anchor" href="#jb6-firebird4"></a>Notes on Firebird 4.0 support</h6>
-<div class="paragraph">
-<p>Jaybird 6 supports the protocol improvements of Firebird 4.0 for statement timeouts and server-side batch execution.
-Jaybird 6 does not support sending blobs as part of batch execution.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 supports the Arc4 and ChaCha wire encryption plugin out-of-the-box.
-To support the ChaCha64 wire encryption plugin, the artifact <code>org.firebirdsql.jdbc:chacha64-plugin</code> has to be added to the classpath.</p>
-</div>
-<div class="paragraph">
-<p>See also <a href="#jb6-firebird3">Notes on Firebird 3.0 support</a></p>
-</div>
-</div>
-<div class="sect5">
-<h6 id="jb6-firebird5"><a class="anchor" href="#jb6-firebird5"></a>Notes on Firebird 5.0 support</h6>
-<div class="paragraph">
-<p>Jaybird 6 supports Firebird 5.0 server-side scrollable cursors and multi-row <code>RETURNING</code>.</p>
-</div>
-<div class="paragraph">
-<p>See also <a href="#jb6-firebird4">Notes on Firebird 4.0 support</a></p>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="jb6-spec"><a class="anchor" href="#jb6-spec"></a>Supported Specifications</h5>
-<div class="paragraph">
-<p>Jaybird 6 supports the following specifications:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Specification</th>
-<th class="tableblock halign-left valign-top">Details</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The driver provides an implementation of the <code>javax.transaction.xa.XAResource</code> interface via a <code>javax.sql.XADataSource</code> implementation.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect4">
-<h5 id="jb6-distribution"><a class="anchor" href="#jb6-distribution"></a>Distribution</h5>
-<div class="paragraph">
-<p>Jaybird has no required runtime dependencies.</p>
-</div>
-<div class="paragraph">
-<p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.16.0 need to be on the classpath.</p>
-</div>
-<div class="paragraph">
-<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.79 (Bouncy Castle JCE provider) need to be on the classpath.</p>
-</div>
-<div class="sect5">
-<h6 id="jb6-distribution-package"><a class="anchor" href="#jb6-distribution-package"></a>Distribution package</h6>
-<div class="paragraph">
-<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
-</div>
-<div class="paragraph">
-<p>The following files can be found in the distribution package:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 28.5714%;">
-<col style="width: 71.4286%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">File name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.0.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The main JDBC driver, the Services API and event management classes.
-Provides only pure Java connections.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.0.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/bcprov-jdk18on-1.79.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required for the ChaCha64 support (with <code>chacha64-plugin</code>)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.0.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Options dependency, support for native and embedded connections.
-Requires <code>lib/jna-jpms-5.16.0.jar</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-jpms-5.16.0.jar</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, or embedded protocols (with <code>jaybird-native</code>)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect5">
-<h6 id="jb6-distribution-maven"><a class="anchor" href="#jb6-distribution-maven"></a>Maven</h6>
-<div class="paragraph">
-<p>Alternatively, you can use Maven to automatically download Jaybird and its dependencies.</p>
-</div>
-<div class="paragraph">
-<p>Jaybird 6 is available from Maven central:</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-groupId
-</td>
-<td class="hdlist2">
-<p><code>org.firebirdsql.jdbc</code></p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-artifactId
-</td>
-<td class="hdlist2">
-<p><code>jaybird</code></p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-version
-</td>
-<td class="hdlist2">
-<p><code>6.0.0</code></p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>For example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you want to use ChaCha64 wire encryption, you need to explicitly include <code>chacha64-plugin</code> as a dependency:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you want to use Type 2 support (native or embedded), you need to explicitly include <code>jaybird-native</code> as a dependency:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
-  &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In addition, for native connections you can use the <code>org.firebirdsql.jdbc:fbclient</code> dependency to provide the client library (<code>fbclient.dll</code>/<code>libfbclient.so</code>) on Windows and Linux.
-See <a href="#driver-native-maven">Maven dependency for native client</a> for details.</p>
 </div>
 </div>
 </div>
@@ -13711,7 +13708,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-27 13:38:58 UTC
+Last updated 2024-12-27 13:41:05 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
