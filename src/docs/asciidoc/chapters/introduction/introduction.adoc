@@ -107,7 +107,7 @@ Committing a code change to the source control is not allowed until it passes al
 Each reproducible bug usually gets its own test case. 
 This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.
 
-Currently, there are more than 9000 test cases covering most of the driver code.
+Currently, there are more than 10,000 test cases covering most of the driver code.
 A subset of the tests are automatically run -- through a GitHub Action -- for each push to the repository.
 
 === Useful resources
@@ -116,7 +116,7 @@ A subset of the tests are automatically run -- through a GitHub Action -- for ea
 
 For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[Java SE Technologies - Database^].
 
-For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.3).
+For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.3, e.g. JDBC 4.3 is "`Maintenance Release 3`").
 
 ==== Firebird
 
@@ -131,7 +131,7 @@ Support for Jaybird is available through the following channels:
 * The https://groups.google.com/g/firebird-java[firebird-java Google Group^] and corresponding mailing list firebird-java@googlegroups.com
 +
 You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account).
-Alternatively, you can join the group at https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
+Alternatively, you can join the group at the https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
 * On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^].
 * On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
 * On https://stackoverflow.com/[Stack Overflow^], please tag your questions with
@@ -144,11 +144,11 @@ see https://stackoverflow.com/tour[Stack Overflow Tour^] and https://stackoverfl
 
 There are several ways you can contribute to Jaybird or Firebird in general:
 
-* Participate on the mailing lists (see https://firebirdsql.org/en/mailing-lists/[^])
+* Participate on the https://firebirdsql.org/en/mailing-lists/[mailing lists^]
 * Report bugs or submit patches on the tracker (see <<intro-reporting-bugs>>)
 * Create pull requests on GitHub (https://github.com/FirebirdSQL/jaybird[^])
 * Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use the https://groups.google.com/g/firebird-devel[firebird-devel Google Group^])
-* Become a paying member or sponsor of the Firebird Foundation (see https://firebirdsql.org/en/firebird-foundation/[^])
+* Become a paying Associate, Partner or sponsor of the Firebird Foundation (see https://firebirdsql.org/en/firebird-foundation/[^])
 
 [[intro-reporting-bugs]]
 ==== Reporting Bugs

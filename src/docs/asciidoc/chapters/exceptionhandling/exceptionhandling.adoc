@@ -158,6 +158,9 @@ to other warnings (if any), and so on.
 
 To clear existing warning, call `Connection.clearWarnings()` method.
 
+[.since]_Jaybird 6_ Some applications log or report `SQLWarning` in a way that can be confusing or annoying.
+You can disable registration of ``SQLWarning``s globally or per connection, see <<ref-report-sql-warnings>> for more information.
+
 === java.sql.SQLException in Jaybird
 
 *TODO* Information in section is possibly outdated or incomplete
@@ -217,40 +220,24 @@ error happens, can also be used as a warning.
 
 NOTE: Unfortunately Jaybird does not yet fully use this exception hierarchy, we are working to improve this with the next versions of Jaybird.
 
-Each of three layers in Jaybird use exceptions most appropriate to the
-specific layer. *TODO* List needs revision
+Each of three layers in Jaybird use exceptions most appropriate to the specific layer.
 
-* `org.firebirdsql.gds.GDSException` is an exception that directly
-corresponding to the error returned by the database engine. Instances of
-this class are thrown by the GDS implementations. Upper layers either
-convert these exceptions into the ones appropriate to that layer or
-catch them if driver can handle the error condition.
-* Subclasses of `javax.resource.ResourceException` are thrown by the JCA
-layer when an error happens in the JCA-related code. Upper layer
-converts this exception into a subclass of `java.sql.SQLException`. If
-the `ResourceException` was caused by the `GDSException`, latter is
-extracted during conversion preserving the error code. If
-`ResourceException` was caused by an error condition not related to an
-error returned by the database engine, error code of the `SQLException`
-remains 0.
-* Subclasses of `javax.transaction.XAException` are thrown when an XA
-protocol error happens in JCA layer. Similar to the previous case,
-`XAException` can wrap the `GDSException`, which are extracted during
-exception conversion to preserve the error code.
-* Subclasses of `java.sql.SQLException` are thrown by the JDBC layer.
-Jaybird has a few subclasses that might be interesting to the
-application:
-** `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` -- this
-exception is thrown when driver detects an internal inconsistent state.
+* Subclasses of `java.sql.SQLException` are thrown by the JDBC, XCA, and GDS layers.
+In addition to the JDBC-provided exceptions, Jaybird has a few subclasses that might be interesting to an application:
+** [.until]_Jaybird 6_ `org.firebirdsql.jdbc.FBDriverConsistencyCheckException` -- this exception is thrown when driver detects an internal inconsistent state.
 SQL state is `HY000`.
-** `org.firebirdsql.jdbc.FBDriverNotCapableException` -- this exception
-is thrown when an unsupported method is called. SQL state is `0A000`.
-** `org.firebirdsql.jdbc.FBSQLParseException` -- this exception is thrown
-when incorrect escaped syntax is detected. SQL state is `42000`.
-** `org.firebirdsql.jdbc.field.TypeConversionException` -- this exception
-is thrown when the driver is asked to perform a type conversion that is
-not defined in the JDBC specification. For a table of allowed type
-conversions see <<Data Type Conversion Table>>.
+** `org.firebirdsql.jdbc.FBDriverNotCapableException` -- this exception is thrown when an unsupported method is called, extends `java.sql.SQLFeatureNotSupportedException`.
+SQL state is `0A000`.
+** `org.firebirdsql.jdbc.FBSQLParseException` -- this exception is thrown when incorrect escaped syntax is detected when parsing JDBC escapes.
+SQL state is `42000`.
+** `org.firebirdsql.jdbc.field.TypeConversionException` -- this exception is thrown when the driver is asked to perform a type conversion that is not defined in the JDBC specification, or otherwise not supported by Jaybird.
+For a table of allowed type conversions see <<Data Type Conversion Table>>.
+* [.until]_Jaybird 5_ Subclasses of `javax.resource.ResourceException` are thrown by the JCA layer when an error happens in the JCA-related code.
+The upper layer converts this exception into a subclass of `java.sql.SQLException`.
+If the `ResourceException` was caused by a `SQLException` or `GDSException`, the latter is extracted during conversion, preserving the error code.
+If `ResourceException` was caused by an error condition not related to an error returned by the database engine, the error code of the `SQLException` remains 0.
+* Subclasses of `javax.transaction.XAException` are thrown when an XA protocol error happens in the JCA/XCA layer.
+Similar to the previous case, `XAException` can wrap the `SQLException` or `GDSException`, which are extracted during exception conversion to preserve the error code.
 
 === SQL states
 

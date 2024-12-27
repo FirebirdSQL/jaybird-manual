@@ -50,14 +50,11 @@ However, despite that these resources are released when the connection closes, i
 
 A statement can be executed using the following methods:
 
-* `Statement.executeQuery(String)` -- executes a `SELECT` statement and returns a result set.
-If the specified statement does not produce a result set, an `SQLException` is thrown after statement execution.
-* `Statement.executeUpdate(String)` -- executes other DMLfootnote:[DML -- Data Manipulation Language] (e.g. `INSERT`, `UPDATE`, `DELETE`) or DDLfootnote:[
-DDL -- Data Definition Language.
-This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]
-statements and returns the number of updated rows.
+* `Statement.executeQuery(String)` -- executes a `SELECT` or other result set producing statement, and returns a result set.
+If the specified statement does not produce a result set, an `SQLException` is thrown after statement executionfootnote:[This is an implementation detail and may change in the future to throw an exception _before_ execution].
+* `Statement.executeUpdate(String)` -- executes other DML (Data Manipulation Language, e.g. `INSERT`, `UPDATE`, `DELETE`) or DDL(Data Definition Languagefootnote:[This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]) statements and returns the number of updated rows.
 If the specified statement is a query or otherwise produces a result set, an `SQLException` is thrown.
-* `Statement.execute(String)` -- executes a statement and returns `true` when the statement returned a result set, otherwise an update was executed and `false` is returned.
+* `Statement.execute(String)` -- executes a statement and returns `true` when the statement returned a result set, or `false` if the result has no result set, but has an update count or nothing as its result.
 You can use `Statement.getResultSet()` method to get the result of the executed query, or you can use `Statement.getUpdateCount()` when you have executed update statement.
 +
 Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.
@@ -184,7 +181,7 @@ The described behaviour may change in the future by throwing the exception *befo
 =====
 
 When an application does not need to know how many rows were modified, it should use the `execute()` method instead of `executeUpdate()`.
-This saves an additional call to the server to get the number of modified rows which can increase the performance in the situations where network latency is comparable with the statement execution times.
+This saves an additional call to the server to get the number of modified rows which can increase the performance in situations where network latency is comparable with the statement execution times.
 
 The `execute()` method is also the only method that can be used when the application does not know what kind of statement is being executed (for example, an application that allows the user to enter SQL statements to execute).
 
@@ -192,11 +189,11 @@ After using the statement object, an application should close it.
 Two different possibilities exist: to close the result set object associated with the statement handle and to close the statement completely.
 
 If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
-Jaybird is required only to compile a new statement before using it, in other words we can skip step 1 (allocating a new statement handle).
+Jaybird only needs to compile a new statement on the existing statement handle before using it, in other words we can skip step 1 (allocating a new statement handle).
 This saves us one round-trip to the server over the network, which might improve the application performance.
 
 If we close the statement completely, the allocated statement handle is no longer usable.
-Jaybird could allocate a new statement handle, however the JDBC specification does not allow use of a `Statement` object after `close()` method has been called.
+In theory, Jaybird could allocate a new statement handle, however the JDBC specification does not allow use of a `Statement` object after `close()` has been called.
 
 ==== Statement lifetime and DDL
 
@@ -228,7 +225,7 @@ The `PreparedStatement` interface addresses such inefficiencies.
 An object that implements this interface represents a precompiled statement that can be executed multiple times.
 If we use the execution flow described in the "<<Statement dynamics>>" section, it allows us to go directly to step 4 for repeated executions.
 
-However, executing the same statement with the same values makes little sense, unless we want to fill the table with the same data, which usually is not the case.
+However, executing the same statement with the same values rarely makes sense, unless we want to fill the table with the same data, which usually is not the case.
 Therefore, JDBC provides support for parametrized statements -- SQL statements where literals are replaced with question marks ('```?```'), so-called positional parameters.
 The application then assigns values to the parameters before executing the statement.
 

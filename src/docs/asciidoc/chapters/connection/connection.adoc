@@ -1,7 +1,7 @@
 [[connection]]
 == Obtaining a connection
 
-Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via `java.sql.DriverManager` and via an implementation of the `javax.sql.DataSource` interface.
+Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via <<connection-drivermanager,`java.sql.DriverManager`>> and via <<connection-datasource,an implementation of the `javax.sql.DataSource` interface>>.
 
 [[connection-drivermanager]]
 === Obtaining connection java.sql.DriverManager
@@ -24,9 +24,9 @@ JDBC protocol
 JDBC subprotocol, identifies driver to use, in this case Jaybird
 * `//localhost:3050/c:/database/example.fdb` 
 +
-This is a database specific part, and identifies the database for the driver to connect, in the case of Jaybird that is `//<host>:<port>/<path to database>`
+This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird that is `//<host>:<port>/<path to database>`
 
-The first part, `jdbc:firebird:` or `jdbc:firebirdsql:`, is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
+The first part -- `jdbc:firebird:` or `jdbc:firebirdsql:` -- is required by JDBC, and specifies the so-called protocol and subprotocol for the JDBC connection.
 In other words, it specifies the type of connection that the application wants to obtain, in this example, a connection to a Firebird database.
 
 An example of obtaining a connection is shown below.
@@ -59,7 +59,8 @@ Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.f
 Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment (e.g. in `WEB-INF/lib` of the WAR).
 There, the driver is not on the system class path, so it will need to be loaded explicitly.
 
-We will leave out usages of `Class.forName` in further examples, they will work because of automatic driver loading.
+We will leave out usages of `Class.forName` in further examples;
+they will work because of automatic driver loading.
 
 [aside]
 .Registering the JDBC driver
@@ -115,8 +116,7 @@ We suggest not to use relative paths, and instead use an alias.
 [[connection-drivermanager-props]]
 ==== Specifying extended properties
 
-What if we want to specify additional connection parameters, for example a client encoding? 
-The JDBC API provides a method to specify additional connection properties:
+The JDBC API provides a method to specify additional connection properties, for example a client encoding:
 
 [source,java]
 .Obtaining JDBC connection with additional connection properties
@@ -143,7 +143,8 @@ public class HelloServerWithEncoding {
 }
 ----
 
-The `user` and `password` properties are defined in JDBC. All other property names, like `encoding` here, are driver-specific.
+The `user` and `password` properties are defined in JDBC.
+All other property names -- like `encoding` here -- are driver-specific.
 
 Additional properties, for example the SQL role for the connection can be added to the `props` object.
 The list of properties available in Jaybird can be found in <<connectionproperties>>.
@@ -178,8 +179,6 @@ Connection connection = DriverManager.getConnection(
 
 [[connection-drivermanager-props-urlencoding]]
 ===== URL encoding in query part of JDBC URL
-
-NOTE: Jaybird only supports URL encoding in Jaybird 4 and higher.
 
 UTF-8 URL encoded values (and keys) can be used in the query part of the JDBC URL.
 
@@ -613,7 +612,7 @@ To connect to Firebird, use LibreOffice Base with connection option "`Firebird E
 [[connection-pooling]]
 === Connection Pooling
 
-Each time a connection is opened via `DriverManager`, a new physical connection to server is opened.
+Each time a connection is opened via `DriverManager` or `FBSimpleDataSource`, a new physical connection to server is opened.
 It is closed when the connection is closed.
 To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.
 
