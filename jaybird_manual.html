@@ -707,7 +707,7 @@ The JCA standard specifies an architecture in which an application server can co
 <div class="sect2">
 <h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
 <div class="paragraph">
-<p>This manual covers Jaybird 5 and may use Java 11 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
+<p>This manual covers Jaybird 6 and may use Java 11 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
 Features that were removed in Jaybird 3 or earlier are not covered.</p>
 </div>
 <div class="paragraph">
@@ -715,7 +715,7 @@ Features that were removed in Jaybird 3 or earlier are not covered.</p>
 This tagging is only done for features introduced (or removed) <em>after</em> Jaybird 4.0.0, or in Firebird 3.0 or later.</p>
 </div>
 <div class="paragraph">
-<p>This manual may include documentation of features of&#8201;&#8212;&#8201;possibly unreleased&#8201;&#8212;&#8201;Jaybird versions later than 5 to simplify manual maintenance and versioning.</p>
+<p>This manual may include documentation of features of&#8201;&#8212;&#8201;possibly unreleased&#8201;&#8212;&#8201;Jaybird versions later than 6 to simplify manual maintenance and versioning.</p>
 </div>
 </div>
 <div class="sect2">
@@ -768,7 +768,7 @@ Currently, only calls to create and drop database are available in the Manager c
 <div class="sect2">
 <h3 id="distribution"><a class="anchor" href="#distribution"></a>1.4. Jaybird Distribution</h3>
 <div class="paragraph">
-<p>Jaybird 5 supports Firebird 2.5 and higher.
+<p>Jaybird 6 supports Firebird 2.5 and higher.
 See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
 <div class="paragraph">
@@ -780,12 +780,12 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <p>Alternatively, you can use maven to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 5 is available from Maven central:</p>
+<p>Jaybird 6 is available from Maven central:</p>
 </div>
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>5.0.6.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <code>java11</code> or <code>java8</code>)</p>
+Version: <code>6.0.0</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -795,24 +795,33 @@ Version: <code>5.0.6.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is <co
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.6.java11&lt;/version&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you want to use Type 2 support (native or embedded), you need to explicitly include JNA 5.15.0 as a dependency:</p>
+<p>If you want to use ChaCha64 wire encryption, you need to explicitly include <code>chacha64-plugin</code> as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
-  &lt;groupId&gt;net.java.dev.jna&lt;/groupId&gt;
-  &lt;artifactId&gt;jna&lt;/artifactId&gt;
-  &lt;version&gt;5.15.0&lt;/version&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In Jaybird 6, native and embedded support will be in a separate library.</p>
+<p>If you want to use Type 2 support (native or embedded), you need to explicitly include <code>jaybird-native</code> as a dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
+  &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>The Firebird client library is available as a Maven dependencies, see <a href="#driver-native-maven">Maven dependency for native client</a>.
@@ -830,7 +839,7 @@ Each reproducible bug usually gets its own test case.
 This guarantees that a clean check out can be compiled and will not contain any previously discovered and fixed bugs.</p>
 </div>
 <div class="paragraph">
-<p>Currently, there are more than 9000 test cases covering most of the driver code.
+<p>Currently, there are more than 10,000 test cases covering most of the driver code.
 A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub Action&#8201;&#8212;&#8201;for each push to the repository.</p>
 </div>
 </div>
@@ -842,7 +851,7 @@ A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub
 <p>For JDBC documentation, see <a href="https://www.oracle.com/java/technologies/javase/javase-tech-database.html" target="_blank" rel="noopener">Java SE Technologies - Database</a>.</p>
 </div>
 <div class="paragraph">
-<p>For the JDBC specification, see <a href="https://jcp.org/en/jsr/detail?id=221" target="_blank" rel="noopener">JSR 221: JDBC<sup>TM</sup> 4.0 API Specification</a> (covers JDBC 4.0 - 4.3).</p>
+<p>For the JDBC specification, see <a href="https://jcp.org/en/jsr/detail?id=221" target="_blank" rel="noopener">JSR 221: JDBC<sup>TM</sup> 4.0 API Specification</a> (covers JDBC 4.0 - 4.3, e.g. JDBC 4.3 is &#8220;Maintenance Release 3&#8221;).</p>
 </div>
 </div>
 <div class="sect3">
@@ -865,7 +874,7 @@ A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub
 <p>The <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and corresponding mailing list <a href="mailto:firebird-java@googlegroups.com">firebird-java@googlegroups.com</a></p>
 <div class="paragraph">
 <p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java+subscribe@googlegroups.com">firebird-java+subscribe@googlegroups.com</a> (this does not require a Google account).
-Alternatively, you can join the group at <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> (this requires a Google account).</p>
+Alternatively, you can join the group at the <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> (this requires a Google account).</p>
 </div>
 </li>
 <li>
@@ -894,7 +903,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 <div class="ulist">
 <ul>
 <li>
-<p>Participate on the mailing lists (see <a href="https://firebirdsql.org/en/mailing-lists/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/mailing-lists/</a>)</p>
+<p>Participate on the <a href="https://firebirdsql.org/en/mailing-lists/" target="_blank" rel="noopener">mailing lists</a></p>
 </li>
 <li>
 <p>Report bugs or submit patches on the tracker (see <a href="#intro-reporting-bugs">Reporting Bugs</a>)</p>
@@ -906,7 +915,7 @@ see <a href="https://stackoverflow.com/tour" target="_blank" rel="noopener">Stac
 <p>Become a developer (for Jaybird contact us on <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a>, for Firebird in general, use the <a href="https://groups.google.com/g/firebird-devel" target="_blank" rel="noopener">firebird-devel Google Group</a>)</p>
 </li>
 <li>
-<p>Become a paying member or sponsor of the Firebird Foundation (see <a href="https://firebirdsql.org/en/firebird-foundation/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/firebird-foundation/</a>)</p>
+<p>Become a paying Associate, Partner or sponsor of the Firebird Foundation (see <a href="https://firebirdsql.org/en/firebird-foundation/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/firebird-foundation/</a>)</p>
 </li>
 </ul>
 </div>
@@ -935,7 +944,7 @@ You can also fork the <a href="https://github.com/FirebirdSQL/jaybird" target="_
 <h2 id="connection"><a class="anchor" href="#connection"></a>2. Obtaining a connection</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via <code>java.sql.DriverManager</code> and via an implementation of the <code>javax.sql.DataSource</code> interface.</p>
+<p>Jaybird is a regular JDBC driver and supports two primary ways to obtain connection: via <a href="#connection-drivermanager"><code>java.sql.DriverManager</code></a> and via <a href="#connection-datasource">an implementation of the <code>javax.sql.DataSource</code> interface</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="connection-drivermanager"><a class="anchor" href="#connection-drivermanager"></a>2.1. Obtaining connection java.sql.DriverManager</h3>
@@ -968,13 +977,13 @@ JDBC subprotocol, identifies driver to use, in this case Jaybird</p>
 <li>
 <p><code>//localhost:3050/c:/database/example.fdb</code></p>
 <div class="paragraph">
-<p>This is a database specific part, and identifies the database for the driver to connect, in the case of Jaybird that is <code>//&lt;host&gt;:&lt;port&gt;/&lt;path to database&gt;</code></p>
+<p>This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird that is <code>//&lt;host&gt;:&lt;port&gt;/&lt;path to database&gt;</code></p>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The first part, <code>jdbc:firebird:</code> or <code>jdbc:firebirdsql:</code>, is required by JDBC and specifies the so-called protocol and subprotocol for the JDBC connection.
+<p>The first part&#8201;&#8212;&#8201;<code>jdbc:firebird:</code> or <code>jdbc:firebirdsql:</code>&#8201;&#8212;&#8201;is required by JDBC, and specifies the so-called protocol and subprotocol for the JDBC connection.
 In other words, it specifies the type of connection that the application wants to obtain, in this example, a connection to a Firebird database.</p>
 </div>
 <div class="paragraph">
@@ -1011,7 +1020,8 @@ Examples where it may be necessary to explicitly load the driver are web applica
 There, the driver is not on the system class path, so it will need to be loaded explicitly.</p>
 </div>
 <div class="paragraph">
-<p>We will leave out usages of <code>Class.forName</code> in further examples, they will work because of automatic driver loading.</p>
+<p>We will leave out usages of <code>Class.forName</code> in further examples;
+they will work because of automatic driver loading.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -1088,8 +1098,7 @@ We suggest not to use relative paths, and instead use an alias.</p>
 <div class="sect3">
 <h4 id="connection-drivermanager-props"><a class="anchor" href="#connection-drivermanager-props"></a>2.1.1. Specifying extended properties</h4>
 <div class="paragraph">
-<p>What if we want to specify additional connection parameters, for example a client encoding?
-The JDBC API provides a method to specify additional connection properties:</p>
+<p>The JDBC API provides a method to specify additional connection properties, for example a client encoding:</p>
 </div>
 <div class="listingblock">
 <div class="title">Obtaining JDBC connection with additional connection properties</div>
@@ -1117,7 +1126,8 @@ public class HelloServerWithEncoding {
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>user</code> and <code>password</code> properties are defined in JDBC. All other property names, like <code>encoding</code> here, are driver-specific.</p>
+<p>The <code>user</code> and <code>password</code> properties are defined in JDBC.
+All other property names&#8201;&#8212;&#8201;like <code>encoding</code> here&#8201;&#8212;&#8201;are driver-specific.</p>
 </div>
 <div class="paragraph">
 <p>Additional properties, for example the SQL role for the connection can be added to the <code>props</code> object.
@@ -1157,18 +1167,6 @@ Connection connection = DriverManager.getConnection(
 </div>
 <div class="sect4">
 <h5 id="connection-drivermanager-props-urlencoding"><a class="anchor" href="#connection-drivermanager-props-urlencoding"></a>URL encoding in query part of JDBC URL</h5>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Jaybird only supports URL encoding in Jaybird 4 and higher.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>UTF-8 URL encoded values (and keys) can be used in the query part of the JDBC URL.</p>
 </div>
@@ -1736,7 +1734,7 @@ To connect to Firebird, use LibreOffice Base with connection option &#8220;Fireb
 <div class="sect2">
 <h3 id="connection-pooling"><a class="anchor" href="#connection-pooling"></a>2.3. Connection Pooling</h3>
 <div class="paragraph">
-<p>Each time a connection is opened via <code>DriverManager</code>, a new physical connection to server is opened.
+<p>Each time a connection is opened via <code>DriverManager</code> or <code>FBSimpleDataSource</code>, a new physical connection to server is opened.
 It is closed when the connection is closed.
 To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.</p>
 </div>
@@ -2129,6 +2127,10 @@ to other warnings (if any), and so on.</p>
 <div class="paragraph">
 <p>To clear existing warning, call <code>Connection.clearWarnings()</code> method.</p>
 </div>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em> Some applications log or report <code>SQLWarning</code> in a way that can be confusing or annoying.
+You can disable registration of <code>SQLWarning</code>s globally or per connection, see <a href="#ref-report-sql-warnings">[ref-report-sql-warnings]</a> for more information.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_java_sql_sqlexception_in_jaybird"><a class="anchor" href="#_java_sql_sqlexception_in_jaybird"></a>3.3. java.sql.SQLException in Jaybird</h3>
@@ -2257,61 +2259,43 @@ Unfortunately Jaybird does not yet fully use this exception hierarchy, we are wo
 </table>
 </div>
 <div class="paragraph">
-<p>Each of three layers in Jaybird use exceptions most appropriate to the
-specific layer. <strong>TODO</strong> List needs revision</p>
+<p>Each of three layers in Jaybird use exceptions most appropriate to the specific layer.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.firebirdsql.gds.GDSException</code> is an exception that directly
-corresponding to the error returned by the database engine. Instances of
-this class are thrown by the GDS implementations. Upper layers either
-convert these exceptions into the ones appropriate to that layer or
-catch them if driver can handle the error condition.</p>
-</li>
-<li>
-<p>Subclasses of <code>javax.resource.ResourceException</code> are thrown by the JCA
-layer when an error happens in the JCA-related code. Upper layer
-converts this exception into a subclass of <code>java.sql.SQLException</code>. If
-the <code>ResourceException</code> was caused by the <code>GDSException</code>, latter is
-extracted during conversion preserving the error code. If
-<code>ResourceException</code> was caused by an error condition not related to an
-error returned by the database engine, error code of the <code>SQLException</code>
-remains 0.</p>
-</li>
-<li>
-<p>Subclasses of <code>javax.transaction.XAException</code> are thrown when an XA
-protocol error happens in JCA layer. Similar to the previous case,
-<code>XAException</code> can wrap the <code>GDSException</code>, which are extracted during
-exception conversion to preserve the error code.</p>
-</li>
-<li>
-<p>Subclasses of <code>java.sql.SQLException</code> are thrown by the JDBC layer.
-Jaybird has a few subclasses that might be interesting to the
-application:</p>
+<p>Subclasses of <code>java.sql.SQLException</code> are thrown by the JDBC, XCA, and GDS layers.
+In addition to the JDBC-provided exceptions, Jaybird has a few subclasses that might be interesting to an application:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.firebirdsql.jdbc.FBDriverConsistencyCheckException</code>&#8201;&#8212;&#8201;this
-exception is thrown when driver detects an internal inconsistent state.
+<p><em class="until">Jaybird 6</em> <code>org.firebirdsql.jdbc.FBDriverConsistencyCheckException</code>&#8201;&#8212;&#8201;this exception is thrown when driver detects an internal inconsistent state.
 SQL state is <code>HY000</code>.</p>
 </li>
 <li>
-<p><code>org.firebirdsql.jdbc.FBDriverNotCapableException</code>&#8201;&#8212;&#8201;this exception
-is thrown when an unsupported method is called. SQL state is <code>0A000</code>.</p>
+<p><code>org.firebirdsql.jdbc.FBDriverNotCapableException</code>&#8201;&#8212;&#8201;this exception is thrown when an unsupported method is called, extends <code>java.sql.SQLFeatureNotSupportedException</code>.
+SQL state is <code>0A000</code>.</p>
 </li>
 <li>
-<p><code>org.firebirdsql.jdbc.FBSQLParseException</code>&#8201;&#8212;&#8201;this exception is thrown
-when incorrect escaped syntax is detected. SQL state is <code>42000</code>.</p>
+<p><code>org.firebirdsql.jdbc.FBSQLParseException</code>&#8201;&#8212;&#8201;this exception is thrown when incorrect escaped syntax is detected when parsing JDBC escapes.
+SQL state is <code>42000</code>.</p>
 </li>
 <li>
-<p><code>org.firebirdsql.jdbc.field.TypeConversionException</code>&#8201;&#8212;&#8201;this exception
-is thrown when the driver is asked to perform a type conversion that is
-not defined in the JDBC specification. For a table of allowed type
-conversions see <a href="#datatypeconversion">Data Type Conversion Table</a>.</p>
+<p><code>org.firebirdsql.jdbc.field.TypeConversionException</code>&#8201;&#8212;&#8201;this exception is thrown when the driver is asked to perform a type conversion that is not defined in the JDBC specification, or otherwise not supported by Jaybird.
+For a table of allowed type conversions see <a href="#datatypeconversion">Data Type Conversion Table</a>.</p>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p><em class="until">Jaybird 5</em> Subclasses of <code>javax.resource.ResourceException</code> are thrown by the JCA layer when an error happens in the JCA-related code.
+The upper layer converts this exception into a subclass of <code>java.sql.SQLException</code>.
+If the <code>ResourceException</code> was caused by a <code>SQLException</code> or <code>GDSException</code>, the latter is extracted during conversion, preserving the error code.
+If <code>ResourceException</code> was caused by an error condition not related to an error returned by the database engine, the error code of the <code>SQLException</code> remains 0.</p>
+</li>
+<li>
+<p>Subclasses of <code>javax.transaction.XAException</code> are thrown when an XA protocol error happens in the JCA/XCA layer.
+Similar to the previous case, <code>XAException</code> can wrap the <code>SQLException</code> or <code>GDSException</code>, which are extracted during exception conversion to preserve the error code.</p>
 </li>
 </ul>
 </div>
@@ -2717,16 +2701,15 @@ However, despite that these resources are released when the connection closes, i
 <div class="ulist">
 <ul>
 <li>
-<p><code>Statement.executeQuery(String)</code>&#8201;&#8212;&#8201;executes a <code>SELECT</code> statement and returns a result set.
-If the specified statement does not produce a result set, an <code>SQLException</code> is thrown after statement execution.</p>
+<p><code>Statement.executeQuery(String)</code>&#8201;&#8212;&#8201;executes a <code>SELECT</code> or other result set producing statement, and returns a result set.
+If the specified statement does not produce a result set, an <code>SQLException</code> is thrown after statement execution<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>.</p>
 </li>
 <li>
-<p><code>Statement.executeUpdate(String)</code>&#8201;&#8212;&#8201;executes other DML<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup> (e.g. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) or DDL<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup>
-statements and returns the number of updated rows.
+<p><code>Statement.executeUpdate(String)</code>&#8201;&#8212;&#8201;executes other DML (Data Manipulation Language, e.g. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) or DDL(Data Definition Language<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup>) statements and returns the number of updated rows.
 If the specified statement is a query or otherwise produces a result set, an <code>SQLException</code> is thrown.</p>
 </li>
 <li>
-<p><code>Statement.execute(String)</code>&#8201;&#8212;&#8201;executes a statement and returns <code>true</code> when the statement returned a result set, otherwise an update was executed and <code>false</code> is returned.
+<p><code>Statement.execute(String)</code>&#8201;&#8212;&#8201;executes a statement and returns <code>true</code> when the statement returned a result set, or <code>false</code> if the result has no result set, but has an update count or nothing as its result.
 You can use <code>Statement.getResultSet()</code> method to get the result of the executed query, or you can use <code>Statement.getUpdateCount()</code> when you have executed update statement.</p>
 <div class="paragraph">
 <p>Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.</p>
@@ -2918,7 +2901,7 @@ No additional checks, like whether the result set contains rows, are performed, 
 </div>
 <div class="paragraph">
 <p>When an application does not need to know how many rows were modified, it should use the <code>execute()</code> method instead of <code>executeUpdate()</code>.
-This saves an additional call to the server to get the number of modified rows which can increase the performance in the situations where network latency is comparable with the statement execution times.</p>
+This saves an additional call to the server to get the number of modified rows which can increase the performance in situations where network latency is comparable with the statement execution times.</p>
 </div>
 <div class="paragraph">
 <p>The <code>execute()</code> method is also the only method that can be used when the application does not know what kind of statement is being executed (for example, an application that allows the user to enter SQL statements to execute).</p>
@@ -2929,12 +2912,12 @@ Two different possibilities exist: to close the result set object associated wit
 </div>
 <div class="paragraph">
 <p>If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
-Jaybird is required only to compile a new statement before using it, in other words we can skip step 1 (allocating a new statement handle).
+Jaybird only needs to compile a new statement on the existing statement handle before using it, in other words we can skip step 1 (allocating a new statement handle).
 This saves us one round-trip to the server over the network, which might improve the application performance.</p>
 </div>
 <div class="paragraph">
 <p>If we close the statement completely, the allocated statement handle is no longer usable.
-Jaybird could allocate a new statement handle, however the JDBC specification does not allow use of a <code>Statement</code> object after <code>close()</code> method has been called.</p>
+In theory, Jaybird could allocate a new statement handle, however the JDBC specification does not allow use of a <code>Statement</code> object after <code>close()</code> has been called.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2978,7 +2961,7 @@ An object that implements this interface represents a precompiled statement that
 If we use the execution flow described in the "<a href="#_statement_dynamics">Statement dynamics</a>" section, it allows us to go directly to step 4 for repeated executions.</p>
 </div>
 <div class="paragraph">
-<p>However, executing the same statement with the same values makes little sense, unless we want to fill the table with the same data, which usually is not the case.
+<p>However, executing the same statement with the same values rarely makes sense, unless we want to fill the table with the same data, which usually is not the case.
 Therefore, JDBC provides support for parametrized statements&#8201;&#8212;&#8201;SQL statements where literals are replaced with question marks (&#8216;<code>?</code>&#8217;), so-called positional parameters.
 The application then assigns values to the parameters before executing the statement.</p>
 </div>
@@ -13313,14 +13296,6 @@ Version: <code>2.2.15</code></p>
 <h3 id="_pre_release_versions"><a class="anchor" href="#_pre_release_versions"></a>F.5. Pre-release versions</h3>
 <div class="sect3">
 <h4 id="jb6"><a class="anchor" href="#jb6"></a>F.5.1. Jaybird 6</h4>
-<div class="paragraph">
-<p>Jaybird 6 is currently in development.
-The following information is tentative and may change before general availability.</p>
-</div>
-<div class="paragraph">
-<p>Snapshot versions are intended for evaluation and testing purposes only.
-We do not recommend their use in production environments.</p>
-</div>
 <div class="sect4">
 <h5 id="jb6-java"><a class="anchor" href="#jb6-java"></a>Java support</h5>
 <div class="paragraph">
@@ -13328,7 +13303,7 @@ We do not recommend their use in production environments.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
-Currently, that means we support Java 17, 21, and 23.</p>
+Currently, that means we support Java 17, Java 21, and Java 23.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.</p>
@@ -13356,7 +13331,7 @@ Currently, that means we support Java 17, 21, and 23.</p>
 <div class="sect4">
 <h5 id="jb6-firebird"><a class="anchor" href="#jb6-firebird"></a>Firebird support</h5>
 <div class="paragraph">
-<p>Jaybird 6 supports Firebird 3.0 and higher.</p>
+<p>Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 will&#8201;&#8212;&#8201;by default&#8201;&#8212;&#8201;not connect to Firebird 2.5 or older.
@@ -13434,10 +13409,55 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <p>Jaybird has no required runtime dependencies.</p>
 </div>
 <div class="paragraph">
-<p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.15.0 need to be on the classpath.</p>
+<p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.16.0 need to be on the classpath.</p>
 </div>
 <div class="paragraph">
 <p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.79 (Bouncy Castle JCE provider) need to be on the classpath.</p>
+</div>
+<div class="sect5">
+<h6 id="jb6-distribution-package"><a class="anchor" href="#jb6-distribution-package"></a>Distribution package</h6>
+<div class="paragraph">
+<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a></p>
+</div>
+<div class="paragraph">
+<p>The following files can be found in the distribution package:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The main JDBC driver, the Services API and event management classes.
+Provides only pure Java connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/bcprov-jdk18on-1.79.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required for the ChaCha64 support (with <code>chacha64-plugin</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Options dependency, support for native and embedded connections.
+Requires <code>lib/jna-jpms-5.16.0.jar</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/jna-jpms-5.16.0.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required if you want to use Type 2 native, or embedded protocols (with <code>jaybird-native</code>)</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect5">
 <h6 id="jb6-distribution-maven"><a class="anchor" href="#jb6-distribution-maven"></a>Maven</h6>
@@ -13445,23 +13465,7 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 <p>Alternatively, you can use Maven to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
-<p>Snapshot versions of Jaybird 6 are available for testing from <a href="https://oss.sonatype.org/content/repositories/snapshots/" class="bare" target="_blank" rel="noopener">https://oss.sonatype.org/content/repositories/snapshots/</a>.
-You will need to add this as a snapshot repository to your Maven configuration.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>These snapshots are released irregularly by a manual deploy.
-Contact us on <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a> if you need a newer snapshot than available.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Jaybird 6 is available from Maven central:</p>
 </div>
 <div class="hdlist">
 <table>
@@ -13486,7 +13490,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>6.0.0-SNAPSHOT</code></p>
+<p><code>6.0.0</code></p>
 </td>
 </tr>
 </table>
@@ -13499,7 +13503,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13511,7 +13515,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13523,7 +13527,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.0-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;6.0.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13576,10 +13580,10 @@ All Rights Reserved.
 <a href="#_footnoteref_3">3</a>. excluding those defined for <code>javax.sql.rowset</code>
 </div>
 <div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. DML&#8201;&#8212;&#8201;Data Manipulation Language
+<a href="#_footnoteref_4">4</a>. This is an implementation detail and may change in the future to throw an exception <em>before</em> execution
 </div>
 <div class="footnote" id="_footnotedef_5">
-<a href="#_footnoteref_5">5</a>. DDL&#8201;&#8212;&#8201;Data Definition Language. This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.
+<a href="#_footnoteref_5">5</a>. This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.
 </div>
 <div class="footnote" id="_footnotedef_6">
 <a href="#_footnoteref_6">6</a>. escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
@@ -13707,7 +13711,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-22 16:21:17 UTC
+Last updated 2024-12-27 13:38:58 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
