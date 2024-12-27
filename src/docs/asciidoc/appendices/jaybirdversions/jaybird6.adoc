@@ -1,19 +1,13 @@
 [[jb6]]
 === Jaybird 6
 
-Jaybird 6 is currently in development.
-The following information is tentative and may change before general availability.
-
-Snapshot versions are intended for evaluation and testing purposes only.
-We do not recommend their use in production environments.
-
 [[jb6-java]]
 ==== Java support
 
 Jaybird 6 supports Java 17 and higher (JDBC 4.3).
 
 Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
-Currently, that means we support Java 17, 21, and 23.
+Currently, that means we support Java 17, Java 21, and Java 23.
 
 Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.
 
@@ -31,7 +25,7 @@ native and embedded protocol implementation using JNA (artifact `org.firebirdsql
 [[jb6-firebird]]
 ==== Firebird support
 
-Jaybird 6 supports Firebird 3.0 and higher.
+Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.
 
 Jaybird 6 will -- by default -- not connect to Firebird 2.5 or older.
 To connect to earlier versions, unsupported protocols have to be enabled explicitly, see <<ref-enable-protocol>> for details.
@@ -91,8 +85,6 @@ For native or embedded connections, the `jaybird-native` artifact and `jna-jpms`
 
 For ChaCha64 wire encryption, the `chacha64-plugin` artifact and `bcprov-jdk18on` {jaybird6-bc-version} (Bouncy Castle JCE provider) need to be on the classpath.
 
-////
-// No downloads available at this time
 [[jb6-distribution-package]]
 ===== Distribution package
 
@@ -121,23 +113,13 @@ Requires `lib/jna-jpms-{jaybird6-jna-version}.jar`.
 |Optional dependency, required if you want to use Type 2 native, or embedded protocols (with `jaybird-native`)
 
 |===
-////
 
 [[jb6-distribution-maven]]
 ===== Maven
 
 Alternatively, you can use Maven to automatically download Jaybird and its dependencies.
 
-//Jaybird 6 is available from Maven central:
-
-Snapshot versions of Jaybird 6 are available for testing from https://oss.sonatype.org/content/repositories/snapshots/[^].
-You will need to add this as a snapshot repository to your Maven configuration.
-
-[NOTE]
-====
-These snapshots are released irregularly by a manual deploy.
-Contact us on https://groups.google.com/g/firebird-java[firebird-java^] if you need a newer snapshot than available.
-====
+Jaybird 6 is available from Maven central:
 
 [horizontal]
 groupId:: `org.firebirdsql.jdbc`

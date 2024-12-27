@@ -10,8 +10,8 @@ Roman Rokytskyy; Mark Rotteveel
 :outlinelevels: 6:1
 :imagesdir: images
 :icons: font
-:jaybird6-full-version: 6.0.0-SNAPSHOT
-:jaybird6-jna-version: 5.15.0
+:jaybird6-full-version: 6.0.0
+:jaybird6-jna-version: 5.16.0
 :jaybird6-bc-version: 1.79
 :jaybird5-full-version: 5.0.6
 :jaybird5-template-version: {jaybird5-full-version}.<java>
@@ -23,10 +23,10 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird3-full-version: 3.0.12
 :jaybird22-full-version: 2.2.15
 :jaybird-fbclient-version: 5.0.1.1
-:jaybird-version: 5
-:jaybird-full-version: {jaybird5-full-version}
-:jaybird-example-version: {jaybird5-example-version}
-:jaybird-template-version: {jaybird5-template-version}
+:jaybird-version: 6
+:jaybird-full-version: {jaybird6-full-version}
+:jaybird-example-version: {jaybird6-full-version}
+:jaybird-template-version: {jaybird6-full-version}
 :jna-version: {jaybird5-jna-version}
 :min-support-firebird: 2.5
 :fb-canonical-html: https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html

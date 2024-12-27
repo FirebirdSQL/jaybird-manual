@@ -70,7 +70,7 @@ Jaybird {jaybird-version} is available from Maven central:
 
 Groupid: `org.firebirdsql.jdbc`, +
 Artifactid: `jaybird`, +
-Version: `{jaybird-template-version}` (where `<java>` is `java11` or `java8`)
+Version: `{jaybird-template-version}`
 
 For example:
 
@@ -83,18 +83,27 @@ For example:
 </dependency>
 ----
 
-If you want to use Type 2 support (native or embedded), you need to explicitly include JNA {jna-version} as a dependency:
+If you want to use ChaCha64 wire encryption, you need to explicitly include `chacha64-plugin` as a dependency:
 
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
-  <groupId>net.java.dev.jna</groupId>
-  <artifactId>jna</artifactId>
-  <version>{jna-version}</version>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>chacha64-plugin</artifactId>
+  <version>{jaybird-example-version}</version>
 </dependency>
 ----
 
-In Jaybird 6, native and embedded support will be in a separate library.
+If you want to use Type 2 support (native or embedded), you need to explicitly include `jaybird-native` as a dependency:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+  <groupId>org.firebirdsql.jdbc</groupId>
+  <artifactId>jaybird-native</artifactId>
+  <version>{jaybird-example-version}</version>
+</dependency>
+----
 
 The Firebird client library is available as a Maven dependencies, see <<driver-native-maven>>.
 In the future, a Maven dependency for Firebird embedded may become available as well.
