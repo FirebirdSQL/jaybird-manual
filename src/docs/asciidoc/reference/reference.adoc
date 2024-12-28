@@ -30,6 +30,8 @@ include::connection/clientinfoproperties.adoc[]
 
 include::connection/createdatabaseifnotexist.adoc[]
 
+include::connection/reportsqlwarnings.adoc[]
+
 include::connection/socketfactory.adoc[]
 
 [[ref-statement]]
