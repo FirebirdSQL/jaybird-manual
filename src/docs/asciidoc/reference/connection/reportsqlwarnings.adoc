@@ -17,6 +17,6 @@ Do not report any ``SQLWarning``s
 
 Invalid values on the connection property will be rejected.
 
-The default value can be overridden with the system property `org.firebirdsql.jdbc.defaultReportSQLWarnings`.
+The default value can be overridden with the system property <<systemproperties-default-report-sql-warnings,`org.firebirdsql.jdbc.defaultReportSQLWarnings`>>.
 It supports the same values as connection property `reportSQLWarnings`.
 Invalid values of the system property are ignored.

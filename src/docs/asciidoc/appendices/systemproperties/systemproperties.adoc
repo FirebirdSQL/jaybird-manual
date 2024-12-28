@@ -71,7 +71,6 @@ Configures the default value for the `enableProtocol` connection property.
 See <<ref-enable-protocol>> for more information.
 
 [#systemproperties-default-report-sql-warnings]
-
 === Default `reportSQLWarnings` value
 
 [.since]_Jaybird 6_
