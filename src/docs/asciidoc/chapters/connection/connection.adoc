@@ -53,11 +53,16 @@ public class HelloServer {
 ----
 
 The first line of this code is important -- it tells Java to load the Jaybird JDBC driver.
-As required by the JDBC specification, at this point driver registers itself with `java.sql.DriverManager`.
+As required by the JDBC specification, at this point the driver registers itself with `java.sql.DriverManager`.
 
 Since Java 6 (JDBC 4), explicitly loading the driver using `Class.forName("org.firebirdsql.jdbc.FBDriver")` is no longer necessary, except when the driver is not on the system class path.
 Examples where it may be necessary to explicitly load the driver are web applications that include the driver in the deployment (e.g. in `WEB-INF/lib` of the WAR).
 There, the driver is not on the system class path, so it will need to be loaded explicitly.
+
+[TIP]
+====
+Explicitly loading the driver with `Class.forName("org.firebirdsql.jdbc.FBDriver")` may aid in debugging "`__No suitable driver found for jdbc:firebird...__`" errors (e.g. whether the driver is not on the classpath, or it was found but an error occurred during loading or initialization, or -- if the error goes away -- it was not loaded by automatic driver loading).
+====
 
 We will leave out usages of `Class.forName` in further examples;
 they will work because of automatic driver loading.
@@ -95,7 +100,7 @@ java\
 The second statement of the example tells the `java.sql.DriverManager` to open a database connection to the Firebird server running on localhost, and the path to the database is `c:/database/employee.fdb`.
 
 The connection specification consists of the host name of the database server, optionally you can specify a port (by default port 3050 is used).
-The host name can be specified using either its DNS name (for example `fb-server.mycompany.com` or just `fb-server`), or its IP address (for example `192.168.0.5`, or `[1080::8:800:200C:417A]` for an IPv6 address).
+The host name can be specified using either its DNS name (for example `fb-server.mycompany.com` or just `fb-server`), or its IP address (e.g. `192.0.2.5`, or `[2001:db8::5]` for an IPv6 address).
 
 After the server name and port, the alias or path to the database is specified.
 We suggest to specify a database alias instead of the absolute database path.
@@ -105,7 +110,7 @@ The format of the path depends on the platform of the Firebird server.
 
 On Windows, the path must include the drive letter and path, for example `c:/database/employee.fdb`, which points to the employee database that can be found in the `database` directory of drive `C:`. 
 Java (and Firebird) supports either `/` or `\` (escaped as `\\`) as path separator on the Windows platform. 
-On Unix and Linux platform, you can use only `/` as the path separator.
+On Unix and Linux platforms, you can use only `/` as the path separator.
 
 On Unix platforms the path must include the root, as the path is otherwise interpreted relative to a server-dependent folder.
 Having to include the root has the effect that a database in `/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the connection string: `jdbc:firebird://localhost//var/firebird/employee.fdb`.
