@@ -115,14 +115,26 @@ If you develop your own Firebird authentication plugin (or use a third-party aut
 * `org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi`
 * `org.firebirdsql.gds.ng.wire.auth.AuthenticationPlugin`
 
-The SPI implementation needs to be listed in `META-INF/services/org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi` in your jar.
+The SPI implementation needs to be listed in `META-INF/services/org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi` in your JAR.
+
+For a modular JAR, using Jaybird 6 or higher, the plugin will also need to be declared in `module-info.java`:
+
+[source,java]
+----
+module org.example.auth {
+  requires org.firebirdsql.jaybird;
+
+  provides org.firebirdsql.gds.ng.wire.auth.AuthenticationPluginSpi
+    with org.example.MyAuthPlugin;
+}
+----
 
 This support is experimental and comes with a number of caveats:
 
 * We haven't tested this extensively (except for loading Jaybird's own plugins internally)
 * The authentication plugin (and provider) interfaces should be considered unstable; 
 they may change with point-releases (although we will try to avoid that) 
-* For now it will be necessary for the jar containing the authentication plugin to be loaded by the same class loader as Jaybird itself
+* For now, it is probably necessary for the JAR containing the authentication plugin to be loaded by the same class loader -- or at least, from the same classpath -- as Jaybird itself
 
 If you implement a custom authentication plugin and run into problems, contact us on the https://groups.google.com/g/firebird-java[firebird-java Google Group^].
 
