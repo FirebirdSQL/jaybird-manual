@@ -608,9 +608,9 @@ jdbc:firebird:oo://host[:port]/<path to database>
 All other notes for <<driver-pure-java>> apply.
 
 [NOTE]
-.OOREMOTE deprecated in Jaybird 5, to be removed in Jaybird 6
+.OOREMOTE deprecated in Jaybird 5, and removed in Jaybird 6
 ====
-[.since]_Jaybird 5_ The OOREMOTE protocol implementation is deprecated and will be removed in Jaybird 6.
+[.since]_Jaybird 5_ The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
 To connect to Firebird, use LibreOffice Base with connection option "`Firebird External`".
 ====
 
