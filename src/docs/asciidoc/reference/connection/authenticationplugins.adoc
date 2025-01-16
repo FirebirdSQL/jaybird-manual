@@ -21,8 +21,8 @@ For example, SHA-224 is not supported in Oracle Java 7 by default and may requir
 [[ref-auth-plugins-default]]
 ==== Default authentication plugins
 
-[[ref-auth-plugins-default-jb5]]
-===== Jaybird 5
+[[ref-auth-plugins-default-jb6]]
+===== Jaybird 6
 
 The default plugins applied by Jaybird 5 are -- in order -- `Srp256` and `Srp`.
 This applies only for the pure Java protocol and only when connecting to Firebird 3.0 or higher.
@@ -38,12 +38,19 @@ To avoid this, consider explicitly configuring the authentication plugins to use
 
 Firebird 2.5 and earlier will always use legacy authentication.
 
+[[ref-auth-plugins-default-jb5]]
+===== Jaybird 5
+
+The default plugins applied by Jaybird 5 are -- in order -- `Srp256` and `Srp`.
+
+See section on <<ref-auth-plugins-default-jb6>> for further details.
+
 [[ref-auth-plugins-default-jb4]]
 ===== Jaybird 4
 
 The default plugins applied by Jaybird 4 are -- in order -- `Srp256` and `Srp`.
 
-See section on <<ref-auth-plugins-default-jb5>> for further details.
+See section on <<ref-auth-plugins-default-jb6>> for further details.
 
 [[ref-auth-plugins-default-jb3]]
 ===== Jaybird 3
