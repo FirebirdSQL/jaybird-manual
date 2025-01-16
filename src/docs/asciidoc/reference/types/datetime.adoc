@@ -223,7 +223,7 @@ In addition to the standard-defined types, it also supports the type names `TIME
 * Firebird 4.0 redefines `CURRENT_TIME` and `CURRENT_TIMESTAMP` to return a `WITH TIME ZONE` type.
 Use `LOCALTIME` and `LOCALTIMESTAMP` (introduced in Firebird 2.5.9 and Firebird 3.0.4) if you want to ensure a `WITHOUT TIME ZONE` type is used.
 * The database metadata will always return JDBC 4.2 compatible information on time zone types, even on Java 7, and even when legacy time zone bind is set.
-For Java 7 compatibility the JDBC 4.2 `java.sql.Types` constants `TIME_WITH_TIMEZONE` and `TIMESTAMP_WITH_TIMEZONE` are also defined in `org.firebirdsql.jdbc.JaybirdTypeCodes`.
+For Java 7 compatibility, the JDBC 4.2 `java.sql.Types` constants `TIME_WITH_TIMEZONE` and `TIMESTAMP_WITH_TIMEZONE` are also defined in `org.firebirdsql.jdbc.JaybirdTypeCodes`.
 * The default `sessionTimeZone` is set to the JVM default time zone, this may result in different application behavior for `DATE`, `TIME` and `TIMESTAMP`, including values generated in triggers and default value clauses.
 To prevent this, either switch those types to a `WITH TIME ZONE` type, or set the `sessionTimeZone` to `server` or to the actual time zone of the Firebird server.
 * As `CURRENT_TIME` uses the session time zone, which usually is a named zone, use in combination with `java.time.OffsetTime` can yield confusing results.

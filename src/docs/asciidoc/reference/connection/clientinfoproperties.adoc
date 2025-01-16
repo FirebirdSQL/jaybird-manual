@@ -6,7 +6,7 @@ Client info properties allow you to set properties on a connection for informati
 [#ref-client-info-jb5]
 ==== Support in Jaybird 5 and earlier
 
-Support for client info properties was introduced in Jaybird 2.2, storing properties in the `USER_SESSION` context of `RDB$GET/SET_CONTEXT`.
+Support for client info properties was introduced in Jaybird 2.2, storing properties in the `USER_SESSION` context of https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-functions.html#fblangref50-functions-workcontext[`RDB$GET/SET_CONTEXT`].
 Support is quite limited, allowing you to:
 
 * Set properties individually or collectively using a `Properties` object (`Connection#setClientInfo(String,String)`, `Connection#setClientInfo(Properties)`)
@@ -14,7 +14,7 @@ Support is quite limited, allowing you to:
 * Get individual properties (`Connection#getClientInfo(String)`)
 
 Properties are always stored in `USER_SESSION`.
-Properties are retrieved from `USER_TRANSACTION`, falling back to `USER_SESSION` if the property was not present in `USER_TRANSACTION.
+Properties are retrieved from `USER_TRANSACTION`, falling back to `USER_SESSION` if the property was not present in `USER_TRANSACTION`.
 
 Absent is support to:
 
@@ -93,7 +93,7 @@ The `ClientUser` and `ClientHostname` properties are considered application-spec
 If you use a connection pool populated from `org.firebirdsql.ds.FBConnectionPoolDataSource` or `org.firebirdsql.ds.FBXADataSource`, the known properties are reset each time the connection is handed out by the pool.
 This assumes the pool uses `getConnection()` from `PooledConnection`/`XAConnection` each time it hands out the connection.
 This reset only removes the property name from the list of known properties of the connection, it does not clear the property values from `USER_SESSION`.
-If properties contain _sensitive_ values you will need to explicitly clear them.
+If properties contain _sensitive_ values, you will need to explicitly clear them.
 
 This reset is not applied when using a connection pool which is populated by different means (e.g. from `DriverManager` or from a normal `javax.sql.DataSource` like `org.firebirdsql.ds.FBSimpleDataSource`).
 If your connection pool implementation supports custom code to reset a connection, and you need known properties to reset when a connection is reused, make it call `FirebirdConnection.resetKnownClientInfoProperties()`, or call it yourself:

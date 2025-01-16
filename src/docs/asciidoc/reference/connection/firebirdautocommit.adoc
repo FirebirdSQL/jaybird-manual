@@ -8,13 +8,13 @@ This functionality is experimental, and will remain so unless Firebird changes h
 
 Incorrect use of this functionality can result in excessive growth of the database due to increases in back-version chains of records, which can also cause performance degradation.
 Additionally, when used with an isolation level other than READ COMMITTED, the connection will only see changes committed at the time the initial transaction was started;
-the auto-commit barrier will not make new committed changes visible.
+the auto-commit barrier will not make new committed changes visible to the current transaction.
 ====
 
 This option is enabled by specifying the connection property `useFirebirdAutocommit=true`.
 
 With this option, a connection in auto-commit mode will configure the transaction to use `isc_tpb_autocommit`.
-This means that Firebird server will internally commit the transaction after each statement completion. 
+This means that Firebird server will internally commit the transaction after each statement completion using "`__commit retain__`".
 Jaybird itself will not commit until connection close (or disabling auto-commit).
 The exception is if the statement was of type `isc_info_sql_stmt_ddl`, in that case Jaybird will commit on statement success and rollback on statement failure (just like it does for all statements in normal auto-commit mode).
 The reason is that Firebird for some DDL commands only executes at a real commit boundary and relying on the Firebird auto-commit is insufficient.

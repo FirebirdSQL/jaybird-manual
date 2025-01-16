@@ -29,7 +29,7 @@ The available options are the same as documented in <<ref-decfloat-bind>>
 
 For example
 
-[[source,java]]
+[source,java]
 ----
 try (Connection connection = DriverManager.getConnection(..);
      Statement stmt = connection.createStatement()) {
@@ -45,7 +45,7 @@ WARNING: The effect of the `SET BIND` statement will be reset to the default whe
 
 Jaybird 3.0.9 added the connection property `dataTypeBind` to defining data type mappings.
 This can be used to configure conversion of `DECFLOAT` to a different datatype.
-When set Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
+When set, Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
 
 TIP: This property is also available in Jaybird 4, but we recommend to not use this property in Jaybird 4 and instead rely on the default behaviour (`native`) and support for `DECFLOAT`.
 
@@ -54,8 +54,8 @@ To map `DECFLOAT(16)` and `DECFLOAT(34)` to a string type, you can use:
 [source,java]
 .Map all decfloat types to string
 ----
-Properties props = new Properties();
-props.setProperty("dataTypeBind", "decfloat to varchar"
+var props = new Properties();
+props.setProperty("dataTypeBind", "decfloat to varchar");
 ----
 
 To map `DECFLOAT(16)` to `DOUBLE PRECISION` and `DECFLOAT(34)` to string, you can use:
@@ -63,8 +63,9 @@ To map `DECFLOAT(16)` to `DOUBLE PRECISION` and `DECFLOAT(34)` to string, you ca
 [source,java]
 .Map all decfloat types to string
 ----
-Properties props = new Properties();
-props.setProperty("dataTypeBind", "decfloat(16) to double precision;decfloat(34) to varchar"
+var props = new Properties();
+props.setProperty(
+    "dataTypeBind", "decfloat(16) to double precision;decfloat(34) to varchar");
 ----
 
 Firebird will convert a `DECFLOAT` type to the specified type using a cast to derive the value.
@@ -102,8 +103,7 @@ If you need to use the type code, we suggest you use these constants.
 If a `DECFLOAT` type constant gets added to the JDBC standard, we will update the value.
 The enum value will be deprecated when that version of JDBC has been released.
 
-Jaybird uses a local copy of the https://github.com/FirebirdSQL/decimal-java[FirebirdSQL/decimal-java^] library, with a custom package `org.firebirdsql.extern.decimal`.
-This to avoid additional dependencies. 
+To avoid additional dependencies, Jaybird uses a local copy of the https://github.com/FirebirdSQL/decimal-java[FirebirdSQL/decimal-java^] library, with a custom package `org.firebirdsql.extern.decimal`.
 
 [[ref-decfloat-precision-range]]
 ===== Precision and range
