@@ -74,6 +74,7 @@ Version: `{jaybird-template-version}`
 
 For example:
 
+.Main Jaybird artifact
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
@@ -85,6 +86,7 @@ For example:
 
 If you want to use ChaCha64 wire encryption, you need to explicitly include `chacha64-plugin` as a dependency:
 
+.ChaCha64 wire encryption plugin
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
@@ -96,6 +98,7 @@ If you want to use ChaCha64 wire encryption, you need to explicitly include `cha
 
 If you want to use Type 2 support (native or embedded), you need to explicitly include `jaybird-native` as a dependency:
 
+.Jaybird native artifact (native and embedded protocol)
 [source,xml,subs="verbatim,attributes"]
 ----
 <dependency>
@@ -107,6 +110,31 @@ If you want to use Type 2 support (native or embedded), you need to explicitly i
 
 The Firebird client library is available as a Maven dependencies, see <<driver-native-maven>>.
 In the future, a Maven dependency for Firebird embedded may become available as well.
+
+[#distribution-gradle]
+==== Gradle
+
+See also <<distribution-maven>>.
+
+Examples:
+
+.Main Jaybird artifact
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:jaybird:{jaybird-example-version}'
+----
+
+.ChaCha64 wire encryption plugin
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:chacha64-plugin:{jaybird-example-version}'
+----
+
+.Jaybird native artifact (native and embedded protocol)
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:jaybird-native:{jaybird-example-version}'
+----
 
 === Quality Assurance
 
