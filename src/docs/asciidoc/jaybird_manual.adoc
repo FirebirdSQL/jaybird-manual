@@ -28,7 +28,7 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird-example-version: {jaybird6-full-version}
 :jaybird-template-version: {jaybird6-full-version}
 :jna-version: {jaybird5-jna-version}
-:min-support-firebird: 2.5
+:min-support-firebird: 3.0
 :fb-canonical-html: https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
 :is-snapshot:
 
