@@ -22,7 +22,7 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird4-example-version: {jaybird4-full-version}.java11
 :jaybird3-full-version: 3.0.12
 :jaybird22-full-version: 2.2.15
-:jaybird-fbclient-version: 5.0.1.1
+:jaybird-fbclient-version: 5.0.2.0
 :jaybird-version: 6
 :jaybird-full-version: {jaybird6-full-version}
 :jaybird-example-version: {jaybird6-full-version}
