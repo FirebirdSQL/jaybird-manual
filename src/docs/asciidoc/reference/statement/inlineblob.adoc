@@ -1,0 +1,65 @@
+[#ref-inline-blob]
+=== Inline blobs
+
+[.since]_Jaybird 5.0.8/6.0.2_ +
+[.since]_Firebird 5.0.3_
+
+Inline blobs are a performance optimization for reading blobs as part of the query.
+
+When querying a blob column, the row data received from the server contains only the blob id, not the data of the blob.
+Without inline blobs, the client will need to retrieve the blob data separately, requiring additional round trips between client and server for each blob.
+With inline blobs, small blobs -- default less than 65535 bytes -- are sent together with the row data, and the client can then serve the blob from the data it has locally.
+Inline blobs can also increase the effectiveness of wire compression -- if enabled, assuming the blob data compresses well.
+
+In short, inline blobs increase throughput when querying small blobs, especially on high latency network connections.
+
+This is not entirely free:
+
+* Fetching rows itself can be slower as more data is sent for a fetch.
+* Caching the inline blobs consumes memory.
++
+By default, a maximum of 10 MiB per connection is used for this cache.
+
+If the maximum blob cache size is reached, received inline blobs will be discarded.
+For pure Java connections, an inline blob is removed from the cache on first use, or when the transaction associated with the blob ends.
+The native client implementation may have different cache eviction rules.
+
+As pure Java connections remove the inline blob from the cache on first use, subsequent attempts to read the same blob -- by getting a different instance of `java.sql.Blob` or through multiple calls to the `ResultSet.getXXX` methods -- will use a server-side blob.
+This can also happen if multiple columns or rows, even in different result sets on the same connection, point to the same blob id in the same transaction.
+
+If you execute queries returning blobs, while those blobs are never actually opened, you may fill up the cache and later received inline blobs are then discarded.
+Especially in long-running transactions, this may reduce the effectiveness of this feature.
+
+Inline blobs are introduced in Firebird 5.0.3 (protocol 19).
+For pure Java connections, you need Jaybird 5.0.8 or higher or Jaybird 6.0.2 or higher.
+For native connections, you need _fbclient_ 5.0.3 or higher, irrespective of the Jaybird version;
+to configure inline blobs for native connections, you will also need Jaybird 5.0.8 or higher or Jaybird 6.0.2 or higher.
+
+[#ref-inline-blob-config]
+==== Configuring inline blobs
+
+There are two connection properties affecting inline blobs:
+
+`maxInlineBlobSize` (aliases: `max_inline_blob_size`, `isc_dpb_max_inline_blob_size`)::
+Maximum size in bytes of the blob (default: `65535`). +
+A value of `0` will disable sending of inline blobs.
++
+The maximum allowed value is decided by the Firebird server, and is currently `65535`;
+this may change in the future
++
+If a blob is smaller than the specified size, the server will send it inline.
+The size includes segment lengths, so the actual maximum blob data received is `_N_ * 2` bytes smaller, where _N_ is the number of segments of the actual blob, or at least one segment for stream blobs.
++
+The default can be changed with system property <<systemproperties-default-inline-blob,`org.firebirdsql.jdbc.defaultMaxInlineBlobSize`>>.
+
+`maxBlobCacheSize` (aliases: `max_blob_cache_size`, `isc_dpb_max_blob_cache_size`)::
+Maximum size in bytes -- per connection -- of the blob cache (default: `10485760` or 10 MiB). +
+A value of `0` will disable the cache, but does not disable sending of inline blobs.
+Set `maxInlineBlobSize` to `0` to disable sending of inline blobs.
++
+For pure Java, only the data size is counted towards the cache size.
+For native, the segment lengths also count towards the cache size.
++
+The default can be changed with system property <<systemproperties-default-inline-blob,`org.firebirdsql.jdbc.defaultMaxBlobCacheSize`>>.
+
+Without explicitly setting the connection or system property, native connections will use the default of _fbclient_ (which are currently the same as those of Jaybird).

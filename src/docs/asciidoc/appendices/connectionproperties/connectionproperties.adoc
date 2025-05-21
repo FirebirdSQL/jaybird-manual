@@ -144,6 +144,21 @@ Specifying a size greater than 65535 may result in additional server roundtrips 
 Values lower than 512 will use 512 ([.since]_Jaybird 6_). +
 Default: `16384`
 
+a|`maxInlineBlobSize` +
+`max_inline_blob_size`, `isc_dpb_max_inline_blob_size`
+|Maximum size in bytes of inline blobs ([.since]_Jaybird 5.0.8/6.0.2_ [.since]_Firebird 5.0.3_).
+A value of `0` disables transmission of inline blobs.
+See <<ref-inline-blob>> for more information. +
+Default: `65535`, maximum value: ``65535``footnote:[The maximum is decided server-side, and may change in future Firebird versions.]
+
+a|`maxBlobCacheSize` +
+`max_blob_cache_size`, `isc_dpb_max_blob_cache_size`
+|Maximum size in bytes -- per connection -- of the inline blob cache ([.since]_Jaybird 5.0.8/6.0.2_ [.since]_Firebird 5.0.3_).
+A value of `0` disables the cache.
+Disabling the cache does not disable transmission of inline blobs: set `maxInlineBlobSize` to `0` to disable transmission.
+See <<ref-inline-blob>> for more information. +
+Default: `10485760` (10 MiB)
+
 a|`soTimeout`
 |Jaybird specific property.
 Socket blocking timeout in milliseconds.

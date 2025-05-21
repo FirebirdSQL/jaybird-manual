@@ -39,6 +39,8 @@ include::statement/asyncfetch.adoc[]
 
 include::statement/generatedkeys.adoc[]
 
+include::statement/inlineblob.adoc[]
+
 include::statement/ignoreproceduretype.adoc[]
 
 include::statement/scrollablecursor.adoc[]

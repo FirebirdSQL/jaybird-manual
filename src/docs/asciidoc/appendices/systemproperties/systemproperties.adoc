@@ -70,6 +70,20 @@ See <<ref-async-fetch>> for more information.
 Configures the default value for the `enableProtocol` connection property.
 See <<ref-enable-protocol>> for more information.
 
+[#systemproperties-default-inline-blob]
+=== Default inline blob property values
+
+[.since]_Jaybird 5.0.8/6.0.2_ +
+[.since]_Firebird 5.0.3_
+
+`org.firebirdsql.jdbc.defaultMaxInlineBlobSize`::
+Configures the default value for the `maxInlineBlobSize` connection property.
+
+`org.firebirdsql.jdbc.defaultMaxBlobCacheSize`::
+Configures the default value for the `maxBlobCacheSize` connection property.
+
+See also <<ref-inline-blob>>.
+
 [#systemproperties-default-report-sql-warnings]
 === Default `reportSQLWarnings` value
 
