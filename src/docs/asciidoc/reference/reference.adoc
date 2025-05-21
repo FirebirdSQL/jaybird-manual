@@ -4,8 +4,6 @@
 [[ref-connection]]
 == Connection reference
 
-include::connection/asyncfetch.adoc[]
-
 include::connection/authenticationplugins.adoc[]
 
 include::connection/wirecrypt.adoc[]
@@ -36,6 +34,8 @@ include::connection/socketfactory.adoc[]
 
 [[ref-statement]]
 == Statement reference
+
+include::statement/asyncfetch.adoc[]
 
 include::statement/generatedkeys.adoc[]
 
