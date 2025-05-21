@@ -557,32 +557,33 @@ table.wide-table{font-size:xx-small}
 <ul class="sectlevel1">
 <li><a href="#ref-connection">9. Connection reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-async-fetch">9.1. Async fetch</a></li>
-<li><a href="#ref-auth-plugins">9.2. Authentication plugins</a></li>
-<li><a href="#ref-wirecrypt">9.3. Wire encryption support</a></li>
-<li><a href="#ref-wirecompression">9.4. Wire compression</a></li>
-<li><a href="#ref-dbcrypt">9.5. Database encryption support</a></li>
-<li><a href="#ref-defaultholdable">9.6. Default holdable result sets</a></li>
-<li><a href="#ref-firebirdautocommit">9.7. Firebird auto commit mode (experimental)</a></li>
-<li><a href="#ref-processinfo">9.8. Process information</a></li>
-<li><a href="#ref-datatypebind">9.9. Data type bind support</a></li>
-<li><a href="#ref-enable-protocol">9.10. Enabling unsupported protocol versions</a></li>
-<li><a href="#ref-catalog-as-package">9.11. Opt-in feature for package information in DatabaseMetaData</a></li>
-<li><a href="#ref-client-info">9.12. Client info properties</a></li>
-<li><a href="#ref-create-database-if-not-exist">9.13. Create database if it does not exist</a></li>
-<li><a href="#ref-report-sql-warnings">9.14. Reporting of <code>SQLWarning</code>s</a></li>
-<li><a href="#ref-socket-factory">9.15. Custom socket factory</a></li>
+<li><a href="#ref-auth-plugins">9.1. Authentication plugins</a></li>
+<li><a href="#ref-wirecrypt">9.2. Wire encryption support</a></li>
+<li><a href="#ref-wirecompression">9.3. Wire compression</a></li>
+<li><a href="#ref-dbcrypt">9.4. Database encryption support</a></li>
+<li><a href="#ref-defaultholdable">9.5. Default holdable result sets</a></li>
+<li><a href="#ref-firebirdautocommit">9.6. Firebird auto commit mode (experimental)</a></li>
+<li><a href="#ref-processinfo">9.7. Process information</a></li>
+<li><a href="#ref-datatypebind">9.8. Data type bind support</a></li>
+<li><a href="#ref-enable-protocol">9.9. Enabling unsupported protocol versions</a></li>
+<li><a href="#ref-catalog-as-package">9.10. Opt-in feature for package information in DatabaseMetaData</a></li>
+<li><a href="#ref-client-info">9.11. Client info properties</a></li>
+<li><a href="#ref-create-database-if-not-exist">9.12. Create database if it does not exist</a></li>
+<li><a href="#ref-report-sql-warnings">9.13. Reporting of <code>SQLWarning</code>s</a></li>
+<li><a href="#ref-socket-factory">9.14. Custom socket factory</a></li>
 </ul>
 </li>
 <li><a href="#ref-statement">10. Statement reference</a>
 <ul class="sectlevel2">
-<li><a href="#ref-generatedkeys">10.1. Generated keys retrieval</a></li>
-<li><a href="#ref-callable-ignore-proctype">10.2. Connection property ignoreProcedureType</a></li>
-<li><a href="#ref-scrollable-cursor">10.3. Connection property scrollableCursor</a></li>
-<li><a href="#ref-batch-use-server-batch">10.4. Connection property useServerBatch</a></li>
-<li><a href="#ref-batch-server-batch-buffer-size">10.5. Connection property serverBatchBufferSize</a></li>
-<li><a href="#ref-allowtxstmts">10.6. Connection property allowTxStmts</a></li>
-<li><a href="#ref-extendedmetadata">10.7. Connection property extendedMetadata</a></li>
+<li><a href="#ref-async-fetch">10.1. Async fetch</a></li>
+<li><a href="#ref-generatedkeys">10.2. Generated keys retrieval</a></li>
+<li><a href="#ref-inline-blob">10.3. Inline blobs</a></li>
+<li><a href="#ref-callable-ignore-proctype">10.4. Connection property ignoreProcedureType</a></li>
+<li><a href="#ref-scrollable-cursor">10.5. Connection property scrollableCursor</a></li>
+<li><a href="#ref-batch-use-server-batch">10.6. Connection property useServerBatch</a></li>
+<li><a href="#ref-batch-server-batch-buffer-size">10.7. Connection property serverBatchBufferSize</a></li>
+<li><a href="#ref-allowtxstmts">10.8. Connection property allowTxStmts</a></li>
+<li><a href="#ref-extendedmetadata">10.9. Connection property extendedMetadata</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -618,10 +619,11 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-charset">B.3. Character set defaults</a></li>
 <li><a href="#systemproperties-default-async-fetch">B.4. Default <code>asyncFetch</code> value</a></li>
 <li><a href="#systemproperties-default-enable-protocol">B.5. Default <code>enableProtocol</code> value</a></li>
-<li><a href="#systemproperties-default-report-sql-warnings">B.6. Default <code>reportSQLWarnings</code> value</a></li>
-<li><a href="#systemproperties-wire-buffers">B.7. Wire protocol buffer sizes</a></li>
-<li><a href="#systemproperties-other">B.8. Other properties</a></li>
-<li><a href="#systemproperties-java">B.9. Useful Java system properties</a></li>
+<li><a href="#systemproperties-default-inline-blob">B.6. Default inline blob property values</a></li>
+<li><a href="#systemproperties-default-report-sql-warnings">B.7. Default <code>reportSQLWarnings</code> value</a></li>
+<li><a href="#systemproperties-wire-buffers">B.8. Wire protocol buffer sizes</a></li>
+<li><a href="#systemproperties-other">B.9. Other properties</a></li>
+<li><a href="#systemproperties-java">B.10. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -6499,71 +6501,7 @@ System.out.println(
 <h2 id="ref-connection"><a class="anchor" href="#ref-connection"></a>9. Connection reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ref-async-fetch"><a class="anchor" href="#ref-async-fetch"></a>9.1. Async fetch</h3>
-<div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
-</div>
-<div class="paragraph">
-<p>For pure Java connections, non-holdable forward-only result sets perform asynchronous fetches by default.
-Asynchronous fetches are implemented for protocol implementation version 11 and higher (i.e. Firebird 2.1 or higher), but are formally only supported for protocol version 13 and higher (i.e. Firebird 3.0 or higher).</p>
-</div>
-<div class="paragraph">
-<p>In normal usage of a result set, the first fetch will be a normal synchronous fetch.
-If certain conditions are met, subsequent fetches will be performed asynchronously.</p>
-</div>
-<div class="paragraph">
-<p>The conditions for using asynchronous fetch are considered an implementation detail and may change in point releases.
-In Jaybird 6.0.0, the conditions to enable asynchronous fetching are:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The result set has type <code>FORWARD_ONLY</code>.</p>
-</li>
-<li>
-<p>The result set does not have a cursor name set.</p>
-</li>
-<li>
-<p>Any synchronous fetch on the statement cursor retrieved at least 15 rows.
-Be aware that the server may return fewer rows than the configured fetch size (default is 400), depending on Firebird version, row size and other factors.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>When the asynchronous fetch is triggered is also an implementation detail and may change in point releases.
-In Jaybird 6.0.0, the conditions to perform an asynchronous fetch are:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Size of the row buffer is equal to the &#8220;low-water mark&#8221;.</p>
-<div class="paragraph">
-<p>This &#8220;low-water mark&#8221; is calculated as ~33% of the maximum number of rows returned by previous fetches, with a minimum of 10 rows.</p>
-</div>
-<div class="paragraph">
-<p>As a consequence of this condition, reducing the fetch size equal to or less than the &#8220;low-water mark&#8221; may cause asynchronous fetches to stop being triggered, as the buffer size may remain smaller than this &#8220;low-water mark&#8221; (this effect may be reduced if there is other activity on the connection after the asynchronous fetch was performed).
-In that case, a synchronous fetch is triggered when the buffer is empty.</p>
-</div>
-</li>
-<li>
-<p>Fetch size at time of async fetch is larger than 1.
-This may be the configured fetch size, or the fetch size derived taking into account the configured maximum row count.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Native connections do not support this type of asynchronous fetching, but <code>fbclient</code> itself provides a different form of internal asynchronous fetching for native connections.</p>
-</div>
-<div class="paragraph">
-<p>Asynchronous fetching&#8201;&#8212;&#8201;for pure Java&#8201;&#8212;&#8201;can be disabled with the Boolean connection property <code>asyncFetch</code>, by setting it to <code>false</code>.
-The system property <a href="#systemproperties-default-async-fetch"><code>org.firebirdsql.jdbc.defaultAsyncFetch</code></a> can be used to disable it globally;
-this system property is checked dynamically when the connection configuration is created.
-These properties are primarily intended for troubleshooting or workarounds if it turns out this feature has problems;
-they may be removed in a future Jaybird version once this feature has proven itself.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.2. Authentication plugins</h3>
+<h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.1. Authentication plugins</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6592,7 +6530,7 @@ For example, SHA-224 is not supported in Oracle Java 7 by default and may requir
 </table>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.2.1. Default authentication plugins</h4>
+<h4 id="ref-auth-plugins-default"><a class="anchor" href="#ref-auth-plugins-default"></a>9.1.1. Default authentication plugins</h4>
 <div class="sect4">
 <h5 id="ref-auth-plugins-default-jb6"><a class="anchor" href="#ref-auth-plugins-default-jb6"></a>Jaybird 6</h5>
 <div class="paragraph">
@@ -6645,7 +6583,7 @@ It is not possible to specify a different configuration in Jaybird 3.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-config"><a class="anchor" href="#ref-auth-plugins-config"></a>9.2.2. Configure authentication plugins</h4>
+<h4 id="ref-auth-plugins-config"><a class="anchor" href="#ref-auth-plugins-config"></a>9.1.2. Configure authentication plugins</h4>
 <div class="paragraph">
 <p>The connection property <code>authPlugins</code> (alias <code>auth_plugin_list</code>) specifies the authentication plugins to try when connecting.
 The value of this property is a comma-separated list with the plugin names.</p>
@@ -6727,7 +6665,7 @@ The setting will also be ignored for native connections when using a fbclient li
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-auth-plugins-external"><a class="anchor" href="#ref-auth-plugins-external"></a>9.2.3. External authentication plugin support (experimental)</h4>
+<h4 id="ref-auth-plugins-external"><a class="anchor" href="#ref-auth-plugins-external"></a>9.1.3. External authentication plugin support (experimental)</h4>
 <div class="paragraph">
 <p>If you develop your own Firebird authentication plugin (or use a third-party authentication plugin), it is possible&#8201;&#8212;&#8201;for pure Java only&#8201;&#8212;&#8201;to add your own authentication plugin by implementing the interfaces</p>
 </div>
@@ -6783,7 +6721,7 @@ they may change with point-releases (although we will try to avoid that)</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.3. Wire encryption support</h3>
+<h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.2. Wire encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6858,7 +6796,7 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.4. Wire compression</h3>
+<h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.3. Wire compression</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6879,7 +6817,7 @@ This may change in future versions of Jaybird to be enabled by default.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.5. Database encryption support</h3>
+<h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.4. Database encryption support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 3.0</em></p>
 </div>
@@ -6965,7 +6903,7 @@ Consider setting connection property <code>wireCrypt=REQUIRED</code> to force en
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.6. Default holdable result sets</h3>
+<h3 id="ref-defaultholdable"><a class="anchor" href="#ref-defaultholdable"></a>9.5. Default holdable result sets</h3>
 <div class="paragraph">
 <p>This connection property enables a connection to create holdable result sets by default.
 This property can be used as a workaround for applications that expect a result set to remain open after commit, or have expectations regarding result sets in auto-commit mode that do not conform to the JDBC specification.</p>
@@ -7008,7 +6946,7 @@ The memory occupied by this result set will be released when the result is close
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.7. Firebird auto commit mode (experimental)</h3>
+<h3 id="ref-firebirdautocommit"><a class="anchor" href="#ref-firebirdautocommit"></a>9.6. Firebird auto commit mode (experimental)</h3>
 <div class="admonitionblock caution">
 <table>
 <tr>
@@ -7060,7 +6998,7 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.8. Process information</h3>
+<h3 id="ref-processinfo"><a class="anchor" href="#ref-processinfo"></a>9.7. Process information</h3>
 <div class="paragraph">
 <p>Introduced in Firebird 2.1, the <code>MON$ATTACHMENTS</code> monitoring table contains information about database attachments, including information about the client process.</p>
 </div>
@@ -7104,7 +7042,7 @@ Jaybird will report its full version (e.g. <code>Jaybird jaybird-6.0.1</code>).<
 <p>It is possible to specify the process name and process id in two ways:</p>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.8.1. System properties for process information</h4>
+<h4 id="ref-processinfo-systemprop"><a class="anchor" href="#ref-processinfo-systemprop"></a>9.7.1. System properties for process information</h4>
 <div class="paragraph">
 <p>It is possible to specify the process information through Java system properties:</p>
 </div>
@@ -7133,7 +7071,7 @@ Changes to these system properties will only affect connections created after th
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.8.2. Connection properties for process information</h4>
+<h4 id="ref-processinfo-connprops"><a class="anchor" href="#ref-processinfo-connprops"></a>9.7.2. Connection properties for process information</h4>
 <div class="paragraph">
 <p>It is also possible to specify the process information through connection properties:</p>
 </div>
@@ -7162,7 +7100,7 @@ In earlier versions, use <code>setNonStandardProperty</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.9. Data type bind support</h3>
+<h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.8. Data type bind support</h3>
 <div class="paragraph">
 <p><em class="since">Firebird 4.0</em></p>
 </div>
@@ -7216,7 +7154,7 @@ props.setProperty("dataTypeBind",
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-enable-protocol"><a class="anchor" href="#ref-enable-protocol"></a>9.10. Enabling unsupported protocol versions</h3>
+<h3 id="ref-enable-protocol"><a class="anchor" href="#ref-enable-protocol"></a>9.9. Enabling unsupported protocol versions</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7319,7 +7257,7 @@ We recommend upgrading your Firebird version, or downgrading to a Jaybird versio
 </table>
 </div>
 <div class="sect2">
-<h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.11. Opt-in feature for package information in DatabaseMetaData</h3>
+<h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.10. Opt-in feature for package information in DatabaseMetaData</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em><br>
 <em class="since">Firebird 3.0</em></p>
@@ -7408,12 +7346,12 @@ This feature may be discontinued and removed in the future if Jaybird needs to i
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-client-info"><a class="anchor" href="#ref-client-info"></a>9.12. Client info properties</h3>
+<h3 id="ref-client-info"><a class="anchor" href="#ref-client-info"></a>9.11. Client info properties</h3>
 <div class="paragraph">
 <p>Client info properties allow you to set properties on a connection for informational purposes, or as the JDBC API documentation says &#8220;<em>used for accounting, diagnostics and debugging purposes only</em>&#8221;&#8203;<sup class="footnote">[<a id="_footnoteref_23" class="footnote" href="#_footnotedef_23" title="View footnote.">23</a>]</sup>.</p>
 </div>
 <div class="sect3">
-<h4 id="ref-client-info-jb5"><a class="anchor" href="#ref-client-info-jb5"></a>9.12.1. Support in Jaybird 5 and earlier</h4>
+<h4 id="ref-client-info-jb5"><a class="anchor" href="#ref-client-info-jb5"></a>9.11.1. Support in Jaybird 5 and earlier</h4>
 <div class="paragraph">
 <p>Support for client info properties was introduced in Jaybird 2.2, storing properties in the <code>USER_SESSION</code> context of <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-functions.html#fblangref50-functions-workcontext"><code>RDB$GET/SET_CONTEXT</code></a>.
 Support is quite limited, allowing you to:</p>
@@ -7453,7 +7391,7 @@ Properties are retrieved from <code>USER_TRANSACTION</code>, falling back to <co
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-client-info-jb6"><a class="anchor" href="#ref-client-info-jb6"></a>9.12.2. Support in Jaybird 6 and later</h4>
+<h4 id="ref-client-info-jb6"><a class="anchor" href="#ref-client-info-jb6"></a>9.11.2. Support in Jaybird 6 and later</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7550,7 +7488,7 @@ The <code>ClientUser</code> and <code>ClientHostname</code> properties are consi
 </div>
 </div>
 <div class="sect3">
-<h4 id="client-info-pool"><a class="anchor" href="#client-info-pool"></a>9.12.3. Connection pools and client info properties</h4>
+<h4 id="client-info-pool"><a class="anchor" href="#client-info-pool"></a>9.11.3. Connection pools and client info properties</h4>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7578,7 +7516,7 @@ If your connection pool implementation supports custom code to reset a connectio
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.13. Create database if it does not exist</h3>
+<h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.12. Create database if it does not exist</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7634,7 +7572,7 @@ Jaybird applies some simple rules to exclude some classes of errors, and not att
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-report-sql-warnings"><a class="anchor" href="#ref-report-sql-warnings"></a>9.14. Reporting of <code>SQLWarning</code>s</h3>
+<h3 id="ref-report-sql-warnings"><a class="anchor" href="#ref-report-sql-warnings"></a>9.13. Reporting of <code>SQLWarning</code>s</h3>
 <div class="paragraph">
 <p>The JDBC Specification requires that a JDBC driver reports a <code>SQLWarning</code> when it deviates from certain JDBC-specified behaviour (for example, changing a requested result set type), or when the server reports a warning.</p>
 </div>
@@ -7677,7 +7615,7 @@ Invalid values of the system property are ignored.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.15. Custom socket factory</h3>
+<h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.14. Custom socket factory</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -7746,7 +7684,71 @@ The other properties&#8201;&#8212;&#8201;here <code>user</code>, <code>password<
 <h2 id="ref-statement"><a class="anchor" href="#ref-statement"></a>10. Statement reference</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="ref-generatedkeys"><a class="anchor" href="#ref-generatedkeys"></a>10.1. Generated keys retrieval</h3>
+<h3 id="ref-async-fetch"><a class="anchor" href="#ref-async-fetch"></a>10.1. Async fetch</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 6</em></p>
+</div>
+<div class="paragraph">
+<p>For pure Java connections, non-holdable forward-only result sets perform asynchronous fetches by default.
+Asynchronous fetches are implemented for protocol implementation version 11 and higher (i.e. Firebird 2.1 or higher), but are formally only supported for protocol version 13 and higher (i.e. Firebird 3.0 or higher).</p>
+</div>
+<div class="paragraph">
+<p>In normal usage of a result set, the first fetch will be a normal synchronous fetch.
+If certain conditions are met, subsequent fetches will be performed asynchronously.</p>
+</div>
+<div class="paragraph">
+<p>The conditions for using asynchronous fetch are considered an implementation detail and may change in point releases.
+In Jaybird 6.0.0, the conditions to enable asynchronous fetching are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The result set has type <code>FORWARD_ONLY</code>.</p>
+</li>
+<li>
+<p>The result set does not have a cursor name set.</p>
+</li>
+<li>
+<p>Any synchronous fetch on the statement cursor retrieved at least 15 rows.
+Be aware that the server may return fewer rows than the configured fetch size (default is 400), depending on Firebird version, row size and other factors.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When the asynchronous fetch is triggered is also an implementation detail and may change in point releases.
+In Jaybird 6.0.0, the conditions to perform an asynchronous fetch are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Size of the row buffer is equal to the &#8220;low-water mark&#8221;.</p>
+<div class="paragraph">
+<p>This &#8220;low-water mark&#8221; is calculated as ~33% of the maximum number of rows returned by previous fetches, with a minimum of 10 rows.</p>
+</div>
+<div class="paragraph">
+<p>As a consequence of this condition, reducing the fetch size equal to or less than the &#8220;low-water mark&#8221; may cause asynchronous fetches to stop being triggered, as the buffer size may remain smaller than this &#8220;low-water mark&#8221; (this effect may be reduced if there is other activity on the connection after the asynchronous fetch was performed).
+In that case, a synchronous fetch is triggered when the buffer is empty.</p>
+</div>
+</li>
+<li>
+<p>Fetch size at time of async fetch is larger than 1.
+This may be the configured fetch size, or the fetch size derived taking into account the configured maximum row count.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Native connections do not support this type of asynchronous fetching, but <code>fbclient</code> itself provides a different form of internal asynchronous fetching for native connections.</p>
+</div>
+<div class="paragraph">
+<p>Asynchronous fetching&#8201;&#8212;&#8201;for pure Java&#8201;&#8212;&#8201;can be disabled with the Boolean connection property <code>asyncFetch</code>, by setting it to <code>false</code>.
+The system property <a href="#systemproperties-default-async-fetch"><code>org.firebirdsql.jdbc.defaultAsyncFetch</code></a> can be used to disable it globally;
+this system property is checked dynamically when the connection configuration is created.
+These properties are primarily intended for troubleshooting or workarounds if it turns out this feature has problems;
+they may be removed in a future Jaybird version once this feature has proven itself.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-generatedkeys"><a class="anchor" href="#ref-generatedkeys"></a>10.2. Generated keys retrieval</h3>
 <div class="paragraph">
 <p>Jaybird provides support for the <code>getGeneratedKeys()</code> JDBC feature for <code>Statement</code> and <code>PreparedStatement</code>.
 This feature can be used to retrieve the generated ids (and other columns) from DML statements.</p>
@@ -7830,7 +7832,7 @@ Support for multi-row <code>RETURNING</code> is available since Jaybird 5.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-RETURN-GENERATED-KEYS"><a class="anchor" href="#ref-generatedkeys-RETURN-GENERATED-KEYS"></a>10.1.1. Basic generated keys retrieval</h4>
+<h4 id="ref-generatedkeys-RETURN-GENERATED-KEYS"><a class="anchor" href="#ref-generatedkeys-RETURN-GENERATED-KEYS"></a>10.2.1. Basic generated keys retrieval</h4>
 <div class="paragraph">
 <p>This form of generated keys execution involves the following methods:</p>
 </div>
@@ -7962,7 +7964,7 @@ This makes sense if you consider that once prepared, the statement can be reused
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-column-index"><a class="anchor" href="#ref-generatedkeys-column-index"></a>10.1.2. Generated keys by column index</h4>
+<h4 id="ref-generatedkeys-column-index"><a class="anchor" href="#ref-generatedkeys-column-index"></a>10.2.2. Generated keys by column index</h4>
 <div class="paragraph">
 <p>This form of generated keys execution involves the following methods:</p>
 </div>
@@ -8092,7 +8094,7 @@ To avoid issues, we recommend specifying the columns in ascending order, or alwa
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-column-name"><a class="anchor" href="#ref-generatedkeys-column-name"></a>10.1.3. Generated keys by column name</h4>
+<h4 id="ref-generatedkeys-column-name"><a class="anchor" href="#ref-generatedkeys-column-name"></a>10.2.3. Generated keys by column name</h4>
 <div class="paragraph">
 <p>This form of generated keys execution involves the following methods:</p>
 </div>
@@ -8189,7 +8191,7 @@ Quoting the column names would then be done by Jaybird.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="ref-generatedkeys-config"><a class="anchor" href="#ref-generatedkeys-config"></a>10.1.4. Configuring generated keys support</h4>
+<h4 id="ref-generatedkeys-config"><a class="anchor" href="#ref-generatedkeys-config"></a>10.2.4. Configuring generated keys support</h4>
 <div class="paragraph">
 <p>The connection property <code>generatedKeysEnabled</code> (alias <code>generated_keys_enabled</code>) allows the behaviour of generated keys support to be configured.
 This property is also available on data sources.</p>
@@ -8283,7 +8285,103 @@ For example with <code>UPDATE</code> statements that touch multiple records and&
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-callable-ignore-proctype"><a class="anchor" href="#ref-callable-ignore-proctype"></a>10.2. Connection property ignoreProcedureType</h3>
+<h3 id="ref-inline-blob"><a class="anchor" href="#ref-inline-blob"></a>10.3. Inline blobs</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5.0.8/6.0.2</em><br>
+<em class="since">Firebird 5.0.3</em></p>
+</div>
+<div class="paragraph">
+<p>Inline blobs are a performance optimization for reading blobs as part of the query.</p>
+</div>
+<div class="paragraph">
+<p>When querying a blob column, the row data received from the server contains only the blob id, not the data of the blob.
+Without inline blobs, the client will need to retrieve the blob data separately, requiring additional round trips between client and server for each blob.
+With inline blobs, small blobs&#8201;&#8212;&#8201;default less than 65535 bytes&#8201;&#8212;&#8201;are sent together with the row data, and the client can then serve the blob from the data it has locally.
+Inline blobs can also increase the effectiveness of wire compression&#8201;&#8212;&#8201;if enabled, assuming the blob data compresses well.</p>
+</div>
+<div class="paragraph">
+<p>In short, inline blobs increase throughput when querying small blobs, especially on high latency network connections.</p>
+</div>
+<div class="paragraph">
+<p>This is not entirely free:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Fetching rows itself can be slower as more data is sent for a fetch.</p>
+</li>
+<li>
+<p>Caching the inline blobs consumes memory.</p>
+<div class="paragraph">
+<p>By default, a maximum of 10 MiB per connection is used for this cache.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the maximum blob cache size is reached, received inline blobs will be discarded.
+For pure Java connections, an inline blob is removed from the cache on first use, or when the transaction associated with the blob ends.
+The native client implementation may have different cache eviction rules.</p>
+</div>
+<div class="paragraph">
+<p>As pure Java connections remove the inline blob from the cache on first use, subsequent attempts to read the same blob&#8201;&#8212;&#8201;by getting a different instance of <code>java.sql.Blob</code> or through multiple calls to the <code>ResultSet.getXXX</code> methods&#8201;&#8212;&#8201;will use a server-side blob.
+This can also happen if multiple columns or rows, even in different result sets on the same connection, point to the same blob id in the same transaction.</p>
+</div>
+<div class="paragraph">
+<p>If you execute queries returning blobs, while those blobs are never actually opened, you may fill up the cache and later received inline blobs are then discarded.
+Especially in long-running transactions, this may reduce the effectiveness of this feature.</p>
+</div>
+<div class="paragraph">
+<p>Inline blobs are introduced in Firebird 5.0.3 (protocol 19).
+For pure Java connections, you need Jaybird 5.0.8 or higher or Jaybird 6.0.2 or higher.
+For native connections, you need <em>fbclient</em> 5.0.3 or higher, irrespective of the Jaybird version;
+to configure inline blobs for native connections, you will also need Jaybird 5.0.8 or higher or Jaybird 6.0.2 or higher.</p>
+</div>
+<div class="sect3">
+<h4 id="ref-inline-blob-config"><a class="anchor" href="#ref-inline-blob-config"></a>10.3.1. Configuring inline blobs</h4>
+<div class="paragraph">
+<p>There are two connection properties affecting inline blobs:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>maxInlineBlobSize</code> (aliases: <code>max_inline_blob_size</code>, <code>isc_dpb_max_inline_blob_size</code>)</dt>
+<dd>
+<p>Maximum size in bytes of the blob (default: <code>65535</code>).<br>
+A value of <code>0</code> will disable sending of inline blobs.</p>
+<div class="paragraph">
+<p>The maximum allowed value is decided by the Firebird server, and is currently <code>65535</code>;
+this may change in the future</p>
+</div>
+<div class="paragraph">
+<p>If a blob is smaller than the specified size, the server will send it inline.
+The size includes segment lengths, so the actual maximum blob data received is <code><em>N</em> * 2</code> bytes smaller, where <em>N</em> is the number of segments of the actual blob, or at least one segment for stream blobs.</p>
+</div>
+<div class="paragraph">
+<p>The default can be changed with system property <a href="#systemproperties-default-inline-blob"><code>org.firebirdsql.jdbc.defaultMaxInlineBlobSize</code></a>.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>maxBlobCacheSize</code> (aliases: <code>max_blob_cache_size</code>, <code>isc_dpb_max_blob_cache_size</code>)</dt>
+<dd>
+<p>Maximum size in bytes&#8201;&#8212;&#8201;per connection&#8201;&#8212;&#8201;of the blob cache (default: <code>10485760</code> or 10 MiB).<br>
+A value of <code>0</code> will disable the cache, but does not disable sending of inline blobs.
+Set <code>maxInlineBlobSize</code> to <code>0</code> to disable sending of inline blobs.</p>
+<div class="paragraph">
+<p>For pure Java, only the data size is counted towards the cache size.
+For native, the segment lengths also count towards the cache size.</p>
+</div>
+<div class="paragraph">
+<p>The default can be changed with system property <a href="#systemproperties-default-inline-blob"><code>org.firebirdsql.jdbc.defaultMaxBlobCacheSize</code></a>.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Without explicitly setting the connection or system property, native connections will use the default of <em>fbclient</em> (which are currently the same as those of Jaybird).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-callable-ignore-proctype"><a class="anchor" href="#ref-callable-ignore-proctype"></a>10.4. Connection property ignoreProcedureType</h3>
 <div class="paragraph">
 <p>On Firebird 2.1 and higher, Jaybird will use the procedure type information from the database metadata to decide how to execute <code>CallableStatement</code>.
 When a procedure is selectable, Jaybird will automatically transform a call-escape or <code>EXECUTE PROCEDURE</code> statement to a <code>SELECT</code>.</p>
@@ -8305,7 +8403,7 @@ When necessary you can use <code>FirebirdCallableStatement.setSelectableProcedur
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.3. Connection property scrollableCursor</h3>
+<h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.5. Connection property scrollableCursor</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 5.0</em></p>
@@ -8364,7 +8462,7 @@ This will be corrected when we retrofit the new behaviour for <em>emulated</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.4. Connection property useServerBatch</h3>
+<h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.6. Connection property useServerBatch</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 4.0</em></p>
@@ -8379,7 +8477,7 @@ Set to <code>false</code> to disable server-side batch updates and always use em
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.5. Connection property serverBatchBufferSize</h3>
+<h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.7. Connection property serverBatchBufferSize</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 4.0</em></p>
@@ -8425,7 +8523,7 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.6. Connection property allowTxStmts</h3>
+<h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.8. Connection property allowTxStmts</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -8519,7 +8617,7 @@ However, for the savepoint related methods it is advisable to use the relevant J
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.7. Connection property extendedMetadata</h3>
+<h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.9. Connection property extendedMetadata</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5.0.5</em></p>
 </div>
@@ -10127,6 +10225,27 @@ Default: <code>16384</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maxInlineBlobSize</code><br>
+<code>max_inline_blob_size</code>, <code>isc_dpb_max_inline_blob_size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes of inline blobs (<em class="since">Jaybird 5.0.8/6.0.2</em> <em class="since">Firebird 5.0.3</em>).
+A value of <code>0</code> disables transmission of inline blobs.
+See <a href="#ref-inline-blob">Inline blobs</a> for more information.<br>
+Default: <code>65535</code>, maximum value: <code>65535</code><sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>maxBlobCacheSize</code><br>
+<code>max_blob_cache_size</code>, <code>isc_dpb_max_blob_cache_size</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes&#8201;&#8212;&#8201;per connection&#8201;&#8212;&#8201;of the inline blob cache (<em class="since">Jaybird 5.0.8/6.0.2</em> <em class="since">Firebird 5.0.3</em>).
+A value of <code>0</code> disables the cache.
+Disabling the cache does not disable transmission of inline blobs: set <code>maxInlineBlobSize</code> to <code>0</code> to disable transmission.
+See <a href="#ref-inline-blob">Inline blobs</a> for more information.<br>
+Default: <code>10485760</code> (10 MiB)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>soTimeout</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
@@ -10603,7 +10722,29 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.6. Default <code>reportSQLWarnings</code> value</h3>
+<h3 id="systemproperties-default-inline-blob"><a class="anchor" href="#systemproperties-default-inline-blob"></a>B.6. Default inline blob property values</h3>
+<div class="paragraph">
+<p><em class="since">Jaybird 5.0.8/6.0.2</em><br>
+<em class="since">Firebird 5.0.3</em></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultMaxInlineBlobSize</code></dt>
+<dd>
+<p>Configures the default value for the <code>maxInlineBlobSize</code> connection property.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.defaultMaxBlobCacheSize</code></dt>
+<dd>
+<p>Configures the default value for the <code>maxBlobCacheSize</code> connection property.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>See also <a href="#ref-inline-blob">Inline blobs</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.7. Default <code>reportSQLWarnings</code> value</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -10618,7 +10759,7 @@ See <a href="#ref-report-sql-warnings">Reporting of <code>SQLWarning</code>s</a>
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.7. Wire protocol buffer sizes</h3>
+<h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.8. Wire protocol buffer sizes</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -10737,7 +10878,7 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.8. Other properties</h3>
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.9. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -10770,7 +10911,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.9. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.10. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -10874,7 +11015,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#160;</p></td>
 </tr>
 <tr>
@@ -10944,7 +11085,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code><sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code><sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -11287,7 +11428,7 @@ This encoding might or might not match the database default encoding.</p>
 </div>
 <div class="paragraph">
 <p>Firebird performs translation between character sets of the client connection and the character set of the content.
-The list of allowed character sets as well as the allowed translations between them are specified in the <code>fbintl</code> shared library located in the <code>intl/</code> directory of the Firebird installation.<sup class="footnote">[<a id="_footnoteref_34" class="footnote" href="#_footnotedef_34" title="View footnote.">34</a>]</sup>
+The list of allowed character sets as well as the allowed translations between them are specified in the <code>fbintl</code> shared library located in the <code>intl/</code> directory of the Firebird installation.<sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup>
 There is also a special character set NONE that tells Firebird not to interpret the contents of the character field.</p>
 </div>
 <div class="paragraph">
@@ -11325,7 +11466,7 @@ Firebird, on the other side, is not based on Unicode and allows different charac
 Additionally, Firebird requires a connection character set to be specified in connection options, which forces Firebird to convert data from the character set of the database object into the character set of the client application.</p>
 </div>
 <div class="paragraph">
-<p>There are two boundary cases that we will consider here, one when Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup> character set <code>UTF8</code>, another when the Firebird database was created without specifying the character set (i.e. character set <code>NONE</code>).</p>
+<p>There are two boundary cases that we will consider here, one when Firebird database was created with default<sup class="footnote">[<a id="_footnoteref_36" class="footnote" href="#_footnotedef_36" title="View footnote.">36</a>]</sup> character set <code>UTF8</code>, another when the Firebird database was created without specifying the character set (i.e. character set <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
 <p>The character set <code>UTF8</code> is a Unicode character set that uses UTF-8 encoding and occupies from one to four 8-bit units.
@@ -11347,7 +11488,7 @@ this can be done by either creating the database with a default character set of
 <p>The <code>encoding</code> connection property in the JDBC driver has to be set to <code>UTF8</code>;
 this can be done in several ways: the easiest one is to add the appropriate parameter to the JDBC URL (see the first example), another possibility is to use appropriate method of the <code>DriverManager</code> class (see the second example).
 Applications that use <code>DataSource</code> interface to obtain the database connections also have access to the
-<code>encoding</code> property.<sup class="footnote">[<a id="_footnoteref_36" class="footnote" href="#_footnotedef_36" title="View footnote.">36</a>]</sup></p>
+<code>encoding</code> property.<sup class="footnote">[<a id="_footnoteref_37" class="footnote" href="#_footnotedef_37" title="View footnote.">37</a>]</sup></p>
 </li>
 </ol>
 </div>
@@ -11736,7 +11877,7 @@ Jaybird will try to provide an equivalent of the JDBC function using the built-i
 When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.</p>
 </div>
 <div class="paragraph">
-<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_37" class="footnote" href="#_footnotedef_37" title="View footnote.">37</a>]</sup> shipped with Firebird.
+<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_38" class="footnote" href="#_footnotedef_38" title="View footnote.">38</a>]</sup> shipped with Firebird.
 Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until">Jaybird 5</em>).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
@@ -11871,7 +12012,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_38" class="footnote" href="#_footnotedef_38" title="View footnote.">38</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -11950,7 +12091,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR_LENGTH(string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in characters of the string expression</p></td>
 </tr>
@@ -11962,7 +12103,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER_LENGTH( string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>CHAR_LENGTH</code></p></td>
 </tr>
@@ -12004,13 +12145,13 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string, OCTETS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_44" class="footnote" href="#_footnotedef_44" title="View footnote.">44</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
@@ -12043,7 +12184,7 @@ Position 1 is the first character in <code>string2</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string, OCTETS)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_44" class="footnote" href="#_footnotedef_44" title="View footnote.">44</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_45" class="footnote" href="#_footnotedef_45" title="View footnote.">45</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (with caveat)</p></td>
 </tr>
@@ -12152,7 +12293,7 @@ this could be a four-digit SOUNDEX code, a phonetic representation of each word,
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_45" class="footnote" href="#_footnotedef_45" title="View footnote.">45</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="#_footnotedef_46" title="View footnote.">46</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>;
 the name for the day is specific to the data source</p></td>
@@ -12204,7 +12345,7 @@ The value for field may be one of the following: <code>YEAR</code>, <code>MONTH<
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTHNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="#_footnotedef_46" title="View footnote.">46</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_47" class="footnote" href="#_footnotedef_47" title="View footnote.">47</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month component of <code>date</code>;
 the name for the month is specific to the data source</p></td>
@@ -12278,7 +12419,7 @@ the name for the month is specific to the data source</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE()</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_47" class="footnote" href="#_footnotedef_47" title="View footnote.">47</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_48" class="footnote" href="#_footnotedef_48" title="View footnote.">48</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database</p></td>
 </tr>
@@ -12956,7 +13097,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the recent LTS versions and the latest release.
-Currently, that means we support Java 7, 8, 11, 17, and 21<sup class="footnote">[<a id="_footnoteref_48" class="footnote" href="#_footnotedef_48" title="View footnote.">48</a>]</sup>.</p>
+Currently, that means we support Java 7, 8, 11, 17, and 21<sup class="footnote">[<a id="_footnoteref_49" class="footnote" href="#_footnotedef_49" title="View footnote.">49</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 4 provides libraries for Java 7, Java 8, and Java 11.
@@ -13771,60 +13912,63 @@ All Rights Reserved.
 <a href="#_footnoteref_31">31</a>. In practice, values with precision 39 are possible up to the maximum value of the <code>INT128</code> backing the value.
 </div>
 <div class="footnote" id="_footnotedef_32">
-<a href="#_footnoteref_32">32</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
+<a href="#_footnoteref_32">32</a>. The maximum is decided server-side, and may change in future Firebird versions.
 </div>
 <div class="footnote" id="_footnotedef_33">
-<a href="#_footnoteref_33">33</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
+<a href="#_footnoteref_33">33</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_34">
-<a href="#_footnoteref_34">34</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux, <code>libfbintl.so</code>
+<a href="#_footnoteref_34">34</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
 </div>
 <div class="footnote" id="_footnotedef_35">
-<a href="#_footnoteref_35">35</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
+<a href="#_footnoteref_35">35</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux, <code>libfbintl.so</code>
 </div>
 <div class="footnote" id="_footnotedef_36">
-<a href="#_footnoteref_36">36</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
+<a href="#_footnoteref_36">36</a>. The default character set simplifies the explanation, since we do not have to consider the cases when different columns with different character sets are used within the same connection. The statements made here, obviously, can be applied to those cases as well.
 </div>
 <div class="footnote" id="_footnotedef_37">
-<a href="#_footnoteref_37">37</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_37">37</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_38">
-<a href="#_footnoteref_38">38</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_38">38</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_39">
-<a href="#_footnoteref_39">39</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_39">39</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
 </div>
 <div class="footnote" id="_footnotedef_40">
-<a href="#_footnoteref_40">40</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_40">40</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_41">
-<a href="#_footnoteref_41">41</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_41">41</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_42">
-<a href="#_footnoteref_42">42</a>. The trailing blanks are also counted, only works if second parameter is omitted
+<a href="#_footnoteref_42">42</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_43">
-<a href="#_footnoteref_43">43</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_43">43</a>. The trailing blanks are also counted, only works if second parameter is omitted
 </div>
 <div class="footnote" id="_footnotedef_44">
-<a href="#_footnoteref_44">44</a>. Parameter <code>OCTETS</code> is ignored
+<a href="#_footnoteref_44">44</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_45">
-<a href="#_footnoteref_45">45</a>. Always returns English full names (e.g. &#8220;Sunday&#8221;)
+<a href="#_footnoteref_45">45</a>. Parameter <code>OCTETS</code> is ignored
 </div>
 <div class="footnote" id="_footnotedef_46">
-<a href="#_footnoteref_46">46</a>. Always returns English full names (e.g. &#8220;January&#8221;)
+<a href="#_footnoteref_46">46</a>. Always returns English full names (e.g. &#8220;Sunday&#8221;)
 </div>
 <div class="footnote" id="_footnotedef_47">
-<a href="#_footnoteref_47">47</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
+<a href="#_footnoteref_47">47</a>. Always returns English full names (e.g. &#8220;January&#8221;)
 </div>
 <div class="footnote" id="_footnotedef_48">
-<a href="#_footnoteref_48">48</a>. The Jaybird 4 support for Java 21 comes with one caveat: some tests weren&#8217;t run due to lack of support for Java 21 in test libraries used for testing Jaybird, and we did not want to invest time to upgrade or replace those libraries.
+<a href="#_footnoteref_48">48</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
+</div>
+<div class="footnote" id="_footnotedef_49">
+<a href="#_footnoteref_49">49</a>. The Jaybird 4 support for Java 21 comes with one caveat: some tests weren&#8217;t run due to lack of support for Java 21 in test libraries used for testing Jaybird, and we did not want to invest time to upgrade or replace those libraries.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-05 11:40:09 UTC
+Last updated 2025-05-21 08:00:14 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
