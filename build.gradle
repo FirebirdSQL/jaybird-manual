@@ -10,11 +10,11 @@ repositories {
 }
 
 asciidoctorj {
-    // asciidoctorj 3.0.0 doesn't seem to work with asciidoctor-gradle-plugin 4.0.3
+    // asciidoctorj 3.0.0 doesn't seem to work with asciidoctor-gradle-plugin 4.0.4 (might be asciidoctor-pdf related)
     version = '2.5.13'
     modules {
         pdf {
-            version '2.3.18'
+            version '2.3.19'
         }
     }
     docExtensions file('doc-extension.groovy')
