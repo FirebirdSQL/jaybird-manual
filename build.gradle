@@ -48,7 +48,7 @@ asciidoctorPdf {
     }
     attributes 'revnumber': false, 'source-highlighter': 'rouge', 'media': 'prepress', 'compress': '',
             'icon-set': 'fas', 'pdf-fontsdir': "${file('src/docs/theme/fonts')},GEM_FONTS_DIR"
-    theme 'jaybird'
+    theme = 'jaybird'
     jvm {
         jvmArgs "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED"
     }
@@ -61,11 +61,11 @@ tasks.register('makePages') {
     doLast {
         copy {
             from asciidoctor.outputs
-            into "$buildDir/pages"
+            into layout.buildDirectory.dir('pages')
         }
         copy {
             from asciidoctorPdf.outputs
-            into "$buildDir/pages"
+            into layout.buildDirectory.dir('pages')
         }
     }
 }
