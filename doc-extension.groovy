@@ -1,7 +1,7 @@
 // Preprocessor for since/until roles in pdf backend (in html5 backed this is handled using CSS)
 preprocessor {
     document, reader ->
-        if (!document.basebackend('pdf')) {
+        if (document.getAttribute('backend') != 'pdf') {
             println 'skipping since/until preprocessor for non-PDF'
             return
         }
