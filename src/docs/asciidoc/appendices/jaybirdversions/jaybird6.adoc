@@ -67,6 +67,9 @@ Jaybird 6 supports the following specifications:
 |===
 |Specification |Details
 
+|JDBC 4.4
+|If a security manager is available, the driver still performs `SQLPermission` checks.
+
 |JDBC 4.3 
 |Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
 It is not officially JDBC compliant, because we currently don't have access to the TCK.
