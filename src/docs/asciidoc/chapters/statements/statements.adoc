@@ -52,10 +52,10 @@ A statement can be executed using the following methods:
 
 * `Statement.executeQuery(String)` -- executes a `SELECT` or other result set producing statement, and returns a result set.
 If the specified statement does not produce a result set, an `SQLException` is thrown after statement executionfootnote:[This is an implementation detail and may change in the future to throw an exception _before_ execution].
-* `Statement.executeUpdate(String)` -- executes other DML (Data Manipulation Language, e.g. `INSERT`, `UPDATE`, `DELETE`) or DDL(Data Definition Languagefootnote:[This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]) statements and returns the number of updated rows.
+* `Statement.executeUpdate(String)` -- executes other DML (Data Manipulation Language, e.g. `INSERT`, `UPDATE`, `DELETE`) or DDL (Data Definition Languagefootnote:[This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]) statements and returns the number of updated rows.
 If the specified statement is a query or otherwise produces a result set, an `SQLException` is thrown.
 * `Statement.execute(String)` -- executes a statement and returns `true` when the statement returned a result set, or `false` if the result has no result set, but has an update count or nothing as its result.
-You can use `Statement.getResultSet()` method to get the result of the executed query, or you can use `Statement.getUpdateCount()` when you have executed update statement.
+You can use `Statement.getResultSet()` to get the result of the executed query, or you can use `Statement.getUpdateCount()` when you have executed an update statement.
 +
 Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.
 
@@ -160,7 +160,7 @@ When a Java application executes a statement, a lot more operations happen behin
 Firebird returns a 32-bit identifier of the allocated object, a statement handle, that must be used in next operations.
 2. An SQL statement is compiled into an executable form and is associated with the specified statement handle.
 3. Jaybird asks the server to describe the statement and Firebird returns information about the statement type and possible statement input parameters (we will discuss this with prepared statements) and output parameters, namely the result set columns.
-4. If no parameters are required for the statement, Jaybird tells Firebird to execute statement passing the statement handle into corresponding method.
+4. If no parameters are required for the statement, Jaybird tells Firebird to execute the statement, passing the statement handle to the corresponding method.
 
 After this Jaybird has to make a decision depending on the operation that was called.
 
