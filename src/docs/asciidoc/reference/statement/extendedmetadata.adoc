@@ -11,7 +11,7 @@ This setting only affects the following methods:
 `ResultSetMetaData.getPrecision(int)`::
 When enabled, the actual precision of `NUMERIC` and `DECIMAL` columns is queried.
 When disabled, the precision will be estimated.
-`ResultSetMetaData.isAutoIncrement(true)`::
+`ResultSetMetaData.isAutoIncrement(int)`::
 When enabled ([.since]_Jaybird 6_), the identity state of `INTEGER`, `BIGINT` and `SMALLINT` columns is queried on Firebird 3.0 and higher.
 When disabled, the result is always `false`.
 
