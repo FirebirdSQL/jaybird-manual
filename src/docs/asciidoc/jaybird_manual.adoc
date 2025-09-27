@@ -13,7 +13,7 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird6-full-version: 6.0.3
 :jaybird6-jna-version: 5.17.0
 :jaybird6-bc-version: 1.81
-:jaybird5-full-version: 5.0.9
+:jaybird5-full-version: 5.0.10
 :jaybird5-template-version: {jaybird5-full-version}.<java>
 :jaybird5-example-version: {jaybird5-full-version}.java11
 :jaybird5-jna-version: 5.17.0
@@ -22,7 +22,7 @@ Roman Rokytskyy; Mark Rotteveel
 :jaybird4-example-version: {jaybird4-full-version}.java11
 :jaybird3-full-version: 3.0.12
 :jaybird22-full-version: 2.2.15
-:jaybird-fbclient-version: 5.0.2.0
+:jaybird-fbclient-version: 5.0.3.0
 :jaybird-version: 6
 :jaybird-full-version: {jaybird6-full-version}
 :jaybird-example-version: {jaybird6-full-version}
