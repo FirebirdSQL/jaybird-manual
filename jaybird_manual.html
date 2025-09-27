@@ -710,7 +710,7 @@ The JCA standard specifies an architecture in which an application server can co
 <div class="sect2">
 <h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
 <div class="paragraph">
-<p>This manual covers Jaybird 6 and may use Java 11 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
+<p>This manual covers Jaybird 6 and may use Java 17 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
 Features that were removed in Jaybird 3 or earlier are not covered.</p>
 </div>
 <div class="paragraph">
@@ -1597,7 +1597,7 @@ This dependency does not support the <code>embedded</code> protocol.</p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
-    &lt;version&gt;5.0.2.0&lt;/artifactId&gt;
+    &lt;version&gt;5.0.3.0&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1610,7 +1610,7 @@ This dependency does not support the <code>embedded</code> protocol.</p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
     &lt;artifactId&gt;fbclient&lt;/artifactId&gt;
-    &lt;version&gt;5.0.2.0&lt;/artifactId&gt;
+    &lt;version&gt;5.0.3.0&lt;/artifactId&gt;
     &lt;classifier&gt;linux&lt;/classifier&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
@@ -8641,7 +8641,7 @@ This can be disabled by setting the connection property <code>extendedMetadata</
 <p>When enabled, the actual precision of <code>NUMERIC</code> and <code>DECIMAL</code> columns is queried.
 When disabled, the precision will be estimated.</p>
 </dd>
-<dt class="hdlist1"><code>ResultSetMetaData.isAutoIncrement(true)</code></dt>
+<dt class="hdlist1"><code>ResultSetMetaData.isAutoIncrement(int)</code></dt>
 <dd>
 <p>When enabled (<em class="since">Jaybird 6</em>), the identity state of <code>INTEGER</code>, <code>BIGINT</code> and <code>SMALLINT</code> columns is queried on Firebird 3.0 and higher.
 When disabled, the result is always <code>false</code>.</p>
@@ -9762,7 +9762,7 @@ The coefficient is 16 digits, but the exponent is too low by 11.</p>
 </div>
 <div class="paragraph">
 <p>If we sacrifice least-significant digits, we can increase the exponent, this is achieved by dividing the coefficient by 10<sup>11</sup> (and rounding) and increasing the exponent by 11.
-We get exponent = round(1234567890123456 / 10<sup>11</sup>) = 12346 and exponent = -409 + 11 = -398.</p>
+We get coefficient = round(1234567890123456 / 10<sup>11</sup>) = 12346 and exponent = -409 + 11 = -398.</p>
 </div>
 <div class="paragraph">
 <p>The resulting value is now <code>12346E-398</code> or <code>1.2346E-394</code>, or in other words, we sacrificed precision to make the value fit.</p>
@@ -9945,7 +9945,7 @@ This behaviour is subject to change, and future releases may 'round' to <code>0<
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Behaviour in Firebird of <code>NUMERIC</code> is closer to the SQL standard <code>DECIMAL</code> behaviour.
+Behaviour in Firebird of <code>NUMERIC</code> is closer to the SQL standard <code>DECIMAL</code> behaviour than the SQL standard <code>NUMERIC</code> behaviour.
 The precision specified is the minimum precision, not the exact precision.
 </td>
 </tr>
@@ -9988,7 +9988,7 @@ Jaybird 4.0.0 will also be able to handle the type, but does not formally identi
 </div>
 <div class="paragraph">
 <p>As JDBC does not define an <code>INT128</code> type, Jaybird maps the Firebird type <code>INT128</code> to the JDBC type <code>NUMERIC</code> with precision of 38.
-This way most tools should be able to handle the full range of values of without issue.</p>
+This way most tools should be able to handle the full range of values without issue.</p>
 </div>
 <div class="paragraph">
 <p>For details on numeric, see <a href="#ref-decimal">Exact numeric types DECIMAL/NUMERIC</a>.</p>
@@ -13009,7 +13009,7 @@ For native or embedded connections, JNA 5.17.0 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.9.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.10.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
@@ -13051,7 +13051,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.9.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.10.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -13064,7 +13064,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.9.java11&lt;/version&gt;
+  &lt;version&gt;5.0.10.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13985,7 +13985,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-09-27 13:43:03 UTC
+Last updated 2025-09-27 14:45:04 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
