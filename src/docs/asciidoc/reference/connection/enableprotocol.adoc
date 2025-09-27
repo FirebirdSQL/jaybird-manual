@@ -5,7 +5,7 @@
 
 Since Jaybird 6, the pure Java protocol implementation will no longer attempt to connect with protocol versions of Firebird versions which are not supported.
 Since the minimum supported Firebird version in Jaybird 6 is Firebird 3.0, this means that protocol versions 10, 11 and 12 are no longer tried by default.
-Protocol versions higher than 18 (Firebird 5.0.0) will also not be attempted (assuming a protocol implementation with that version number exists on the classpath).
+Protocol versions higher than 19 (Firebird 5.0.3) will also not be attempted (assuming a protocol implementation with that version number exists on the classpath).
 
 As a workaround, the connection property `enableProtocol` can enable unsupported protocols, assuming a suitable protocol implementation is available on the classpath.
 
@@ -58,6 +58,6 @@ Unsupported protocol versions may be removed in future releases of Jaybird.
 |16footnote:[Jaybird has no protocol 17 implementation]
 
 |5.0
-|18
+|19footnote:[since Firebird 5.0.3, version 18 for 5.0.0 - 5.0.2]
 
 |===
