@@ -16,7 +16,7 @@ The JCA implementation was removed in Jaybird 5, and Jaybird is now only a JDBC 
 
 === This manual
 
-This manual covers Jaybird {jaybird-version} and may use Java 11 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
+This manual covers Jaybird {jaybird-version} and may use Java 17 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
 Features that were removed in Jaybird 3 or earlier are not covered.
 
 New or removed features are tagged with the version that introduced a feature (e.g. [.since]_Jaybird 5_) or removed feature (e.g. [.until]_Jaybird 5_).
