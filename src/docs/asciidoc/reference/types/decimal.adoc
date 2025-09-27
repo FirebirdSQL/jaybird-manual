@@ -3,7 +3,7 @@
 
 The JDBC types `DECIMAL` and `NUMERIC` are supported by Firebird and Jaybird and map to `java.math.BigDecimal`.
 
-NOTE: Behaviour in Firebird of `NUMERIC` is closer to the SQL standard `DECIMAL` behaviour. 
+NOTE: Behaviour in Firebird of `NUMERIC` is closer to the SQL standard `DECIMAL` behaviour than the SQL standard `NUMERIC` behaviour.
 The precision specified is the minimum precision, not the exact precision.
 
 [[ref-decimal-precision-range]]

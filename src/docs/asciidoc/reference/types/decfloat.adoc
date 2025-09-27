@@ -142,7 +142,7 @@ The value `1.234567890123456E-394` or `1234567890123456E-409` is coefficient `12
 The coefficient is 16 digits, but the exponent is too low by 11.
 +
 If we sacrifice least-significant digits, we can increase the exponent, this is achieved by dividing the coefficient by 10^11^ (and rounding) and increasing the exponent by 11. 
-We get exponent = round(1234567890123456 / 10^11^) = 12346 and exponent = -409 + 11 = -398.
+We get coefficient = round(1234567890123456 / 10^11^) = 12346 and exponent = -409 + 11 = -398.
 +    
 The resulting value is now `12346E-398` or `1.2346E-394`, or in other words, we sacrificed precision to make the value fit.
     
