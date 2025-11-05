@@ -552,7 +552,7 @@ backupManager.restoreDatabase();
 [IMPORTANT]
 ====
 Starting with Firebird 3.0, user management through the Services API has been deprecated.
-You should use the SQL DDL statements for user management instead.
+You should use the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-security-user.html[SQL statements for user management] instead.
 ====
 
 The next service available is the user management.
