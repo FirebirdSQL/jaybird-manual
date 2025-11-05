@@ -153,7 +153,7 @@ A subset of the tests are automatically run -- through a GitHub Action -- for ea
 
 For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[Java SE Technologies - Database^].
 
-For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.3, e.g. JDBC 4.3 is "`Maintenance Release 3`").
+For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.4, e.g. JDBC 4.4 is "`Maintenance Release 4`").
 
 ==== Firebird
 
