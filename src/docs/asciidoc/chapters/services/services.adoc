@@ -936,10 +936,25 @@ Possible values are (bit mask, can be combined):
 |getHeader{zwsp}Page()
 |Get information from the header page (e.g. page size, OIT, OAT and Next transaction values, etc.)
 
-|getTable{zwsp}Statistics(String[])
-|Get statistic information for the specified tables.
+|getTable{zwsp}Statistics({zwsp}String[])
+a|Get statistic information for the listed tables.
 
-This method allows to limit the reported statistical information to a single or couple of the tables, not for the whole database.
+The statistics will be limited to the listed tables.
+In Jaybird 6 and earlier, at least one table is required.
+
+[.since]_Jaybird 7_ Method accepts varargs (`++String...++`).
+In Jaybird 7 and later, specifying no tables will list all tables.
+
+|getTable{zwsp}Statistics({zwsp}Collection<String>)
+|[.since]_Jaybird 7_ Same as previous, but as a collection of table names.
+
+|getTable{zwsp}Statistics({zwsp}Collection<String>, Collection<String>)
+a|[.since]_Jaybird 7_ Get statistic information for the listed tables in the listed schemas.
+Accepts a collection of schema names and a collection of table names.
+
+The statistics will be limited to the listed schemas, and the listed tables.
+If both collections are empty, all tables in all schemas are reported.
+On Firebird 5.0 and older, the collections of schemas will be ignored.
 
 |getDatabase{zwsp}Transaction{zwsp}Info()
 a|Get transaction information of a database

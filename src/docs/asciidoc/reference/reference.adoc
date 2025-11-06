@@ -32,6 +32,8 @@ include::connection/reportsqlwarnings.adoc[]
 
 include::connection/socketfactory.adoc[]
 
+include::connection/schemasupport.adoc[]
+
 [[ref-statement]]
 == Statement reference
 
@@ -52,6 +54,8 @@ include::statement/serverbatchbuffersize.adoc[]
 include::statement/allowtxstmts.adoc[]
 
 include::statement/extendedmetadata.adoc[]
+
+include::statement/schemasupport.adoc[]
 
 // TODO: Document closeOnCompletion support?
 

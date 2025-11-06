@@ -96,6 +96,13 @@ Character set for the connection using Java character set name.
 Similar to the previous property, but instead of Firebird-specific name accepts a Java character set name. +
 In general, only specify `charSet` _or_ `encoding`, not both.
 
+a|`searchPath` +
+`search_path`, `isc_dpb_search_path`
+a|Schemas to search for unqualified objects ([.since]_Jaybird 7_, [.since]_Firebird 6.0_) +
+Comma-separated list of schema names.
+For a case-sensitive or otherwise non-regular schema name, the identifier *must* be quoted.
+See <<ref-schema-support-search-path>> for more information.
+
 a|`sqlDialect` +
 `dialect`, `sql_dialect`, `isc_dpb_sql_dialect`
 a|SQL dialect, can be 1, 2 or 3. +

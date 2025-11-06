@@ -1,0 +1,82 @@
+[#ref-schema-support]
+=== Schema support
+
+[.since]_Jaybird 7_ +
+[.since]_Firebird 6.0_
+
+Firebird 6.0 introduced schema support, and schemas are supported in Jaybird 7 and higher.
+
+This sections describes aspects of schema support that we think are relevant, or deviate from JDBC defined behaviour.
+
+[#ref-schema-support-search-path]
+==== Search path
+
+In Firebird 6.0 and higher, the search path is a list of schemas that Firebird searches for objects that are not fully-qualified -- for example a select statement referencing a table without a schema name.
+
+Jaybird has a connection property `searchPath` (aliases `search_path`, `isc_dpb_search_path`) to configure the initial search path of a connection.
+If the `SYSTEM` schema is not included, Firebird will automatically add it to the end of the search path.
+The configured value is also what is reverted to when executing `ALTER SESSION RESET`.
+
+The value of this connection property is a comma-separated list of schema names.
+For a case-sensitive or otherwise non-regular schema name, the identifier *must* be quoted.
+
+The `FirebirdConnection` interface defines the methods `setSearchPath(String)` and `setSearchPathList(List<String>)` to change the search path of the current connection.
+It also defines methods `String getSearchPath()` and `List<String> getSearchPathList()` to obtain the search path of the connection.
+
+[#ref-schema-support-set-schema]
+==== Current schema and `Connection.setSchema/getSchema`
+
+The first _valid_ (existing) schema on the search path is the _current schema_.
+The current schema is used to create objects if they are not fully-qualified.
+
+JDBC defines the method `setSchema` to change the current schema, and `getSchema` to retrieve the current schema.
+
+The implementation in Jaybird will do one of the following:
+
+. Prepend the schema to the existing search path.
++
+This is done if `setSchema` was not called before, or if Jaybird detected that the search path was changed in some other fashion.
+. Replace the first value of the current search path with a new value.
++
+This is done if the current search path is unchanged since the previous call to `setSchema`, otherwise it's prepended.
+
+The `setSchema` method will not check if the specified schema exists, nor throw an exception.
+In other words, the current schema -- and the value reported by `getSchema` -- might not change, or change to a different value in case 2 (replacing the first schema), if the specified schema does not exist.
+
+If a schema on the search path that previously did not exist is created, the value reported by `getSchema` may change even if the search path was not changed.
+
+[#ref-schema-support-statement]
+==== Non-standard statement behaviour
+
+JDBC requires that a statement object, once created, does not change the current schema it uses.
+That is, changes made with `Connection.setSchema` should not apply to statements created before that call.
+Jaybird cannot fully meet this requirement as the search path is a connection-level property, and Firebird will use the search path as it is at prepare time.
+
+- For `Statement`, Jaybird will prepare the statement text on execute, so the search path at that time is used and resolution can change between executes on the same `Statement` object.
+- For `PreparedStatement` (not `CallableStatement`), Jaybird will prepare the statement text at `Connection.prepareStatement` time, so it can guarantee the required behaviour.
+- For `CallableStatement`, Jaybird will attempt to identify the procedure at `Connection.prepareCall` time, and rewrite the statement text to use a fully-qualified reference.
+If it can identify the procedure, Jaybird will meet the required behaviour.
++
+However, actual server-side statement preparation is delayed and will be repeated during the lifetime of the `CallableStatement`.
+So, if Jaybird was not able to identify the procedure during `prepareCall`, the actual schema and procedure resolution can change between executes.
+
+[TIP]
+====
+If you need stable resolution where Jaybird doesn't guarantee it, you can fully qualify the objects (e.g. tables) in your statements:
+
+[source,sql]
+----
+select
+  MY_TABLE.*,
+  MY_SCHEMA.MY_FUNCTION(MY_COLUMN),
+  MY_SCHEMA.MY_PACKAGE.MY_FUNCTION(MY_COLUMN)
+from MY_SCHEMA.MY_TABLE
+----
+
+[source]
+----
+{call MY_SCHEMA.MY_PROCEDURE(?, ?)}
+-- or
+{call MY_SCHEMA.MY_PACKAGE.MY_PROCEDURE(?, ?)}
+----
+====

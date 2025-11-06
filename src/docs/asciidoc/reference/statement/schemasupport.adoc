@@ -1,0 +1,4 @@
+[#ref-stmt-schema-support]
+=== Schema support
+
+See <<ref-schema-support-statement>>.
