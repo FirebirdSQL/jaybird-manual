@@ -580,12 +580,13 @@ table.wide-table{font-size:xx-small}
 <li><a href="#ref-generatedkeys">10.2. Generated keys retrieval</a></li>
 <li><a href="#ref-inline-blob">10.3. Inline blobs</a></li>
 <li><a href="#ref-callable-ignore-proctype">10.4. Connection property ignoreProcedureType</a></li>
-<li><a href="#ref-scrollable-cursor">10.5. Connection property scrollableCursor</a></li>
-<li><a href="#ref-batch-use-server-batch">10.6. Connection property useServerBatch</a></li>
-<li><a href="#ref-batch-server-batch-buffer-size">10.7. Connection property serverBatchBufferSize</a></li>
-<li><a href="#ref-allowtxstmts">10.8. Connection property allowTxStmts</a></li>
-<li><a href="#ref-extendedmetadata">10.9. Connection property extendedMetadata</a></li>
-<li><a href="#ref-stmt-schema-support">10.10. Schema support</a></li>
+<li><a href="#ref-max-field-size">10.5. Maximum field size (<code>maxFieldSize</code>)</a></li>
+<li><a href="#ref-scrollable-cursor">10.6. Connection property scrollableCursor</a></li>
+<li><a href="#ref-batch-use-server-batch">10.7. Connection property useServerBatch</a></li>
+<li><a href="#ref-batch-server-batch-buffer-size">10.8. Connection property serverBatchBufferSize</a></li>
+<li><a href="#ref-allowtxstmts">10.9. Connection property allowTxStmts</a></li>
+<li><a href="#ref-extendedmetadata">10.10. Connection property extendedMetadata</a></li>
+<li><a href="#ref-stmt-schema-support">10.11. Schema support</a></li>
 </ul>
 </li>
 <li><a href="#ref-general">11. General</a>
@@ -8560,7 +8561,90 @@ When necessary you can use <code>FirebirdCallableStatement.setSelectableProcedur
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.5. Connection property scrollableCursor</h3>
+<h3 id="ref-max-field-size"><a class="anchor" href="#ref-max-field-size"></a>10.5. Maximum field size (<code>maxFieldSize</code>)</h3>
+<div class="paragraph">
+<p><em class="until">Jaybird 7</em></p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 6 and older, the <code>maxFieldSize</code> property of <code>Statement</code> is effectively ignored&#8201;&#8212;&#8201;the value is only stored, and otherwise ignored.</p>
+</div>
+<div class="paragraph">
+<p><em class="since">Jaybird 7</em></p>
+</div>
+<div class="paragraph">
+<p>In Jaybird 7 and higher, the <code>maxFieldSize</code> property of <code>Statement</code> is used to truncate values returned from a result set.</p>
+</div>
+<div class="paragraph">
+<p>The <code>maxFieldSize</code> value is defined in bytes, and is applied when the value is greater than zero.
+Truncation occurs for <code>CHAR</code>, <code>VARCHAR</code>, <code>BINARY</code>, <code>VARBINARY</code>, <code>BLOB SUB_TYPE TEXT</code> (JDBC <code>LONGVARCHAR</code>), and <code>BLOB SUB_TYPE BINARY</code> and other Firebird built-in (positive) blob subtypes (JDBC <code>LONGVARBINARY</code>), but not custom (negative) subtypes (Jaybird considers those JDBC <code>BLOB</code>, and JDBC specifies that type should not be limited by <code>maxFieldSize</code>).</p>
+</div>
+<div class="paragraph">
+<p>In case of <code>CHAR</code>, <code>VARCHAR</code>, <code>BINARY</code>, and <code>VARBINARY</code>, the truncation is performed when fetching a row (in the GDS-ng layer) <em>if</em> it is not an <code>RDB$DB_KEY</code> column.
+This is a client-side truncation, and does not reduce the number of bytes transferred, only the number of bytes retained in memory and returned from the result set.</p>
+</div>
+<div class="paragraph">
+<p>In the case of built-in (non-negative)  blob subtypes, the truncation is performed in the result set field implementation in the JDBC layer.
+This is a client-side truncation, but it may reduce the number of bytes transferred <em>if</em> the blob wasn&#8217;t already transferred as an inline blob.</p>
+</div>
+<div class="paragraph">
+<p>For these blob subtypes, the truncation will not occur for methods returning a <code>Blob</code>, <code>Clob</code>, <code>InputStream</code> or <code>Reader</code> <em>if</em> the result set is not cached locally (cached result sets are used for holdable result sets and emulated scrollable result sets).
+In the case of <code>InputStream</code> and <code>Reader</code>, this doesn&#8217;t conform to the JDBC requirements, but avoided complications in the implementation.
+We may address this in the future.</p>
+</div>
+<div class="paragraph">
+<p>Caveats:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Given the truncation happens at a set number of bytes, values in a multibyte character set (UTF8) might end in the Unicode replacement character (U+FFFD, &#8216;&#xFFFD;&#8217;) due to truncation before the end of the encoded codepoint.</p>
+</li>
+<li>
+<p>Jaybird will accept any non-negative value for <code>maxFieldSize</code>.
+The JDBC apidoc recommends using values greater than <code>256</code>.</p>
+</li>
+<li>
+<p>A too small <code>maxFieldSize</code> may result in &#8220;wrong&#8221; values or missing precision being returned without error for numeric and Boolean getters;
+for datetime getters it may result in missing precision without errors, or parse errors.</p>
+</li>
+<li>
+<p>Setting the max field size after execute may not be immediately applied to the current result set for <code>CHAR</code>, <code>VARCHAR</code>, <code>BINARY</code>, and <code>VARBINARY</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For a locally cached result set: never, as the rows were truncated to the <code>maxFieldSize</code> on execute.</p>
+</li>
+<li>
+<p>Otherwise, already fetched rows are truncated to the <code>maxFieldSize</code> on their fetch, and only rows returned by a subsequent fetch will apply the new limit.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>For <code>LONGVARCHAR</code>/<code>LONGVARBINARY</code>, the value will be truncated on access, with the following caveats:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For cached blobs, the limit is applied on retrieval, and applies to all methods (as the cached value is truncated).</p>
+</li>
+<li>
+<p>The value of a cached blob (holdable result set or emulated scrollable result set) will be truncated to the initial <code>maxFieldSize</code>.
+Subsequent use of a larger <code>maxFieldSize</code> will continue to return the shorter value.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>The detection of <code>RDB$DB_KEY</code> columns includes &#8220;normal&#8221; <code>BINARY</code>/<code>CHAR CHARACTER SET OCTETS</code> columns called <code>DB_KEY</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For further details, see <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2025-07-statement-max-field-size.adoc">jdp-2025-07: Statement Max Field Size</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.6. Connection property scrollableCursor</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 5.0</em></p>
@@ -8619,7 +8703,7 @@ This will be corrected when we retrofit the new behaviour for <em>emulated</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.6. Connection property useServerBatch</h3>
+<h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.7. Connection property useServerBatch</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 4.0</em></p>
@@ -8634,7 +8718,7 @@ Set to <code>false</code> to disable server-side batch updates and always use em
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.7. Connection property serverBatchBufferSize</h3>
+<h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.8. Connection property serverBatchBufferSize</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5</em><br>
 <em class="since">Firebird 4.0</em></p>
@@ -8680,7 +8764,7 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.8. Connection property allowTxStmts</h3>
+<h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.9. Connection property allowTxStmts</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 6</em></p>
 </div>
@@ -8774,7 +8858,7 @@ However, for the savepoint related methods it is advisable to use the relevant J
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.9. Connection property extendedMetadata</h3>
+<h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.10. Connection property extendedMetadata</h3>
 <div class="paragraph">
 <p><em class="since">Jaybird 5.0.5</em></p>
 </div>
@@ -8807,7 +8891,7 @@ When disabled, the result is always <code>false</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="ref-stmt-schema-support"><a class="anchor" href="#ref-stmt-schema-support"></a>10.10. Schema support</h3>
+<h3 id="ref-stmt-schema-support"><a class="anchor" href="#ref-stmt-schema-support"></a>10.11. Schema support</h3>
 <div class="paragraph">
 <p>See <a href="#ref-schema-support-statement">Non-standard statement behaviour</a>.</p>
 </div>
@@ -14154,7 +14238,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-11-06 08:58:41 UTC
+Last updated 2025-11-13 13:52:02 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
