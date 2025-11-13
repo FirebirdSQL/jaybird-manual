@@ -45,6 +45,8 @@ include::statement/inlineblob.adoc[]
 
 include::statement/ignoreproceduretype.adoc[]
 
+include::statement/maxfieldsize.adoc[]
+
 include::statement/scrollablecursor.adoc[]
 
 include::statement/useserverbatch.adoc[]
