@@ -24,7 +24,7 @@ We may address this in the future.
 
 Caveats:
 
-* Given the truncation happens at a set number of bytes, values in a multibyte character set (UTF8) might end in the Unicode replacement character (U+FFFD, '`&#xFFFD;`') due to truncation before the end of the encoded codepoint.
+* Given the truncation happens at a set number of bytes, values in a multibyte character set (UTF8) might end in the Unicode replacement character (U+FFFD) due to truncation before the end of the encoded codepoint.
 * Jaybird will accept any non-negative value for `maxFieldSize`.
 The JDBC apidoc recommends using values greater than `256`.
 * A too small `maxFieldSize` may result in "`wrong`" values or missing precision being returned without error for numeric and Boolean getters;
