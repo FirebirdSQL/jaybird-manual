@@ -56,14 +56,14 @@ Alternatively, you can use an external table to store the audit log.
 When a connection uses explicit transaction control, each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
 If a transaction was not finished, but the `close` method is called, the active transaction is rolled back automatically.
 This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that `Connection` object became eligible for garbage collection.
-[.until]_Jaybird 5_ In this case, the class finalizer implicitly invokes the `close()` method, which in turn rolls the transaction back.
+until:[Jaybird 5] In this case, the class finalizer implicitly invokes the `close()` method, which in turn rolls the transaction back.
 
 [WARNING]
 ====
 Given the non-deterministic delay of garbage collection, make sure to explicitly end the transaction and close the connection.
 Do not rely on the garbage collector for this.
 
-[.since]_Jaybird 5_ A number of finalizers have been removed in Jaybird 5, so transaction rollback through garbage collection has become even less deterministic (though it is likely still to occur when the connection is forcibly closed).
+since:[Jaybird 5] A number of finalizers have been removed in Jaybird 5, so transaction rollback through garbage collection has become even less deterministic (though it is likely still to occur when the connection is forcibly closed).
 ====
 
 === Auto-commit mode
@@ -91,10 +91,10 @@ Note – Some JDBC driver implementations may also implicitly `close` the `Resul
 '''
 ____
 
-[.until]_Jaybird 6_ In Jaybird 5 and earlier, in auto-commit mode, a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
+until:[Jaybird 6] In Jaybird 5 and earlier, in auto-commit mode, a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
 This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.
 
-[.since]_Jaybird 6_ In auto-commit mode, a result set will now remain open until explicitly closed using `ResultSet.close()`, when any statement is executed, when the auto-commit mode is disabled, or by the close of the `Statement` or `Connection`.
+since:[Jaybird 6] In auto-commit mode, a result set will now remain open until explicitly closed using `ResultSet.close()`, when any statement is executed, when the auto-commit mode is disabled, or by the close of the `Statement` or `Connection`.
 
 If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.
 
@@ -363,7 +363,7 @@ Therefore, it is recommended to set the read-only mode for the transaction when 
 
 [NOTE]
 ====
-[.since]_Firebird 4.0_ With the `READ COMMITTED CONSISTENCY` mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.
+since:[Firebird 4.0] With the `READ COMMITTED CONSISTENCY` mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.
 ====
 
 [[transactions-lock-resolution]]

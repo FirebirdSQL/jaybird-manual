@@ -1,7 +1,7 @@
 [[ref-wirecompression]]
 === Wire compression
 
-[.since]_Firebird 3.0_
+since:[Firebird 3.0]
 
 Jaybird supports zlib wire compression in the pure Java wire protocol.
 Compression can be enabled using boolean connection property `wireCompression`.

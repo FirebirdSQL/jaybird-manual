@@ -386,7 +386,7 @@ With `jdbc:firebird://java/employee`, this ambiguity does not exist.
 [[driver-native]]
 ==== NATIVE and LOCAL types
 
-[.since]_Jaybird 6_ Native connections require the `jaybird-native` artifact on the classpath.
+since:[Jaybird 6] Native connections require the `jaybird-native` artifact on the classpath.
 
 The `NATIVE` and `LOCAL` types (JDBC Type 2) use a JNA proxy to access the Firebird client library and requires installation of the Firebird client.
 The `NATIVE` driver type is used to access the remote database server, the `LOCAL` type (Windows only) accesses the database server running on the same host by means of IPC (Inter-Process Communication).
@@ -415,7 +415,7 @@ The following JDBC URL syntax is supported:
   | [_serverName_[/_portNumber_]:]_databaseName_
 ----
 
-[.since]_Jaybird 5_ Since Jaybird 5, all URLs supported by fbclient can be used.
+since:[Jaybird 5] Since Jaybird 5, all URLs supported by fbclient can be used.
 The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support has been removed in Firebird 5).
 
 When connecting to a local database server using the `LOCAL` driver, you should use following:
@@ -429,7 +429,7 @@ In addition to Jaybird, this requires a native Firebird client library, and JNA 
 [NOTE]
 .LOCAL protocol removed in Jaybird 5
 ====
-[.since]_Jaybird 5_ The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
+since:[Jaybird 5] The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
 To ensure local access, use a connection string using XNET (Windows only!):
 
 ....
@@ -548,7 +548,7 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 [[driver-embedded]]
 ==== EMBEDDED type
 
-[.since]_Jaybird 6_ Embedded connections require the `jaybird-native` artifact on the classpath.
+since:[Jaybird 6] Embedded connections require the `jaybird-native` artifact on the classpath.
 
 The Embedded server JDBC driver is a Type 2 JDBC driver that, rather than using the Firebird client library, loads the Firebird embedded server library instead.
 This is the highest performance type of JDBC driver for accessing local databases, as the Java code accesses the database file directly.
@@ -588,7 +588,7 @@ This can be changed with the `ServerMode` setting in `firebird.conf`.
 [[driver-ooremote]]
 ==== OOREMOTE type
 
-[.until]_Jaybird 6_
+until:[Jaybird 6]
 
 The `OOREMOTE` type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
 It addresses some differences in interpretation of the JDBC specification, and provides alternative metadata in certain cases to allow OpenOffice.org and LibreOffice to function correctly.
@@ -610,7 +610,7 @@ All other notes for <<driver-pure-java>> apply.
 [NOTE]
 .OOREMOTE deprecated in Jaybird 5, and removed in Jaybird 6
 ====
-[.since]_Jaybird 5_ The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
+since:[Jaybird 5] The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
 To connect to Firebird, use LibreOffice Base with connection option "`Firebird External`".
 ====
 

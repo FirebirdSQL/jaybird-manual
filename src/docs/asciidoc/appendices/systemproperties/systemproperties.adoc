@@ -7,7 +7,7 @@ Jaybird provides a number of system properties to control global behaviour of Ja
 [[systemproperties-logging]]
 === Logging
 
-[.until]_Jaybird 6_
+until:[Jaybird 6]
 
 To configure logging, the following system properties are available. 
 See <<ref-logging>> for details.
@@ -55,7 +55,7 @@ The property values are read for each connect, so the value can be changed at an
 [#systemproperties-default-async-fetch]
 === Default `asyncFetch` value
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 `org.firebirdsql.jdbc.defaultAsyncFetch`::
 Configures the default value for the `asyncFetch` connection property.
@@ -64,7 +64,7 @@ See <<ref-async-fetch>> for more information.
 [#systemproperties-default-enable-protocol]
 === Default `enableProtocol` value
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 `org.firebirdsql.jdbc.defaultEnableProtocol`::
 Configures the default value for the `enableProtocol` connection property.
@@ -73,8 +73,8 @@ See <<ref-enable-protocol>> for more information.
 [#systemproperties-default-inline-blob]
 === Default inline blob property values
 
-[.since]_Jaybird 5.0.8/6.0.2_ +
-[.since]_Firebird 5.0.3_
+since:[Jaybird 5.0.8/6.0.2] +
+since:[Firebird 5.0.3]
 
 `org.firebirdsql.jdbc.defaultMaxInlineBlobSize`::
 Configures the default value for the `maxInlineBlobSize` connection property.
@@ -87,7 +87,7 @@ See also <<ref-inline-blob>>.
 [#systemproperties-default-report-sql-warnings]
 === Default `reportSQLWarnings` value
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 `org.firebirdsql.jdbc.defaultReportSQLWarnings`::
 Configures the default value for the `reportSQLWarnings` connection property.
@@ -96,7 +96,7 @@ See <<ref-report-sql-warnings>> for more information.
 [[systemproperties-wire-buffers]]
 === Wire protocol buffer sizes
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 The following system properties control the sizes of a number of buffers used by Jaybird's wire protocol implementation.
 
@@ -183,7 +183,7 @@ Technically, `org.firebirdsql.jna.syncWrapNativeLibrary` is dynamic, but a nativ
 
 The following Java system properties are relevant for Jaybird.
 
-`jdk.net.useFastTcpLoopback`:: [.since]_Firebird 3.0.2_ [.until]_Firebird 5.0_ [.since]_Jave 8 update 60_ [.since]_Windows 8 / Windows Server 2012_
+`jdk.net.useFastTcpLoopback`:: since:[Firebird 3.0.2] until:[Firebird 5.0] since:[Jave 8 update 60] since:[Windows 8 / Windows Server 2012]
 Set to true on Windows to enable "`TCP Loopback Fast Path`" (`SIO_LOOPBACK_FAST_PATH` socket option).
 "`TCP Loopback Fast Path`" can improve performance for localhost connections. +
 Java only has an 'all-or-nothing' support for the "`TCP Loopback Fast Path`", so Jaybird cannot enable this for you: you must specify this property on JVM startup.

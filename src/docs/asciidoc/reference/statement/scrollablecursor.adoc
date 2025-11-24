@@ -1,8 +1,8 @@
 [[ref-scrollable-cursor]]
 === Connection property scrollableCursor
 
-[.since]_Jaybird 5_ +
-[.since]_Firebird 5.0_
+since:[Jaybird 5] +
+since:[Firebird 5.0]
 
 On Firebird 5.0 and higher, Jaybird 5 and higher support server-side scrollable cursors..
 

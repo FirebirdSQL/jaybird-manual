@@ -1,7 +1,7 @@
 [#ref-create-database-if-not-exist]
 === Create database if it does not exist
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 The Boolean connection property `createDatabaseIfNotExist` instructs Jaybird to attempt to create the database if it does not exist yet.
 This property can be used in the JDBC URL, in the `Properties` object passed to `DriverManager`, and can be set on data sources.

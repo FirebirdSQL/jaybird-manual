@@ -1,7 +1,7 @@
 [[ref-dbcrypt]]
 === Database encryption support
 
-[.since]_Firebird 3.0_
+since:[Firebird 3.0]
 
 Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in the pure Java implementation of the version 13 protocol.
 
@@ -17,7 +17,7 @@ This property can be set as follows:
 * Absent or empty value -- empty response to callback (depending on the database encryption plugin this may just work or yield an error later).
 * Strings prefixed with `base64:` -- rest of the string is decoded as _base64_ to bytes.
 The `=` padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).
-* [.since]_Jaybird 5_ Strings prefixed with `base64url:` -- rest of the string is decoded as _base64url_ to bytes (using "`Base 64 URL and Filename safe`" alphabet).
+* since:[Jaybird 5] Strings prefixed with `base64url:` -- rest of the string is decoded as _base64url_ to bytes (using "`Base 64 URL and Filename safe`" alphabet).
 As `base64:`, the `=` padding characters are optional
 * Plain string value -- string is encoded to bytes using UTF-8, and these bytes are used as the response.
     

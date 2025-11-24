@@ -11,7 +11,7 @@ With the default result set holdability, close on commit, doing this yields a `S
 The property is accessible as:
 
 * connection property `defaultResultSetHoldable` with no value, empty value or `true` (aliases: `defaultHoldable` and `result_set_holdable`);
-* [.until]_Jaybird 5_ database parameter buffer member `isc_dpb_result_set_holdable`;
+* until:[Jaybird 5] database parameter buffer member `isc_dpb_result_set_holdable`;
 * `FirebirdConnectionProperties` interface methods `isDefaultResultSetHoldable()` and `setDefaultResultSetHoldable(boolean)`
 
 [WARNING]

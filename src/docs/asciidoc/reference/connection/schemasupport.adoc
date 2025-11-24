@@ -1,8 +1,8 @@
 [#ref-schema-support]
 === Schema support
 
-[.since]_Jaybird 7_ +
-[.since]_Firebird 6.0_
+since:[Jaybird 7] +
+since:[Firebird 6.0]
 
 Firebird 6.0 introduced schema support, and schemas are supported in Jaybird 7 and higher.
 

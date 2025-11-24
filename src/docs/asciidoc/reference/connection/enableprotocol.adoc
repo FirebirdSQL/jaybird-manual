@@ -1,7 +1,7 @@
 [[ref-enable-protocol]]
 === Enabling unsupported protocol versions
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 Since Jaybird 6, the pure Java protocol implementation will no longer attempt to connect with protocol versions of Firebird versions which are not supported.
 Since the minimum supported Firebird version in Jaybird 6 is Firebird 3.0, this means that protocol versions 10, 11 and 12 are no longer tried by default.

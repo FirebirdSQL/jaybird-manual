@@ -1,7 +1,7 @@
 [#ref-async-fetch]
 === Async fetch
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 For pure Java connections, non-holdable forward-only result sets perform asynchronous fetches by default.
 Asynchronous fetches are implemented for protocol implementation version 11 and higher (i.e. Firebird 2.1 or higher), but are formally only supported for protocol version 13 and higher (i.e. Firebird 3.0 or higher).

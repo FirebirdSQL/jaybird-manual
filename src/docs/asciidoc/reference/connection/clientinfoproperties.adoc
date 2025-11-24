@@ -25,7 +25,7 @@ Absent is support to:
 [#ref-client-info-jb6]
 ==== Support in Jaybird 6 and later
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 In Jaybird 6, the client info properties support was rewritten, improving and extending support of this feature.
 
@@ -88,7 +88,7 @@ The `ClientUser` and `ClientHostname` properties are considered application-spec
 [#client-info-pool]
 ==== Connection pools and client info properties
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 If you use a connection pool populated from `org.firebirdsql.ds.FBConnectionPoolDataSource` or `org.firebirdsql.ds.FBXADataSource`, the known properties are reset each time the connection is handed out by the pool.
 This assumes the pool uses `getConnection()` from `PooledConnection`/`XAConnection` each time it hands out the connection.

@@ -143,8 +143,8 @@ try (Statement stmt = connection.createStatement()) {
 
 According to the JDBC specification, the `getResultSet()` and `getUpdateCount()` methods can be only called once per result.
 
-[.until]_Jaybird 5.0.5_ In Jaybird 5.0.4 and earlier, calling the `getResultset()` method a second time will throw an exception. +
-[.since]_Jaybird 5.0.5_ Since Jaybird 5.0.5, calling `getResultSet()` multiple times will return the same instance of `ResultSet` it returned from the first call to `getResultSet()` or from `executeQuery()`.
+until:[Jaybird 5.0.5] In Jaybird 5.0.4 and earlier, calling the `getResultset()` method a second time will throw an exception. +
+since:[Jaybird 5.0.5] Since Jaybird 5.0.5, calling `getResultSet()` multiple times will return the same instance of `ResultSet` it returned from the first call to `getResultSet()` or from `executeQuery()`.
 
 // TODO May need some revision to address retrieval of update counts after the result set
 
@@ -628,7 +628,7 @@ Otherwise, the driver will try to prepare a procedure with an incorrect number o
 Batch updates are intended to group multiple update operations to be submitted to a database server to be processed at once.
 Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4 and earlier emulate it by issuing separate update commands.
 
-[.since]_Jaybird 5_ Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
+since:[Jaybird 5] Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
 
 ==== Batch Updates with java.sql.Statement interface
 
@@ -713,8 +713,8 @@ try (CallableStatement stmt = connection.prepareCall(
 [[stmt-batch-server-side]]
 ==== Server-side Batch Updates
 
-[.since]_Jaybird 5_ +
-[.since]_Firebird 4.0_
+since:[Jaybird 5] +
+since:[Firebird 4.0]
 
 Jaybird 5 adds support for server-side batch updates when connecting to Firebird 4.0 or higher.
 This support comes with a number of limitations:
@@ -726,7 +726,7 @@ This support comes with a number of limitations:
 The implementation might be rewritten in a future Jaybird version, if there is sufficient demand.
 As a workaround, use `execute procedure` or `++{call procedure_name(...)}++` from a `PreparedStatement`.
 * Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the `RETURNING` clause.
-* [.since]_Jaybird 5.0.5_ Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.
+* since:[Jaybird 5.0.5] Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.
 +
 In Jaybird 5.0.0 - 5.0.4 this results in error "`Statement used in batch must have parameters`" (`isc_batch_param`, `335545186`).
 The workaround is to connect with property `useServerBatch` set to `false`, or to not use a prepared statement, or not use batch execution, for parameterless statements.

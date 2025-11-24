@@ -1,13 +1,13 @@
 [[ref-int128]]
 === Type INT128
 
-[.since]_Firebird 4.0_
+since:[Firebird 4.0]
 
 Firebird 4.0 introduced the non-standard type `INT128`, a signed 128 bit number.
 
 ==== Support for INT128
 
-[.since]_Jaybird 4.0.1_
+since:[Jaybird 4.0.1]
 
 Jaybird 4.0.1 introduced support for the `INT128` type.
 Jaybird 4.0.0 will also be able to handle the type, but does not formally identify it as `INT128`.

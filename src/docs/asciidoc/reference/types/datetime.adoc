@@ -6,7 +6,7 @@
 [[ref-datetime-tz]]
 ==== Time zones
 
-[.since]_Firebird 4.0_
+since:[Firebird 4.0]
 
 Firebird 4.0 introduced time zone types, with types `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE`.
 See the https://www.firebirdsql.org/file/documentation/release_notes/html/en/4_0/rlsnotes40.html[Firebird 4.0 release notes^] and `doc/sql.extensions/README.time_zone.md` in the Firebird installation for details on these types.
@@ -31,7 +31,7 @@ Given the definition in JDBC, Jaybird defaults to offset time zones.
 On retrieval of a value with a named zone, Jaybird will make a best effort to convert to the equivalent offset using Java's time zone information.
 If no mapping is available the time will be returned at UTC (offset zero).
 
-[.since]_Jaybird 4.0.1_ +
+since:[Jaybird 4.0.1] +
 Since Jaybird 4.0.1, it is also possible to get and set `java.time.ZonedDateTime`, which preserves the named zone information.
 
 Jaybird 4 supports the following Java types on fields of time zone types (those marked with * are not defined in JDBC)
@@ -46,7 +46,7 @@ The offset can be different from the offset of the `OffsetDateTime` for the same
 *** For a named zone, the time in the zone is derived at 2020-01-01 and then rebased to the current date.
 As a result, the offset can be different from an `OffsetTime`.
 ** On set the date information is removed
-* `java.time.ZonedDateTime` (*) [.since]_Jaybird 4.0.1_
+* `java.time.ZonedDateTime` (*) since:[Jaybird 4.0.1]
 ** On get the time in the zone is derived at 2020-01-01 and then rebased to the current date.
 ** On set, the time is rebased to 2020-01-01 and then the date information is removed.
 * `java.lang.String`
@@ -65,7 +65,7 @@ As a result, the offset can be different from an `OffsetTime`.
 * `java.time.OffsetTime` (*)
 ** On get, the date information is removed
 ** On set, the current date is added
-* `java.time.ZonedDateTime` (*) [.since]_Jaybird 4.0.1_
+* `java.time.ZonedDateTime` (*) since:[Jaybird 4.0.1]
 * `java.lang.String`
 ** On get applies `OffsetDateTime.toString()` (e.g. `2019-03-10T13:25:13.1+01:00`)
 ** On set tries the default parse format of either `OffsetTime` or `OffsetDateTime` (e.g. `13:25:13.1+01:00` or `2019-03-10T13:25:13+01:00`) and then sets as that type
@@ -180,7 +180,7 @@ Be aware that this is inconsistent if Firebird and Java are in different time zo
 [[ref-datetime-sessiontimezone-fb]]
 ====== Firebird session time zone
 
-[.since]_Firebird 4.0_
+since:[Firebird 4.0]
 
 The session time zone is used for conversion between `WITH TIME ZONE` values and `WITHOUT TIME ZONE` values (i.e. using cast or with legacy time zone bind), and for the value of `LOCALTIME`, `LOCALTIMESTAMP`, `CURRENT_TIME` and `CURRENT_TIMESTAMP`, and other uses of the session time zone as documented in the Firebird 4.0 documentation.
 

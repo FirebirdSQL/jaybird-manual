@@ -5,7 +5,7 @@ The JDBC Specification requires that a JDBC driver reports a `SQLWarning` when i
 
 These warnings are reported on the `Connection`, `Statement`, or ``ResultSet``footnote:[In the current implementation, Jaybird never has warnings on `ResultSet`], and can be retrieved with `getWarnings()`.
 
-[.since]_Jaybird 6_ The connection property `reportSQLWarnings` can be used to disable the reporting of ``SQLWarning``s.
+since:[Jaybird 6] The connection property `reportSQLWarnings` can be used to disable the reporting of ``SQLWarning``s.
 
 This connection property supports the following values (case-insensitive):
 

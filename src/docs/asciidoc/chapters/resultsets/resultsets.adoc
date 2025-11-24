@@ -22,8 +22,8 @@ Due to a missing support of scrollable cursors in Firebird 4.0 and earlier, supp
 Scrolling happens in memory on the client.
 This can have adverse effect on the system memory usage and performance when the result set is large.
 
-[.since]_Jaybird 5_ +
-[.since]_Firebird 5.0_
+since:[Jaybird 5] +
+since:[Firebird 5.0]
 
 Starting with Firebird 5.0, server-side scrollable cursors are supported.
 Jaybird 5 introduced support for scrolling non-holdable result set when the connection property `scrollableCursor` is set to value `SERVER`, and the connection is a pure Java connection (not native or embedded).
@@ -61,8 +61,8 @@ Because of these reasons "commit retaining" is not used in Jaybird during normal
 Applications can commit the transaction keeping the result sets open by executing a "`COMMIT RETAIN`" SQL statement.
 
 To support holdable result sets, Jaybird will cache all rows locally. +
-[.until]_Jaybird 6_ In Jaybird 5 and earlier, for `TYPE_FORWARD_ONLY`, this is achieved by upgrading to `TYPE_SCROLL_INSENSITIVE`. See also <<resultsets-types>>. +
-[.since]_Jaybird 6_ Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.
+until:[Jaybird 6] In Jaybird 5 and earlier, for `TYPE_FORWARD_ONLY`, this is achieved by upgrading to `TYPE_SCROLL_INSENSITIVE`. See also <<resultsets-types>>. +
+since:[Jaybird 6] Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.
 
 [NOTE]
 ====
@@ -73,13 +73,13 @@ Server-side scrollable cursors do not support the holdable behaviour.
 === ResultSet manipulation
 
 `ResultSet` objects are created when either `Statement.executeQuery(String)` or `Statement.getResultSet()` methods are called, or when obtaining the generated keys from `Statement.getGeneratedKeys()`.
-`Statement.getResultSet()` is used in combination with `Statement.execute(String)` and can be called only once per result set (see the following two examples; [.until]_Jaybird 5.0.5_).
+`Statement.getResultSet()` is used in combination with `Statement.execute(String)` and can be called only once per result set (see the following two examples; until:[Jaybird 5.0.5]).
 
 [NOTE]
 ====
-[.until]_Jaybird 5.0.5_ The implementation in Jaybird 5.0.4 and older does not allow calls to the `getResultSet()` method after using an `executeQuery` or the `getResultSet()` method of the `Statement` class.
+until:[Jaybird 5.0.5] The implementation in Jaybird 5.0.4 and older does not allow calls to the `getResultSet()` method after using an `executeQuery` or the `getResultSet()` method of the `Statement` class.
 
-[.since]_Jaybird 5.0.5_ Starting with Jaybird 5.0.5, calls to `getResultSet()` will return the current result set, even if the result set was returned before by an `executeQuery` or the `getResultSet()` method.
+since:[Jaybird 5.0.5] Starting with Jaybird 5.0.5, calls to `getResultSet()` will return the current result set, even if the result set was returned before by an `executeQuery` or the `getResultSet()` method.
 ====
 
 [source,java]

@@ -8,11 +8,11 @@ The columns `MON$REMOTE_PID` and `MON$REMOTE_PROCESS` report the process id and 
 Jaybird 5 and earlier do not provide this information by default, except for the process ID of native connections, but they can be specified with system or connection properties (see below).
 This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just "`java`" (or similar), which is not very useful.
 
-[.since]_Jaybird 6_ Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
+since:[Jaybird 6] Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
 When a `SecurityManager` is installed, the entire call-chain needs to have the `RuntimePermission("manageProcess")` to obtain the process ID in pure Java connections.
 If this permission check fails, Jaybird will silently ignore it and not set the `isc_dpb_process_id` based on the actual process ID.
 
-[.since]_Jaybird 6_ The process name is returned from `Connection.getClientInfo("ApplicationName")`, if the client info property `ApplicationName` has not been set explicitly with `Connection.setClientInfo`, and/or if there is no property `ApplicationName` in the `USER_SESSION` context.
+since:[Jaybird 6] The process name is returned from `Connection.getClientInfo("ApplicationName")`, if the client info property `ApplicationName` has not been set explicitly with `Connection.setClientInfo`, and/or if there is no property `ApplicationName` in the `USER_SESSION` context.
 
 WARNING: Do not use the process name and process id information for security decisions.
 Treat it as informational only, as clients can report fake information.

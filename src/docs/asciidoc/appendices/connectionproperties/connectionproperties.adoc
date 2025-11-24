@@ -7,7 +7,7 @@ Jaybird has a number of connection properties that can be used to configure a co
 This appendix provides a list of most connection properties and a short explanation to each of them.
 The properties listed below are usable as JDBC connection properties.
 
-The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false` ([.since]_Jaybird 5_), but also without a value, or with an empty value (which will both signify `true`).
+The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false` (since:[Jaybird 5]), but also without a value, or with an empty value (which will both signify `true`).
 For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like `true` or `false`.
 
 In Jaybird 4 and earlier, the default for all _boolean_ properties is `false`. +
@@ -61,7 +61,7 @@ a|`processId` +
 See <<ref-processinfo>> for more information.
 
 a|`processName` +
-`process_name`, `isc_dpb_process_name`, `ApplicationName` ([.since]_Jaybird 6_), `applicationName` ([.since]_Jaybird 6_)
+`process_name`, `isc_dpb_process_name`, `ApplicationName` (since:[Jaybird 6]), `applicationName` (since:[Jaybird 6])
 |Specifies the process name reported to Firebird.
 See <<ref-processinfo>> for more information.
 |===
@@ -75,7 +75,7 @@ See <<ref-processinfo>> for more information.
 |Explanation
 
 a|`asyncFetch`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 Boolean property.
 Enables/disables async fetching for pure Java connections.
 Default is `true`.
@@ -90,7 +90,7 @@ In general, only specify `charSet` _or_ `encoding`, not both. +
 Default: `NONE` (unless `charSet` is specified).
 
 a|`charSet` +
-`localEncoding`, `charset` ([.since]_Jaybird 5_)
+`localEncoding`, `charset` (since:[Jaybird 5])
 |Jaybird specific property.
 Character set for the connection using Java character set name.
 Similar to the previous property, but instead of Firebird-specific name accepts a Java character set name. +
@@ -98,7 +98,7 @@ In general, only specify `charSet` _or_ `encoding`, not both.
 
 a|`searchPath` +
 `search_path`, `isc_dpb_search_path`
-a|Schemas to search for unqualified objects ([.since]_Jaybird 7_, [.since]_Firebird 6.0_) +
+a|Schemas to search for unqualified objects (since:[Jaybird 7], since:[Firebird 6.0]) +
 Comma-separated list of schema names.
 For a case-sensitive or otherwise non-regular schema name, the identifier *must* be quoted.
 See <<ref-schema-support-search-path>> for more information.
@@ -148,19 +148,19 @@ a|`blobBufferSize` +
 |Jaybird specific property. 
 Size in bytes of the buffer used to transfer BLOB content.
 Specifying a size greater than 65535 may result in additional server roundtrips per read, but may also waste memory for larger buffers than used in some cases.
-Values lower than 512 will use 512 ([.since]_Jaybird 6_). +
+Values lower than 512 will use 512 (since:[Jaybird 6]). +
 Default: `16384`
 
 a|`maxInlineBlobSize` +
 `max_inline_blob_size`, `isc_dpb_max_inline_blob_size`
-|Maximum size in bytes of inline blobs ([.since]_Jaybird 5.0.8/6.0.2_ [.since]_Firebird 5.0.3_).
+|Maximum size in bytes of inline blobs (since:[Jaybird 5.0.8/6.0.2] since:[Firebird 5.0.3]).
 A value of `0` disables transmission of inline blobs.
 See <<ref-inline-blob>> for more information. +
 Default: `65535`, maximum value: ``65535``footnote:[The maximum is decided server-side, and may change in future Firebird versions.]
 
 a|`maxBlobCacheSize` +
 `max_blob_cache_size`, `isc_dpb_max_blob_cache_size`
-|Maximum size in bytes -- per connection -- of the inline blob cache ([.since]_Jaybird 5.0.8/6.0.2_ [.since]_Firebird 5.0.3_).
+|Maximum size in bytes -- per connection -- of the inline blob cache (since:[Jaybird 5.0.8/6.0.2] since:[Firebird 5.0.3]).
 A value of `0` disables the cache.
 Disabling the cache does not disable transmission of inline blobs: set `maxInlineBlobSize` to `0` to disable transmission.
 See <<ref-inline-blob>> for more information. +
@@ -179,7 +179,7 @@ For Type 2 (native) connections, the connect timeout works as the DPB item `isc_
 This means that for native connections the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
-|Jaybird specific property ([.since]_Firebird 3.0_).
+|Jaybird specific property (since:[Firebird 3.0]).
 Boolean property.
 Enables zlib wire compression.
 See <<ref-wirecompression>> for more information.
@@ -205,14 +205,14 @@ Value `true` disables usage of procedure type metadata to decide to use `SELECT`
 See <<ref-callable-ignore-proctype>> for more information.
 
 a|`scrollableCursor`
-a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 5.0_).
+a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 5.0]).
 Allowed values: `EMULATED`, `SERVER` (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <<ref-scrollable-cursor>> for more information. +
 Default: `EMULATED`
 
 a|`useServerBatch`
-a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 4.0_).
+a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 4.0]).
 Boolean property.
 Value `true` enables server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to `false` to always use emulated batch updates.
@@ -220,7 +220,7 @@ See <<ref-batch-use-server-batch>> for more information. +
 Default value: `true`
 
 a|`serverBatchBufferSize`
-a|Jaybird specific property ([.since]_Jaybird 5_ [.since]_Firebird 4.0_).
+a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 4.0]).
 Size in bytes of the server-side batch buffer.
 Value `< 0` -- server-side default, `0` -- server-side maximum, `> 0` -- size (capped at server-side maximum)
 See <<ref-batch-server-batch-buffer-size>> for more information. +
@@ -228,7 +228,7 @@ Default value: `0`
 
 a|`dataTypeBind` +
 `set_bind`
-|Defines data type bind from one type to a different type. ([.since]_Firebird 4.0_)
+|Defines data type bind from one type to a different type. (since:[Firebird 4.0])
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using `%3B`.
 See <<ref-datatypebind>> for more information.
@@ -242,26 +242,26 @@ Default: the JVM default time zone (Jaybird 4 or higher), or not set (Jaybird 3 
 
 a|`decfloatRound` +
 `decfloat_round`
-|Defines server-side rounding behaviour for `DECFLOAT` data types ([.since]_Firebird 4.0_)
+|Defines server-side rounding behaviour for `DECFLOAT` data types (since:[Firebird 4.0])
 Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
 See <<ref-decfloat-traps-round>> for more information.
 
 a|`decfloatTraps` +
 `decfloat_traps`
-|Defines server-side error behaviour for `DECFLOAT` data types ([.since]_Firebird 4.0_)
+|Defines server-side error behaviour for `DECFLOAT` data types (since:[Firebird 4.0])
 Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
 See <<ref-decfloat-traps-round>> for more information.
 
 a|`useStandarUdf` +
 `use_standard_udf`
-|Jaybird specific property ([.until]_Jaybird 5_).
+|Jaybird specific property (until:[Jaybird 5]).
 Boolean property. 
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
 See <<jdbcescape>> for more information.
 
 a|`timestampUsesLocalTimezone` 
-|Jaybird specific property ([.until]_Jaybird 6_).
+|Jaybird specific property (until:[Jaybird 6]).
 Boolean property.
 Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations.
 
@@ -285,7 +285,7 @@ a|`set_db_charset` +
 |Set the default character set of the database.
 
 a|`enableProtocol`
-|Jaybird specific property ([.since]_Jaybird 6_).
+|Jaybird specific property (since:[Jaybird 6]).
 Enable unsupported protocol versions, if available.
 Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
 The value `"*"` will enable all available protocol versions.
@@ -293,10 +293,10 @@ See <<ref-enable-protocol>> for more information.
 
 a|`parallelWorkers` +
 `parallel_workers`, `isc_dpb_parallel_workers`
-|The number of parallel workers to use ([.since]_Jaybird 5.0.2_ [.since]_Firebird 5.0_)
+|The number of parallel workers to use (since:[Jaybird 5.0.2] since:[Firebird 5.0])
 
 a|`nativeLibraryPath`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 
 Specifies a directory to try and load the client library for native (`fbclient`) or embedded (`fbembed` or `fbclient`) connections.
 If a file name is specified instead of a directory name, the parent directory will be used.
@@ -308,46 +308,46 @@ Any subsequent connection uses the library that was loaded by the first connecti
 ====
 
 a|`useCatalogAsPackage`
-a|Jaybird specific property ([.since]_Jaybird 6_ [.since]_Firebird 3.0_).
+a|Jaybird specific property (since:[Jaybird 6] since:[Firebird 3.0]).
 Boolean property.
 Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
 See <<ref-catalog-as-package>> for more information.
 
 a|`allowTxStmts`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 Boolean property.
 Enables support for executing `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION`.
 Default is `false`.
 See <<ref-allowtxstmts>> for more information.
 
 a|`extendedMetadata`
-a|Jaybird specific property ([.since]_Jaybird 5.0.5_).
+a|Jaybird specific property (since:[Jaybird 5.0.5]).
 Boolean property.
 Enables support for retrieving extended metadata.
 Default is `true`.
 See <<ref-extendedmetadata>> for more information.
 
 a|`createDatabaseIfNotExist`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 Boolean property.
 Attempts to create a database if it does not exist.
 Default is `false`.
 See <<ref-create-database-if-not-exist>> for more information.
 
 a|`reportSQLWarnings`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 Possible values (case-insensitive): `ALL` (default), `NONE`.
 Can be used to disable reporting of ``SQLWarning``s.
 See <<ref-report-sql-warnings>> for more information.
 
 a|`socketFactory`
-a|Jaybird specific property ([.since]_Jaybird 6_).
+a|Jaybird specific property (since:[Jaybird 6]).
 Sets a custom socket factory for pure Java connections.
 See <<ref-socket-factory>> for more information.
 
 |===
 
-In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` ([.since]_Jaybird 5_), or `ISCConstants` ([.until]_Jaybird 5_)).
+In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` (since:[Jaybird 5]), or `ISCConstants` (until:[Jaybird 5])).
 The current Firebird API has over 100 DPB parameters, however only few of them are interesting for regular users.
 If a DPB item called `isc_dpb_XXX` exists, then Jaybird allows these to be specified as `isc_dpb_XXX` and `XXX`. 
 By default properties are mapped as string DPB items. 

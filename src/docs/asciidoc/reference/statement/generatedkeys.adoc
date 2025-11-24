@@ -27,13 +27,13 @@ Since Jaybird 4.0.8, Jaybird uses a custom parser and no longer requires ANTLR f
 If you previously relied on absence of ANTLR to disable generated keys support, the generated keys feature can be disabled by setting <<ref-generatedkeys-config,connection property `generatedKeysEnabled`>> to `disabled`.
 ****
 
-This functionality is available for `INSERT`, `UPDATE`, `UPDATE OR INSERT`, `DELETE`, and -- [.since]_Firebird 3.0_ -- `MERGE`.
+This functionality is available for `INSERT`, `UPDATE`, `UPDATE OR INSERT`, `DELETE`, and -- since:[Firebird 3.0] -- `MERGE`.
 
 Generated keys retrieval modifies the statement to add a `RETURNING`-clause.
 Firebird 4.0 and earlier only support `RETURNING` for DML operations that affect a single row.
 Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error _"multiple rows in singleton select"_.
 
-[.since]_Jaybird 5_ [.since]_Firebird 5.0_ Support for multi-row `RETURNING` is introduced in Firebird 5.0.
+since:[Jaybird 5] since:[Firebird 5.0] Support for multi-row `RETURNING` is introduced in Firebird 5.0.
 Support for multi-row `RETURNING` is available since Jaybird 5.
 
 The examples in this section use the following (Firebird 3.0) table:

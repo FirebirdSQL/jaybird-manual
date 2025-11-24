@@ -9,18 +9,26 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    asciidoctorExt
+}
+
+dependencies {
+    asciidoctorExt 'org.firebirdsql.asciidoctor:canonical-link:1.0'
+    asciidoctorExt 'org.firebirdsql.asciidoctor:since-until-macro:1.0'
+}
+
 asciidoctorj {
-    // asciidoctorj 3.0.x doesn't seem to work with asciidoctorj-groovy-dsl used for docExtensions
-    version = '2.5.13'
+    version = '3.0.1'
     modules {
         pdf {
             version '2.3.23'
         }
     }
-    docExtensions file('doc-extension.groovy')
 }
 
 asciidoctor {
+    configurations 'asciidoctorExt'
     baseDirFollowsSourceDir()
     executionMode = OUT_OF_PROCESS
     sources {
@@ -41,6 +49,7 @@ pdfThemes {
 }
 
 asciidoctorPdf {
+    configurations 'asciidoctorExt'
     baseDirFollowsSourceDir()
     executionMode = OUT_OF_PROCESS
     sources {

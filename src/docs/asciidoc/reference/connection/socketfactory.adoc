@@ -1,7 +1,7 @@
 [#ref-socket-factory]
 === Custom socket factory
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 A custom socket factory can be specified to customize the creation of the `java.net.Socket` instance of a pure Java database or service connection.
 

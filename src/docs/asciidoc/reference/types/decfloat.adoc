@@ -1,7 +1,7 @@
 [[ref-decfloat]]
 === Decimal floating point type DECFLOAT
 
-[.since]_Firebird 4.0_
+since:[Firebird 4.0]
 
 Firebird 4.0 introduces the SQL:2016 `DECFLOAT` datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
 See the Firebird 4.0 documentation for details on this datatype.

@@ -1,7 +1,7 @@
 [#ref-allowtxstmts]
 === Connection property allowTxStmts
 
-[.since]_Jaybird 6_
+since:[Jaybird 6]
 
 Enables support for the transaction management statements `COMMIT [WORK]`, `ROLLBACK [WORK]` (without retain or savepoint) and `SET TRANSACTION`.
 

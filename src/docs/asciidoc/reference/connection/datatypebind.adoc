@@ -1,7 +1,7 @@
 [[ref-datatypebind]]
 === Data type bind support
 
-[.since]_Firebird 4.0_
+since:[Firebird 4.0]
 
 Firebird 4.0 introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.
 This allows you to define data type conversion rules for compatibility or ease of processing data.

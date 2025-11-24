@@ -3,7 +3,7 @@
 
 The JDBC (and SQL standard) types `BINARY` and `VARBINARY` are called `CHAR(n) CHARACTER SET OCTETS` and `VARCHAR(n) CHARACTER SET OCTETS` in Firebird.
 
-([.since]_Firebird 4.0_) Firebird 4.0 introduces the names `BINARY` and `VARBINARY`/`BINARY VARYING` as aliases for `(VAR)CHAR(n) CHARACTER SET OCTETS`.
+(since:[Firebird 4.0]) Firebird 4.0 introduces the names `BINARY` and `VARBINARY`/`BINARY VARYING` as aliases for `(VAR)CHAR(n) CHARACTER SET OCTETS`.
 
 In Java, binary and varbinary are usually handled with byte arrays and `InputStream`/`OutputStream`.
 

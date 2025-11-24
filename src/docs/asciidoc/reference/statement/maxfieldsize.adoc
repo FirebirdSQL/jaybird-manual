@@ -1,11 +1,11 @@
 [#ref-max-field-size]
 === Maximum field size (`maxFieldSize`)
 
-[.until]_Jaybird 7_
+until:[Jaybird 7]
 
 In Jaybird 6 and older, the `maxFieldSize` property of `Statement` is effectively ignored -- the value is only stored, and otherwise ignored.
 
-[.since]_Jaybird 7_
+since:[Jaybird 7]
 
 In Jaybird 7 and higher, the `maxFieldSize` property of `Statement` is used to truncate values returned from a result set.
 
