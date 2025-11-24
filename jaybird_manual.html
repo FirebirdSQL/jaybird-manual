@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="generator" content="Asciidoctor 2.0.26">
 <meta name="keywords" content="jaybird, firebird, jdbc, sql, database, java">
 <meta name="author" content="Roman Rokytskyy, Mark Rotteveel">
 <title>Jaybird JDBC Driver Java Programmer&#8217;s Manual</title>
@@ -457,9 +457,7 @@ div#preheader table{border:none}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
 <style>
 em.since{font-size:smaller;}
-em.since::before{content:"Since: ";font-weight:bold;}
 em.until{font-size:smaller;}
-em.until::before{content:"Removed in: ";font-weight:bold;}
 table.wide-table{font-size:xx-small}
 </style>
 <link rel="canonical" href="https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html"/>
@@ -717,7 +715,7 @@ The JCA standard specifies an architecture in which an application server can co
 Features that were removed in Jaybird 3 or earlier are not covered.</p>
 </div>
 <div class="paragraph">
-<p>New or removed features are tagged with the version that introduced a feature (e.g. <em class="since">Jaybird 5</em>) or removed feature (e.g. <em class="until">Jaybird 5</em>).
+<p>New or removed features are tagged with the version that introduced a feature (e.g. <em class="since"><strong>Since:</strong> Jaybird 5</em>) or removed feature (e.g. <em class="until"><strong>Removed in:</strong> Jaybird 5</em>).
 This tagging is only done for features introduced (or removed) <em>after</em> Jaybird 4.0.0, or in Firebird 3.0 or later.</p>
 </div>
 <div class="paragraph">
@@ -750,7 +748,7 @@ local, and embedded implementations of the driver.</p>
 </div>
 </li>
 <li>
-<p><em class="until">Jaybird 5</em> The JCA layer represents the heart of the driver.
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5</em> The JCA layer represents the heart of the driver.
 Here all connection and transaction management happens.
 Additionally, this layer adapts the GDS API and proxies the calls to the GDS implementation.</p>
 <div class="paragraph">
@@ -758,7 +756,7 @@ Additionally, this layer adapts the GDS API and proxies the calls to the GDS imp
 </div>
 </li>
 <li>
-<p><em class="since">Jaybird 5</em> The XCA layer is a replacement of the JCA layer of previous versions.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> The XCA layer is a replacement of the JCA layer of previous versions.</p>
 </li>
 <li>
 <p>The JDBC layer is an implementation of the JDBC specification.</p>
@@ -1485,7 +1483,7 @@ With <code>jdbc:firebird://java/employee</code>, this ambiguity does not exist.<
 <div class="sect3">
 <h4 id="driver-native"><a class="anchor" href="#driver-native"></a>2.2.2. NATIVE and LOCAL types</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> Native connections require the <code>jaybird-native</code> artifact on the classpath.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> Native connections require the <code>jaybird-native</code> artifact on the classpath.</p>
 </div>
 <div class="paragraph">
 <p>The <code>NATIVE</code> and <code>LOCAL</code> types (JDBC Type 2) use a JNA proxy to access the Firebird client library and requires installation of the Firebird client.
@@ -1518,7 +1516,7 @@ This is mostly due to the fact that TCP/IP stack is not involved in this mode.</
 </div>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> Since Jaybird 5, all URLs supported by fbclient can be used.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Since Jaybird 5, all URLs supported by fbclient can be used.
 The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support has been removed in Firebird 5).</p>
 </div>
 <div class="paragraph">
@@ -1541,7 +1539,7 @@ The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET
 <td class="content">
 <div class="title">LOCAL protocol removed in Jaybird 5</div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> The LOCAL protocol was removed in Jaybird 5, and is now simply an alias for NATIVE.
 To ensure local access, use a connection string using XNET (Windows only!):</p>
 </div>
 <div class="literalblock">
@@ -1684,7 +1682,7 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 <div class="sect3">
 <h4 id="driver-embedded"><a class="anchor" href="#driver-embedded"></a>2.2.3. EMBEDDED type</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> Embedded connections require the <code>jaybird-native</code> artifact on the classpath.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> Embedded connections require the <code>jaybird-native</code> artifact on the classpath.</p>
 </div>
 <div class="paragraph">
 <p>The Embedded server JDBC driver is a Type 2 JDBC driver that, rather than using the Firebird client library, loads the Firebird embedded server library instead.
@@ -1731,7 +1729,7 @@ This can be changed with the <code>ServerMode</code> setting in <code>firebird.c
 <div class="sect3">
 <h4 id="driver-ooremote"><a class="anchor" href="#driver-ooremote"></a>2.2.4. OOREMOTE type</h4>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em></p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>The <code>OOREMOTE</code> type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
@@ -1772,7 +1770,7 @@ jdbc:firebird:oo://host[:port]/&lt;path to database&gt;</pre>
 <td class="content">
 <div class="title">OOREMOTE deprecated in Jaybird 5, and removed in Jaybird 6</div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
 To connect to Firebird, use LibreOffice Base with connection option &#8220;Firebird External&#8221;.</p>
 </div>
 </td>
@@ -2178,7 +2176,7 @@ to other warnings (if any), and so on.</p>
 <p>To clear existing warning, call <code>Connection.clearWarnings()</code> method.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> Some applications log or report <code>SQLWarning</code> in a way that can be confusing or annoying.
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> Some applications log or report <code>SQLWarning</code> in a way that can be confusing or annoying.
 You can disable registration of <code>SQLWarning</code>s globally or per connection, see <a href="#ref-report-sql-warnings">Reporting of <code>SQLWarning</code>s</a> for more information.</p>
 </div>
 </div>
@@ -2319,7 +2317,7 @@ In addition to the JDBC-provided exceptions, Jaybird has a few subclasses that m
 <div class="ulist">
 <ul>
 <li>
-<p><em class="until">Jaybird 6</em> <code>org.firebirdsql.jdbc.FBDriverConsistencyCheckException</code>&#8201;&#8212;&#8201;this exception is thrown when driver detects an internal inconsistent state.
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em> <code>org.firebirdsql.jdbc.FBDriverConsistencyCheckException</code>&#8201;&#8212;&#8201;this exception is thrown when driver detects an internal inconsistent state.
 SQL state is <code>HY000</code>.</p>
 </li>
 <li>
@@ -2338,7 +2336,7 @@ For a table of allowed type conversions see <a href="#datatypeconversion">Data T
 </div>
 </li>
 <li>
-<p><em class="until">Jaybird 5</em> Subclasses of <code>javax.resource.ResourceException</code> are thrown by the JCA layer when an error happens in the JCA-related code.
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5</em> Subclasses of <code>javax.resource.ResourceException</code> are thrown by the JCA layer when an error happens in the JCA-related code.
 The upper layer converts this exception into a subclass of <code>java.sql.SQLException</code>.
 If the <code>ResourceException</code> was caused by a <code>SQLException</code> or <code>GDSException</code>, the latter is extracted during conversion, preserving the error code.
 If <code>ResourceException</code> was caused by an error condition not related to an error returned by the database engine, the error code of the <code>SQLException</code> remains 0.</p>
@@ -2879,8 +2877,8 @@ The next example shows the creation of database tables using this method.</p>
 <p>According to the JDBC specification, the <code>getResultSet()</code> and <code>getUpdateCount()</code> methods can be only called once per result.</p>
 </div>
 <div class="paragraph">
-<p><em class="until">Jaybird 5.0.5</em> In Jaybird 5.0.4 and earlier, calling the <code>getResultset()</code> method a second time will throw an exception.<br>
-<em class="since">Jaybird 5.0.5</em> Since Jaybird 5.0.5, calling <code>getResultSet()</code> multiple times will return the same instance of <code>ResultSet</code> it returned from the first call to <code>getResultSet()</code> or from <code>executeQuery()</code>.</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5.0.5</em> In Jaybird 5.0.4 and earlier, calling the <code>getResultset()</code> method a second time will throw an exception.<br>
+<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Since Jaybird 5.0.5, calling <code>getResultSet()</code> multiple times will return the same instance of <code>ResultSet</code> it returned from the first call to <code>getResultSet()</code> or from <code>executeQuery()</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3497,7 +3495,7 @@ Otherwise, the driver will try to prepare a procedure with an incorrect number o
 Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4 and earlier emulate it by issuing separate update commands.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <a href="#stmt-batch-server-side">Server-side Batch Updates</a>.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <a href="#stmt-batch-server-side">Server-side Batch Updates</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="_batch_updates_with_java_sql_statement_interface"><a class="anchor" href="#_batch_updates_with_java_sql_statement_interface"></a>4.5.1. Batch Updates with java.sql.Statement interface</h4>
@@ -3598,8 +3596,8 @@ The main difference is that only one statement can be used, but with different s
 <div class="sect3">
 <h4 id="stmt-batch-server-side"><a class="anchor" href="#stmt-batch-server-side"></a>4.5.3. Server-side Batch Updates</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em><br>
-<em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em><br>
+<em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 5 adds support for server-side batch updates when connecting to Firebird 4.0 or higher.
@@ -3629,7 +3627,7 @@ As a workaround, use <code>execute procedure</code> or <code>{call procedure_nam
 <p>Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the <code>RETURNING</code> clause.</p>
 </li>
 <li>
-<p><em class="since">Jaybird 5.0.5</em> Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.</p>
 <div class="paragraph">
 <p>In Jaybird 5.0.0 - 5.0.4 this results in error &#8220;Statement used in batch must have parameters&#8221; (<code>isc_batch_param</code>, <code>335545186</code>).
 The workaround is to connect with property <code>useServerBatch</code> set to <code>false</code>, or to not use a prepared statement, or not use batch execution, for parameterless statements.</p>
@@ -3815,8 +3813,8 @@ Scrolling happens in memory on the client.
 This can have adverse effect on the system memory usage and performance when the result set is large.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em><br>
-<em class="since">Firebird 5.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em><br>
+<em class="since"><strong>Since:</strong> Firebird 5.0</em></p>
 </div>
 <div class="paragraph">
 <p>Starting with Firebird 5.0, server-side scrollable cursors are supported.
@@ -3879,8 +3877,8 @@ Applications can commit the transaction keeping the result sets open by executin
 </div>
 <div class="paragraph">
 <p>To support holdable result sets, Jaybird will cache all rows locally.<br>
-<em class="until">Jaybird 6</em> In Jaybird 5 and earlier, for <code>TYPE_FORWARD_ONLY</code>, this is achieved by upgrading to <code>TYPE_SCROLL_INSENSITIVE</code>. See also <a href="#resultsets-types">ResultSet Types</a>.<br>
-<em class="since">Jaybird 6</em> Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.</p>
+<em class="until"><strong>Removed in:</strong> Jaybird 6</em> In Jaybird 5 and earlier, for <code>TYPE_FORWARD_ONLY</code>, this is achieved by upgrading to <code>TYPE_SCROLL_INSENSITIVE</code>. See also <a href="#resultsets-types">ResultSet Types</a>.<br>
+<em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3903,7 +3901,7 @@ Server-side scrollable cursors do not support the holdable behaviour.</p>
 <h3 id="_resultset_manipulation"><a class="anchor" href="#_resultset_manipulation"></a>5.2. ResultSet manipulation</h3>
 <div class="paragraph">
 <p><code>ResultSet</code> objects are created when either <code>Statement.executeQuery(String)</code> or <code>Statement.getResultSet()</code> methods are called, or when obtaining the generated keys from <code>Statement.getGeneratedKeys()</code>.
-<code>Statement.getResultSet()</code> is used in combination with <code>Statement.execute(String)</code> and can be called only once per result set (see the following two examples; <em class="until">Jaybird 5.0.5</em>).</p>
+<code>Statement.getResultSet()</code> is used in combination with <code>Statement.execute(String)</code> and can be called only once per result set (see the following two examples; <em class="until"><strong>Removed in:</strong> Jaybird 5.0.5</em>).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3913,10 +3911,10 @@ Server-side scrollable cursors do not support the holdable behaviour.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><em class="until">Jaybird 5.0.5</em> The implementation in Jaybird 5.0.4 and older does not allow calls to the <code>getResultSet()</code> method after using an <code>executeQuery</code> or the <code>getResultSet()</code> method of the <code>Statement</code> class.</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5.0.5</em> The implementation in Jaybird 5.0.4 and older does not allow calls to the <code>getResultSet()</code> method after using an <code>executeQuery</code> or the <code>getResultSet()</code> method of the <code>Statement</code> class.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5.0.5</em> Starting with Jaybird 5.0.5, calls to <code>getResultSet()</code> will return the current result set, even if the result set was returned before by an <code>executeQuery</code> or the <code>getResultSet()</code> method.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Starting with Jaybird 5.0.5, calls to <code>getResultSet()</code> will return the current result set, even if the result set was returned before by an <code>executeQuery</code> or the <code>getResultSet()</code> method.</p>
 </div>
 </td>
 </tr>
@@ -4143,7 +4141,7 @@ Alternatively, you can use an external table to store the audit log.</p>
 <p>When a connection uses explicit transaction control, each transaction must be finished by calling the <code>commit()</code> or <code>rollback()</code> methods of the <code>Connection</code> object before the connection is closed.
 If a transaction was not finished, but the <code>close</code> method is called, the active transaction is rolled back automatically.
 This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that <code>Connection</code> object became eligible for garbage collection.
-<em class="until">Jaybird 5</em> In this case, the class finalizer implicitly invokes the <code>close()</code> method, which in turn rolls the transaction back.</p>
+<em class="until"><strong>Removed in:</strong> Jaybird 5</em> In this case, the class finalizer implicitly invokes the <code>close()</code> method, which in turn rolls the transaction back.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -4157,7 +4155,7 @@ This also happens when you did not commit or roll back the transaction, and did 
 Do not rely on the garbage collector for this.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> A number of finalizers have been removed in Jaybird 5, so transaction rollback through garbage collection has become even less deterministic (though it is likely still to occur when the connection is forcibly closed).</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> A number of finalizers have been removed in Jaybird 5, so transaction rollback through garbage collection has become even less deterministic (though it is likely still to occur when the connection is forcibly closed).</p>
 </div>
 </td>
 </tr>
@@ -4211,11 +4209,11 @@ The point when statement execution is considered complete, is defined in the spe
 </div>
 </div>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em> In Jaybird 5 and earlier, in auto-commit mode, a <code>TYPE_FORWARD_ONLY</code> result set was implicitly closed when <code>next()</code> returned false.
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em> In Jaybird 5 and earlier, in auto-commit mode, a <code>TYPE_FORWARD_ONLY</code> result set was implicitly closed when <code>next()</code> returned false.
 This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> In auto-commit mode, a result set will now remain open until explicitly closed using <code>ResultSet.close()</code>, when any statement is executed, when the auto-commit mode is disabled, or by the close of the <code>Statement</code> or <code>Connection</code>.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> In auto-commit mode, a result set will now remain open until explicitly closed using <code>ResultSet.close()</code>, when any statement is executed, when the auto-commit mode is disabled, or by the close of the <code>Statement</code> or <code>Connection</code>.</p>
 </div>
 <div class="paragraph">
 <p>If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.</p>
@@ -4587,7 +4585,7 @@ Thus, long-running read-write transaction inhibits the garbage collection even w
 </td>
 <td class="content">
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em> With the <code>READ COMMITTED CONSISTENCY</code> mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.</p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em> With the <code>READ COMMITTED CONSISTENCY</code> mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.</p>
 </div>
 </td>
 </tr>
@@ -4866,7 +4864,7 @@ The following properties can be specified:</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<em class="since">Jaybird 5</em> <code>serverName</code> and <code>portNumber</code> are replacements for <code>host</code> and <code>port</code>, which have been deprecated for removal in Jaybird 6.
+<em class="since"><strong>Since:</strong> Jaybird 5</em> <code>serverName</code> and <code>portNumber</code> are replacements for <code>host</code> and <code>port</code>, which have been deprecated for removal in Jaybird 6.
 </td>
 </tr>
 </table>
@@ -4897,7 +4895,7 @@ The meaning of the property depends on the service being invoked and will be des
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>expectedDb</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. <em>Optional</em>.</p>
 </div></div></td>
 </tr>
@@ -4913,35 +4911,35 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>processId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Process id to report to the server.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Process id to report to the server.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>processName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Process name to report to the server.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Process name to report to the server.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>socketBufferSize</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket buffer size in bytes</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket buffer size in bytes</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>soTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4959,7 +4957,7 @@ In Jaybird 5, the property is type <code>String</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wireCryptAsEnum</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>WireCrypt</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Alternative to <code>WireCrypt</code> to use <code>WireCrypt</code> enum.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Alternative to <code>WireCrypt</code> to use <code>WireCrypt</code> enum.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5423,7 +5421,7 @@ Defaults to <code>0</code> if <code>backupGuid</code> has not been set.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupGuid</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 4.0.4</em> Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.4</em> Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
 This will back up all data pages modified since the backup identified by the GUID.
 The GUID is enclosed in braces (<code>{</code> and <code>}</code>).</p>
 </div></div></td>
@@ -5437,7 +5435,7 @@ The GUID is enclosed in braces (<code>{</code> and <code>}</code>).</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>inPlaceRestore</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 4.0.4</em> Enables in-place restore (requires Firebird 4.0 or higher).
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.4</em> Enables in-place restore (requires Firebird 4.0 or higher).
 This allows incremental restore, for example for a read-only replica, or a hot standby.</p>
 </div></div></td>
 </tr>
@@ -5445,7 +5443,7 @@ This allows incremental restore, for example for a read-only replica, or a hot s
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>preserveSequence</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
 This preserves the existing GUID and replication sequence of the original database.</p>
 </div></div></td>
 </tr>
@@ -5453,7 +5451,7 @@ This preserves the existing GUID and replication sequence of the original databa
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cleanHistory</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 4.0.7</em> Enable the <em>clean history</em> option (requires Firebird 4.0.3 or higher).
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.7</em> Enable the <em>clean history</em> option (requires Firebird 4.0.3 or higher).
 One of the properties <code>keepRows</code> <em>or</em> <code>keepDays</code> must also be set.
 When enabled, after performing a backup, old records from the <code>RDB$BACKUP_HISTORY</code> will be removed.</p>
 </div></div></td>
@@ -5462,14 +5460,14 @@ When enabled, after performing a backup, old records from the <code>RDB$BACKUP_H
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>keepDays</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 4.0.7</em> Number of days to keep backup history when <code>cleanHistory</code> is enabled.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.7</em> Number of days to keep backup history when <code>cleanHistory</code> is enabled.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>keepRows</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 4.0.7</em> Number of rows (including the new backup!) to keep backup history when <code>cleanHistory</code> is enabled.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.7</em> Number of rows (including the new backup!) to keep backup history when <code>cleanHistory</code> is enabled.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -5511,7 +5509,7 @@ For restore, the files must be in the correct order to form the chain of the lev
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixupDatabase()</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Perform the nbackup fixup operation.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Perform the nbackup fixup operation.
 A fixup will switch a locked database back to &#8220;normal&#8221; state without merging the delta, so this is a potentially destructive action.
 The normal use-case of this option is to unlock a copy of a database file where the source database file was locked with <code>nbackup -L</code> or <code>ALTER DATABASE BEGIN BACKUP</code>.
 Enable <code>preserveSequence</code> to preserve the original database GUID and replication sequence.</p>
@@ -6042,7 +6040,7 @@ This makes sense for read-only databases, since more data fit the page, which in
 <div class="sect2">
 <h3 id="services-table-statistics-manager"><a class="anchor" href="#services-table-statistics-manager"></a>7.5. Table statistics of a connection (experimental)</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em></p>
 </div>
 <div class="paragraph">
 <p>The class <code>org.firebirdsql.management.FBTableStatisticsManager</code> can be used to retrieve the table statistics of a connection.</p>
@@ -6167,18 +6165,18 @@ It is the responsibility of the application to correctly parse the text output i
 In Jaybird 6 and earlier, at least one table is required.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 7</em> Method accepts varargs (<code>String...</code>).
+<p><em class="since"><strong>Since:</strong> Jaybird 7</em> Method accepts varargs (<code>String...</code>).
 In Jaybird 7 and later, specifying no tables will list all tables.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTable&#8203;Statistics(&#8203;Collection&lt;String&gt;)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em class="since">Jaybird 7</em> Same as previous, but as a collection of table names.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em class="since"><strong>Since:</strong> Jaybird 7</em> Same as previous, but as a collection of table names.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getTable&#8203;Statistics(&#8203;Collection&lt;String&gt;, Collection&lt;String&gt;)</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 7</em> Get statistic information for the listed tables in the listed schemas.
+<p><em class="since"><strong>Since:</strong> Jaybird 7</em> Get statistic information for the listed tables in the listed schemas.
 Accepts a collection of schema names and a collection of table names.</p>
 </div>
 <div class="paragraph">
@@ -6351,7 +6349,7 @@ The path is specified for the remote host but must be absolute. <em>Required</em
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<em class="since">Jaybird 5</em> <code>serverName</code>, <code>portNumber</code> and <code>databaseName</code> are replacements for <code>host</code>, <code>port</code> and <code>databaseName</code>, which have been deprecated for removal in Jaybird 6.
+<em class="since"><strong>Since:</strong> Jaybird 5</em> <code>serverName</code>, <code>portNumber</code> and <code>databaseName</code> are replacements for <code>host</code>, <code>port</code> and <code>databaseName</code>, which have been deprecated for removal in Jaybird 6.
 </td>
 </tr>
 </table>
@@ -6376,7 +6374,7 @@ The path is specified for the remote host but must be absolute. <em>Required</em
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>expectedDb</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. <em>Optional</em>.</p>
 </div></div></td>
 </tr>
@@ -6392,35 +6390,35 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>processId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Process id to report to the server.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Process id to report to the server.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>processName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Process name to report to the server.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Process name to report to the server.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>socketBufferSize</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket buffer size in bytes</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket buffer size in bytes</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>soTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6438,7 +6436,7 @@ In Jaybird 5, the property is type <code>String</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wireCryptAsEnum</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>WireCrypt</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><em class="since">Jaybird 5</em> Alternative to <code>WireCrypt</code> to use <code>WireCrypt</code> enum.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Alternative to <code>WireCrypt</code> to use <code>WireCrypt</code> enum.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6531,12 +6529,12 @@ System.out.println(
 <div class="sect2">
 <h3 id="ref-auth-plugins"><a class="anchor" href="#ref-auth-plugins"></a>9.1. Authentication plugins</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3.0 introduced authentication plugins together with a new authentication model.
 By default, Firebird 3.0 uses the authentication plugin <code>Srp</code> (<em>Secure remote password</em>).
-It also includes plugins <code>Legacy_Auth</code> that supports the pre-Firebird-3 authentication mechanism, and&#8201;&#8212;&#8201;<em class="since">Firebird 3.0.4</em>&#8201;&#8212;&#8201;<code>Srp256</code>.
+It also includes plugins <code>Legacy_Auth</code> that supports the pre-Firebird-3 authentication mechanism, and&#8201;&#8212;&#8201;<em class="since"><strong>Since:</strong> Firebird 3.0.4</em>&#8201;&#8212;&#8201;<code>Srp256</code>.
 Firebird 4.0 introduced the plugins <code>Srp224</code>, <code>Srp384</code> and <code>Srp512</code>.</p>
 </div>
 <div class="paragraph">
@@ -6757,7 +6755,7 @@ they may change with point-releases (although we will try to avoid that)</p>
 <div class="sect2">
 <h3 id="ref-wirecrypt"><a class="anchor" href="#ref-wirecrypt"></a>9.2. Wire encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3.0 and higher have support for encrypting the data sent over the network.
@@ -6832,7 +6830,7 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 <div class="sect2">
 <h3 id="ref-wirecompression"><a class="anchor" href="#ref-wirecompression"></a>9.3. Wire compression</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird supports zlib wire compression in the pure Java wire protocol.
@@ -6853,7 +6851,7 @@ This may change in future versions of Jaybird to be enabled by default.</p>
 <div class="sect2">
 <h3 id="ref-dbcrypt"><a class="anchor" href="#ref-dbcrypt"></a>9.4. Database encryption support</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 3.0.4 added support for Firebird 3.0 database encryption callbacks in the pure Java implementation of the version 13 protocol.</p>
@@ -6880,7 +6878,7 @@ This property can be set as follows:</p>
 The <code>=</code> padding characters are optional, but when present they must be valid (that is: if you use padding, you must use the right number of padding characters for the length).</p>
 </li>
 <li>
-<p><em class="since">Jaybird 5</em> Strings prefixed with <code>base64url:</code>&#8201;&#8212;&#8201;rest of the string is decoded as <em>base64url</em> to bytes (using &#8220;Base 64 URL and Filename safe&#8221; alphabet).
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> Strings prefixed with <code>base64url:</code>&#8201;&#8212;&#8201;rest of the string is decoded as <em>base64url</em> to bytes (using &#8220;Base 64 URL and Filename safe&#8221; alphabet).
 As <code>base64:</code>, the <code>=</code> padding characters are optional</p>
 </li>
 <li>
@@ -6956,7 +6954,7 @@ With the default result set holdability, close on commit, doing this yields a <c
 <p>connection property <code>defaultResultSetHoldable</code> with no value, empty value or <code>true</code> (aliases: <code>defaultHoldable</code> and <code>result_set_holdable</code>);</p>
 </li>
 <li>
-<p><em class="until">Jaybird 5</em> database parameter buffer member <code>isc_dpb_result_set_holdable</code>;</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5</em> database parameter buffer member <code>isc_dpb_result_set_holdable</code>;</p>
 </li>
 <li>
 <p><code>FirebirdConnectionProperties</code> interface methods <code>isDefaultResultSetHoldable()</code> and <code>setDefaultResultSetHoldable(boolean)</code></p>
@@ -7044,12 +7042,12 @@ Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, w
 This has two main reasons: until recently Java did not have a portable way of retrieving the process id, and in most cases the process name is just &#8220;java&#8221; (or similar), which is not very useful.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> Starting with Jaybird 6, pure Java connections will by default report the actual process ID, just like native connections.
 When a <code>SecurityManager</code> is installed, the entire call-chain needs to have the <code>RuntimePermission("manageProcess")</code> to obtain the process ID in pure Java connections.
 If this permission check fails, Jaybird will silently ignore it and not set the <code>isc_dpb_process_id</code> based on the actual process ID.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> The process name is returned from <code>Connection.getClientInfo("ApplicationName")</code>, if the client info property <code>ApplicationName</code> has not been set explicitly with <code>Connection.setClientInfo</code>, and/or if there is no property <code>ApplicationName</code> in the <code>USER_SESSION</code> context.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> The process name is returned from <code>Connection.getClientInfo("ApplicationName")</code>, if the client info property <code>ApplicationName</code> has not been set explicitly with <code>Connection.setClientInfo</code>, and/or if there is no property <code>ApplicationName</code> in the <code>USER_SESSION</code> context.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -7136,7 +7134,7 @@ In earlier versions, use <code>setNonStandardProperty</code>.</p>
 <div class="sect2">
 <h3 id="ref-datatypebind"><a class="anchor" href="#ref-datatypebind"></a>9.8. Data type bind support</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 4.0 introduced the <code>SET BIND</code> statement and <code>isc_dpb_set_bind</code> DPB item.
@@ -7190,7 +7188,7 @@ props.setProperty("dataTypeBind",
 <div class="sect2">
 <h3 id="ref-enable-protocol"><a class="anchor" href="#ref-enable-protocol"></a>9.9. Enabling unsupported protocol versions</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>Since Jaybird 6, the pure Java protocol implementation will no longer attempt to connect with protocol versions of Firebird versions which are not supported.
@@ -7293,8 +7291,8 @@ We recommend upgrading your Firebird version, or downgrading to a Jaybird versio
 <div class="sect2">
 <h3 id="ref-catalog-as-package"><a class="anchor" href="#ref-catalog-as-package"></a>9.10. Opt-in feature for package information in DatabaseMetaData</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em><br>
-<em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em><br>
+<em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3.0 added packages, which can contain stored procedures and functions.
@@ -7427,7 +7425,7 @@ Properties are retrieved from <code>USER_TRANSACTION</code>, falling back to <co
 <div class="sect3">
 <h4 id="ref-client-info-jb6"><a class="anchor" href="#ref-client-info-jb6"></a>9.11.2. Support in Jaybird 6 and later</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>In Jaybird 6, the client info properties support was rewritten, improving and extending support of this feature.</p>
@@ -7524,7 +7522,7 @@ The <code>ClientUser</code> and <code>ClientHostname</code> properties are consi
 <div class="sect3">
 <h4 id="client-info-pool"><a class="anchor" href="#client-info-pool"></a>9.11.3. Connection pools and client info properties</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>If you use a connection pool populated from <code>org.firebirdsql.ds.FBConnectionPoolDataSource</code> or <code>org.firebirdsql.ds.FBXADataSource</code>, the known properties are reset each time the connection is handed out by the pool.
@@ -7552,7 +7550,7 @@ If your connection pool implementation supports custom code to reset a connectio
 <div class="sect2">
 <h3 id="ref-create-database-if-not-exist"><a class="anchor" href="#ref-create-database-if-not-exist"></a>9.12. Create database if it does not exist</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>The Boolean connection property <code>createDatabaseIfNotExist</code> instructs Jaybird to attempt to create the database if it does not exist yet.
@@ -7614,7 +7612,7 @@ Jaybird applies some simple rules to exclude some classes of errors, and not att
 <p>These warnings are reported on the <code>Connection</code>, <code>Statement</code>, or <code>ResultSet</code><sup class="footnote">[<a id="_footnoteref_25" class="footnote" href="#_footnotedef_25" title="View footnote.">25</a>]</sup>, and can be retrieved with <code>getWarnings()</code>.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> The connection property <code>reportSQLWarnings</code> can be used to disable the reporting of <code>SQLWarning</code>s.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> The connection property <code>reportSQLWarnings</code> can be used to disable the reporting of <code>SQLWarning</code>s.</p>
 </div>
 <div class="paragraph">
 <p>This connection property supports the following values (case-insensitive):</p>
@@ -7651,7 +7649,7 @@ Invalid values of the system property are ignored.</p>
 <div class="sect2">
 <h3 id="ref-socket-factory"><a class="anchor" href="#ref-socket-factory"></a>9.14. Custom socket factory</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>A custom socket factory can be specified to customize the creation of the <code>java.net.Socket</code> instance of a pure Java database or service connection.</p>
@@ -7715,8 +7713,8 @@ The other properties&#8201;&#8212;&#8201;here <code>user</code>, <code>password<
 <div class="sect2">
 <h3 id="ref-schema-support"><a class="anchor" href="#ref-schema-support"></a>9.15. Schema support</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 7</em><br>
-<em class="since">Firebird 6.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 7</em><br>
+<em class="since"><strong>Since:</strong> Firebird 6.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 6.0 introduced schema support, and schemas are supported in Jaybird 7 and higher.</p>
@@ -7844,7 +7842,7 @@ from MY_SCHEMA.MY_TABLE</code></pre>
 <div class="sect2">
 <h3 id="ref-async-fetch"><a class="anchor" href="#ref-async-fetch"></a>10.1. Async fetch</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>For pure Java connections, non-holdable forward-only result sets perform asynchronous fetches by default.
@@ -7963,7 +7961,7 @@ If you previously relied on absence of ANTLR to disable generated keys support, 
 </div>
 </div>
 <div class="paragraph">
-<p>This functionality is available for <code>INSERT</code>, <code>UPDATE</code>, <code>UPDATE OR INSERT</code>, <code>DELETE</code>, and&#8201;&#8212;&#8201;<em class="since">Firebird 3.0</em>&#8201;&#8212;&#8201;<code>MERGE</code>.</p>
+<p>This functionality is available for <code>INSERT</code>, <code>UPDATE</code>, <code>UPDATE OR INSERT</code>, <code>DELETE</code>, and&#8201;&#8212;&#8201;<em class="since"><strong>Since:</strong> Firebird 3.0</em>&#8201;&#8212;&#8201;<code>MERGE</code>.</p>
 </div>
 <div class="paragraph">
 <p>Generated keys retrieval modifies the statement to add a <code>RETURNING</code>-clause.
@@ -7971,7 +7969,7 @@ Firebird 4.0 and earlier only support <code>RETURNING</code> for DML operations 
 Attempting to use generated keys retrieval with a statement that affects multiple rows will yield the error <em>"multiple rows in singleton select"</em>.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em> <em class="since">Firebird 5.0</em> Support for multi-row <code>RETURNING</code> is introduced in Firebird 5.0.
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> <em class="since"><strong>Since:</strong> Firebird 5.0</em> Support for multi-row <code>RETURNING</code> is introduced in Firebird 5.0.
 Support for multi-row <code>RETURNING</code> is available since Jaybird 5.</p>
 </div>
 <div class="paragraph">
@@ -8445,8 +8443,8 @@ For example with <code>UPDATE</code> statements that touch multiple records and&
 <div class="sect2">
 <h3 id="ref-inline-blob"><a class="anchor" href="#ref-inline-blob"></a>10.3. Inline blobs</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5.0.8/6.0.2</em><br>
-<em class="since">Firebird 5.0.3</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.8/6.0.2</em><br>
+<em class="since"><strong>Since:</strong> Firebird 5.0.3</em></p>
 </div>
 <div class="paragraph">
 <p>Inline blobs are a performance optimization for reading blobs as part of the query.</p>
@@ -8563,13 +8561,13 @@ When necessary you can use <code>FirebirdCallableStatement.setSelectableProcedur
 <div class="sect2">
 <h3 id="ref-max-field-size"><a class="anchor" href="#ref-max-field-size"></a>10.5. Maximum field size (<code>maxFieldSize</code>)</h3>
 <div class="paragraph">
-<p><em class="until">Jaybird 7</em></p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 7</em></p>
 </div>
 <div class="paragraph">
 <p>In Jaybird 6 and older, the <code>maxFieldSize</code> property of <code>Statement</code> is effectively ignored&#8201;&#8212;&#8201;the value is only stored, and otherwise ignored.</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 7</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 7</em></p>
 </div>
 <div class="paragraph">
 <p>In Jaybird 7 and higher, the <code>maxFieldSize</code> property of <code>Statement</code> is used to truncate values returned from a result set.</p>
@@ -8646,8 +8644,8 @@ Subsequent use of a larger <code>maxFieldSize</code> will continue to return the
 <div class="sect2">
 <h3 id="ref-scrollable-cursor"><a class="anchor" href="#ref-scrollable-cursor"></a>10.6. Connection property scrollableCursor</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em><br>
-<em class="since">Firebird 5.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em><br>
+<em class="since"><strong>Since:</strong> Firebird 5.0</em></p>
 </div>
 <div class="paragraph">
 <p>On Firebird 5.0 and higher, Jaybird 5 and higher support server-side scrollable cursors..</p>
@@ -8705,8 +8703,8 @@ This will be corrected when we retrofit the new behaviour for <em>emulated</em> 
 <div class="sect2">
 <h3 id="ref-batch-use-server-batch"><a class="anchor" href="#ref-batch-use-server-batch"></a>10.7. Connection property useServerBatch</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em><br>
-<em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em><br>
+<em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>A Boolean property to configure use of server-side batch updates.
@@ -8720,8 +8718,8 @@ Set to <code>false</code> to disable server-side batch updates and always use em
 <div class="sect2">
 <h3 id="ref-batch-server-batch-buffer-size"><a class="anchor" href="#ref-batch-server-batch-buffer-size"></a>10.8. Connection property serverBatchBufferSize</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5</em><br>
-<em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em><br>
+<em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Configures the server-side batch buffer size in bytes.</p>
@@ -8766,7 +8764,7 @@ Too large buffer sizes will use the server-side maximum (256MB as of Firebird 4.
 <div class="sect2">
 <h3 id="ref-allowtxstmts"><a class="anchor" href="#ref-allowtxstmts"></a>10.9. Connection property allowTxStmts</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>Enables support for the transaction management statements <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> (without retain or savepoint) and <code>SET TRANSACTION</code>.</p>
@@ -8860,7 +8858,7 @@ However, for the savepoint related methods it is advisable to use the relevant J
 <div class="sect2">
 <h3 id="ref-extendedmetadata"><a class="anchor" href="#ref-extendedmetadata"></a>10.10. Connection property extendedMetadata</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5.0.5</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.5</em></p>
 </div>
 <div class="paragraph">
 <p>By default, Jaybird queries extended metadata information.
@@ -8878,7 +8876,7 @@ When disabled, the precision will be estimated.</p>
 </dd>
 <dt class="hdlist1"><code>ResultSetMetaData.isAutoIncrement(int)</code></dt>
 <dd>
-<p>When enabled (<em class="since">Jaybird 6</em>), the identity state of <code>INTEGER</code>, <code>BIGINT</code> and <code>SMALLINT</code> columns is queried on Firebird 3.0 and higher.
+<p>When enabled (<em class="since"><strong>Since:</strong> Jaybird 6</em>), the identity state of <code>INTEGER</code>, <code>BIGINT</code> and <code>SMALLINT</code> columns is queried on Firebird 3.0 and higher.
 When disabled, the result is always <code>false</code>.</p>
 </dd>
 </dl>
@@ -8944,14 +8942,14 @@ When disabled, the result is always <code>false</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>fatal</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">severe/fatal errors (though in general, level <em>error</em> will be used instead of <em>fatal</em>)</p>
-<p class="tableblock"><em class="until">Jaybird 6</em></p></td>
+<p class="tableblock"><em class="until"><strong>Removed in:</strong> Jaybird 6</em></p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
 <h4 id="_java_platform_logging_api"><a class="anchor" href="#_java_platform_logging_api"></a>11.1.1. Java Platform Logging API</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>Since Jaybird 6, the Java Platform Logging API (<a href="https://openjdk.org/jeps/264" target="_blank" rel="noopener">JEP 264</a>) is used.</p>
@@ -8964,7 +8962,7 @@ For example, Log4j provides the <code>log4j-jpl</code> dependency which will rep
 <div class="sect3">
 <h4 id="ref-logging-jul"><a class="anchor" href="#ref-logging-jul"></a>11.1.2. java.util.logging</h4>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em></p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird uses <code>java.util.logging</code> by default.</p>
@@ -9014,7 +9012,7 @@ For example, Log4j provides the <code>log4j-jpl</code> dependency which will rep
 <div class="sect3">
 <h4 id="ref-logging-disable"><a class="anchor" href="#ref-logging-disable"></a>11.1.3. Disable logging</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> To disable logging, configure your logging library.
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> To disable logging, configure your logging library.
 For example, when using <code>java.util.logging</code>, use a properties file (specified with <code>-Djava.util.logging.config.file=&lt;file&gt;</code>) including:</p>
 </div>
 <div class="listingblock">
@@ -9026,13 +9024,13 @@ For example, when using <code>java.util.logging</code>, use a properties file (s
 <p>Consult the documentation of <code>java.util.logging</code> or your actual logging library for other options to disable logging.</p>
 </div>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em> To disable logging, specify system property <code>org.firebirdsql.jdbc.disableLogging</code> with value <code>true</code>.</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em> To disable logging, specify system property <code>org.firebirdsql.jdbc.disableLogging</code> with value <code>true</code>.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="ref-logging-console"><a class="anchor" href="#ref-logging-console"></a>11.1.4. Console logging</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> To write logging to the console, configure your logging library.
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> To write logging to the console, configure your logging library.
 For example, when using <code>java.util.logging</code>, use a properties file (specified with <code>-Djava.util.logging.config.file=&lt;file&gt;</code>) including:</p>
 </div>
 <div class="listingblock">
@@ -9053,7 +9051,7 @@ Contrary to the solution available under Jaybird 5 and earlier, <code>java.util.
 </table>
 </div>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em> Jaybird can write its logging to the <code>System.out</code> for <em>info</em> and lower and <code>System.err</code> for <em>warn</em> and above.
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em> Jaybird can write its logging to the <code>System.out</code> for <em>info</em> and lower and <code>System.err</code> for <em>warn</em> and above.
 Levels <em>debug</em> and <em>trace</em> are disabled in the implementation.
 To enable logging to the console, you can set system property <code>org.firebirdsql.jdbc.forceConsoleLogger</code> to <code>true</code>.</p>
 </div>
@@ -9063,7 +9061,7 @@ To enable logging to the console, you can set system property <code>org.firebird
 <div class="sect4">
 <h5 id="ref-logging-custom-after-6"><a class="anchor" href="#ref-logging-custom-after-6"></a>Custom logging in Jaybird 6 and higher</h5>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em> If you need a custom logger implementation under Jaybird 6 or higher, you will need to provide an implementation of <code>java.lang.System.Logger</code> and <code>java.lang.System.LoggerFinder</code> and a service loader definition.</p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em> If you need a custom logger implementation under Jaybird 6 or higher, you will need to provide an implementation of <code>java.lang.System.Logger</code> and <code>java.lang.System.LoggerFinder</code> and a service loader definition.</p>
 </div>
 <div class="paragraph">
 <p>Make sure you really need this: if you want to use a different logging library, it may already have the necessary implementation (for example, Log4j has the <code>log4j-jpl</code> dependency).</p>
@@ -9072,7 +9070,7 @@ To enable logging to the console, you can set system property <code>org.firebird
 <div class="sect4">
 <h5 id="ref-logging-custom-before-6"><a class="anchor" href="#ref-logging-custom-before-6"></a>Custom logging in Jaybird 5 and earlier</h5>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em></p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>You can provide your own logging implementation if you don&#8217;t want to use <code>java.util.logging</code> or console logging.</p>
@@ -9135,7 +9133,7 @@ It does not provide full documentation for all supported datatypes.
 <p>The JDBC (and SQL standard) types <code>BINARY</code> and <code>VARBINARY</code> are called <code>CHAR(n) CHARACTER SET OCTETS</code> and <code>VARCHAR(n) CHARACTER SET OCTETS</code> in Firebird.</p>
 </div>
 <div class="paragraph">
-<p>(<em class="since">Firebird 4.0</em>) Firebird 4.0 introduces the names <code>BINARY</code> and <code>VARBINARY</code>/<code>BINARY VARYING</code> as aliases for <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code>.</p>
+<p>(<em class="since"><strong>Since:</strong> Firebird 4.0</em>) Firebird 4.0 introduces the names <code>BINARY</code> and <code>VARBINARY</code>/<code>BINARY VARYING</code> as aliases for <code>(VAR)CHAR(n) CHARACTER SET OCTETS</code>.</p>
 </div>
 <div class="paragraph">
 <p>In Java, binary and varbinary are usually handled with byte arrays and <code>InputStream</code>/<code>OutputStream</code>.</p>
@@ -9190,7 +9188,7 @@ It does not provide full documentation for all supported datatypes.
 <div class="sect2">
 <h3 id="ref-boolean"><a class="anchor" href="#ref-boolean"></a>12.2. Type BOOLEAN</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 3.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 3.0 introduced the SQL standard type <code>BOOLEAN</code>.</p>
@@ -9339,7 +9337,7 @@ If you do this, name the domain something like <code>D_BOOLEAN</code>, and avoid
 <div class="sect3">
 <h4 id="ref-datetime-tz"><a class="anchor" href="#ref-datetime-tz"></a>12.3.1. Time zones</h4>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 4.0 introduced time zone types, with types <code>TIME WITH TIME ZONE</code> and <code>TIMESTAMP WITH TIME ZONE</code>.
@@ -9369,7 +9367,7 @@ On retrieval of a value with a named zone, Jaybird will make a best effort to co
 If no mapping is available the time will be returned at UTC (offset zero).</p>
 </div>
 <div class="paragraph">
-<p><em class="since">Jaybird 4.0.1</em><br>
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.1</em><br>
 Since Jaybird 4.0.1, it is also possible to get and set <code>java.time.ZonedDateTime</code>, which preserves the named zone information.</p>
 </div>
 <div class="paragraph">
@@ -9413,7 +9411,7 @@ As a result, the offset can be different from an <code>OffsetTime</code>.</p>
 </div>
 </li>
 <li>
-<p><code>java.time.ZonedDateTime</code> (*) <em class="since">Jaybird 4.0.1</em></p>
+<p><code>java.time.ZonedDateTime</code> (*) <em class="since"><strong>Since:</strong> Jaybird 4.0.1</em></p>
 <div class="ulist">
 <ul>
 <li>
@@ -9488,7 +9486,7 @@ As a result, the offset can be different from an <code>OffsetTime</code>.</p>
 </div>
 </li>
 <li>
-<p><code>java.time.ZonedDateTime</code> (*) <em class="since">Jaybird 4.0.1</em></p>
+<p><code>java.time.ZonedDateTime</code> (*) <em class="since"><strong>Since:</strong> Jaybird 4.0.1</em></p>
 </li>
 <li>
 <p><code>java.lang.String</code></p>
@@ -9691,7 +9689,7 @@ Be aware that this is inconsistent if Firebird and Java are in different time zo
 <div class="sect5">
 <h6 id="ref-datetime-sessiontimezone-fb"><a class="anchor" href="#ref-datetime-sessiontimezone-fb"></a>Firebird session time zone</h6>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>The session time zone is used for conversion between <code>WITH TIME ZONE</code> values and <code>WITHOUT TIME ZONE</code> values (i.e. using cast or with legacy time zone bind), and for the value of <code>LOCALTIME</code>, <code>LOCALTIMESTAMP</code>, <code>CURRENT_TIME</code> and <code>CURRENT_TIMESTAMP</code>, and other uses of the session time zone as documented in the Firebird 4.0 documentation.</p>
@@ -9778,7 +9776,7 @@ We recommend avoiding <code>TIME WITH TIME ZONE</code> where possible.</p>
 <div class="sect2">
 <h3 id="ref-decfloat"><a class="anchor" href="#ref-decfloat"></a>12.4. Decimal floating point type DECFLOAT</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 4.0 introduces the SQL:2016 <code>DECFLOAT</code> datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
@@ -10198,7 +10196,7 @@ The precision specified is the minimum precision, not the exact precision.
 <p>In Firebird 3.0 and earlier, the maximum precision of <code>DECIMAL</code> and <code>NUMERIC</code> is 18 with a maximum scale of 18.<sup class="footnote">[<a id="_footnoteref_31" class="footnote" href="#_footnotedef_31" title="View footnote.">31</a>]</sup></p>
 </div>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em> In Firebird 4.0 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 38.
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em> In Firebird 4.0 the maximum precision and scale of <code>DECIMAL</code> and <code>NUMERIC</code> have been raised to 38.
 Any <code>NUMERIC</code> or <code>DECIMAL</code> with a precision between 19 and 38 will allow storage up to a precision of 38.<sup class="footnote">[<a id="_footnoteref_32" class="footnote" href="#_footnotedef_32" title="View footnote.">32</a>]</sup></p>
 </div>
 <div class="paragraph">
@@ -10213,7 +10211,7 @@ Values exceeding a precision of 38 after rounding will be rejected with a <code>
 <div class="sect2">
 <h3 id="ref-int128"><a class="anchor" href="#ref-int128"></a>12.6. Type INT128</h3>
 <div class="paragraph">
-<p><em class="since">Firebird 4.0</em></p>
+<p><em class="since"><strong>Since:</strong> Firebird 4.0</em></p>
 </div>
 <div class="paragraph">
 <p>Firebird 4.0 introduced the non-standard type <code>INT128</code>, a signed 128 bit number.</p>
@@ -10221,7 +10219,7 @@ Values exceeding a precision of 38 after rounding will be rejected with a <code>
 <div class="sect3">
 <h4 id="_support_for_int128"><a class="anchor" href="#_support_for_int128"></a>12.6.1. Support for INT128</h4>
 <div class="paragraph">
-<p><em class="since">Jaybird 4.0.1</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 4.0.1</em></p>
 </div>
 <div class="paragraph">
 <p>Jaybird 4.0.1 introduced support for the <code>INT128</code> type.
@@ -10253,7 +10251,7 @@ This way most tools should be able to handle the full range of values without is
 The properties listed below are usable as JDBC connection properties.</p>
 </div>
 <div class="paragraph">
-<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, <code>false</code> (<em class="since">Jaybird 5</em>), but also without a value, or with an empty value (which will both signify <code>true</code>).
+<p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, <code>false</code> (<em class="since"><strong>Since:</strong> Jaybird 5</em>), but also without a value, or with an empty value (which will both signify <code>true</code>).
 For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like <code>true</code> or <code>false</code>.</p>
 </div>
 <div class="paragraph">
@@ -10340,7 +10338,7 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>processName</code><br>
-<code>process_name</code>, <code>isc_dpb_process_name</code>, <code>ApplicationName</code> (<em class="since">Jaybird 6</em>), <code>applicationName</code> (<em class="since">Jaybird 6</em>)</p>
+<code>process_name</code>, <code>isc_dpb_process_name</code>, <code>ApplicationName</code> (<em class="since"><strong>Since:</strong> Jaybird 6</em>), <code>applicationName</code> (<em class="since"><strong>Since:</strong> Jaybird 6</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the process name reported to Firebird.
 See <a href="#ref-processinfo">Process information</a> for more information.</p></td>
@@ -10367,7 +10365,7 @@ See <a href="#ref-processinfo">Process information</a> for more information.</p>
 <p><code>asyncFetch</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Boolean property.
 Enables/disables async fetching for pure Java connections.
 Default is <code>true</code>.
@@ -10390,7 +10388,7 @@ Default: <code>NONE</code> (unless <code>charSet</code> is specified).</p>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>charSet</code><br>
-<code>localEncoding</code>, <code>charset</code> (<em class="since">Jaybird 5</em>)</p>
+<code>localEncoding</code>, <code>charset</code> (<em class="since"><strong>Since:</strong> Jaybird 5</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Character set for the connection using Java character set name.
@@ -10403,7 +10401,7 @@ In general, only specify <code>charSet</code> <em>or</em> <code>encoding</code>,
 <code>search_path</code>, <code>isc_dpb_search_path</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Schemas to search for unqualified objects (<em class="since">Jaybird 7</em>, <em class="since">Firebird 6.0</em>)<br>
+<p>Schemas to search for unqualified objects (<em class="since"><strong>Since:</strong> Jaybird 7</em>, <em class="since"><strong>Since:</strong> Firebird 6.0</em>)<br>
 Comma-separated list of schema names.
 For a case-sensitive or otherwise non-regular schema name, the identifier <strong>must</strong> be quoted.
 See <a href="#ref-schema-support-search-path">Search path</a> for more information.</p>
@@ -10479,7 +10477,7 @@ Can be used for performance tuning, or when the default socket buffer provided b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property.
 Size in bytes of the buffer used to transfer BLOB content.
 Specifying a size greater than 65535 may result in additional server roundtrips per read, but may also waste memory for larger buffers than used in some cases.
-Values lower than 512 will use 512 (<em class="since">Jaybird 6</em>).<br>
+Values lower than 512 will use 512 (<em class="since"><strong>Since:</strong> Jaybird 6</em>).<br>
 Default: <code>16384</code></p></td>
 </tr>
 <tr>
@@ -10487,7 +10485,7 @@ Default: <code>16384</code></p></td>
 <p><code>maxInlineBlobSize</code><br>
 <code>max_inline_blob_size</code>, <code>isc_dpb_max_inline_blob_size</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes of inline blobs (<em class="since">Jaybird 5.0.8/6.0.2</em> <em class="since">Firebird 5.0.3</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes of inline blobs (<em class="since"><strong>Since:</strong> Jaybird 5.0.8/6.0.2</em> <em class="since"><strong>Since:</strong> Firebird 5.0.3</em>).
 A value of <code>0</code> disables transmission of inline blobs.
 See <a href="#ref-inline-blob">Inline blobs</a> for more information.<br>
 Default: <code>65535</code>, maximum value: <code>65535</code><sup class="footnote">[<a id="_footnoteref_33" class="footnote" href="#_footnotedef_33" title="View footnote.">33</a>]</sup></p></td>
@@ -10497,7 +10495,7 @@ Default: <code>65535</code>, maximum value: <code>65535</code><sup class="footno
 <p><code>maxBlobCacheSize</code><br>
 <code>max_blob_cache_size</code>, <code>isc_dpb_max_blob_cache_size</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes&#8201;&#8212;&#8201;per connection&#8201;&#8212;&#8201;of the inline blob cache (<em class="since">Jaybird 5.0.8/6.0.2</em> <em class="since">Firebird 5.0.3</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size in bytes&#8201;&#8212;&#8201;per connection&#8201;&#8212;&#8201;of the inline blob cache (<em class="since"><strong>Since:</strong> Jaybird 5.0.8/6.0.2</em> <em class="since"><strong>Since:</strong> Firebird 5.0.3</em>).
 A value of <code>0</code> disables the cache.
 Disabling the cache does not disable transmission of inline blobs: set <code>maxInlineBlobSize</code> to <code>0</code> to disable transmission.
 See <a href="#ref-inline-blob">Inline blobs</a> for more information.<br>
@@ -10525,7 +10523,7 @@ This means that for native connections the connect timeout will not detect unrea
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>wireCompression</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Firebird 3.0</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since"><strong>Since:</strong> Firebird 3.0</em>).
 Boolean property.
 Enables zlib wire compression.
 See <a href="#ref-wirecompression">Wire compression</a> for more information.</p></td>
@@ -10566,7 +10564,7 @@ See <a href="#ref-callable-ignore-proctype">Connection property ignoreProcedureT
 <p><code>scrollableCursor</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 5.0</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5</em> <em class="since"><strong>Since:</strong> Firebird 5.0</em>).
 Allowed values: <code>EMULATED</code>, <code>SERVER</code> (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <a href="#ref-scrollable-cursor">Connection property scrollableCursor</a> for more information.<br>
@@ -10578,7 +10576,7 @@ Default: <code>EMULATED</code></p>
 <p><code>useServerBatch</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 4.0</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5</em> <em class="since"><strong>Since:</strong> Firebird 4.0</em>).
 Boolean property.
 Value <code>true</code> enables server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to <code>false</code> to always use emulated batch updates.
@@ -10591,7 +10589,7 @@ Default value: <code>true</code></p>
 <p><code>serverBatchBufferSize</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5</em> <em class="since">Firebird 4.0</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5</em> <em class="since"><strong>Since:</strong> Firebird 4.0</em>).
 Size in bytes of the server-side batch buffer.
 Value <code>&lt; 0</code>&#8201;&#8212;&#8201;server-side default, <code>0</code>&#8201;&#8212;&#8201;server-side maximum, <code>&gt; 0</code>&#8201;&#8212;&#8201;size (capped at server-side maximum)
 See <a href="#ref-batch-server-batch-buffer-size">Connection property serverBatchBufferSize</a> for more information.<br>
@@ -10603,7 +10601,7 @@ Default value: <code>0</code></p>
 <p><code>dataTypeBind</code><br>
 <code>set_bind</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines data type bind from one type to a different type. (<em class="since">Firebird 4.0</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines data type bind from one type to a different type. (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using <code>%3B</code>.
 See <a href="#ref-datatypebind">Data type bind support</a> for more information.</p></td>
@@ -10623,7 +10621,7 @@ Default: the JVM default time zone (Jaybird 4 or higher), or not set (Jaybird 3 
 <p><code>decfloatRound</code><br>
 <code>decfloat_round</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side rounding behaviour for <code>DECFLOAT</code> data types (<em class="since">Firebird 4.0</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side rounding behaviour for <code>DECFLOAT</code> data types (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)
 Possible values: <code>ceiling</code>, <code>up</code>, <code>half_up</code> (default), <code>half_even</code>, <code>half_down</code>, <code>down</code>, <code>floor</code>, <code>reround</code>
 See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding</a> for more information.</p></td>
 </tr>
@@ -10632,7 +10630,7 @@ See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding<
 <p><code>decfloatTraps</code><br>
 <code>decfloat_traps</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side error behaviour for <code>DECFLOAT</code> data types (<em class="since">Firebird 4.0</em>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines server-side error behaviour for <code>DECFLOAT</code> data types (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)
 Comma-separated list with options: <code>Division_by_zero</code> (default), <code>Inexact</code>, <code>Invalid_operation</code> (default), <code>Overflow</code> (default), <code>Underflow</code>
 See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding</a> for more information.</p></td>
 </tr>
@@ -10641,7 +10639,7 @@ See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding<
 <p><code>useStandarUdf</code><br>
 <code>use_standard_udf</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 5</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until"><strong>Removed in:</strong> Jaybird 5</em>).
 Boolean property.
 Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls.
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
@@ -10651,7 +10649,7 @@ See <a href="#jdbcescape">Supported JDBC Scalar Functions</a> for more informati
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>timestampUsesLocalTimezone</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until">Jaybird 6</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until"><strong>Removed in:</strong> Jaybird 6</em>).
 Boolean property.
 Changes how <code>getTime</code>/<code>getTimestamp</code> methods accepting a <code>java.util.Calendar</code> apply the calendar offset in calculations.</p></td>
 </tr>
@@ -10690,7 +10688,7 @@ Set the database into read-only state.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>enableProtocol</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since">Jaybird 6</em>).
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Enable unsupported protocol versions, if available.
 Comma-separated list of protocol versions to enable in addition to the supported protocol versions.
 The value <code>"*"</code> will enable all available protocol versions.
@@ -10701,14 +10699,14 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 <p><code>parallelWorkers</code><br>
 <code>parallel_workers</code>, <code>isc_dpb_parallel_workers</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of parallel workers to use (<em class="since">Jaybird 5.0.2</em> <em class="since">Firebird 5.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of parallel workers to use (<em class="since"><strong>Since:</strong> Jaybird 5.0.2</em> <em class="since"><strong>Since:</strong> Firebird 5.0</em>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>nativeLibraryPath</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).</p>
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).</p>
 </div>
 <div class="paragraph">
 <p>Specifies a directory to try and load the client library for native (<code>fbclient</code>) or embedded (<code>fbembed</code> or <code>fbclient</code>) connections.
@@ -10735,7 +10733,7 @@ Any subsequent connection uses the library that was loaded by the first connecti
 <p><code>useCatalogAsPackage</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em> <em class="since">Firebird 3.0</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em> <em class="since"><strong>Since:</strong> Firebird 3.0</em>).
 Boolean property.
 Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
 See <a href="#ref-catalog-as-package">Opt-in feature for package information in DatabaseMetaData</a> for more information.</p>
@@ -10746,7 +10744,7 @@ See <a href="#ref-catalog-as-package">Opt-in feature for package information in 
 <p><code>allowTxStmts</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Boolean property.
 Enables support for executing <code>COMMIT [WORK]</code>, <code>ROLLBACK [WORK]</code> and <code>SET TRANSACTION</code>.
 Default is <code>false</code>.
@@ -10758,7 +10756,7 @@ See <a href="#ref-allowtxstmts">Connection property allowTxStmts</a> for more in
 <p><code>extendedMetadata</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 5.0.5</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em>).
 Boolean property.
 Enables support for retrieving extended metadata.
 Default is <code>true</code>.
@@ -10770,7 +10768,7 @@ See <a href="#ref-extendedmetadata">Connection property extendedMetadata</a> for
 <p><code>createDatabaseIfNotExist</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Boolean property.
 Attempts to create a database if it does not exist.
 Default is <code>false</code>.
@@ -10782,7 +10780,7 @@ See <a href="#ref-create-database-if-not-exist">Create database if it does not e
 <p><code>reportSQLWarnings</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Possible values (case-insensitive): <code>ALL</code> (default), <code>NONE</code>.
 Can be used to disable reporting of <code>SQLWarning</code>s.
 See <a href="#ref-report-sql-warnings">Reporting of <code>SQLWarning</code>s</a> for more information.</p>
@@ -10793,7 +10791,7 @@ See <a href="#ref-report-sql-warnings">Reporting of <code>SQLWarning</code>s</a>
 <p><code>socketFactory</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since">Jaybird 6</em>).
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 6</em>).
 Sets a custom socket factory for pure Java connections.
 See <a href="#ref-socket-factory">Custom socket factory</a> for more information.</p>
 </div></div></td>
@@ -10801,7 +10799,7 @@ See <a href="#ref-socket-factory">Custom socket factory</a> for more information
 </tbody>
 </table>
 <div class="paragraph">
-<p>In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird&#8217;s <code>DpbItems</code> and <code>SpbItems</code> (<em class="since">Jaybird 5</em>), or <code>ISCConstants</code> (<em class="until">Jaybird 5</em>)).
+<p>In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird&#8217;s <code>DpbItems</code> and <code>SpbItems</code> (<em class="since"><strong>Since:</strong> Jaybird 5</em>), or <code>ISCConstants</code> (<em class="until"><strong>Removed in:</strong> Jaybird 5</em>)).
 The current Firebird API has over 100 DPB parameters, however only few of them are interesting for regular users.
 If a DPB item called <code>isc_dpb_XXX</code> exists, then Jaybird allows these to be specified as <code>isc_dpb_XXX</code> and <code>XXX</code>.
 By default properties are mapped as string DPB items.
@@ -10866,7 +10864,7 @@ See <a href="#transactions-isolation-levels">Transaction Isolation Levels</a> fo
 <div class="sect2">
 <h3 id="systemproperties-logging"><a class="anchor" href="#systemproperties-logging"></a>B.1. Logging</h3>
 <div class="paragraph">
-<p><em class="until">Jaybird 6</em></p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>To configure logging, the following system properties are available.
@@ -10953,7 +10951,7 @@ This property will have no effect if <code>org.firebirdsql.jdbc.defaultConnectio
 <div class="sect2">
 <h3 id="systemproperties-default-async-fetch"><a class="anchor" href="#systemproperties-default-async-fetch"></a>B.4. Default <code>asyncFetch</code> value</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -10968,7 +10966,7 @@ See <a href="#ref-async-fetch">Async fetch</a> for more information.</p>
 <div class="sect2">
 <h3 id="systemproperties-default-enable-protocol"><a class="anchor" href="#systemproperties-default-enable-protocol"></a>B.5. Default <code>enableProtocol</code> value</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -10983,8 +10981,8 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 <div class="sect2">
 <h3 id="systemproperties-default-inline-blob"><a class="anchor" href="#systemproperties-default-inline-blob"></a>B.6. Default inline blob property values</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 5.0.8/6.0.2</em><br>
-<em class="since">Firebird 5.0.3</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.8/6.0.2</em><br>
+<em class="since"><strong>Since:</strong> Firebird 5.0.3</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -11005,7 +11003,7 @@ See <a href="#ref-enable-protocol">Enabling unsupported protocol versions</a> fo
 <div class="sect2">
 <h3 id="systemproperties-default-report-sql-warnings"><a class="anchor" href="#systemproperties-default-report-sql-warnings"></a>B.7. Default <code>reportSQLWarnings</code> value</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="dlist">
 <dl>
@@ -11020,7 +11018,7 @@ See <a href="#ref-report-sql-warnings">Reporting of <code>SQLWarning</code>s</a>
 <div class="sect2">
 <h3 id="systemproperties-wire-buffers"><a class="anchor" href="#systemproperties-wire-buffers"></a>B.8. Wire protocol buffer sizes</h3>
 <div class="paragraph">
-<p><em class="since">Jaybird 6</em></p>
+<p><em class="since"><strong>Since:</strong> Jaybird 6</em></p>
 </div>
 <div class="paragraph">
 <p>The following system properties control the sizes of a number of buffers used by Jaybird&#8217;s wire protocol implementation.</p>
@@ -11178,7 +11176,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 <dl>
 <dt class="hdlist1"><code>jdk.net.useFastTcpLoopback</code></dt>
 <dd>
-<p><em class="since">Firebird 3.0.2</em> <em class="until">Firebird 5.0</em> <em class="since">Jave 8 update 60</em> <em class="since">Windows 8 / Windows Server 2012</em>
+<p><em class="since"><strong>Since:</strong> Firebird 3.0.2</em> <em class="until"><strong>Removed in:</strong> Firebird 5.0</em> <em class="since"><strong>Since:</strong> Jave 8 update 60</em> <em class="since"><strong>Since:</strong> Windows 8 / Windows Server 2012</em>
 Set to true on Windows to enable &#8220;TCP Loopback Fast Path&#8221; (<code>SIO_LOOPBACK_FAST_PATH</code> socket option).
 &#8220;TCP Loopback Fast Path&#8221; can improve performance for localhost connections.<br>
 Java only has an 'all-or-nothing' support for the &#8220;TCP Loopback Fast Path&#8221;, so Jaybird cannot enable this for you: you must specify this property on JVM startup.
@@ -11291,7 +11289,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>CHAR CHARACTER SET OCTETS</code><br>
-<code>BINARY</code> (<em class="since">Firebird 4.0</em>)</p>
+<code>BINARY</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
 </tr>
@@ -11299,7 +11297,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>VARBINARY</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>VARCHAR CHARACTER SET OCTETS</code><br>
-<code>VARBINARY</code> (<em class="since">Firebird 4.0</em>)</p>
+<code>VARBINARY</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte[]</code></p></td>
 </tr>
@@ -11320,7 +11318,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME_WITH_TIMEZONE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME WITH TIME ZONE</code> (<em class="since">Firebird 4.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME WITH TIME ZONE</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetTime</code></p></td>
 </tr>
 <tr>
@@ -11330,7 +11328,7 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP_WITH_TIMEZONE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP WITH TIME ZONE</code> (<em class="since">Firebird 4.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP WITH TIME ZONE</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetDateTime</code></p></td>
 </tr>
 <tr>
@@ -11340,12 +11338,12 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code> (<em class="since">Firebird 3.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code> (<em class="since"><strong>Since:</strong> Firebird 3.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code><sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since">Firebird 4.0</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
 </tbody>
@@ -12137,13 +12135,13 @@ When no equivalent is available, Jaybird will pass the function call "as is" to 
 </div>
 <div class="paragraph">
 <p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup> shipped with Firebird.
-Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until">Jaybird 5</em>).
+Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until"><strong>Removed in:</strong> Jaybird 5</em>).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
 <div class="paragraph">
 <p>In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
 Using the <code>use_standard_udf</code> is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.
-<em class="since">Jaybird 5</em> UDF mode (<code>use_standard_udf</code>) is no longer available in Jaybird 5 and higher.</p>
+<em class="since"><strong>Since:</strong> Jaybird 5</em> UDF mode (<code>use_standard_udf</code>) is no longer available in Jaybird 5 and higher.</p>
 </div>
 <div class="paragraph">
 <p>Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "built-in" and in the "UDF" modes.</p>
@@ -14238,7 +14236,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-11-22 09:20:13 UTC
+Last updated 2025-11-24 12:12:37 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
