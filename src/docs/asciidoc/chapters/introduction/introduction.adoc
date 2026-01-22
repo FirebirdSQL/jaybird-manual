@@ -1,7 +1,7 @@
 [[introduction]]
 == Introduction
 
-Jaybird is a JDBC driver to connect to the Firebird database server.
+Jaybird is a JDBC (Java DataBase Connectivity) driver to connect to the https://firebirdsql.org[Firebird] database server.
 
 Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
 The type 2 driver includes support for Firebird Embedded.
