@@ -426,7 +426,7 @@ In addition, the class defines the following methods:
 
 The `NBackupManager` interface and its implementation `FBNbackupManager` provides _nbackup_ backup and restore through the service API.
 This form of backup and restore is server-side, meaning that all paths are on the Firebird server.
-For information about _nbackup_, consult the https://www.firebirdsql.org/file/documentation/html/en/firebirddocs/nbackup/firebird-nbackup.html[Firebird's nbackup tool^] documentation.
+For information about _nbackup_, consult the https://firebirdsql.org/file/documentation/html/en/firebirddocs/nbackup/firebird-nbackup.html[Firebird's nbackup tool^] documentation.
 
 In addition to the setters and getters described in the previous section, the following methods are used to specify the backup and restore paths and properties:
 

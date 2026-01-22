@@ -4,7 +4,7 @@
 
 The contents of this Documentation are subject to the Public Documentation License Version 1.0 (the "License");
 you may only use this Documentation if you comply with the terms of this License.
-A copy of the License is available at https://www.firebirdsql.org/en/public-documentation-license/.
+A copy of the License is available at https://firebirdsql.org/en/public-documentation-license/.
 
 The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer's Manual.
 
