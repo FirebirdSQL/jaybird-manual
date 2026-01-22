@@ -30,17 +30,6 @@ Roman Rokytskyy; Mark Rotteveel
 :jna-version: {jaybird5-jna-version}
 :min-support-firebird: 3.0
 :fb-canonical-html: https://firebirdsql.github.io/jaybird-manual/jaybird_manual.html
-:is-snapshot:
-
-ifdef::is-snapshot[]
-[NOTE]
-====
-This is a snapshot version of the Jaybird manual. It may contain obvious (and not so obvious)
-errors, or it may still miss information on more recent features. If you find any problems, don't
-hesitate to report them on https://github.com/FirebirdSQL/jaybird-manual/issues[^] or submit a pull
-request with the fix.
-====
-endif::is-snapshot[]
 
 :sectnums:
 
