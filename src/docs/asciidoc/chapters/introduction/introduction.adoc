@@ -171,11 +171,6 @@ You can subscribe to the mailing list by sending an email to firebird-java+subsc
 Alternatively, you can join the group at the https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
 * On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^].
 * On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
-* On https://stackoverflow.com/[Stack Overflow^], please tag your questions with
-*jaybird* and *firebird*
-+
-Please make sure to familiarize yourself with the rules and expectations of Stack Overflow before asking, 
-see https://stackoverflow.com/tour[Stack Overflow Tour^] and https://stackoverflow.com/help/asking[Help Center: Asking^]
 
 === Contributing
 
