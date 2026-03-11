@@ -95,15 +95,17 @@ The 'default' object type for `DECFLOAT` is a `java.math.BigDecimal`, but conver
 - `java.math.BigInteger` (see notes <<decfloat-note-15,15>>, <<decfloat-note-16,16>>)
 - `org.firebirdsql.extern.decimal.Decimal32/64/128` (see notes <<decfloat-note-17,17>>, <<decfloat-note-18,18>>)
 
-The `DECFLOAT` type is not yet defined in the JDBC specification. 
-For the time being, Jaybird defines a Jaybird specific type code with value `-6001`.
+The `DECFLOAT` type was not standardized in JDBC until the JDBC 4.5 specification (Java 26).
+
+until:[Jaybird 5.0.12/6.0.5] Up to Jaybird 5.0.11/6.0.4, Jaybird defines a custom type code with value `-6001`. +
+since:[Jaybird 5.0.12/6.0.5] Starting with Jaybird 5.0.12/6.0.5, Jaybird changed this type code to `2015`, as defined by JDBC 4.5.
+
 This value is available through constant `org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT`, or -- for JDBC 4.2 and higher -- `org.firebirdsql.jdbc.JaybirdType.DECFLOAT`, which is an enum implementing `java.sql.SQLType`.
+On Java 26 and higher, we recommend using `java.sql.Types.DECFLOAT` or `java.sql.JDBCType.DECFLOAT` instead.
 
-If you need to use the type code, we suggest you use these constants.
-If a `DECFLOAT` type constant gets added to the JDBC standard, we will update the value.
-The enum value will be deprecated when that version of JDBC has been released.
+The `DECFLOAT` constants in `JaybirdTypeCodes` and `JaybirdType` may be deprecated for eventual removal once Jaybird no longer supports Java versions before Java 26.
 
-To avoid additional dependencies, Jaybird uses a local copy of the https://github.com/FirebirdSQL/decimal-java[FirebirdSQL/decimal-java^] library, with a custom package `org.firebirdsql.extern.decimal`.
+To avoid additional dependencies, Jaybird uses a local ("`shaded`") copy of the https://github.com/FirebirdSQL/decimal-java[FirebirdSQL/decimal-java^] library, with a custom package `org.firebirdsql.extern.decimal`.
 
 [[ref-decfloat-precision-range]]
 ===== Precision and range
