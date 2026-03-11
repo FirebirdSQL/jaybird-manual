@@ -10028,17 +10028,21 @@ The 'default' object type for <code>DECFLOAT</code> is a <code>java.math.BigDeci
 </ul>
 </div>
 <div class="paragraph">
-<p>The <code>DECFLOAT</code> type is not yet defined in the JDBC specification.
-For the time being, Jaybird defines a Jaybird specific type code with value <code>-6001</code>.
-This value is available through constant <code>org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT</code>, or&#8201;&#8212;&#8201;for JDBC 4.2 and higher&#8201;&#8212;&#8201;<code>org.firebirdsql.jdbc.JaybirdType.DECFLOAT</code>, which is an enum implementing <code>java.sql.SQLType</code>.</p>
+<p>The <code>DECFLOAT</code> type was not standardized in JDBC until the JDBC 4.5 specification (Java 26).</p>
 </div>
 <div class="paragraph">
-<p>If you need to use the type code, we suggest you use these constants.
-If a <code>DECFLOAT</code> type constant gets added to the JDBC standard, we will update the value.
-The enum value will be deprecated when that version of JDBC has been released.</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5.0.12/6.0.5</em> Up to Jaybird 5.0.11/6.0.4, Jaybird defines a custom type code with value <code>-6001</code>.<br>
+<em class="since"><strong>Since:</strong> Jaybird 5.0.12/6.0.5</em> Starting with Jaybird 5.0.12/6.0.5, Jaybird changed this type code to <code>2015</code>, as defined by JDBC 4.5.</p>
 </div>
 <div class="paragraph">
-<p>To avoid additional dependencies, Jaybird uses a local copy of the <a href="https://github.com/FirebirdSQL/decimal-java" target="_blank" rel="noopener">FirebirdSQL/decimal-java</a> library, with a custom package <code>org.firebirdsql.extern.decimal</code>.</p>
+<p>This value is available through constant <code>org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT</code>, or&#8201;&#8212;&#8201;for JDBC 4.2 and higher&#8201;&#8212;&#8201;<code>org.firebirdsql.jdbc.JaybirdType.DECFLOAT</code>, which is an enum implementing <code>java.sql.SQLType</code>.
+On Java 26 and higher, we recommend using <code>java.sql.Types.DECFLOAT</code> or <code>java.sql.JDBCType.DECFLOAT</code> instead.</p>
+</div>
+<div class="paragraph">
+<p>The <code>DECFLOAT</code> constants in <code>JaybirdTypeCodes</code> and <code>JaybirdType</code> may be deprecated for eventual removal once Jaybird no longer supports Java versions before Java 26.</p>
+</div>
+<div class="paragraph">
+<p>To avoid additional dependencies, Jaybird uses a local (&#8220;shaded&#8221;) copy of the <a href="https://github.com/FirebirdSQL/decimal-java" target="_blank" rel="noopener">FirebirdSQL/decimal-java</a> library, with a custom package <code>org.firebirdsql.extern.decimal</code>.</p>
 </div>
 <div class="sect4">
 <h5 id="ref-decfloat-precision-range"><a class="anchor" href="#ref-decfloat-precision-range"></a>Precision and range</h5>
@@ -14333,7 +14337,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-11 12:55:57 UTC
+Last updated 2026-03-11 13:44:37 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
