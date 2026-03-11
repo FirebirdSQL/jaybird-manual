@@ -511,7 +511,7 @@ table.wide-table{font-size:xx-small}
 <li><a href="#_the_java_sql_preparedstatement_interface">4.3. The java.sql.PreparedStatement interface</a></li>
 <li><a href="#callable-statement">4.4. The java.sql.CallableStatement interface</a></li>
 <li><a href="#_batch_updates">4.5. Batch Updates</a></li>
-<li><a href="#_escape_syntax">4.6. Escape Syntax</a></li>
+<li><a href="#stmt-escape-syntax">4.6. Escape syntax</a></li>
 </ul>
 </li>
 <li><a href="#resultsets">5. Working with result sets</a>
@@ -3622,7 +3622,7 @@ The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to acc
 </div>
 </div>
 <div class="sect2">
-<h3 id="_escape_syntax"><a class="anchor" href="#_escape_syntax"></a>4.6. Escape Syntax</h3>
+<h3 id="stmt-escape-syntax"><a class="anchor" href="#stmt-escape-syntax"></a>4.6. Escape syntax</h3>
 <div class="paragraph">
 <p>The escape syntax was introduced as a portable JDBC-specific syntax to represent parts of the SQL language that are (or were) usually implemented differently by database vendors.
 The escaped syntax is also used to define features that might not be implemented by the database server, but can have an appropriate implementation in the driver.</p>
@@ -3650,7 +3650,7 @@ The escaped syntax is also used to define features that might not be implemented
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_scalar_functions"><a class="anchor" href="#_scalar_functions"></a>4.6.1. Scalar Functions</h4>
+<h4 id="stmt-escape-func"><a class="anchor" href="#stmt-escape-func"></a>4.6.1. Scalar Functions</h4>
 <div class="paragraph">
 <p>Escaped syntax for the scalar function call is defined as</p>
 </div>
@@ -3665,7 +3665,7 @@ The escaped syntax is also used to define features that might not be implemented
 </div>
 </div>
 <div class="sect3">
-<h4 id="_date_and_time_literals"><a class="anchor" href="#_date_and_time_literals"></a>4.6.2. Date and Time Literals</h4>
+<h4 id="stmt-escape-datetime"><a class="anchor" href="#stmt-escape-datetime"></a>4.6.2. Date and time literals</h4>
 <div class="paragraph">
 <p>It is possible to include date and time literals in SQL statements.
 To guarantee that each database will interpret the literal identically, the JDBC specification provides the following syntax to specify them:</p>
@@ -3697,7 +3697,7 @@ omitted):</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_outer_joins"><a class="anchor" href="#_outer_joins"></a>4.6.3. Outer Joins</h4>
+<h4 id="stmt-escape-oj"><a class="anchor" href="#stmt-escape-oj"></a>4.6.3. Outer Joins</h4>
 <div class="paragraph">
 <p>Due to the various approaches to specify outer joins (for instance, the Oracle "(+)" syntax), the JDBC specification provides the following syntax:</p>
 </div>
@@ -3727,15 +3727,15 @@ omitted):</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_stored_procedures"><a class="anchor" href="#_stored_procedures"></a>4.6.4. Stored Procedures</h4>
+<h4 id="stmt-escape-sp"><a class="anchor" href="#stmt-escape-sp"></a>4.6.4. Stored procedures</h4>
 <div class="paragraph">
 <p>The escaped syntax for stored procedures is described in details in section <a href="#callable-statement">The java.sql.CallableStatement interface</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_like_escaped_characters"><a class="anchor" href="#_like_escaped_characters"></a>4.6.5. LIKE Escaped Characters</h4>
+<h4 id="stmt-escape-like-escape"><a class="anchor" href="#stmt-escape-like-escape"></a>4.6.5. LIKE escaped characters</h4>
 <div class="paragraph">
-<p>The percent sign (&#8216;<code>%</code>&#8217;) and underscore (&#8216;<code>_</code>&#8217;) characters are wild cards in the LIKE predicate of SQL.
+<p>The percent sign (&#8216;<code>%</code>&#8217;) and underscore (&#8216;<code>_</code>&#8217;) characters are wildcards in the LIKE predicate of SQL.
 To interpret them literally they must be escaped using the escape character.
 The escaped syntax for this case identifies which character is used as an escape character:</p>
 </div>
@@ -3743,6 +3743,132 @@ The escaped syntax for this case identifies which character is used as an escape
 <div class="content">
 <pre>{escape '&lt;escape character&gt;'}</pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="stmt-escape-disable-proc"><a class="anchor" href="#stmt-escape-disable-proc"></a>4.6.6. &#8220;Disable escape processing&#8221; escape</h4>
+<div class="paragraph">
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.12/6.0.5</em></p>
+</div>
+<div class="paragraph">
+<p>The &#8220;disable escape processing&#8221; escape (<code>{\...\}</code>) can be used to disable escape processing and parameter parsing within part of a statement text.</p>
+</div>
+<div class="listingblock">
+<div class="title">Syntax</div>
+<div class="content">
+<pre>&lt;start&gt;[&lt;allowed-char&gt;...]&lt;end&gt;
+
+&lt;start&gt; := {\
+
+&lt;end&gt; := \}
+
+&lt;allowed-char&gt; :=
+    &lt;esc-backslash&gt;
+  | !! any other character than backslash !!
+
+&lt;esc-backslash&gt; := \\</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Within the escape, <strong>all</strong> occurrences of a backslash (<code>\</code>) <strong>must</strong> be escaped by doubling.
+Unescaped backslashes inside the escape will result in a <code>FBSQLParseException</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Some examples</div>
+<div class="content">
+<pre>-- Input:
+select {\"N\\A"\} from SOME_TABLE
+-- Sent to server:
+select "N\A" from SOME_TABLE
+
+-- Input:
+select {\{fn EXP(2)}\} from SOME_TABLE
+-- Sent to server (results in a syntax error)
+select {fn EXP(2)} from SOME_TABLE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As Java string literals, the escape requires a <strong>lot</strong> of backslashes, see the example repeated below as Java string literals.</p>
+</div>
+<div class="listingblock">
+<div class="title">Same examples, but as Java string literals</div>
+<div class="content">
+<pre>-- Input:
+"select {\\\"N\\\\A\"\\} from SOME_TABLE"
+-- Sent to server:
+"select \"N\\A\" from SOME_TABLE"
+
+-- Input:
+"select {\\{fn EXP(2)}\\} from SOME_TABLE"
+-- Sent to server (results in a syntax error)
+"select {fn EXP(2)} from SOME_TABLE"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We think the use case for this escape is extremely limited, even non-existent, for Jaybird.
+Jaybird always offloads parameter parsing to Firebird, and Firebird currently has no syntax that could conflict with the definition of JDBC escapes.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Possible ambiguity for comments, literals, and delimited identifiers</div>
+<div class="paragraph">
+<p>Given the backslash must be escaped everywhere inside the escape, the definition in the JDBC 4.5 specification can be interpreted to mean that the escape can end inside a comment, literal, or delimited identifier (quoted identifier).
+Allowing this would conflict with the fact that other JDBC escapes are not parsed inside comments, literals, and delimited identifiers.
+Discussion with the JDBC spec lead and others did not resolve this ambiguity.</p>
+</div>
+<div class="paragraph">
+<p>For Jaybird, we decide to reject attempts to end the escape in a comment, literal, or delimited identifier.
+Attempts to do so (e.g. <code>{\ends/*in\}comment*/</code>) will raise a <code>FBSQLParseException</code>.
+Valid alternatives would be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>End it before the comment:<br>
+<code>{\ends\}/*in\}comment*/</code></p>
+</li>
+<li>
+<p>End it after the comment and escape the backslash in the comment:<br>
+<code>{\ends/*in\\}comment*/\}</code></p>
+</li>
+<li>
+<p>Or, don&#8217;t use the escape:<br>
+<code>ends/*in\}comment*/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a consensus is reached in the JDBC Expert Group, or a community consensus arises, we may revisit this decision.</p>
+</div>
+<div class="paragraph">
+<p>Further details can be found in <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2026-03-jdbc-escape-to-disable-escape-processing.adoc">jdp-2026-03: JDBC escape to disable escape processing</a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Given above ambiguity, and the lack of a real need to use it for Jaybird/Firebird, we recommend avoiding use of this escape unless absolutely necessary.
+If it is used, we recommend only using it for the shortest substring needed.</p>
+</div>
+<div class="paragraph">
+<p>For example, the last example (passing the JDBC escape <code>{fn EXP(2)}</code> unprocessed to the server) could also be achieved by only disabling escape processing for the braces:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-- Input:
+select {\{\}fn EXP(2){\}\} from SOME_TABLE
+-- Sent to server (results in a syntax error)
+select {fn EXP(2)} from SOME_TABLE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, consider disabling escape processing for the <code>Statement</code> using <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Statement.html#setEscapeProcessing(boolean)" target="_blank" rel="noopener"><code>Statement.setEscapeProcessing(boolean)</code></a> (not available for <code>PreparedStatement</code> and <code>CallableStatement</code>).</p>
 </div>
 </div>
 </div>
@@ -14070,7 +14196,7 @@ All Rights Reserved.
 <a href="#_footnoteref_5">5</a>. This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.
 </div>
 <div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
+<a href="#_footnoteref_6">6</a>. The call escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
 </div>
 <div class="footnote" id="_footnotedef_7">
 <a href="#_footnoteref_7">7</a>. Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.
@@ -14207,7 +14333,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-11 08:14:48 UTC
+Last updated 2026-03-11 12:55:57 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
