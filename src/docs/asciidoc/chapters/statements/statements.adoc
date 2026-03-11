@@ -345,7 +345,7 @@ NOTE: Jaybird currently does not perform statement caching
 
 The `CallableStatement` interface extends `PreparedStatement` with methods for executing and retrieving results from stored procedures.
 It was introduced in the JDBC specification to unify access to the stored procedures across different database systems.
-The main difference to `PreparedStatement` is that the procedure call is specified using the portable escape syntaxfootnote:[escape syntax in limited form also works for `Statement` and `PreparedStatement`]:
+The main difference to `PreparedStatement` is that the procedure call is specified using the portable escape syntaxfootnote:[The call escape syntax in limited form also works for `Statement` and `PreparedStatement`]:
 
 .Unified escape syntax for stored procedure execution
 ....
