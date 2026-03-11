@@ -740,7 +740,8 @@ Jaybird does not track the consumption of the server-side batch buffer.
 Attempting to execute a batch larger than this buffer will fail with error "`Internal buffer overflow - batch too big`" (`isc_batch_too_big`, `335545198`).
 The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size (a naive calculation says around 4000 rows, but this doesn't account for all overhead of a row).
 
-=== Escape Syntax
+[#stmt-escape-syntax]
+=== Escape syntax
 
 The escape syntax was introduced as a portable JDBC-specific syntax to represent parts of the SQL language that are (or were) usually implemented differently by database vendors.
 The escaped syntax is also used to define features that might not be implemented by the database server, but can have an appropriate implementation in the driver.
@@ -753,6 +754,7 @@ The JDBC specification defines escaped syntax for the following
 * calling stored procedures
 * escape characters for LIKE clauses
 
+[#stmt-escape-func]
 ==== Scalar Functions
 
 Escaped syntax for the scalar function call is defined as
@@ -764,7 +766,8 @@ Escaped syntax for the scalar function call is defined as
 For example, `{fn concat('Firebird', 'Java')}` results in the code `('Firebird'||'Java')` in the actual statement sent to the server.
 "<<jdbcescape>>" provides a list of supported scalar functions.
 
-==== Date and Time Literals
+[#stmt-escape-datetime]
+==== Date and time literals
 
 It is possible to include date and time literals in SQL statements.
 To guarantee that each database will interpret the literal identically, the JDBC specification provides the following syntax to specify them:
@@ -788,6 +791,7 @@ omitted):
 {ts 'yyyy-mm-dd hh:mm:ss.f...'}
 ....
 
+[#stmt-escape-oj]
 ==== Outer Joins
 
 Due to the various approaches to specify outer joins (for instance, the Oracle "(+)" syntax), the JDBC specification provides the following syntax:
@@ -811,13 +815,15 @@ SELECT * FROM {oj tableA a
     LEFT OUTER JOIN tableB b ON a.id = b.id}
 ....
 
-==== Stored Procedures
+[#stmt-escape-sp]
+==== Stored procedures
 
 The escaped syntax for stored procedures is described in details in section <<callable-statement>>.
 
-==== LIKE Escaped Characters
+[#stmt-escape-like-escape]
+==== LIKE escaped characters
 
-The percent sign ('```%```') and underscore ('```_```') characters are wild cards in the LIKE predicate of SQL.
+The percent sign ('```%```') and underscore ('```_```') characters are wildcards in the LIKE predicate of SQL.
 To interpret them literally they must be escaped using the escape character.
 The escaped syntax for this case identifies which character is used as an escape character:
 
