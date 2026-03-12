@@ -10854,18 +10854,6 @@ See <a href="#ref-allowtxstmts">Connection property allowTxStmts</a> for more in
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>extendedMetadata</code></p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em>).
-Boolean property.
-Enables support for retrieving extended metadata.
-Default is <code>true</code>.
-See <a href="#ref-extendedmetadata">Connection property extendedMetadata</a> for more information.</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><code>createDatabaseIfNotExist</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -10874,6 +10862,29 @@ Boolean property.
 Attempts to create a database if it does not exist.
 Default is <code>false</code>.
 See <a href="#ref-create-database-if-not-exist">Create database if it does not exist</a> for more information.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>escapeProcessing</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>JDBC standard property (<em class="since"><strong>Since:</strong> Jaybird 7</em>).
+Boolean property.
+Sets the default escape processing behaviour of <code>Statement</code> objects of a connection.
+Default is <code>true</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>extendedMetadata</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Jaybird specific property (<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em>).
+Boolean property.
+Enables support for retrieving extended metadata.
+Default is <code>true</code>.
+See <a href="#ref-extendedmetadata">Connection property extendedMetadata</a> for more information.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -14337,7 +14348,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-11 13:44:37 UTC
+Last updated 2026-03-12 12:01:25 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
