@@ -6,6 +6,9 @@ Jaybird has a number of connection properties that can be used to configure a co
 
 This appendix provides a list of most connection properties and a short explanation to each of them.
 The properties listed below are usable as JDBC connection properties.
+Some properties have one or more aliases.
+The first name is the primary and preferred property name;
+it's usually also the name of the property in the data source classes.
 
 The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false` (since:[Jaybird 5]), but also without a value, or with an empty value (which will both signify `true`).
 For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like `true` or `false`.
@@ -256,7 +259,7 @@ a|`useStandarUdf` +
 `use_standard_udf`
 |Jaybird specific property (until:[Jaybird 5]).
 Boolean property. 
-Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls. 
+Tells the JDBC driver to assume that the standard UDF library is registered in the database when converting escaped function calls.
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
 See <<jdbcescape>> for more information.
 
@@ -268,7 +271,7 @@ Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` ap
 a|`num_buffers` +
 `isc_dpb_num_buffers`
 |Number of database pages that will be cached.
-Overrides server or database default for this specific connection.
+Overrides server or database default for this specific connection if the server mode is Classic or SuperClassic.
 Use with care to avoid using an excessive amount of memory.
 
 a|`set_db_readonly` +
@@ -279,6 +282,7 @@ Set the database into read-only state.
 a|`set_db_sql_dialect` +
  `isc_dpb_set_db_sql_dialect`
 |Set the SQL dialect of the database.
+Use with care to avoid database issues.
 
 a|`set_db_charset` +
 `isc_dpb_set_db_charset`

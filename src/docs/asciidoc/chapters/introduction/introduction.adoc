@@ -159,7 +159,7 @@ For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JD
 
 General information about the Firebird database is available from the Firebird website (https://firebirdsql.org/[^]).
 
-For information about using SQL in Firebird, see the https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html[Firebird 5.0 Language Reference^] and other documents available from the https://firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird website.
+For information about using SQL in Firebird, see the https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html[Firebird 5.0 Language Reference^] and other documentation available from the https://firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird website.
 
 ==== Jaybird Support
 
@@ -167,10 +167,10 @@ Support for Jaybird is available through the following channels:
 
 * The https://groups.google.com/g/firebird-java[firebird-java Google Group^] and corresponding mailing list firebird-java@googlegroups.com
 +
-You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account).
+You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account *if* you confirm by email reply).
 Alternatively, you can join the group at the https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
-* On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^].
-* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^].
+* On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^]
+* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^]
 
 === Contributing
 

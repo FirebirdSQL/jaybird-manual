@@ -32,3 +32,6 @@ The implementation comes with a number of caveats:
 * the ARC4 encryption -- the default provided by Firebird -- is considered to be a weak (maybe even broken) cipher these days
 * the encryption cipher uses ARCFOUR with a 160 bits key, this means that the unlimited Cryptographic Jurisdiction Policy needs to be used (or at minimum a custom policy that allows ARCFOUR with 160 bits keys). See also FAQ entry https://firebirdsql.org/docs/drivers/java/faq.html#encryption-key-did-not-meet-algorithm-requirements-of-symmetricarc4-337248282[Encryption key did not meet algorithm requirements of Symmetric/Arc4 (337248282)^]
 ====
+
+since:[Jaybird 5] On Java 11 or higher, Jaybird 5 and higher also support the `ChaCha` wire encryption. +
+since:[Jaybird 6] Since Jaybird 6, the `ChaCha64` wire encryption is supported *if* the `chacha64-plugin` artifact and its Bouncy Castle dependency are on the classpath.

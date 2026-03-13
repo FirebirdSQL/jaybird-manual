@@ -3,14 +3,14 @@
 
 Firebird supports events.
 Events are a feature that provides asynchronous notification to the connected applications about events triggered by the database or other applications.
-Instead of requiring applications to reread the database tables to check for the changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
+Instead of requiring applications to reread the database tables to check for changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
 And even more, the event can be so specific that an application would need to reread only a limited set of records, possibly only one.
 
 This chapter describes the event mechanism in Firebird and the common usage scenarios.
 
 === Database events
 
-An _event_ is a message generated in a trigger, stored procedure or execute block that is delivered to subscribed applications.
+An _event_ is a message generated in PSQL code that is delivered to subscribed applications.
 The event is characterized only by a name which is used when the event is posted, therefore two different events must have two different names.
 The applications that subscribe for events are required to specify the event names of interest, no wildcards are allowed;
 and applications either provide a callback function that will be invoked in case of event or are required to poll for the posted events periodically.
@@ -21,7 +21,7 @@ The database engine will continue operating even if no application subscribes to
 
 It can also happen that multiple transactions will be committed before the events are delivered to the client system.
 But even in such case the callback function will be invoked only once, and only the event name and the count of the events will be passed as parameters.
-The same applies to periodical polling, the application will receive event names and counts of the events since last polling.
+The same applies to periodical polling, the application will receive event names and counts of the events since last poll.
 
 Internally, Firebird can be thought to store the subscription information in a table where columns contain event names, rows correspond to the subscribed applications and the cells contain the count of the particular event for a particular application.
 When an event is posted in trigger or stored procedure, Firebird checks the subscription information and increases the event count for the subscribed applications.
@@ -36,8 +36,8 @@ For such cases, applications should maintain a change tracking table where the I
 
 === Posting events
 
-Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the `POST_EVENT` command.
-It is possible to create a stored procedure with the sole purpose of posting events:
+Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-postevent[`POST_EVENT`^] statement.
+It is possible to create a stored procedure with the sole purpose of posting events (e.g. to notify events from an application):
 
 [source,sql]
 .Example of posting events from PSQL code
@@ -48,7 +48,7 @@ AS BEGIN
 END
 ----
 
-The `EXECUTE BLOCK` statement can be used to execute PSQL statements within DSQL code:
+The https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-dml-execblock.html#fblangref50-dml-execblock[`EXECUTE BLOCK`^] statement can be used to execute PSQL statements within DSQL code:
 
 [source,sql]
 .Using EXECUTE BLOCK to post events
@@ -56,8 +56,6 @@ The `EXECUTE BLOCK` statement can be used to execute PSQL statements within DSQL
 try (Statement stmt = connection.createStatement()) {
   stmt.execute(
       "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
-} finally {
-  stmt.close();
 }
 ----
 
@@ -88,7 +86,7 @@ a|`port` +
 |Path to the database.
 The path is specified for the remote host but must be absolute. __Required__.
 
-3+a|NOTE: since:[Jaybird 5] `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `databaseName`, which have been deprecated for removal in Jaybird 6.
+3+a|NOTE: since:[Jaybird 5] `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `database`, which have been deprecated for removal in Jaybird 6.
 
 |user
 |String

@@ -97,7 +97,8 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`BOOLEAN` (since:[Firebird 3.0])
 |`Boolean`
 
-|``JaybirdTypeCodes.DECFLOAT``footnote:[JDBC does not yet define a `java.sql.Types` code for `DECFLOAT`]
+a|`DECFLOAT` (since:[JDBC 4.5/Java 26]) +
+``JaybirdTypeCodes.DECFLOAT``footnote:[JDBC 4.4 and earlier do not yet define a `java.sql.Types` code for `DECFLOAT`]
 |`DECFLOAT` (since:[Firebird 4.0])
 |`java.math.BigDecimal`
 |===

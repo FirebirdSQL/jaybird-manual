@@ -3,7 +3,7 @@
 
 In addition to normal database connections, Firebird features server-wide connections.
 These are used to perform various administrative tasks in Firebird, e.g. database backup, maintenance, statistics.
-The set of API calls to perform such tasks are known under the name "`Services API`".
+The set of API calls to perform such tasks are known under the name "`Services API`" or "`Services Manager`".
 Additionally, client applications can use the Services API to get some limited information about the server environment and configuration.
 
 The actual execution of the Services API calls can be viewed as a tasks triggered from the client application to be executed on server.
@@ -478,7 +478,7 @@ This preserves the existing GUID and replication sequence of the original databa
 |boolean
 a|since:[Jaybird 4.0.7] Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
 One of the properties `keepRows` _or_ `keepDays` must also be set.
-When enabled, after performing a backup, old records from the `RDB$BACKUP_HISTORY` will be removed.
+When enabled, after performing a backup, old records from `RDB$BACKUP_HISTORY` will be removed.
 
 |keepDays
 |int
@@ -911,7 +911,7 @@ Its API may change in point releases, or it may be removed or replaced entirely 
 
 === Database statistics
 
-And last but not least is the `StatisticsManager` interface and corresponding implementation in the `FBStatisticsManager` class, which allow to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.
+The `StatisticsManager` interface and corresponding implementation in the `FBStatisticsManager` class can be used to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.
 
 The following methods provide the functionality equivalent to the _gstat_ command line tool, the output of the commands is written to the output stream specified in the `logger` property.
 It is the responsibility of the application to correctly parse the text output if needed.

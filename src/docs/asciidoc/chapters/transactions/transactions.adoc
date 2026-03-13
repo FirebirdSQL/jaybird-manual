@@ -68,7 +68,7 @@ since:[Jaybird 5] A number of finalizers have been removed in Jaybird 5, so tran
 
 === Auto-commit mode
 
-Each newly created connection by default has the auto-commit property enabled.
+Each newly created connection by default has auto-commit mode enabled by default.
 In other words, the duration of the transaction is limited by the duration of statement execution, or more formally -- the transaction is ended when the statement is completed.
 The point when statement execution is considered complete, is defined in the specification as:
 
@@ -198,7 +198,7 @@ And finally Firebird provides a `consistency` isolation level which in combinati
 A transaction will be prevented from starting if there is already another one with the overlapping sets of the reserved tables.
 This isolation level guarantees truly serial history of transaction execution.
 
-To satisfy the JDBC specification Jaybird provides a following default mapping of the JDBC transaction isolation levels into Firebird isolation levels:
+To satisfy the JDBC specification Jaybird provides the following default mapping of the JDBC transaction isolation levels to Firebird isolation levels:
 
 * TRANSACTION_READ_COMMITTED is mapped to `read_committed` isolation level in Firebird -- any changes made inside a transaction are not visible outside a transaction until the transaction is committed.
 A transaction in read-committed mode sees all committed changes made by other transactions even if that happened after start of the current transaction.
@@ -286,7 +286,7 @@ The behavior of Firebird transactions is internally controlled by the _Transacti
 * and, finally, the table reservations -- their names and reservation modes.
 
 The TPB is automatically generated depending on the transaction isolation level specified for the `java.sql.Connection` object.
-Additionally, if the connection is set to read-only mode, this is reflected in the TPB by appropriate constant.
+Additionally, if the connection is set to read-only mode, this is reflected in the TPB.
 
 Usually there is no need to manipulate the TPB directly.
 However, the lock resolution mode as well as table reservations cannot be specified by using the standard JDBC interfaces.
@@ -344,7 +344,7 @@ The `TpbItems.isc_tpb_read_consistency` uses the `READ COMMITTED READ CONSISTENC
 [WARNING]
 ====
 With default settings, Firebird 4.0 and higher will ignore `isc_tpb_rec_version` and `isc_tpb_no_rec_version`, and behave as if `isc_tpb_read_consistency` was specified.
-This is controlled through the `ReadConsistency` setting in `firebird.conf` or -- per database -- in `databases.conf`.
+This is controlled through the https://firebirdsql.org/file/documentation/html/en/refdocs/fbconf/firebird-configuration-reference.html#fbconf-read-consistency[`ReadConsistency`^] setting in `firebird.conf` or -- per database -- in `databases.conf`.
 ====
 
 [[transactions-read-only]]

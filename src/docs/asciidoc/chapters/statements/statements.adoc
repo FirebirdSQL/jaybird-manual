@@ -4,7 +4,7 @@
 After obtaining a connection, the next thing to do is to execute an SQL statement.
 The JDBC specification distinguishes three kinds of statements:
 
-1. Regular statements to execute constant SQL statements (statements without parameters),
+1. Regular statements to execute SQL statements without parameters,
 2. prepared statements to execute SQL statements with parameters,
 3. and callable statements to execute stored procedures.
 
@@ -62,9 +62,9 @@ Formally, this method is also used for statements with multiple results (result 
 These `execute` methods have several variants for additional features covered in the reference section <<ref-generatedkeys>>.
 
 A statement is closed by calling the `Statement.close()` method, or by using a try-with-resources which calls `close()` behind the scenes.
-After a close, the statement object is invalid and cannot be used anymore.
+After a close, the statement object is invalid and cannot be used any more.
 
-It is allowed to use the same statement object to execute different types of queries, one after another.
+It is allowed to use the same statement object to execute different statements, one by one.
 The code below contains a short example which first performs a select to find the ID of the user 'Joe Doe', and if the record is found, it enables his account.
 
 [WARNING]
@@ -141,10 +141,10 @@ try (Statement stmt = connection.createStatement()) {
 }
 ----
 
-According to the JDBC specification, the `getResultSet()` and `getUpdateCount()` methods can be only called once per result.
+According to the JDBC specification, the `getResultSet()` and `getUpdateCount()` methods should only be called once per result.
 
-until:[Jaybird 5.0.5] In Jaybird 5.0.4 and earlier, calling the `getResultset()` method a second time will throw an exception. +
-since:[Jaybird 5.0.5] Since Jaybird 5.0.5, calling `getResultSet()` multiple times will return the same instance of `ResultSet` it returned from the first call to `getResultSet()` or from `executeQuery()`.
+until:[Jaybird 5.0.5] In Jaybird 5.0.4 and earlier, calling the `getResultset()` method a second time throws an exception. +
+since:[Jaybird 5.0.5] Since Jaybird 5.0.5, calling `getResultSet()` multiple times returns the same instance of `ResultSet` it returned from the first call to `getResultSet()` or from `executeQuery()`.
 
 // TODO May need some revision to address retrieval of update counts after the result set
 
@@ -157,7 +157,7 @@ The previous examples requires us to discuss the statement object dynamics, its 
 When a Java application executes a statement, a lot more operations happen behind the scenes:
 
 1. A new statement object is allocated on the server.
-Firebird returns a 32-bit identifier of the allocated object, a statement handle, that must be used in next operations.
+Firebird returns an identifier of the allocated object, a statement handle, that must be used in next operations.
 2. An SQL statement is compiled into an executable form and is associated with the specified statement handle.
 3. Jaybird asks the server to describe the statement and Firebird returns information about the statement type and possible statement input parameters (we will discuss this with prepared statements) and output parameters, namely the result set columns.
 4. If no parameters are required for the statement, Jaybird tells Firebird to execute the statement, passing the statement handle to the corresponding method.
@@ -169,11 +169,11 @@ application that there is a result set for this operation, or `false`, if the st
 * If `Statement.executeUpdate()` was called, Jaybird asks Firebird to give the information about the number of affected rows.
 This method can be called only if the statement type tells that no result set can be returned by the statement.
 +
-When called for queries, an exception is thrown despite the fact that the statement was successfully executed on the server.
+When called for queries, an exception is thrown even though the statement was successfully executed on the server.
 * If `Statement.executeQuery()` was called and the statement type indicates that a result set can be returned, Jaybird constructs a `ResultSet` object and returns it to the application.
 No additional checks, like whether the result set contains rows, are performed, as that is the responsibility of the `ResultSet` object.
 +
-If this method is used for statements that do not return result set, an exception is thrown despite the fact that the statement was successfully executed on the server.
+If this method is used for statements that do not return result set, an exception is thrown even though the statement was successfully executed on the server.
 
 [WARNING]
 =====
@@ -181,7 +181,7 @@ The described behaviour may change in the future by throwing the exception *befo
 =====
 
 When an application does not need to know how many rows were modified, it should use the `execute()` method instead of `executeUpdate()`.
-This saves an additional call to the server to get the number of modified rows which can increase the performance in situations where network latency is comparable with the statement execution times.
+This saves an additional call to the server to get the number of modified rows which can increase performance in situations where network latency is comparable with the statement execution times.
 
 The `execute()` method is also the only method that can be used when the application does not know what kind of statement is being executed (for example, an application that allows the user to enter SQL statements to execute).
 
@@ -190,7 +190,7 @@ Two different possibilities exist: to close the result set object associated wit
 
 If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
 Jaybird only needs to compile a new statement on the existing statement handle before using it, in other words we can skip step 1 (allocating a new statement handle).
-This saves us one round-trip to the server over the network, which might improve the application performance.
+This saves us one round-trip to the server over the network, which might improve application performance.
 
 If we close the statement completely, the allocated statement handle is no longer usable.
 In theory, Jaybird could allocate a new statement handle, however the JDBC specification does not allow use of a `Statement` object after `close()` has been called.
@@ -202,24 +202,24 @@ Step 2 (compiling the SQL statement) in the previous section is probably the mos
 When Firebird server receives a "prepare statement" call, it parses the SQL statement and converts it into the executable form: BLR, or Binary Language Representation.
 BLR contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.
 
-When a statement is prepared, it holds the references to all database object definitions that are used during that statement execution.
+When a statement is prepared, it holds references to all database object definitions that are used during that statement execution.
 This mechanism preserves the database schema consistency, it saves the statement objects from "surprises" like accessing a database table that has been removed by another application.
 
-However, holding references to the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
-In other words, if two application are running and one is trying to modify the table, view, procedure or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 "`object is in use`".
+However, holding references to those database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing objects being upgraded.
+In other words, if two application are running and one is trying to modify a schema, table, view, procedure, function, package or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 "`__object is in use__`".
 
-To avoid this problem, it is strongly recommended to close the statement as soon as it is no longer needed.
-This invalidates the BLR and release all references to the database objects, making them available for the modification.
+To avoid this problem, it is strongly recommended to close a statement as soon as it is no longer needed.
+This invalidates the BLR and release all its references to database objects, making them available for modification.
 
 Special care should be taken when statement pooling is used.
 In that case, statements are not released even if the `close()` method is called.
-The only possibility to close the pooled statements is to close the pooled connections.
+Likely, the only possibility to close pooled statements is to close the pooled connections.
 Please check the documentation of your connection pool for more information.
 
 === The java.sql.PreparedStatement interface
 
 As we have seen, Jaybird already performs internal optimization when it comes to multiple statement execution -- it can reuse the allocated statement handle in subsequent calls.
-However, this improvement is very small and sometimes can even be negligible compared to the time needed to compile the SQL statement into the BLR form.
+However, this improvement is very small and sometimes can even be negligible compared to the time needed to compile a SQL statement into its BLR form.
 
 The `PreparedStatement` interface addresses such inefficiencies.
 An object that implements this interface represents a precompiled statement that can be executed multiple times.
@@ -365,6 +365,7 @@ The syntax above does not allow to specify the type of the parameter, therefore 
 
 Firebird stored procedures represent a piece of code written in the PSQL language that allows SQL statement execution at the native speed of the engine and provides capabilities for a limited execution flow control.
 The PSQL language is not a general purpose language, therefore its capabilities are limited when it comes to interaction with other systems.
+UDR-based procedures can be used instead for such purposes.
 
 Firebird stored procedures can be classified as follows:
 
@@ -374,7 +375,7 @@ These are stored procedures that do not contain the `RETURNS` keyword in their h
 These are stored procedures that contain the `RETURNS` keyword in their header, but do not contain the `SUSPEND` keyword in their procedure body.
 These procedures can be viewed as functions that return multiple values.
 These procedures are executed by using the `EXECUTE PROCEDURE` statement.
-* Procedures that return a result set, also called "`selectable stored procedures`".
+* Procedures that return a result set, also called "`selectable stored procedures`" (some other DBMSes call these "`table-valued functions`").
 These are stored procedures that contain the `RETURNS` keyword in their header and the `SUSPEND` keyword in their procedure body, usually within a loop.
 Selectable procedures are executed using the `"SELECT * FROM myProcedure(...)"` SQL statement.
 It is also allowed to use the `EXECUTE PROCEDURE` statement, however that might produce strange results, since for selectable procedures it is equivalent to executing a `SELECT` statement, but doing only one fetch after the select.
@@ -519,7 +520,6 @@ After executing the procedure call, we get the result from the appropriate gette
 
 It is worth mentioning that the stored procedure call preparation happens in the `CallableStatement.execute` method, and not in the `prepareCall` method of the `Connection` object.
 Reason for this deviation from the specification is that Firebird does not allow to prepare a procedure without specifying parameters and set them only after the statement is prepared.
-It seems that this part of the JDBC specification is modelled after the Oracle RDBMS and a workaround for this issue had to be delivered.
 Another side effect of this issue is, that it is allowed to intermix input and output parameters, for example in the "IN, OUT, IN, OUT, OUT, IN" order.
 Not that it makes much sense to do this, but it might help in some cases when porting applications from another database server.
 
@@ -648,8 +648,8 @@ try (Statement stmt = connection.createStatement()) {
 }
 ----
 
-The JDBC specification recommends to turn the auto-commit mode off to guarantee standard behavior for all databases.
-The specification explicitly states that behavior in auto-commit case is implementation defined.
+The JDBC specification recommends to turn auto-commit mode off (`false`) to guarantee standard behaviour for all databases.
+The specification explicitly states that behaviour in auto-commit case is implementation defined.
 
 In auto-commit mode, Jaybird executes a batch in a single transaction, i.e. the "all-or-nothing" principle.
 A new transaction is started before the batch execution and is committed if there were no exceptions during batch execution, or is rolled back if at least one batch command generated an error.
@@ -658,8 +658,8 @@ The `Statement.executeBatch` method submits the job to the database server.
 In case of successful execution of the complete batch, it returns an array of integers containing update counts for each of the commands.
 Possible values are:
 
-* 0 or positive value -- an update count for the corresponding update/DDL statement.
-* `Statement.SUCCESS_NO_INFO` -- driver does not have any information about the update count, but it knows that statement was executed successfully.
+* `0` or positive value -- an update count for the corresponding update/DDL statement.
+* `Statement.SUCCESS_NO_INFO` (`-2`) -- driver does not have any information about the update count, but it knows that statement was executed successfully.
 
 The `Statement.executeBatch` method closes the current result set if one is open.
 After execution, the batch is cleared.
@@ -728,7 +728,7 @@ As a workaround, use `execute procedure` or `++{call procedure_name(...)}++` fro
 * Requesting generated-keys will fall back to emulated behaviour as server-side batches do not support returning values produced by the `RETURNING` clause.
 * since:[Jaybird 5.0.5] Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.
 +
-In Jaybird 5.0.0 - 5.0.4 this results in error "`Statement used in batch must have parameters`" (`isc_batch_param`, `335545186`).
+In Jaybird 5.0.0 - 5.0.4 this results in error "`__Statement used in batch must have parameters__`" (`isc_batch_param`, `335545186`).
 The workaround is to connect with property `useServerBatch` set to `false`, or to not use a prepared statement, or not use batch execution, for parameterless statements.
 * Firebird 4.0 has additional facilities to send `BLOB` values as part of the batch update, but this is not yet used by Jaybird.
 
@@ -738,7 +738,7 @@ By default, Jaybird will request the maximum server-side batch buffer size (256M
 A smaller buffer can be requested with <<ref-batch-server-batch-buffer-size,connection property `serverBatchBufferSize`>> (value in bytes).
 Jaybird does not track the consumption of the server-side batch buffer.
 Attempting to execute a batch larger than this buffer will fail with error "`Internal buffer overflow - batch too big`" (`isc_batch_too_big`, `335545198`).
-The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size (a naive calculation says around 4000 rows, but this doesn't account for all overhead of a row).
+The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size of -- for Firebird 5.0 and earlier -- 64 KiB (a naive calculation says around 4000 rows, but this doesn't account for all overhead of a row).
 
 [#stmt-escape-syntax]
 === Escape syntax
@@ -748,11 +748,12 @@ The escaped syntax is also used to define features that might not be implemented
 
 The JDBC specification defines escaped syntax for the following
 
-* scalar functions
-* date and time literals
-* outer joins
-* calling stored procedures
-* escape characters for LIKE clauses
+* <<stmt-escape-func>>
+* <<stmt-escape-datetime>>
+* <<stmt-escape-oj>>
+* <<stmt-escape-sp,Calling stored procedures>>
+* <<stmt-escape-like-escape>>
+* <<stmt-escape-disable-proc>>
 
 [#stmt-escape-func]
 ==== Scalar Functions
@@ -821,7 +822,7 @@ SELECT * FROM {oj tableA a
 The escaped syntax for stored procedures is described in details in section <<callable-statement>>.
 
 [#stmt-escape-like-escape]
-==== LIKE escaped characters
+==== LIKE escape character
 
 The percent sign ('```%```') and underscore ('```_```') characters are wildcards in the LIKE predicate of SQL.
 To interpret them literally they must be escaped using the escape character.
@@ -926,4 +927,4 @@ select {fn EXP(2)} from SOME_TABLE
 ----
 
 Alternatively, consider disabling escape processing for the `Statement` using https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Statement.html#setEscapeProcessing(boolean)[`Statement.setEscapeProcessing(boolean)`^] (not available for `PreparedStatement` and `CallableStatement`).
-// TODO Add link to connection property `escapeProcessing` once https://github.com/FirebirdSQL/jaybird/issues/930 is done
+Alternatively, starting with Jaybird 7, escape processing can be disabled by default by setting connection property `escapeProcessing` to `false` (also works for `PreparedStatement` and `CallableStatement`).

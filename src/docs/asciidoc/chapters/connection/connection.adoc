@@ -116,7 +116,7 @@ On Unix platforms the path must include the root, as the path is otherwise inter
 Having to include the root has the effect that a database in `/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the connection string: `jdbc:firebird://localhost//var/firebird/employee.fdb`.
 
 It is possible to specify a relative path, but as this depends on the server configuration, this may be confusing or easily lead to errors.
-We suggest not to use relative paths, and instead use an alias.
+We recommend to not use a relative path, and instead use an alias.
 
 [[connection-drivermanager-props]]
 ==== Specifying extended properties
@@ -149,7 +149,7 @@ public class HelloServerWithEncoding {
 ----
 
 The `user` and `password` properties are defined in JDBC.
-All other property names -- like `encoding` here -- are driver-specific.
+Nearly all other property names -- like `encoding` here -- are driver-specific.
 
 Additional properties, for example the SQL role for the connection can be added to the `props` object.
 The list of properties available in Jaybird can be found in <<connectionproperties>>.
@@ -194,7 +194,7 @@ This can be used to include otherwise unsupported characters in a connection pro
 * `{plus}` escaped as `%2B`
 +
 A {plus} in the query part means _space_ (0x20), so occurrences of `{plus}` (_plus_) need to be escaped;
-make sure to do this for _base64_ encoded values of `dbCryptConfig`, or better yet use the _base64url_ encoding instead.
+make sure to do this for _base64_ encoded values of <<ref-dbcrypt,`dbCryptConfig`>>, or better yet use _base64url_ encoding instead.
 * `%` escaped as `%25`.
 +
 A `%` in the query part introduces an escape, so occurrences of `%` (_percent_) need to be escaped.
@@ -322,10 +322,10 @@ In fact, use of JNDI is extremely uncommon these days.
 === Driver types
 
 As mentioned in the section <<Jaybird Architecture>>, Jaybird supports multiple implementations of the GDS API.
-The default Jaybird distribution contains two main categories of the implementations: the pure Java implementation of the Firebird wire protocol, and a JNA proxy that can use a Firebird `fbclient` library.
+The default Jaybird distribution contains two main categories of the implementations: the pure Java implementation of the Firebird wire protocol, and a https://github.com/java-native-access/jna[JNA (Java Native Access)^] proxy that can use a Firebird `fbclient` library.
 
 The next sections provide a description of these types and their configuration with the corresponding JDBC URLs that should be used to obtain the connection of desired type.
-The type of the JDBC driver for the `javax.sql.DataSource` is configured via a corresponding property.
+The type of the JDBC driver for the `javax.sql.DataSource` is configured via the property `type` (`setType(String)`).
 
 [[driver-pure-java]]
 ==== PURE_JAVA type
@@ -472,7 +472,7 @@ jdbc:firebird:native:employee
 ===== Maven dependency for native client
 
 When using Jaybird 3 and later, you can use a library to provide the Firebird client library for the `native` and `local` protocol.
-For Windows, Linux, and macOS, you can add the `org.firebirdsql.jdbc:fbclient` dependency on your classpath.
+For Windows, Linux, and macOS, you can add the https://github.com/mrotteveel/jaybird-fbclient[`org.firebirdsql.jdbc:fbclient`^] dependency on your classpath.
 This dependency does not support the `embedded` protocol.
 
 .Native libraries for all supported OS and architectures
@@ -551,7 +551,7 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 since:[Jaybird 6] Embedded connections require the `jaybird-native` artifact on the classpath.
 
 The Embedded server JDBC driver is a Type 2 JDBC driver that, rather than using the Firebird client library, loads the Firebird embedded server library instead.
-This is the highest performance type of JDBC driver for accessing local databases, as the Java code accesses the database file directly.
+This is the highest performance type of JDBC driver for accessing local databases, as the Java application accesses the database file directly.
 
 The following JDBC URL syntax is supported:
 

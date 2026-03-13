@@ -36,6 +36,8 @@ This information can be specified in connection properties, or globally using th
 Process name to send to Firebird
 `org.firebirdsql.jdbc.pid`::
 PID to send to Firebird (must be a valid integer)
++
+Ignored for native and embedded connections
 
 The property values are read for each connect, so the value can be changed at any time.
 
