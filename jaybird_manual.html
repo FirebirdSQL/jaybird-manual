@@ -873,7 +873,7 @@ A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub
 <p>General information about the Firebird database is available from the Firebird website (<a href="https://firebirdsql.org/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/</a>).</p>
 </div>
 <div class="paragraph">
-<p>For information about using SQL in Firebird, see the <a href="https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html" target="_blank" rel="noopener">Firebird 5.0 Language Reference</a> and other documents available from the <a href="https://firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird website.</p>
+<p>For information about using SQL in Firebird, see the <a href="https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html" target="_blank" rel="noopener">Firebird 5.0 Language Reference</a> and other documentation available from the <a href="https://firebirdsql.org/en/reference-manuals/" target="_blank" rel="noopener">Reference Manuals</a> section of the Firebird website.</p>
 </div>
 </div>
 <div class="sect3">
@@ -886,15 +886,15 @@ A subset of the tests are automatically run&#8201;&#8212;&#8201;through a GitHub
 <li>
 <p>The <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and corresponding mailing list <a href="mailto:firebird-java@googlegroups.com">firebird-java@googlegroups.com</a></p>
 <div class="paragraph">
-<p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java+subscribe@googlegroups.com">firebird-java+subscribe@googlegroups.com</a> (this does not require a Google account).
+<p>You can subscribe to the mailing list by sending an email to <a href="mailto:firebird-java+subscribe@googlegroups.com">firebird-java+subscribe@googlegroups.com</a> (this does not require a Google account <strong>if</strong> you confirm by email reply).
 Alternatively, you can join the group at the <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> (this requires a Google account).</p>
 </div>
 </li>
 <li>
-<p>On <a href="https://firebirdsql.org/docs/drivers/java/faq.html" target="_blank" rel="noopener">Jaybird Frequently Asked Questions</a>.</p>
+<p>On <a href="https://firebirdsql.org/docs/drivers/java/faq.html" target="_blank" rel="noopener">Jaybird Frequently Asked Questions</a></p>
 </li>
 <li>
-<p>On <a href="https://github.com/FirebirdSQL/jaybird/wiki/" target="_blank" rel="noopener">Jaybird wiki</a>.</p>
+<p>On <a href="https://github.com/FirebirdSQL/jaybird/wiki/" target="_blank" rel="noopener">Jaybird wiki</a></p>
 </li>
 </ul>
 </div>
@@ -1112,7 +1112,7 @@ Having to include the root has the effect that a database in <code>/var/firebird
 </div>
 <div class="paragraph">
 <p>It is possible to specify a relative path, but as this depends on the server configuration, this may be confusing or easily lead to errors.
-We suggest not to use relative paths, and instead use an alias.</p>
+We recommend to not use a relative path, and instead use an alias.</p>
 </div>
 <div class="sect3">
 <h4 id="connection-drivermanager-props"><a class="anchor" href="#connection-drivermanager-props"></a>2.1.1. Specifying extended properties</h4>
@@ -1146,7 +1146,7 @@ public class HelloServerWithEncoding {
 </div>
 <div class="paragraph">
 <p>The <code>user</code> and <code>password</code> properties are defined in JDBC.
-All other property names&#8201;&#8212;&#8201;like <code>encoding</code> here&#8201;&#8212;&#8201;are driver-specific.</p>
+Nearly all other property names&#8201;&#8212;&#8201;like <code>encoding</code> here&#8201;&#8212;&#8201;are driver-specific.</p>
 </div>
 <div class="paragraph">
 <p>Additional properties, for example the SQL role for the connection can be added to the <code>props</code> object.
@@ -1204,7 +1204,7 @@ Connection connection = DriverManager.getConnection(
 <p><code>&#43;</code> escaped as <code>%2B</code></p>
 <div class="paragraph">
 <p>A &#43; in the query part means <em>space</em> (0x20), so occurrences of <code>&#43;</code> (<em>plus</em>) need to be escaped;
-make sure to do this for <em>base64</em> encoded values of <code>dbCryptConfig</code>, or better yet use the <em>base64url</em> encoding instead.</p>
+make sure to do this for <em>base64</em> encoded values of <a href="#ref-dbcrypt"><code>dbCryptConfig</code></a>, or better yet use <em>base64url</em> encoding instead.</p>
 </div>
 </li>
 <li>
@@ -1373,11 +1373,11 @@ If you find yourself copying this code, rethink what you&#8217;re doing.</p>
 <h3 id="driver-types"><a class="anchor" href="#driver-types"></a>2.2. Driver types</h3>
 <div class="paragraph">
 <p>As mentioned in the section <a href="#_jaybird_architecture">Jaybird Architecture</a>, Jaybird supports multiple implementations of the GDS API.
-The default Jaybird distribution contains two main categories of the implementations: the pure Java implementation of the Firebird wire protocol, and a JNA proxy that can use a Firebird <code>fbclient</code> library.</p>
+The default Jaybird distribution contains two main categories of the implementations: the pure Java implementation of the Firebird wire protocol, and a <a href="https://github.com/java-native-access/jna" target="_blank" rel="noopener">JNA (Java Native Access)</a> proxy that can use a Firebird <code>fbclient</code> library.</p>
 </div>
 <div class="paragraph">
 <p>The next sections provide a description of these types and their configuration with the corresponding JDBC URLs that should be used to obtain the connection of desired type.
-The type of the JDBC driver for the <code>javax.sql.DataSource</code> is configured via a corresponding property.</p>
+The type of the JDBC driver for the <code>javax.sql.DataSource</code> is configured via the property <code>type</code> (<code>setType(String)</code>).</p>
 </div>
 <div class="sect3">
 <h4 id="driver-pure-java"><a class="anchor" href="#driver-pure-java"></a>2.2.1. PURE_JAVA type</h4>
@@ -1560,7 +1560,7 @@ jdbc:firebird:native:employee</pre>
 <h5 id="driver-native-maven"><a class="anchor" href="#driver-native-maven"></a>Maven dependency for native client</h5>
 <div class="paragraph">
 <p>When using Jaybird 3 and later, you can use a library to provide the Firebird client library for the <code>native</code> and <code>local</code> protocol.
-For Windows, Linux, and macOS, you can add the <code>org.firebirdsql.jdbc:fbclient</code> dependency on your classpath.
+For Windows, Linux, and macOS, you can add the <a href="https://github.com/mrotteveel/jaybird-fbclient" target="_blank" rel="noopener"><code>org.firebirdsql.jdbc:fbclient</code></a> dependency on your classpath.
 This dependency does not support the <code>embedded</code> protocol.</p>
 </div>
 <div class="listingblock">
@@ -1657,7 +1657,7 @@ For example, when using the Type 2 JDBC driver with a web or application server,
 </div>
 <div class="paragraph">
 <p>The Embedded server JDBC driver is a Type 2 JDBC driver that, rather than using the Firebird client library, loads the Firebird embedded server library instead.
-This is the highest performance type of JDBC driver for accessing local databases, as the Java code accesses the database file directly.</p>
+This is the highest performance type of JDBC driver for accessing local databases, as the Java application accesses the database file directly.</p>
 </div>
 <div class="paragraph">
 <p>The following JDBC URL syntax is supported:</p>
@@ -2642,7 +2642,7 @@ The JDBC specification distinguishes three kinds of statements:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Regular statements to execute constant SQL statements (statements without parameters),</p>
+<p>Regular statements to execute SQL statements without parameters,</p>
 </li>
 <li>
 <p>prepared statements to execute SQL statements with parameters,</p>
@@ -2741,10 +2741,10 @@ You can use <code>Statement.getResultSet()</code> to get the result of the execu
 </div>
 <div class="paragraph">
 <p>A statement is closed by calling the <code>Statement.close()</code> method, or by using a try-with-resources which calls <code>close()</code> behind the scenes.
-After a close, the statement object is invalid and cannot be used anymore.</p>
+After a close, the statement object is invalid and cannot be used any more.</p>
 </div>
 <div class="paragraph">
-<p>It is allowed to use the same statement object to execute different types of queries, one after another.
+<p>It is allowed to use the same statement object to execute different statements, one by one.
 The code below contains a short example which first performs a select to find the ID of the user 'Joe Doe', and if the record is found, it enables his account.</p>
 </div>
 <div class="admonitionblock warning">
@@ -2845,11 +2845,11 @@ The next example shows the creation of database tables using this method.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>According to the JDBC specification, the <code>getResultSet()</code> and <code>getUpdateCount()</code> methods can be only called once per result.</p>
+<p>According to the JDBC specification, the <code>getResultSet()</code> and <code>getUpdateCount()</code> methods should only be called once per result.</p>
 </div>
 <div class="paragraph">
-<p><em class="until"><strong>Removed in:</strong> Jaybird 5.0.5</em> In Jaybird 5.0.4 and earlier, calling the <code>getResultset()</code> method a second time will throw an exception.<br>
-<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Since Jaybird 5.0.5, calling <code>getResultSet()</code> multiple times will return the same instance of <code>ResultSet</code> it returned from the first call to <code>getResultSet()</code> or from <code>executeQuery()</code>.</p>
+<p><em class="until"><strong>Removed in:</strong> Jaybird 5.0.5</em> In Jaybird 5.0.4 and earlier, calling the <code>getResultset()</code> method a second time throws an exception.<br>
+<em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Since Jaybird 5.0.5, calling <code>getResultSet()</code> multiple times returns the same instance of <code>ResultSet</code> it returned from the first call to <code>getResultSet()</code> or from <code>executeQuery()</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2866,7 +2866,7 @@ The next example shows the creation of database tables using this method.</p>
 <ol class="arabic">
 <li>
 <p>A new statement object is allocated on the server.
-Firebird returns a 32-bit identifier of the allocated object, a statement handle, that must be used in next operations.</p>
+Firebird returns an identifier of the allocated object, a statement handle, that must be used in next operations.</p>
 </li>
 <li>
 <p>An SQL statement is compiled into an executable form and is associated with the specified statement handle.</p>
@@ -2892,14 +2892,14 @@ application that there is a result set for this operation, or <code>false</code>
 <p>If <code>Statement.executeUpdate()</code> was called, Jaybird asks Firebird to give the information about the number of affected rows.
 This method can be called only if the statement type tells that no result set can be returned by the statement.</p>
 <div class="paragraph">
-<p>When called for queries, an exception is thrown despite the fact that the statement was successfully executed on the server.</p>
+<p>When called for queries, an exception is thrown even though the statement was successfully executed on the server.</p>
 </div>
 </li>
 <li>
 <p>If <code>Statement.executeQuery()</code> was called and the statement type indicates that a result set can be returned, Jaybird constructs a <code>ResultSet</code> object and returns it to the application.
 No additional checks, like whether the result set contains rows, are performed, as that is the responsibility of the <code>ResultSet</code> object.</p>
 <div class="paragraph">
-<p>If this method is used for statements that do not return result set, an exception is thrown despite the fact that the statement was successfully executed on the server.</p>
+<p>If this method is used for statements that do not return result set, an exception is thrown even though the statement was successfully executed on the server.</p>
 </div>
 </li>
 </ul>
@@ -2920,7 +2920,7 @@ No additional checks, like whether the result set contains rows, are performed, 
 </div>
 <div class="paragraph">
 <p>When an application does not need to know how many rows were modified, it should use the <code>execute()</code> method instead of <code>executeUpdate()</code>.
-This saves an additional call to the server to get the number of modified rows which can increase the performance in situations where network latency is comparable with the statement execution times.</p>
+This saves an additional call to the server to get the number of modified rows which can increase performance in situations where network latency is comparable with the statement execution times.</p>
 </div>
 <div class="paragraph">
 <p>The <code>execute()</code> method is also the only method that can be used when the application does not know what kind of statement is being executed (for example, an application that allows the user to enter SQL statements to execute).</p>
@@ -2932,7 +2932,7 @@ Two different possibilities exist: to close the result set object associated wit
 <div class="paragraph">
 <p>If, for example, we want to execute another query, it is not necessary to completely release the allocated statement.
 Jaybird only needs to compile a new statement on the existing statement handle before using it, in other words we can skip step 1 (allocating a new statement handle).
-This saves us one round-trip to the server over the network, which might improve the application performance.</p>
+This saves us one round-trip to the server over the network, which might improve application performance.</p>
 </div>
 <div class="paragraph">
 <p>If we close the statement completely, the allocated statement handle is no longer usable.
@@ -2949,21 +2949,21 @@ In theory, Jaybird could allocate a new statement handle, however the JDBC speci
 BLR contains low-level commands to traverse the database tables, conditions that are used to filter records, defines the order in which records are accessed, indices that are used to improve the performance, etc.</p>
 </div>
 <div class="paragraph">
-<p>When a statement is prepared, it holds the references to all database object definitions that are used during that statement execution.
+<p>When a statement is prepared, it holds references to all database object definitions that are used during that statement execution.
 This mechanism preserves the database schema consistency, it saves the statement objects from "surprises" like accessing a database table that has been removed by another application.</p>
 </div>
 <div class="paragraph">
-<p>However, holding references to the database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing the objects being upgraded.
-In other words, if two application are running and one is trying to modify the table, view, procedure or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 &#8220;object is in use&#8221;.</p>
+<p>However, holding references to those database objects has one very unpleasant effect: it is not possible to upgrade the database schema, if there are active connections to the database with open statements referencing objects being upgraded.
+In other words, if two application are running and one is trying to modify a schema, table, view, procedure, function, package or trigger definition while another one is accessing those objects, the first application will receive an error 335544453 &#8220;<em>object is in use</em>&#8221;.</p>
 </div>
 <div class="paragraph">
-<p>To avoid this problem, it is strongly recommended to close the statement as soon as it is no longer needed.
-This invalidates the BLR and release all references to the database objects, making them available for the modification.</p>
+<p>To avoid this problem, it is strongly recommended to close a statement as soon as it is no longer needed.
+This invalidates the BLR and release all its references to database objects, making them available for modification.</p>
 </div>
 <div class="paragraph">
 <p>Special care should be taken when statement pooling is used.
 In that case, statements are not released even if the <code>close()</code> method is called.
-The only possibility to close the pooled statements is to close the pooled connections.
+Likely, the only possibility to close pooled statements is to close the pooled connections.
 Please check the documentation of your connection pool for more information.</p>
 </div>
 </div>
@@ -2972,7 +2972,7 @@ Please check the documentation of your connection pool for more information.</p>
 <h3 id="_the_java_sql_preparedstatement_interface"><a class="anchor" href="#_the_java_sql_preparedstatement_interface"></a>4.3. The java.sql.PreparedStatement interface</h3>
 <div class="paragraph">
 <p>As we have seen, Jaybird already performs internal optimization when it comes to multiple statement execution&#8201;&#8212;&#8201;it can reuse the allocated statement handle in subsequent calls.
-However, this improvement is very small and sometimes can even be negligible compared to the time needed to compile the SQL statement into the BLR form.</p>
+However, this improvement is very small and sometimes can even be negligible compared to the time needed to compile a SQL statement into its BLR form.</p>
 </div>
 <div class="paragraph">
 <p>The <code>PreparedStatement</code> interface addresses such inefficiencies.
@@ -3147,7 +3147,8 @@ The syntax above does not allow to specify the type of the parameter, therefore 
 <h4 id="_firebird_stored_procedures"><a class="anchor" href="#_firebird_stored_procedures"></a>4.4.1. Firebird stored procedures</h4>
 <div class="paragraph">
 <p>Firebird stored procedures represent a piece of code written in the PSQL language that allows SQL statement execution at the native speed of the engine and provides capabilities for a limited execution flow control.
-The PSQL language is not a general purpose language, therefore its capabilities are limited when it comes to interaction with other systems.</p>
+The PSQL language is not a general purpose language, therefore its capabilities are limited when it comes to interaction with other systems.
+UDR-based procedures can be used instead for such purposes.</p>
 </div>
 <div class="paragraph">
 <p>Firebird stored procedures can be classified as follows:</p>
@@ -3165,7 +3166,7 @@ These procedures can be viewed as functions that return multiple values.
 These procedures are executed by using the <code>EXECUTE PROCEDURE</code> statement.</p>
 </li>
 <li>
-<p>Procedures that return a result set, also called &#8220;selectable stored procedures&#8221;.
+<p>Procedures that return a result set, also called &#8220;selectable stored procedures&#8221; (some other DBMSes call these &#8220;table-valued functions&#8221;).
 These are stored procedures that contain the <code>RETURNS</code> keyword in their header and the <code>SUSPEND</code> keyword in their procedure body, usually within a loop.
 Selectable procedures are executed using the <code>"SELECT * FROM myProcedure(&#8230;&#8203;)"</code> SQL statement.
 It is also allowed to use the <code>EXECUTE PROCEDURE</code> statement, however that might produce strange results, since for selectable procedures it is equivalent to executing a <code>SELECT</code> statement, but doing only one fetch after the select.
@@ -3321,7 +3322,6 @@ After executing the procedure call, we get the result from the appropriate gette
 <div class="paragraph">
 <p>It is worth mentioning that the stored procedure call preparation happens in the <code>CallableStatement.execute</code> method, and not in the <code>prepareCall</code> method of the <code>Connection</code> object.
 Reason for this deviation from the specification is that Firebird does not allow to prepare a procedure without specifying parameters and set them only after the statement is prepared.
-It seems that this part of the JDBC specification is modelled after the Oracle RDBMS and a workaround for this issue had to be delivered.
 Another side effect of this issue is, that it is allowed to intermix input and output parameters, for example in the "IN, OUT, IN, OUT, OUT, IN" order.
 Not that it makes much sense to do this, but it might help in some cases when porting applications from another database server.</p>
 </div>
@@ -3488,8 +3488,8 @@ Adding a statement that returns a result set is an error.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The JDBC specification recommends to turn the auto-commit mode off to guarantee standard behavior for all databases.
-The specification explicitly states that behavior in auto-commit case is implementation defined.</p>
+<p>The JDBC specification recommends to turn auto-commit mode off (<code>false</code>) to guarantee standard behaviour for all databases.
+The specification explicitly states that behaviour in auto-commit case is implementation defined.</p>
 </div>
 <div class="paragraph">
 <p>In auto-commit mode, Jaybird executes a batch in a single transaction, i.e. the "all-or-nothing" principle.
@@ -3503,10 +3503,10 @@ Possible values are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>0 or positive value&#8201;&#8212;&#8201;an update count for the corresponding update/DDL statement.</p>
+<p><code>0</code> or positive value&#8201;&#8212;&#8201;an update count for the corresponding update/DDL statement.</p>
 </li>
 <li>
-<p><code>Statement.SUCCESS_NO_INFO</code>&#8201;&#8212;&#8201;driver does not have any information about the update count, but it knows that statement was executed successfully.</p>
+<p><code>Statement.SUCCESS_NO_INFO</code> (<code>-2</code>)&#8201;&#8212;&#8201;driver does not have any information about the update count, but it knows that statement was executed successfully.</p>
 </li>
 </ul>
 </div>
@@ -3600,7 +3600,7 @@ As a workaround, use <code>execute procedure</code> or <code>{call procedure_nam
 <li>
 <p><em class="since"><strong>Since:</strong> Jaybird 5.0.5</em> Using parameterless statements will fall back to emulated behaviour as server-side batches do not support executing parameterless statements.</p>
 <div class="paragraph">
-<p>In Jaybird 5.0.0 - 5.0.4 this results in error &#8220;Statement used in batch must have parameters&#8221; (<code>isc_batch_param</code>, <code>335545186</code>).
+<p>In Jaybird 5.0.0 - 5.0.4 this results in error &#8220;<em>Statement used in batch must have parameters</em>&#8221; (<code>isc_batch_param</code>, <code>335545186</code>).
 The workaround is to connect with property <code>useServerBatch</code> set to <code>false</code>, or to not use a prepared statement, or not use batch execution, for parameterless statements.</p>
 </div>
 </li>
@@ -3617,7 +3617,7 @@ The workaround is to connect with property <code>useServerBatch</code> set to <c
 A smaller buffer can be requested with <a href="#ref-batch-server-batch-buffer-size">connection property <code>serverBatchBufferSize</code></a> (value in bytes).
 Jaybird does not track the consumption of the server-side batch buffer.
 Attempting to execute a batch larger than this buffer will fail with error &#8220;Internal buffer overflow - batch too big&#8221; (<code>isc_batch_too_big</code>, <code>335545198</code>).
-The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size (a naive calculation says around 4000 rows, but this doesn&#8217;t account for all overhead of a row).</p>
+The 256MB buffer used with Jaybird defaults on Firebird 4.0 is sufficient to accommodate several thousand rows at maximum row size of&#8201;&#8212;&#8201;for Firebird 5.0 and earlier&#8201;&#8212;&#8201;64 KiB (a naive calculation says around 4000 rows, but this doesn&#8217;t account for all overhead of a row).</p>
 </div>
 </div>
 </div>
@@ -3633,19 +3633,22 @@ The escaped syntax is also used to define features that might not be implemented
 <div class="ulist">
 <ul>
 <li>
-<p>scalar functions</p>
+<p><a href="#stmt-escape-func">Scalar Functions</a></p>
 </li>
 <li>
-<p>date and time literals</p>
+<p><a href="#stmt-escape-datetime">Date and time literals</a></p>
 </li>
 <li>
-<p>outer joins</p>
+<p><a href="#stmt-escape-oj">Outer Joins</a></p>
 </li>
 <li>
-<p>calling stored procedures</p>
+<p><a href="#stmt-escape-sp">Calling stored procedures</a></p>
 </li>
 <li>
-<p>escape characters for LIKE clauses</p>
+<p><a href="#stmt-escape-like-escape">LIKE escape character</a></p>
+</li>
+<li>
+<p><a href="#stmt-escape-disable-proc">&#8220;Disable escape processing&#8221; escape</a></p>
 </li>
 </ul>
 </div>
@@ -3733,7 +3736,7 @@ omitted):</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="stmt-escape-like-escape"><a class="anchor" href="#stmt-escape-like-escape"></a>4.6.5. LIKE escaped characters</h4>
+<h4 id="stmt-escape-like-escape"><a class="anchor" href="#stmt-escape-like-escape"></a>4.6.5. LIKE escape character</h4>
 <div class="paragraph">
 <p>The percent sign (&#8216;<code>%</code>&#8217;) and underscore (&#8216;<code>_</code>&#8217;) characters are wildcards in the LIKE predicate of SQL.
 To interpret them literally they must be escaped using the escape character.
@@ -3868,7 +3871,8 @@ select {fn EXP(2)} from SOME_TABLE</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Alternatively, consider disabling escape processing for the <code>Statement</code> using <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Statement.html#setEscapeProcessing(boolean)" target="_blank" rel="noopener"><code>Statement.setEscapeProcessing(boolean)</code></a> (not available for <code>PreparedStatement</code> and <code>CallableStatement</code>).</p>
+<p>Alternatively, consider disabling escape processing for the <code>Statement</code> using <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Statement.html#setEscapeProcessing(boolean)" target="_blank" rel="noopener"><code>Statement.setEscapeProcessing(boolean)</code></a> (not available for <code>PreparedStatement</code> and <code>CallableStatement</code>).
+Alternatively, starting with Jaybird 7, escape processing can be disabled by default by setting connection property <code>escapeProcessing</code> to <code>false</code> (also works for <code>PreparedStatement</code> and <code>CallableStatement</code>).</p>
 </div>
 </div>
 </div>
@@ -3893,6 +3897,9 @@ select {fn EXP(2)} from SOME_TABLE</pre>
 <p><code>TYPE_FORWARD_ONLY</code>&#8201;&#8212;&#8201;the result set is not scrollable, the cursor can only move forward.
 When the <code>TRANSACTION_READ_COMMITTED</code> isolation level is used, the result set will return all rows that are satisfying the search condition at the moment of fetch (which&#8201;&#8212;&#8201;simplified&#8201;&#8212;&#8201;will be every <em>fetch size</em> calls to <code>ResultSet.next()</code>).
 In other cases, the result set will return only rows that were visible at the moment of the transaction start.</p>
+<div class="paragraph">
+<p>This is the default result set type.</p>
+</div>
 </li>
 <li>
 <p><code>TYPE_SCROLL_INSENSITIVE</code>&#8201;&#8212;&#8201;the result set is scrollable, the cursor can move back and forth, can be positioned on the specified row.
@@ -3905,7 +3912,7 @@ Jaybird allows an application to ask for this type of result set, however in com
 </ul>
 </div>
 <div class="paragraph">
-<p>Due to a missing support of scrollable cursors in Firebird 4.0 and earlier, support for scrollable results set (<code>TYPE_SCROLL_INSENSITIVE</code> result set type) is implemented by fetching the complete result set to the client.
+<p>Due to missing support for scrollable cursors in Firebird 4.0 and earlier, support for scrollable results set (<code>TYPE_SCROLL_INSENSITIVE</code> result set type) is implemented by fetching the complete result set to the client.
 Scrolling happens in memory on the client.
 This can have adverse effect on the system memory usage and performance when the result set is large.</p>
 </div>
@@ -3915,7 +3922,7 @@ This can have adverse effect on the system memory usage and performance when the
 </div>
 <div class="paragraph">
 <p>Starting with Firebird 5.0, server-side scrollable cursors are supported.
-Jaybird 5 introduced support for scrolling non-holdable result set when the connection property <code>scrollableCursor</code> is set to value <code>SERVER</code>, and the connection is a pure Java connection (not native or embedded).
+Jaybird 5 introduced support for scrollable non-holdable result set when the connection property <code>scrollableCursor</code> is set to value <code>SERVER</code>, and the connection is a pure Java connection (not native or embedded).
 A future version may enable this behaviour by default.</p>
 </div>
 </div>
@@ -3941,7 +3948,7 @@ These conditions are:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>the SELECT statement that generated the result set references only one table;</p>
+<p>the SELECT statement references only one table;</p>
 </li>
 <li>
 <p>all columns that are not referenced by the SELECT statement allow <code>NULL</code> values, otherwise it won&#8217;t be possible to insert new rows;</p>
@@ -3968,14 +3975,14 @@ These conditions are:</p>
 <p>When an application calls <code>Connection.commit()</code>, the Firebird server closes all open result sets.
 It is not possible to tell the server to keep a result set open over commit unless "commit retaining" mode is used.
 This mode is global for the complete connection and is not suitable for holdability control on a statement level.
-Use of "commit retaining" mode is believed to have an undesired side effect for read-write transactions as it inhibits garbage collection.
+Use of "commit retaining" mode als has an undesirable side effect for read-write transactions as it inhibits garbage collection.
 Because of these reasons "commit retaining" is not used in Jaybird during normal execution.
 Applications can commit the transaction keeping the result sets open by executing a &#8220;COMMIT RETAIN&#8221; SQL statement.</p>
 </div>
 <div class="paragraph">
 <p>To support holdable result sets, Jaybird will cache all rows locally.<br>
 <em class="until"><strong>Removed in:</strong> Jaybird 6</em> In Jaybird 5 and earlier, for <code>TYPE_FORWARD_ONLY</code>, this is achieved by upgrading to <code>TYPE_SCROLL_INSENSITIVE</code>. See also <a href="#resultsets-types">ResultSet Types</a>.<br>
-<em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, the result set type is no longer upgraded, but all rows are still cached locally.</p>
+<em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, the result set type is no longer upgraded to <code>TYPE_SCROLL_INSENSITIVE</code>, but all rows are still cached locally.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -4047,11 +4054,11 @@ Server-side scrollable cursors do not support the holdable behaviour.</p>
 <div class="paragraph">
 <p>Values of the result set are obtained by calling the corresponding getter method depending on the type of column.
 For example, the <code>ResultSet.getInt(1)</code> method returns the value of the first column as an <code>int</code> value.
-If the value of the column is not integer, Jaybird tries to convert it according to the "Data Type Conversion Table" specified in <a href="#datatypeconversion">Data Type Conversion Table</a>.
+If the value of the column is not integer, Jaybird tries to convert it according to the conversions specified in <a href="#datatypeconversion">Data Type Conversion Table</a>.
 If conversion is not possible, an exception is thrown.</p>
 </div>
 <div class="paragraph">
-<p>There are two possibilities to obtain data from the result set columns: by column label or by column position.
+<p>There are two possibilities to obtain data from result set columns: by column label or by column position.
 Position of the first column is 1.
 Names supplied to getter methods are case-insensitive.
 The search only happens in column aliases&#8201;&#8212;&#8201;or in JDBC terminology the <em>column label</em>.
@@ -4112,11 +4119,11 @@ Calling <code>wasNull</code> after object <em>get</em> methods is possible but u
 </div>
 </div>
 <div class="paragraph">
-<p>The code example above shows how to update first row, insert new one and after that move two records backwards.</p>
+<p>The code example above shows how to update the first row, insert a new row, and after that move two records backwards.</p>
 </div>
 <div class="paragraph">
 <p>An application can also update the current row using so called &#8220;positioned updates&#8221; on named cursors.
-This technique can be used only with forward-only cursors, since application can update only the row to which the server-side cursor points to.
+This technique can be used only with forward-only cursors, since the application can only update the row the server-side cursor points to.
 In case of scrollable cursors the complete result set is fetched to the client and then the server-side cursor is closed.
 <a href="#using-positioned-updates">The example below</a> shows how to use positioned updates.</p>
 </div>
@@ -4262,7 +4269,7 @@ Do not rely on the garbage collector for this.</p>
 <div class="sect2">
 <h3 id="_auto_commit_mode"><a class="anchor" href="#_auto_commit_mode"></a>6.2. Auto-commit mode</h3>
 <div class="paragraph">
-<p>Each newly created connection by default has the auto-commit property enabled.
+<p>Each newly created connection by default has auto-commit mode enabled by default.
 In other words, the duration of the transaction is limited by the duration of statement execution, or more formally&#8201;&#8212;&#8201;the transaction is ended when the statement is completed.
 The point when statement execution is considered complete, is defined in the specification as:</p>
 </div>
@@ -4442,7 +4449,7 @@ A transaction will be prevented from starting if there is already another one wi
 This isolation level guarantees truly serial history of transaction execution.</p>
 </div>
 <div class="paragraph">
-<p>To satisfy the JDBC specification Jaybird provides a following default mapping of the JDBC transaction isolation levels into Firebird isolation levels:</p>
+<p>To satisfy the JDBC specification Jaybird provides the following default mapping of the JDBC transaction isolation levels to Firebird isolation levels:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -4570,7 +4577,7 @@ Savepoints that have been created within a transaction are automatically release
 </div>
 <div class="paragraph">
 <p>The TPB is automatically generated depending on the transaction isolation level specified for the <code>java.sql.Connection</code> object.
-Additionally, if the connection is set to read-only mode, this is reflected in the TPB by appropriate constant.</p>
+Additionally, if the connection is set to read-only mode, this is reflected in the TPB.</p>
 </div>
 <div class="paragraph">
 <p>Usually there is no need to manipulate the TPB directly.
@@ -4644,7 +4651,7 @@ The outcome of the operation is then controlled by the lock resolution mode (see
 <div class="title">Firebird 4.0 and higher default to always use <code>isc_tpb_read_consistency</code></div>
 <div class="paragraph">
 <p>With default settings, Firebird 4.0 and higher will ignore <code>isc_tpb_rec_version</code> and <code>isc_tpb_no_rec_version</code>, and behave as if <code>isc_tpb_read_consistency</code> was specified.
-This is controlled through the <code>ReadConsistency</code> setting in <code>firebird.conf</code> or&#8201;&#8212;&#8201;per database&#8201;&#8212;&#8201;in <code>databases.conf</code>.</p>
+This is controlled through the <a href="https://firebirdsql.org/file/documentation/html/en/refdocs/fbconf/firebird-configuration-reference.html#fbconf-read-consistency" target="_blank" rel="noopener"><code>ReadConsistency</code></a> setting in <code>firebird.conf</code> or&#8201;&#8212;&#8201;per database&#8201;&#8212;&#8201;in <code>databases.conf</code>.</p>
 </div>
 </td>
 </tr>
@@ -4900,7 +4907,7 @@ Applications should not invoke SQL commands directly to change the connection&#8
 <div class="paragraph">
 <p>In addition to normal database connections, Firebird features server-wide connections.
 These are used to perform various administrative tasks in Firebird, e.g. database backup, maintenance, statistics.
-The set of API calls to perform such tasks are known under the name &#8220;Services API&#8221;.
+The set of API calls to perform such tasks are known under the name &#8220;Services API&#8221; or &#8220;Services Manager&#8221;.
 Additionally, client applications can use the Services API to get some limited information about the server environment and configuration.</p>
 </div>
 <div class="paragraph">
@@ -5550,7 +5557,7 @@ This preserves the existing GUID and replication sequence of the original databa
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><em class="since"><strong>Since:</strong> Jaybird 4.0.7</em> Enable the <em>clean history</em> option (requires Firebird 4.0.3 or higher).
 One of the properties <code>keepRows</code> <em>or</em> <code>keepDays</code> must also be set.
-When enabled, after performing a backup, old records from the <code>RDB$BACKUP_HISTORY</code> will be removed.</p>
+When enabled, after performing a backup, old records from <code>RDB$BACKUP_HISTORY</code> will be removed.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -6201,7 +6208,7 @@ Its API may change in point releases, or it may be removed or replaced entirely 
 <div class="sect2">
 <h3 id="_database_statistics"><a class="anchor" href="#_database_statistics"></a>7.6. Database statistics</h3>
 <div class="paragraph">
-<p>And last but not least is the <code>StatisticsManager</code> interface and corresponding implementation in the <code>FBStatisticsManager</code> class, which allow to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.</p>
+<p>The <code>StatisticsManager</code> interface and corresponding implementation in the <code>FBStatisticsManager</code> class can be used to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.</p>
 </div>
 <div class="paragraph">
 <p>The following methods provide the functionality equivalent to the <em>gstat</em> command line tool, the output of the commands is written to the output stream specified in the <code>logger</code> property.
@@ -6325,7 +6332,7 @@ On Firebird 5.0 and older, the collections of schemas will be ignored.</p>
 <div class="paragraph">
 <p>Firebird supports events.
 Events are a feature that provides asynchronous notification to the connected applications about events triggered by the database or other applications.
-Instead of requiring applications to reread the database tables to check for the changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
+Instead of requiring applications to reread the database tables to check for changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
 And even more, the event can be so specific that an application would need to reread only a limited set of records, possibly only one.</p>
 </div>
 <div class="paragraph">
@@ -6334,7 +6341,7 @@ And even more, the event can be so specific that an application would need to re
 <div class="sect2">
 <h3 id="_database_events"><a class="anchor" href="#_database_events"></a>8.1. Database events</h3>
 <div class="paragraph">
-<p>An <em>event</em> is a message generated in a trigger, stored procedure or execute block that is delivered to subscribed applications.
+<p>An <em>event</em> is a message generated in PSQL code that is delivered to subscribed applications.
 The event is characterized only by a name which is used when the event is posted, therefore two different events must have two different names.
 The applications that subscribe for events are required to specify the event names of interest, no wildcards are allowed;
 and applications either provide a callback function that will be invoked in case of event or are required to poll for the posted events periodically.</p>
@@ -6347,7 +6354,7 @@ The database engine will continue operating even if no application subscribes to
 <div class="paragraph">
 <p>It can also happen that multiple transactions will be committed before the events are delivered to the client system.
 But even in such case the callback function will be invoked only once, and only the event name and the count of the events will be passed as parameters.
-The same applies to periodical polling, the application will receive event names and counts of the events since last polling.</p>
+The same applies to periodical polling, the application will receive event names and counts of the events since last poll.</p>
 </div>
 <div class="paragraph">
 <p>Internally, Firebird can be thought to store the subscription information in a table where columns contain event names, rows correspond to the subscribed applications and the cells contain the count of the particular event for a particular application.
@@ -6365,8 +6372,8 @@ For such cases, applications should maintain a change tracking table where the I
 <div class="sect2">
 <h3 id="_posting_events"><a class="anchor" href="#_posting_events"></a>8.2. Posting events</h3>
 <div class="paragraph">
-<p>Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the <code>POST_EVENT</code> command.
-It is possible to create a stored procedure with the sole purpose of posting events:</p>
+<p>Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-postevent" target="_blank" rel="noopener"><code>POST_EVENT</code></a> statement.
+It is possible to create a stored procedure with the sole purpose of posting events (e.g. to notify events from an application):</p>
 </div>
 <div class="listingblock">
 <div class="title">Example of posting events from PSQL code</div>
@@ -6378,7 +6385,7 @@ END</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>EXECUTE BLOCK</code> statement can be used to execute PSQL statements within DSQL code:</p>
+<p>The <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-dml-execblock.html#fblangref50-dml-execblock" target="_blank" rel="noopener"><code>EXECUTE BLOCK</code></a> statement can be used to execute PSQL statements within DSQL code:</p>
 </div>
 <div class="listingblock">
 <div class="title">Using EXECUTE BLOCK to post events</div>
@@ -6386,8 +6393,6 @@ END</code></pre>
 <pre class="prettyprint highlight"><code data-lang="sql">try (Statement stmt = connection.createStatement()) {
   stmt.execute(
       "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
-} finally {
-  stmt.close();
 }</code></pre>
 </div>
 </div>
@@ -6446,7 +6451,7 @@ The path is specified for the remote host but must be absolute. <em>Required</em
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<em class="since"><strong>Since:</strong> Jaybird 5</em> <code>serverName</code>, <code>portNumber</code> and <code>databaseName</code> are replacements for <code>host</code>, <code>port</code> and <code>databaseName</code>, which have been deprecated for removal in Jaybird 6.
+<em class="since"><strong>Since:</strong> Jaybird 5</em> <code>serverName</code>, <code>portNumber</code> and <code>databaseName</code> are replacements for <code>host</code>, <code>port</code> and <code>database</code>, which have been deprecated for removal in Jaybird 6.
 </td>
 </tr>
 </table>
@@ -6922,6 +6927,10 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><em class="since"><strong>Since:</strong> Jaybird 5</em> On Java 11 or higher, Jaybird 5 and higher also support the <code>ChaCha</code> wire encryption.<br>
+<em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, the <code>ChaCha64</code> wire encryption is supported <strong>if</strong> the <code>chacha64-plugin</code> artifact and its Bouncy Castle dependency are on the classpath.</p>
 </div>
 </div>
 <div class="sect2">
@@ -10349,7 +10358,10 @@ This way most tools should be able to handle the full range of values without is
 </div>
 <div class="paragraph">
 <p>This appendix provides a list of most connection properties and a short explanation to each of them.
-The properties listed below are usable as JDBC connection properties.</p>
+The properties listed below are usable as JDBC connection properties.
+Some properties have one or more aliases.
+The first name is the primary and preferred property name;
+it&#8217;s usually also the name of the property in the data source classes.</p>
 </div>
 <div class="paragraph">
 <p>The properties marked as <em>boolean property</em> can be included in the JDBC URL with values <code>true</code>, <code>false</code> (<em class="since"><strong>Since:</strong> Jaybird 5</em>), but also without a value, or with an empty value (which will both signify <code>true</code>).
@@ -10742,7 +10754,7 @@ See <a href="#ref-decfloat-traps-round">Configuring decfloat traps and rounding<
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird specific property (<em class="until"><strong>Removed in:</strong> Jaybird 5</em>).
 Boolean property.
-Tells the JDBC driver to assume that standard UDF library is registered in the database when converting escaped function calls.
+Tells the JDBC driver to assume that the standard UDF library is registered in the database when converting escaped function calls.
 With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
 See <a href="#jdbcescape">Supported JDBC Scalar Functions</a> for more information.</p></td>
 </tr>
@@ -10760,7 +10772,7 @@ Changes how <code>getTime</code>/<code>getTimestamp</code> methods accepting a <
 <code>isc_dpb_num_buffers</code></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of database pages that will be cached.
-Overrides server or database default for this specific connection.
+Overrides server or database default for this specific connection if the server mode is Classic or SuperClassic.
 Use with care to avoid using an excessive amount of memory.</p></td>
 </tr>
 <tr>
@@ -10776,7 +10788,8 @@ Set the database into read-only state.</p></td>
 <p><code>set_db_sql_dialect</code><br>
  <code>isc_dpb_set_db_sql_dialect</code></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set the SQL dialect of the database.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the SQL dialect of the database.
+Use with care to avoid database issues.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -11031,6 +11044,9 @@ This information can be specified in connection properties, or globally using th
 <dt class="hdlist1"><code>org.firebirdsql.jdbc.pid</code></dt>
 <dd>
 <p>PID to send to Firebird (must be a valid integer)</p>
+<div class="paragraph">
+<p>Ignored for native and embedded connections</p>
+</div>
 </dd>
 </dl>
 </div>
@@ -11454,7 +11470,16 @@ Also, for each JDBC data type a class instance of which is returned by <code>Res
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JaybirdTypeCodes.DECFLOAT</code><sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>DECFLOAT</code> (<em class="since"><strong>Since:</strong> JDBC 4.5/Java 26</em>)<br>
+<code>JaybirdTypeCodes.DECFLOAT</code><sup class="footnote">[<a id="_footnoteref_35" class="footnote" href="#_footnotedef_35" title="View footnote.">35</a>]</sup></p>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_35">
+<a href="#_footnoteref_35">35</a>. JDBC 4.4 and earlier do not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
+</div>
+</div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECFLOAT</code> (<em class="since"><strong>Since:</strong> Firebird 4.0</em>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
 </tr>
@@ -11911,16 +11936,20 @@ When the <code>NONE</code> character set is used, Jaybird does not know how to i
 The only choice that is left to Jaybird is to construct a string using the default character set of the JVM, which usually matches the regional settings of the operating system and can be accessed from within the JVM through the <code>file.encoding</code> system property.</p>
 </div>
 <div class="paragraph">
-<p>With connection character set <code>NONE</code>, Jaybird uses the explicit character set of <code>CHAR</code>, <code>VARCHAR</code> and <code>BLOB SUB_TYPE TEXT</code> columns for the conversion.
+<p>With connection character set <code>NONE</code>, Jaybird<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup> uses the explicit character set of <code>CHAR</code>, <code>VARCHAR</code> and <code>BLOB SUB_TYPE TEXT</code> columns for the conversion.
 This addresses most of the problems described in this section, except for columns without an explicit character set (i.e. their character set is <code>NONE</code>).</p>
 </div>
 <div class="paragraph">
-<p>It is clear that a conversion using default character set that happens inside the JVM can lead to errors when the same content is accessed from two or more different Java Virtual Machines that have different configuration.
-One application running on the computer with, for example, Russian regional settings saves the Russian text (the default character set of the JVM is Cp1251) and another application running on computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
-However, when all client applications run on the same OS with the same regional settings, in most cases this will not have any severe consequences, except probably wrong sorting order or uppercasing on the server side.</p>
+<p>A conversion using the default character set of the JVM can lead to errors when the same content is accessed from two or more Java Virtual Machines that have different configuration.
+One application running on a computer with, for example, Russian regional settings saves Russian text (default character set of the JVM is Cp1251), and another application running on a computer with German regional settings (default character set is Cp1252) will read in such case some special or accented characters.
+However, when all client applications run on the same OS with the same regional settings, in most cases this will not have any severe consequences, except maybe wrong sorting order or uppercasing on the server side.</p>
 </div>
 <div class="paragraph">
 <p>On Linux and other Unix platforms, it might have more severe consequences as it is very common that regional settings are not configured and that the default "C" locale is used and the non-ASCII characters will be replaced with question marks ("?").</p>
+</div>
+<div class="paragraph">
+<p>Since Java 18 (<a href="https://openjdk.org/jeps/400" target="_blank" rel="noopener">JEP 400</a>), this is less of a concern as the default is now always UTF-8.
+On the other hand, this can cause unexpected behaviour when upgrading from older Java versions.</p>
 </div>
 <div class="paragraph">
 <p>Therefore, an application should only use <code>NONE</code> character encoding as an encoding for a database and a connection when at least one of the following is met:</p>
@@ -11960,7 +11989,7 @@ With Jaybird 3 and higher, this option has limitations when <code>encoding=NONE<
 </div>
 <div class="paragraph">
 <p>The last case is most powerful, but also is the most dangerous in use.
-When used properly, it can solve the problems with the legacy databases;
+When used properly, it can solve problems with legacy databases;
 when used incorrectly, one can easily trash the content of the database.</p>
 </div>
 </div>
@@ -12241,12 +12270,12 @@ when used incorrectly, one can easily trash the content of the database.</p>
 <h2 id="jdbcescape"><a class="anchor" href="#jdbcescape"></a>Appendix E: Supported JDBC Scalar Functions</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The JDBC API has an escaped syntax for numeric, string, time, date, system and conversion functions.
+<p>The JDBC API has an escape syntax for numeric, string, time, date, system and conversion functions.
 Jaybird will try to provide an equivalent of the JDBC function using the built-in capabilities of the Firebird database.
 When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.</p>
 </div>
 <div class="paragraph">
-<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_39" class="footnote" href="#_footnotedef_39" title="View footnote.">39</a>]</sup> shipped with Firebird.
+<p>Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library <code>ib_udf</code>&#8288;<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup> shipped with Firebird.
 Jaybird provides a connection parameter <code>use_standard_udf</code> to configure the driver to assume that functions from that UDF are available in the database (<em class="until"><strong>Removed in:</strong> Jaybird 5</em>).
 In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.</p>
 </div>
@@ -12381,7 +12410,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RAND(integer)</code></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_40" class="footnote" href="#_footnotedef_40" title="View footnote.">40</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Random floating point for seed <code>integer</code></p></td>
 </tr>
 <tr>
@@ -12460,7 +12489,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHAR_LENGTH(string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_41" class="footnote" href="#_footnotedef_41" title="View footnote.">41</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the length in characters of the string expression</p></td>
 </tr>
@@ -12472,7 +12501,7 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER_LENGTH( string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_42" class="footnote" href="#_footnotedef_42" title="View footnote.">42</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Alias for <code>CHAR_LENGTH</code></p></td>
 </tr>
@@ -12514,13 +12543,13 @@ Using the <code>use_standard_udf</code> is no longer advisable, especially as UD
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string [,CHARACTERS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_43" class="footnote" href="#_footnotedef_43" title="View footnote.">43</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_44" class="footnote" href="#_footnotedef_44" title="View footnote.">44</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_45" class="footnote" href="#_footnotedef_45" title="View footnote.">45</a>]</sup></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LENGTH(string, OCTETS])</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_45" class="footnote" href="#_footnotedef_45" title="View footnote.">45</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="#_footnotedef_46" title="View footnote.">46</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of characters in <code>string</code>, excluding trailing blanks</p></td>
 </tr>
@@ -12553,7 +12582,7 @@ Position 1 is the first character in <code>string2</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>POSITION(substring IN string, OCTETS)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_46" class="footnote" href="#_footnotedef_46" title="View footnote.">46</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_47" class="footnote" href="#_footnotedef_47" title="View footnote.">47</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns the position of first occurrence of <code>substr</code> in <code>string</code> (with caveat)</p></td>
 </tr>
@@ -12662,7 +12691,7 @@ this could be a four-digit SOUNDEX code, a phonetic representation of each word,
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DAYNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_47" class="footnote" href="#_footnotedef_47" title="View footnote.">47</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_48" class="footnote" href="#_footnotedef_48" title="View footnote.">48</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the day component of <code>date</code>;
 the name for the day is specific to the data source</p></td>
@@ -12714,7 +12743,7 @@ The value for field may be one of the following: <code>YEAR</code>, <code>MONTH<
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MONTHNAME(date)</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_48" class="footnote" href="#_footnotedef_48" title="View footnote.">48</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_49" class="footnote" href="#_footnotedef_49" title="View footnote.">49</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A character string representing the month component of <code>date</code>;
 the name for the month is specific to the data source</p></td>
@@ -12788,7 +12817,7 @@ the name for the month is specific to the data source</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE()</code></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_49" class="footnote" href="#_footnotedef_49" title="View footnote.">49</a>]</sup></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">X<sup class="footnote">[<a id="_footnoteref_50" class="footnote" href="#_footnotedef_50" title="View footnote.">50</a>]</sup></p></td>
 <td class="tableblock halign-center valign-top"><p class="tableblock">&#160;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Name of the database</p></td>
 </tr>
@@ -13474,7 +13503,7 @@ We recommend upgrading to <a href="#jb5">Jaybird 5</a>.</p>
 </div>
 <div class="paragraph">
 <p>Given the limited support period for Java 9 and higher versions, we will limit support on those versions to the recent LTS versions and the latest release.
-Currently, that means we support Java 7, 8, 11, 17, and 21<sup class="footnote">[<a id="_footnoteref_50" class="footnote" href="#_footnotedef_50" title="View footnote.">50</a>]</sup>.</p>
+Currently, that means we support Java 7, 8, 11, 17, and 21<sup class="footnote">[<a id="_footnoteref_51" class="footnote" href="#_footnotedef_51" title="View footnote.">51</a>]</sup>.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 4 provides libraries for Java 7, Java 8, and Java 11.
@@ -14175,20 +14204,20 @@ you may only use this Documentation if you comply with the terms of this License
 A copy of the License is available at <a href="https://firebirdsql.org/en/public-documentation-license/" class="bare">https://firebirdsql.org/en/public-documentation-license/</a>.</p>
 </div>
 <div class="paragraph">
-<p>The Original Documentation is Jaybird 2.1 JDBC driver Java Programmer&#8217;s Manual.</p>
+<p>The Original Documentation is &#8220;Jaybird 2.1 JDBC driver Java Programmer&#8217;s Manual&#8221;.</p>
 </div>
 <div class="paragraph">
 <p>The Initial Writer of the Original Documentation is Roman Rokytskyy Copyright &#169; 2004-2008.
 All Rights Reserved.
-(Initial Writer contact(s): <a href="mailto:roman@rokytskyy.de">roman@rokytskyy.de</a>).</p>
+(Initial Writer contact(s): roman (at) rokytskyy (dot) de).</p>
 </div>
 <div class="paragraph">
 <p>Contributor(s): Mark Rotteveel.</p>
 </div>
 <div class="paragraph">
-<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2024.
+<p>Portions created by Mark Rotteveel are Copyright &#169; 2014-2026.
 All Rights Reserved.
-(Contributor contact(s): <a href="mailto:mrotteveel@users.sourceforge.net">mrotteveel@users.sourceforge.net</a>).</p>
+(Contributor contact(s): mark (at) lawinegevaar (dot) nl).</p>
 </div>
 </div>
 </div>
@@ -14297,9 +14326,6 @@ All Rights Reserved.
 <div class="footnote" id="_footnotedef_34">
 <a href="#_footnoteref_34">34</a>. A Firebird <code>REAL</code> is an alias for <code>FLOAT</code> and by default handled as <code>java.sql.Types.FLOAT</code>
 </div>
-<div class="footnote" id="_footnotedef_35">
-<a href="#_footnoteref_35">35</a>. JDBC does not yet define a <code>java.sql.Types</code> code for <code>DECFLOAT</code>
-</div>
 <div class="footnote" id="_footnotedef_36">
 <a href="#_footnoteref_36">36</a>. On Windows this library is represented by <code>fbintl.dll</code>, on Linux, <code>libfbintl.so</code>
 </div>
@@ -14310,45 +14336,48 @@ All Rights Reserved.
 <a href="#_footnoteref_38">38</a>. See <a href="https://github.com/FirebirdSQL/jaybird/wiki" class="bare">https://github.com/FirebirdSQL/jaybird/wiki</a> for configuration examples of the most popular application servers.
 </div>
 <div class="footnote" id="_footnotedef_39">
-<a href="#_footnoteref_39">39</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
+<a href="#_footnoteref_39">39</a>. Since Jaybird 3
 </div>
 <div class="footnote" id="_footnotedef_40">
-<a href="#_footnoteref_40">40</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
+<a href="#_footnoteref_40">40</a>. On Windows platform it is represented by the <code>ib_udf.dll</code>, on Linux it is represented by the <code>libib_udf.so</code>.
 </div>
 <div class="footnote" id="_footnotedef_41">
-<a href="#_footnoteref_41">41</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_41">41</a>. Maps to UDF <code>RAND()</code> taking no parameters. The random number generator is seeded by the current time. There is no function where the seed can be specified.
 </div>
 <div class="footnote" id="_footnotedef_42">
-<a href="#_footnoteref_42">42</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
+<a href="#_footnoteref_42">42</a>. Second parameter is ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_43">
-<a href="#_footnoteref_43">43</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_43">43</a>. Second parameter ignored in Jaybird 3 and earlier, supported in Jaybird 4 and higher
 </div>
 <div class="footnote" id="_footnotedef_44">
-<a href="#_footnoteref_44">44</a>. The trailing blanks are also counted, only works if second parameter is omitted
+<a href="#_footnoteref_44">44</a>. In Jaybird 3, the second parameter is ignored, in Jaybird 4 the <code>CHARACTERS</code> parameter only determines that characters are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_45">
-<a href="#_footnoteref_45">45</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
+<a href="#_footnoteref_45">45</a>. The trailing blanks are also counted, only works if second parameter is omitted
 </div>
 <div class="footnote" id="_footnotedef_46">
-<a href="#_footnoteref_46">46</a>. Parameter <code>OCTETS</code> is ignored
+<a href="#_footnoteref_46">46</a>. The <code>OCTETS</code> parameter only determines that bytes are counted, the ignored blanks (space (0x20) or NUL (0x00)) are not determined by the parameter but by the underlying type
 </div>
 <div class="footnote" id="_footnotedef_47">
-<a href="#_footnoteref_47">47</a>. Always returns English full names (e.g. &#8220;Sunday&#8221;)
+<a href="#_footnoteref_47">47</a>. Parameter <code>OCTETS</code> is ignored
 </div>
 <div class="footnote" id="_footnotedef_48">
-<a href="#_footnoteref_48">48</a>. Always returns English full names (e.g. &#8220;January&#8221;)
+<a href="#_footnoteref_48">48</a>. Always returns English full names (e.g. &#8220;Sunday&#8221;)
 </div>
 <div class="footnote" id="_footnotedef_49">
-<a href="#_footnoteref_49">49</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
+<a href="#_footnoteref_49">49</a>. Always returns English full names (e.g. &#8220;January&#8221;)
 </div>
 <div class="footnote" id="_footnotedef_50">
-<a href="#_footnoteref_50">50</a>. The Jaybird 4 support for Java 21 comes with one caveat: some tests weren&#8217;t run due to lack of support for Java 21 in test libraries used for testing Jaybird, and we did not want to invest time to upgrade or replace those libraries.
+<a href="#_footnoteref_50">50</a>. Either the full path of the database or the alias. See documentation of <code>RDB$GET_CONTEXT('SYSTEM', 'DB_NAME')</code> for details.
+</div>
+<div class="footnote" id="_footnotedef_51">
+<a href="#_footnoteref_51">51</a>. The Jaybird 4 support for Java 21 comes with one caveat: some tests weren&#8217;t run due to lack of support for Java 21 in test libraries used for testing Jaybird, and we did not want to invest time to upgrade or replace those libraries.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-12 12:01:25 UTC
+Last updated 2026-03-13 13:01:07 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
