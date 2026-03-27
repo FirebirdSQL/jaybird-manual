@@ -768,7 +768,7 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="paragraph">
 <p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
 Artifactid: <code>jaybird</code>,<br>
-Version: <code>6.0.4</code></p>
+Version: <code>6.0.5</code></p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -779,7 +779,7 @@ Version: <code>6.0.4</code></p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -792,7 +792,7 @@ Version: <code>6.0.4</code></p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -805,7 +805,7 @@ Version: <code>6.0.4</code></p>
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -825,19 +825,19 @@ In the future, a Maven dependency for Firebird embedded may become available as 
 <div class="listingblock">
 <div class="title">Main Jaybird artifact</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.4'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">ChaCha64 wire encryption plugin</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.4'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.5'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Jaybird native artifact (native and embedded protocol)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.4'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.5'</code></pre>
 </div>
 </div>
 </div>
@@ -7174,7 +7174,7 @@ This cannot be overridden using the options below.</p>
 </div>
 <div class="paragraph">
 <p>Since Firebird 3.0, the <code>MON$ATTACHMENTS</code> table also includes the column <code>MON$CLIENT_VERSION</code>.
-Jaybird will report its full version (e.g. <code>Jaybird jaybird-6.0.4</code>).</p>
+Jaybird will report its full version (e.g. <code>Jaybird jaybird-6.0.5</code>).</p>
 </div>
 <div class="paragraph">
 <p>It is possible to specify the process name and process id in two ways:</p>
@@ -13020,11 +13020,11 @@ In current Firebird versions, this means the value will be equivalent to <code>D
 <div class="sect3">
 <h4 id="jb6-java"><a class="anchor" href="#jb6-java"></a>F.1.1. Java support</h4>
 <div class="paragraph">
-<p>Jaybird 6 supports Java 17 and higher (JDBC 4.3).</p>
+<p>Jaybird 6 supports Java 17 and higher (JDBC 4.3 - 4.5).</p>
 </div>
 <div class="paragraph">
-<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
-Currently, that means we support Java 17, Java 21, and Java 24.</p>
+<p>Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the LTS versions after Java 17, and the latest Java release.
+Currently, that means we support Java 17, Java 21, Java 25, and Java 26.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.</p>
@@ -13053,6 +13053,25 @@ Currently, that means we support Java 17, Java 21, and Java 24.</p>
 <h4 id="jb6-firebird"><a class="anchor" href="#jb6-firebird"></a>F.1.2. Firebird support</h4>
 <div class="paragraph">
 <p>Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">No promises on Firebird 6.0 support</div>
+<div class="paragraph">
+<p>Firebird 6.0 is still in development, and includes changes&#8201;&#8212;&#8201;like schema support&#8201;&#8212;&#8201;that impact Jaybird.</p>
+</div>
+<div class="paragraph">
+<p>As a result&#8201;&#8212;&#8201;at this time&#8201;&#8212;&#8201;we make no promises on the support for Firebird 6.0 by Jaybird 6.
+We may delay support for Firebird 6.0 until Jaybird 7, or we may improve support during maintenance releases of Jaybird 6.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 will&#8201;&#8212;&#8201;by default&#8201;&#8212;&#8201;not connect to Firebird 2.5 or older.
@@ -13113,13 +13132,16 @@ To support the ChaCha64 wire encryption plugin, the artifact <code>org.firebirds
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All JDBC 4.5 methods for features supported by Firebird, except arrays.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If a security manager is available, the driver still performs <code>SQLPermission</code> checks.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All JDBC 4.3 methods for features supported by Firebird, except arrays.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
@@ -13127,6 +13149,9 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>As we don&#8217;t have access to the JDBC TCKs, Jaybird is not officially JDBC compliant.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="jb6-distribution"><a class="anchor" href="#jb6-distribution"></a>F.1.4. Distribution</h4>
@@ -13160,12 +13185,12 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.4.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.5.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The main JDBC driver, the Services API and event management classes.
 Provides only pure Java connections.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.4.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.5.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.</p></td>
 </tr>
 <tr>
@@ -13173,7 +13198,7 @@ Provides only pure Java connections.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required for the ChaCha64 support (with <code>chacha64-plugin</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.4.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.5.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Options dependency, support for native and embedded connections.
 Requires <code>lib/jna-jpms-5.18.1.jar</code>.</p></td>
 </tr>
@@ -13215,7 +13240,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>6.0.4</code></p>
+<p><code>6.0.5</code></p>
 </td>
 </tr>
 </table>
@@ -13228,7 +13253,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13240,7 +13265,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13252,7 +13277,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.4&lt;/version&gt;
+  &lt;version&gt;6.0.5&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13268,11 +13293,11 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 <div class="sect3">
 <h4 id="jb5-java"><a class="anchor" href="#jb5-java"></a>F.2.1. Java support</h4>
 <div class="paragraph">
-<p>Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).</p>
+<p>Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3 - 4.5).</p>
 </div>
 <div class="paragraph">
-<p>Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 8, Java 11, Java 17, Java 21, and Java 24.</p>
+<p>Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the LTS versions after Java 17 and the latest Java release.
+Currently, that means we support Java 8, Java 11, Java 17, Java 21, Java 25, and Java 26.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -13289,6 +13314,11 @@ We highly recommend upgrading to Java 17 or higher.</p>
 <div class="paragraph">
 <p>Jaybird 5 will serve as a &#8220;long-term support&#8221; version for Java 8 and 11, with maintenance releases at least until the release of Jaybird 7.</p>
 </div>
+<div class="paragraph">
+<p>It is possible future maintenance releases of Jaybird 5 stop expanding Java support to include newly released Java versions.
+A reason can be&#8201;&#8212;&#8201;but is not limited to&#8201;&#8212;&#8201;if adding support for a newer Java version results in breaking support for Java 8 or Java 11, or JDBC 4.2 or JDBC 4.3, or require changes that would limit testability on those versions.
+We may also simply stop expanding Java support to limit the number of versions we need to test.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -13304,7 +13334,29 @@ The Java 8 builds have all JDBC 4.3 related functionality and can be used on Jav
 <div class="sect3">
 <h4 id="jb5-firebird"><a class="anchor" href="#jb5-firebird"></a>F.2.2. Firebird support</h4>
 <div class="paragraph">
-<p>Jaybird 5 supports Firebird 2.5 and higher.</p>
+<p>Jaybird 5 supports Firebird 2.5, Firebird 3.0, Firebird 4.0, and Firebird 5.0.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">No promises on Firebird 6.0 support</div>
+<div class="paragraph">
+<p>Firebird 6.0 is still in development, and includes changes&#8201;&#8212;&#8201;like schema support&#8201;&#8212;&#8201;that impact Jaybird.</p>
+</div>
+<div class="paragraph">
+<p>As a result&#8201;&#8212;&#8201;at this time&#8201;&#8212;&#8201;we make no promises on the support for Firebird 6.0 by Jaybird 5.
+We may delay support for Firebird 6.0 until Jaybird 7, or we may improve support during maintenance releases of Jaybird 5 and/or Jaybird 6.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Jaybird 5 is the last version to support Firebird 2.5.</p>
 </div>
 <div class="paragraph">
 <p>Formal support for Firebird 2.0 and 2.1 has been dropped, and some things may no longer work (especially <code>DatabaseMetaData</code> methods), if features of Firebird 2.5 have been used.
@@ -13359,13 +13411,20 @@ Support for ChaCha64 will be added in Jaybird 6.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All JDBC 4.5 methods for features supported by Firebird, except arrays.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If a security manager is available, the driver still performs <code>SQLPermission</code> checks.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don&#8217;t have access to the TCK.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All JDBC 4.3 methods for features supported by Firebird, except arrays.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDBC 4.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All JDBC 4.2 methods for features supported by Firebird, except arrays.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JTA</p></td>
@@ -13373,6 +13432,9 @@ It is not officially JDBC compliant, because we currently don&#8217;t have acces
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>As we don&#8217;t have access to the JDBC TCKs, Jaybird is not officially JDBC compliant.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="jb5-distribution"><a class="anchor" href="#jb5-distribution"></a>F.2.4. Distribution</h4>
@@ -13401,7 +13463,7 @@ For native or embedded connections, JNA 5.18.1 needs to be on the class path.</p
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.11.&lt;java&gt;.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-5.0.12.&lt;java&gt;.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">An archive containing the JDBC driver, the Services API and event management classes.
 Where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>.</p></td>
 </tr>
@@ -13443,7 +13505,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>5.0.11.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
+<p><code>5.0.12.&lt;java&gt;</code> (where <code>&lt;java&gt;</code> is either <code>java11</code> or <code>java8</code>)</p>
 </td>
 </tr>
 </table>
@@ -13456,7 +13518,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;5.0.11.java11&lt;/version&gt;
+  &lt;version&gt;5.0.12.java11&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -14378,7 +14440,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-03-14 08:36:48 UTC
+Last updated 2026-03-27 15:18:15 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
