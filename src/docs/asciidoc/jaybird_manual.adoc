@@ -10,10 +10,10 @@ Roman Rokytskyy; Mark Rotteveel
 :outlinelevels: 6:1
 :imagesdir: images
 :icons: font
-:jaybird6-full-version: 6.0.4
+:jaybird6-full-version: 6.0.5
 :jaybird6-jna-version: 5.18.1
 :jaybird6-bc-version: 1.83
-:jaybird5-full-version: 5.0.11
+:jaybird5-full-version: 5.0.12
 :jaybird5-template-version: {jaybird5-full-version}.<java>
 :jaybird5-example-version: {jaybird5-full-version}.java11
 :jaybird5-jna-version: 5.18.1

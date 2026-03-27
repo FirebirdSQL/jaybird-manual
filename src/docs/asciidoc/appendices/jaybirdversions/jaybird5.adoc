@@ -4,10 +4,10 @@
 [[jb5-java]]
 ==== Java support
 
-Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3).
+Jaybird 5 supports Java 8 (JDBC 4.2), and Java 9 and higher (JDBC 4.3 - 4.5).
 
-Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the most recent LTS version after Java 17 and the latest Java release.
-Currently, that means we support Java 8, Java 11, Java 17, Java 21, and Java 24.
+Given the limited support period for Java 9 and higher versions, we limit support to Java 8, 11, 17 and the LTS versions after Java 17 and the latest Java release.
+Currently, that means we support Java 8, Java 11, Java 17, Java 21, Java 25, and Java 26.
 
 [NOTE]
 ====
@@ -16,6 +16,10 @@ Jaybird 6 will use Java 17 as the baseline (minimum) version.
 We highly recommend upgrading to Java 17 or higher.
 
 Jaybird 5 will serve as a "`long-term support`" version for Java 8 and 11, with maintenance releases at least until the release of Jaybird 7.
+
+It is possible future maintenance releases of Jaybird 5 stop expanding Java support to include newly released Java versions.
+A reason can be -- but is not limited to -- if adding support for a newer Java version results in breaking support for Java 8 or Java 11, or JDBC 4.2 or JDBC 4.3, or require changes that would limit testability on those versions.
+We may also simply stop expanding Java support to limit the number of versions we need to test.
 ====
 
 Jaybird 5 provides libraries for Java 8 and Java 11.
@@ -26,7 +30,18 @@ Jaybird 5 is not modularized, but all versions declare the automatic module name
 [[jb5-firebird]]
 ==== Firebird support
 
-Jaybird 5 supports Firebird 2.5 and higher.
+Jaybird 5 supports Firebird 2.5, Firebird 3.0, Firebird 4.0, and Firebird 5.0.
+
+.No promises on Firebird 6.0 support
+[WARNING]
+====
+Firebird 6.0 is still in development, and includes changes -- like schema support -- that impact Jaybird.
+
+As a result -- at this time -- we make no promises on the support for Firebird 6.0 by Jaybird 5.
+We may delay support for Firebird 6.0 until Jaybird 7, or we may improve support during maintenance releases of Jaybird 5 and/or Jaybird 6.
+====
+
+Jaybird 5 is the last version to support Firebird 2.5.
 
 Formal support for Firebird 2.0 and 2.1 has been dropped, and some things may no longer work (especially `DatabaseMetaData` methods), if features of Firebird 2.5 have been used.
 The Type 2 and embedded server JDBC drivers use JNA to access the Firebird client or embedded library.
@@ -64,17 +79,24 @@ Jaybird 5 supports the following specifications:
 |===
 |Specification |Details
 
+|JDBC 4.5
+|All JDBC 4.5 methods for features supported by Firebird, except arrays.
+
 |JDBC 4.4
 |If a security manager is available, the driver still performs `SQLPermission` checks.
 
 |JDBC 4.3 
-|Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don't have access to the TCK.
+|All JDBC 4.3 methods for features supported by Firebird, except arrays.
+
+|JDBC 4.2
+|All JDBC 4.2 methods for features supported by Firebird, except arrays.
 
 |JTA
 |The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via a `javax.sql.XADataSource` implementation.
 
 |===
+
+As we don't have access to the JDBC TCKs, Jaybird is not officially JDBC compliant.
 
 [[jb5-distribution]]
 ==== Distribution

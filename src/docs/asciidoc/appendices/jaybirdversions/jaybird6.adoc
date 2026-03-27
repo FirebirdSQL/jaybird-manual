@@ -4,10 +4,10 @@
 [[jb6-java]]
 ==== Java support
 
-Jaybird 6 supports Java 17 and higher (JDBC 4.3).
+Jaybird 6 supports Java 17 and higher (JDBC 4.3 - 4.5).
 
-Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the most recent LTS version after Java 17, and the latest Java release.
-Currently, that means we support Java 17, Java 21, and Java 24.
+Given the limited support period for non-LTS Java versions, we limit support to Java 17 and the LTS versions after Java 17, and the latest Java release.
+Currently, that means we support Java 17, Java 21, Java 25, and Java 26.
 
 Jaybird 6 provides libraries compiled against Java 17, which also work on higher Java versions.
 
@@ -26,6 +26,15 @@ native and embedded protocol implementation using JNA (artifact `org.firebirdsql
 ==== Firebird support
 
 Jaybird 6 supports Firebird 3.0, Firebird 4.0, and Firebird 5.0.
+
+.No promises on Firebird 6.0 support
+[WARNING]
+====
+Firebird 6.0 is still in development, and includes changes -- like schema support -- that impact Jaybird.
+
+As a result -- at this time -- we make no promises on the support for Firebird 6.0 by Jaybird 6.
+We may delay support for Firebird 6.0 until Jaybird 7, or we may improve support during maintenance releases of Jaybird 6.
+====
 
 Jaybird 6 will -- by default -- not connect to Firebird 2.5 or older.
 To connect to earlier versions, unsupported protocols have to be enabled explicitly, see <<ref-enable-protocol>> for details.
@@ -67,17 +76,21 @@ Jaybird 6 supports the following specifications:
 |===
 |Specification |Details
 
+|JDBC 4.5
+|All JDBC 4.5 methods for features supported by Firebird, except arrays.
+
 |JDBC 4.4
 |If a security manager is available, the driver still performs `SQLPermission` checks.
 
-|JDBC 4.3 
-|Jaybird supports most of JDBC 4.3, in as far the features are required or supported by Firebird.
-It is not officially JDBC compliant, because we currently don't have access to the TCK.
+|JDBC 4.3
+|All JDBC 4.3 methods for features supported by Firebird, except arrays.
 
 |JTA
 |The driver provides an implementation of the `javax.transaction.xa.XAResource` interface via a `javax.sql.XADataSource` implementation.
 
 |===
+
+As we don't have access to the JDBC TCKs, Jaybird is not officially JDBC compliant.
 
 [[jb6-distribution]]
 ==== Distribution
