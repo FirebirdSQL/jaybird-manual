@@ -71,8 +71,8 @@ See <<ref-processinfo>> for more information.
 a|`legacyAuthCharset` +
 `legacyAuthCharSet`
 |Jaybird specific property (since:[Jaybird 5.0.13/6.0.6]).
-The Java character set to use when hashing the password for Firebird 2.5 and older, or for the `Legacy_Auth` plugin.
-Defaults to `UTF-8`.
+The Java character set to use when hashing the password for Firebird 2.5 and older, or for the `Legacy_Auth` plugin. +
+Default: `UTF-8`.
 
 |===
 
