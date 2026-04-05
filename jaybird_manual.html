@@ -6469,8 +6469,7 @@ On Firebird 5.0 and older, the collections of schemas will be ignored.</p>
 <h2 id="events"><a class="anchor" href="#events"></a>8. Working with Events</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Firebird supports events.
-Events are a feature that provides asynchronous notification to the connected applications about events triggered by the database or other applications.
+<p>Events are a Firebird feature that provides asynchronous notification to connected applications about events triggered by the database or other applications.
 Instead of requiring applications to reread the database tables to check for changes, events make it possible to avoid that: triggers in the database can post an event in case of a change.
 And even more, the event can be so specific that an application would need to reread only a limited set of records, possibly only one.</p>
 </div>
@@ -6480,10 +6479,10 @@ And even more, the event can be so specific that an application would need to re
 <div class="sect2">
 <h3 id="_database_events"><a class="anchor" href="#_database_events"></a>8.1. Database events</h3>
 <div class="paragraph">
-<p>An <em>event</em> is a message generated in PSQL code that is delivered to subscribed applications.
-The event is characterized only by a name which is used when the event is posted, therefore two different events must have two different names.
-The applications that subscribe for events are required to specify the event names of interest, no wildcards are allowed;
-and applications either provide a callback function that will be invoked in case of event or are required to poll for the posted events periodically.</p>
+<p>An <em>event</em> is a message generated in PSQL code using <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-postevent"><code>POST_EVENT</code></a> that is delivered to subscribed applications.
+An event is characterized only by its name, so two different events must use different names.
+Applications subscribing for events specify the event names of interest, no wildcards are allowed;
+an applications either provides a callback function that will be invoked asynchronously for the event, or it polls for the posted events periodically.</p>
 </div>
 <div class="paragraph">
 <p>Events are delivered to the application only on (after) commit of the transaction that generated the event.
@@ -6491,27 +6490,27 @@ Firebird does not provide any guarantees about the time of event delivery, it de
 The database engine will continue operating even if no application subscribes to events or when the subscribed application crashed in the meantime.</p>
 </div>
 <div class="paragraph">
-<p>It can also happen that multiple transactions will be committed before the events are delivered to the client system.
-But even in such case the callback function will be invoked only once, and only the event name and the count of the events will be passed as parameters.
-The same applies to periodical polling, the application will receive event names and counts of the events since last poll.</p>
+<p>It&#8217;s possible that multiple transactions have been committed before the events are delivered to subscribed applications.
+In that case, the callback function is invoked only once, and only the event name and the count of the events are passed as parameters.
+The same applies to periodical polling, the application will receive event names and counts of the events since the last poll.</p>
 </div>
 <div class="paragraph">
 <p>Internally, Firebird can be thought to store the subscription information in a table where columns contain event names, rows correspond to the subscribed applications and the cells contain the count of the particular event for a particular application.
-When an event is posted in trigger or stored procedure, Firebird checks the subscription information and increases the event count for the subscribed applications.
-Another thread checks the table periodically and notifies the application about all new events relevant to the particular application.
+When an event is posted in a trigger or stored procedure, Firebird checks the subscription information and increases the event count for the subscribed applications.
+Another thread checks the table periodically and notifies subscribed applications about all new events relevant to the particular application.
 Such mechanism allows Firebird to keep the event notification table very small<sup class="footnote">[<a id="_footnoteref_19" class="footnote" href="#_footnotedef_19" title="View footnote.">19</a>]</sup>
 and to reduce the number of messages sent to the application.</p>
 </div>
 <div class="paragraph">
 <p>It is not possible to pass parameters with the event, e.g. an ID of the modified records.
-It is also not possible to encode such information in the event names, wildcards are not supported.
+It is also not possible to encode such information in the event names, as wildcards are not supported.
 For such cases, applications should maintain a change tracking table where the IDs of the modified records are stored and the event mechanism is used to tell the application that new records were added to the table.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_posting_events"><a class="anchor" href="#_posting_events"></a>8.2. Posting events</h3>
 <div class="paragraph">
-<p>Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-postevent" target="_blank" rel="noopener"><code>POST_EVENT</code></a> statement.
+<p>Events are posted from PSQL code (trigger, stored procedure, execute block, function) using the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-postevent"><code>POST_EVENT</code></a> statement.
 It is possible to create a stored procedure with the sole purpose of posting events (e.g. to notify events from an application):</p>
 </div>
 <div class="listingblock">
@@ -6529,7 +6528,7 @@ END</code></pre>
 <div class="listingblock">
 <div class="title">Using EXECUTE BLOCK to post events</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="sql">try (Statement stmt = connection.createStatement()) {
+<pre class="prettyprint highlight"><code data-lang="java">try (Statement stmt = connection.createStatement()) {
   stmt.execute(
       "EXECUTE BLOCK AS BEGIN POST_EVENT 'some_evt'; END");
 }</code></pre>
@@ -6540,10 +6539,10 @@ END</code></pre>
 <h3 id="_subscribing_to_events"><a class="anchor" href="#_subscribing_to_events"></a>8.3. Subscribing to events</h3>
 <div class="paragraph">
 <p>The design of the classes and interfaces in the <code>org.firebirdsql.event</code> package is similar to the Services API support;
-there is a central manager-class that establishes a database connection and provides service methods to work with the events, a callback interface that applications must implement to use the asynchronous event notification and an interface representing a database event with two properties, event name and occurrence count.</p>
+there is a central manager-class that establishes a database connection and provides service methods to work with the events, a callback interface that applications must implement to use the asynchronous event notification, and an interface representing a database event with two properties, event name and occurrence count.</p>
 </div>
 <div class="paragraph">
-<p>Applications have to configure the following properties before starting use of the implementation <code>EventManager</code> interface:</p>
+<p>Applications have to configure the following properties before starting use of the implementation of the <code>EventManager</code> interface:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -6561,26 +6560,32 @@ there is a central manager-class that establishes a database connection and prov
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>host</code><br>
-<code>serverName</code></p>
+<p><code>serverName</code><br>
+<code>host</code> (<em class="until"><strong>Removed in:</strong> Jaybird 6</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name or the IP address of the host to which we subscribe for events. <em>Required</em>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name or the IP address of the host to which we subscribe for events. <em>Required</em>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>port</code><br>
-<code>portNumber</code></p>
+<p><code>portNumber</code><br>
+<code>port</code> (<em class="until"><strong>Removed in:</strong> Jaybird 6</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Port to which we connect to, 3050 by default.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Port to which we connect to, 3050 by default.</p>
+</div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>database</code><br>
-<code>databaseName</code></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><code>databaseName</code><br>
+<code>database</code> (<em class="until"><strong>Removed in:</strong> Jaybird 6</em>)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the database.
-The path is specified for the remote host but must be absolute. <em>Required</em>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Path to the database.
+The path is specified for the remote host but must be absolute. <em>Required</em>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top" colspan="3"><div class="content"><div class="admonitionblock note">
@@ -6599,17 +6604,23 @@ The path is specified for the remote host but must be absolute. <em>Required</em
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>user</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the user on behalf of which we connect to the database. <em>Required</em>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Name of the user on behalf of which we connect to the database. <em>Required</em>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password corresponding to the specified user. <em>Required</em>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Password corresponding to the specified user. <em>Required</em>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>roleName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Role name. <em>Optional</em>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Role name. <em>Optional</em>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>expectedDb</code></p></td>
@@ -6743,7 +6754,7 @@ The following shows an example of using the blocking methods.</p>
 <div class="listingblock">
 <div class="title">Example of blocking waiting for event with a specified timeout</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">EventManager eventManager = new FBEventManager();
+<pre class="prettyprint highlight"><code data-lang="java">var eventManager = new FBEventManager();
 
 eventManager.setServerName("localhost");
 eventManager.setUser("SYSDBA");
@@ -6978,7 +6989,7 @@ The setting will also be ignored for native connections when using a fbclient li
 </li>
 <li>
 <p>The authentication plugin (and provider) interfaces should be considered unstable;
-they may change with point-releases (although we will try to avoid that)</p>
+they may change with point-releases (though we will try to avoid that)</p>
 </li>
 <li>
 <p>For now, it is probably necessary for the JAR containing the authentication plugin to be loaded by the same class loader&#8201;&#8212;&#8201;or at least, from the same classpath&#8201;&#8212;&#8201;as Jaybird itself</p>
@@ -7232,8 +7243,10 @@ The memory occupied by this result set will be released when the result is close
 </td>
 <td class="content">
 <div class="paragraph">
-<p>This functionality is experimental, and will remain so unless Firebird changes how its auto-commit mode works.
-<strong>Do not use this unless you really know what you&#8217;re doing.</strong></p>
+<p><strong>Do not use this unless you really know what you&#8217;re doing.</strong></p>
+</div>
+<div class="paragraph">
+<p>This functionality is experimental, and will remain so unless Firebird changes how its auto-commit mode works.</p>
 </div>
 <div class="paragraph">
 <p>Incorrect use of this functionality can result in excessive growth of the database due to increases in back-version chains of records, which can also cause performance degradation.
@@ -7270,8 +7283,20 @@ Note that any open blobs will be closed client- and server-side (until this is i
 <p>Artificial testing with repeated inserts (using a prepared statement) against a Firebird server on localhost shows that this leads to a reduction of execution time of +/- 7%.</p>
 </div>
 <div class="paragraph">
-<p>Support for this option is experimental, and should only be enabled if you 1) know what you&#8217;re doing, and 2) really need this feature.
-Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.</p>
+<p>Support for this option is experimental, and should only be enabled if you</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>know what you&#8217;re doing, and</p>
+</li>
+<li>
+<p>really need this feature.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Internally <code>isc_tpb_autocommit</code> uses <code>commit_retaining</code>, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7421,7 +7446,7 @@ Invalid values or impossible mappings will result in an error on connect.</p>
 <div class="listingblock">
 <div class="title">Properties object with dataTypeBind</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">Properties props = new Properties();
+<pre class="prettyprint highlight"><code data-lang="java">var props = new Properties();
 props.setProperty("dataTypeBind",
     "decfloat to varchar;timestamp with time zone to legacy"</code></pre>
 </div>
@@ -7454,7 +7479,7 @@ The listed versions are tried in addition to the supported protocol versions.
 Non-integer values or unknown protocol versions are silently ignored.</p>
 <div class="paragraph">
 <p>It is possible to use the &#8220;masked&#8221; protocol version (e.g. <code>"32780"</code> for protocol version 12).
-However, we recommend using the unmasked version (e.g. <code>"12"</code> for protocol version 12).</p>
+However, we recommend using the unmasked version (e.g. <code>"12"</code>).</p>
 </div>
 </li>
 <li>
@@ -7615,7 +7640,7 @@ When this connection property is enabled, the <code>DatabaseMetaData</code> of t
 <p>The <code>useCatalogAsPackage</code> connection property does not result in any other behaviour.</p>
 </div>
 <div class="paragraph">
-<p>Keep in mind, that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
+<p>Keep in mind that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
 This feature may be discontinued and removed in the future if Jaybird needs to implement &#8220;real&#8221; catalogs (e.g. because Firebird started supporting catalogs).</p>
 </div>
 <div class="paragraph">
@@ -7631,7 +7656,7 @@ This feature may be discontinued and removed in the future if Jaybird needs to i
 <h4 id="ref-client-info-jb5"><a class="anchor" href="#ref-client-info-jb5"></a>9.11.1. Support in Jaybird 5 and earlier</h4>
 <div class="paragraph">
 <p>Support for client info properties was introduced in Jaybird 2.2, storing properties in the <code>USER_SESSION</code> context of <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-functions.html#fblangref50-functions-workcontext"><code>RDB$GET/SET_CONTEXT</code></a>.
-Support is quite limited, allowing you to:</p>
+Support in Jaybird 5 and earlier is quite limited, allowing you to:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -14591,7 +14616,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-05 15:02:22 UTC
+Last updated 2026-04-05 16:05:17 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
