@@ -22,36 +22,36 @@ Features that were removed in Jaybird 3 or earlier are not covered.
 New or removed features are tagged with the version that introduced a feature (e.g. since:[Jaybird 5]) or removed feature (e.g. until:[Jaybird 5]).
 This tagging is only done for features introduced (or removed) _after_ Jaybird 4.0.0, or in Firebird 3.0 or later.
 
-This manual may include documentation of features of -- possibly unreleased -- Jaybird versions later than {jaybird-version} to simplify manual maintenance and versioning.
+This manual may contain documentation of features of unreleased Jaybird versions to simplify manual maintenance and versioning.
 
 === History
 
-When Borland released an open-source version of the InterBase RDBMS, it included sources for a type 3 JDBC driver called InterClient.footnote:[For those interested in software archaeology, you can find the open sourced Interclient sources archived on https://github.com/FirebirdSQL/x-cvs-interclient]
-However, due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the type 3 driver was a dead end.
+When Borland released an open-source version of the InterBase RDBMS, it included sources for a Type 3 (middleware) JDBC driver called InterClient.footnote:[For those interested in software archaeology, you can find the open sourced Interclient sources archived on https://github.com/FirebirdSQL/x-cvs-interclient]
+However, due to some inherent limitations of the InterBase (and later Firebird) client library, it was decided that the Type 3 driver was a dead end.
 Instead, the Firebird team decided to develop a pure Java implementation of the wire protocol. 
-This implementation became the basis for Jaybird, a pure Java driver for Firebird relational database.
+This implementation became the basis for Jaybird, a Type 2 and Type 4 JDBC driver for the Firebird relational database.
 
 === Jaybird Architecture
 
 The Jaybird driver consists of three layers, each of which is
 responsible for its part of the functionality.
 
-* The GDS layer represents a Java translation of the Firebird API.
+* The GDS-ng layer represents a Java translation of the Firebird API.
 It is represented by a number of interfaces and classes from the `org.firebirdsql.gds` package (and sub-packages).
 +
 This API is implemented by a number of plugins that provide the pure java, native,
 local, and embedded implementations of the driver.
-* until:[Jaybird 5] The JCA layer represents the heart of the driver.
+* since:[Jaybird 5] The XCA layer represents the heart of the driver.
 Here all connection and transaction management happens.
-Additionally, this layer adapts the GDS API and proxies the calls to the GDS implementation.
+Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.
 +
-The JCA layer is an implementation of the Java Connector Architecture specification.
-* since:[Jaybird 5] The XCA layer is a replacement of the JCA layer of previous versions.
-* The JDBC layer is an implementation of the JDBC specification.
+The XCA layer is a replacement of the JCA layer of previous versions, and should be considered an internal implementation detail.
+* until:[Jaybird 5] The JCA layer is an implementation of the Java/Jakarta Connector Architecture specification, and fulfils the same role as the XCA layer in Jaybird 5 and later.
+* The JDBC layer is an implementation of the https://jcp.org/en/jsr/detail?id=221[JDBC Specification^].
 
-In addition, the Services API allows you to manage the database and the server itself.
-The manager component represents a JMX compatible implementation that utilizes the Services API.
-Currently, only calls to create and drop database are available in the Manager component, other classes provide features for database backup/restore, user management, statistics gathering, etc.
+The <<services,Services API>> allows you to manage databases and the server itself.
+It offers a Manager component to create and drop databases.
+Other classes provide access to the Firebird Services Manager for database backup/restore, user management, statistics gathering, etc.
 
 [[distribution]]
 === Jaybird Distribution
@@ -153,13 +153,13 @@ A subset of the tests are automatically run -- through a GitHub Action -- for ea
 
 For JDBC documentation, see https://www.oracle.com/java/technologies/javase/javase-tech-database.html[Java SE Technologies - Database^].
 
-For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.4, e.g. JDBC 4.4 is "`Maintenance Release 4`").
+For the JDBC specification, see https://jcp.org/en/jsr/detail?id=221[JSR 221: JDBC^TM^ 4.0 API Specification^] (covers JDBC 4.0 - 4.5, e.g. JDBC 4.5 is "`Maintenance Release 5`").
 
 ==== Firebird
 
-General information about the Firebird database is available from the Firebird website (https://firebirdsql.org/[^]).
+General information about the Firebird database is available from the  https://firebirdsql.org/[Firebird website].
 
-For information about using SQL in Firebird, see the https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html[Firebird 5.0 Language Reference^] and other documentation available from the https://firebirdsql.org/en/reference-manuals/[Reference Manuals^] section of the Firebird website.
+For information about using SQL in Firebird, see the https://firebirdsql.org/file/documentation/html/en/refdocs/fblangref50/firebird-50-language-reference.html[Firebird 5.0 Language Reference] and other documentation available from the https://firebirdsql.org/en/reference-manuals/[Reference Manuals] section of the Firebird website.
 
 ==== Jaybird Support
 
@@ -169,18 +169,18 @@ Support for Jaybird is available through the following channels:
 +
 You can subscribe to the mailing list by sending an email to firebird-java+subscribe@googlegroups.com (this does not require a Google account *if* you confirm by email reply).
 Alternatively, you can join the group at the https://groups.google.com/g/firebird-java[firebird-java Google Group^] (this requires a Google account).
-* On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions^]
-* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki^]
+* On https://firebirdsql.org/docs/drivers/java/faq.html[Jaybird Frequently Asked Questions]
+* On https://github.com/FirebirdSQL/jaybird/wiki/[Jaybird wiki] ("`archived`")
 
 === Contributing
 
 There are several ways you can contribute to Jaybird or Firebird in general:
 
-* Participate on the https://firebirdsql.org/en/mailing-lists/[mailing lists^]
+* Participate on the https://firebirdsql.org/en/mailing-lists/[mailing lists]
 * Report bugs or submit patches on the tracker (see <<intro-reporting-bugs>>)
 * Create pull requests on GitHub (https://github.com/FirebirdSQL/jaybird[^])
 * Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use the https://groups.google.com/g/firebird-devel[firebird-devel Google Group^])
-* Become a paying Associate, Partner or sponsor of the Firebird Foundation (see https://firebirdsql.org/en/firebird-foundation/[^])
+* Become a paying Associate, Partner or sponsor of the https://firebirdsql.org/en/firebird-foundation/[Firebird Foundation] (see also https://firebirdsql.org/en/donate[Support Firebird: Donation and Sponsorship Opportunities])
 
 [[intro-reporting-bugs]]
 ==== Reporting Bugs

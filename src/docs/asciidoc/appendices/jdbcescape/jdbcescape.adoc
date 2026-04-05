@@ -2,19 +2,19 @@
 [appendix]
 == Supported JDBC Scalar Functions
 
-The JDBC API has an escape syntax for numeric, string, time, date, system and conversion functions.
-Jaybird will try to provide an equivalent of the JDBC function using the built-in capabilities of the Firebird database.
-When no equivalent is available, Jaybird will pass the function call "as is" to the database assuming that it contains the necessary UDF, UDR or stored function declaration.
+The JDBC Specification defines an escape syntax for numeric, string, time, date, system and conversion functions.
+Jaybird will try to provide an equivalent of the JDBC function using the built-in capabilities of Firebird.
+When no equivalent is available, Jaybird will pass the function call "as is" assuming that the database contains the necessary UDF, UDR or stored function declaration.
 
 Not all functions described in the JDBC specification have corresponding built-in functions in Firebird, but some are available in the standard UDF library ``ib_udf``{wj}footnote:[On Windows platform it is represented by the `ib_udf.dll`, on Linux it is represented by the `libib_udf.so`.] shipped with Firebird.
 Jaybird provides a connection parameter `use_standard_udf` to configure the driver to assume that functions from that UDF are available in the database (until:[Jaybird 5]).
-In this case Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.
+When enabled, Jaybird will convert all JDBC function calls into the corresponding calls of the UDF functions.
 
 In recent Firebird versions, the number of built-in functions has been greatly increased, and Jaybird 3 and higher can now map almost all JDBC escapes to those built-in functions.
 Using the `use_standard_udf` is no longer advisable, especially as UDFs are now deprecated and will be removed in a future Firebird version.
 since:[Jaybird 5] UDF mode (`use_standard_udf`) is no longer available in Jaybird 5 and higher.
 
-Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "built-in" and in the "UDF" modes.
+Below you will find the list of JDBC functions and whether they have a corresponding equivalent in the "`built-in`" and in the "`UDF`" modes.
 
 === Numeric Functions
 
