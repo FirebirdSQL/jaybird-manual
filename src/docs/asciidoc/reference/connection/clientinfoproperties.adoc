@@ -7,7 +7,7 @@ Client info properties allow you to set properties on a connection for informati
 ==== Support in Jaybird 5 and earlier
 
 Support for client info properties was introduced in Jaybird 2.2, storing properties in the `USER_SESSION` context of https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-functions.html#fblangref50-functions-workcontext[`RDB$GET/SET_CONTEXT`].
-Support is quite limited, allowing you to:
+Support in Jaybird 5 and earlier is quite limited, allowing you to:
 
 * Set properties individually or collectively using a `Properties` object (`Connection#setClientInfo(String,String)`, `Connection#setClientInfo(Properties)`)
 * Clear properties individually (setting them to `null`) (`Connection#setClientInfo(String,String)`

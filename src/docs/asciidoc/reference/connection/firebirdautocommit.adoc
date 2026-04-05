@@ -3,8 +3,9 @@
 
 [CAUTION]
 ====
-This functionality is experimental, and will remain so unless Firebird changes how its auto-commit mode works.
 **Do not use this unless you really know what you're doing.**
+
+This functionality is experimental, and will remain so unless Firebird changes how its auto-commit mode works.
 
 Incorrect use of this functionality can result in excessive growth of the database due to increases in back-version chains of records, which can also cause performance degradation.
 Additionally, when used with an isolation level other than READ COMMITTED, the connection will only see changes committed at the time the initial transaction was started;
@@ -30,5 +31,9 @@ If you manually add `isc_tpb_autocommit` to the transaction parameter buffer, an
 
 Artificial testing with repeated inserts (using a prepared statement) against a Firebird server on localhost shows that this leads to a reduction of execution time of +/- 7%.
 
-Support for this option is experimental, and should only be enabled if you 1) know what you're doing, and 2) really need this feature. 
+Support for this option is experimental, and should only be enabled if you
+
+. know what you're doing, and
+. really need this feature.
+
 Internally `isc_tpb_autocommit` uses `commit_retaining`, which means that using this feature may increase the transaction gap with associated sweep and garbage collection impact.

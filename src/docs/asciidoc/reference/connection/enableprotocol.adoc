@@ -16,7 +16,7 @@ The listed versions are tried in addition to the supported protocol versions.
 Non-integer values or unknown protocol versions are silently ignored.
 +
 It is possible to use the "`masked`" protocol version (e.g. `"32780"` for protocol version 12).
-However, we recommend using the unmasked version (e.g. `"12"` for protocol version 12).
+However, we recommend using the unmasked version (e.g. `"12"`).
 * `"*"` -- enable all available protocol versions
 * `null` or empty string (`++""++`) -- default behaviour, only use supported protocols
 

@@ -31,7 +31,7 @@ When this connection property is enabled, the `DatabaseMetaData` of that connect
 
 The `useCatalogAsPackage` connection property does not result in any other behaviour.
 
-Keep in mind, that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
+Keep in mind that this is non-standard behaviour, and standard JDBC tools or libraries may not work correctly when this property is enabled.
 This feature may be discontinued and removed in the future if Jaybird needs to implement "`real`" catalogs (e.g. because Firebird started supporting catalogs).
 
 See also https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2023-09-use-catalog-as-package.adoc[jdp-2023-08: Use Catalog as Package^]

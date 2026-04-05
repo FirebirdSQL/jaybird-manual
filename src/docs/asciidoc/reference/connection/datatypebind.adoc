@@ -35,7 +35,7 @@ For example:
 [source,java]
 .Properties object with dataTypeBind
 ----
-Properties props = new Properties();
+var props = new Properties();
 props.setProperty("dataTypeBind", 
     "decfloat to varchar;timestamp with time zone to legacy"
 ----

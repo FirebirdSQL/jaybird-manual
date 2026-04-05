@@ -137,7 +137,7 @@ This support is experimental and comes with a number of caveats:
 
 * We haven't tested this extensively (except for loading Jaybird's own plugins internally)
 * The authentication plugin (and provider) interfaces should be considered unstable; 
-they may change with point-releases (although we will try to avoid that) 
+they may change with point-releases (though we will try to avoid that)
 * For now, it is probably necessary for the JAR containing the authentication plugin to be loaded by the same class loader -- or at least, from the same classpath -- as Jaybird itself
 
 If you implement a custom authentication plugin and run into problems, contact us on the https://groups.google.com/g/firebird-java[firebird-java Google Group^].
