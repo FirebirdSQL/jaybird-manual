@@ -159,6 +159,30 @@ The order of buffers for output is as follows:
 Jaybird => output [=> deflate] => socket
 ----
 
+[#systemproperties-force-close-on-fatal]
+=== Close connection on fatal error
+
+since:[Jaybird 5.0.13/6.0.6]
+
+The following system properties configure if Jaybird forcibly closes connections on fatal errors (default) or not.
+
+`org.firebirdsql.jdbc.connection.forceCloseOnFatal`::
+Boolean property.
+Configures force close behaviour of "`normal`" JDBC connections (i.e. created with `org.firebirdsql.jaybird.xca.FBStandAloneConnectionManager`);
+defaults to `true`.
+
+`org.firebirdsql.ds.xa.connection.forceCloseOnFatal`::
+Boolean property.
+Configures force close behaviour of (XA) connections created by `org.firebirdsql.ds.FBXADataSource`;
+defaults to `true`.
+
+These system properties are checked _dynamically_, so they can be changed at run time.
+
+These properties should only be used for debugging or workarounds.
+Correct behaviour of a connection after a fatal error is ignored is not guaranteed.
+
+See also https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2026-04-disable-closing-of-broken-connections.adoc[jdp-2026-04: Disable closing of broken connections].
+
 [[systemproperties-other]]
 === Other properties
 
