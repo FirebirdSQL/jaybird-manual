@@ -623,8 +623,9 @@ table.wide-table{font-size:xx-small}
 <li><a href="#systemproperties-default-inline-blob">B.6. Default inline blob property values</a></li>
 <li><a href="#systemproperties-default-report-sql-warnings">B.7. Default <code>reportSQLWarnings</code> value</a></li>
 <li><a href="#systemproperties-wire-buffers">B.8. Wire protocol buffer sizes</a></li>
-<li><a href="#systemproperties-other">B.9. Other properties</a></li>
-<li><a href="#systemproperties-java">B.10. Useful Java system properties</a></li>
+<li><a href="#systemproperties-force-close-on-fatal">B.9. Close connection on fatal error</a></li>
+<li><a href="#systemproperties-other">B.10. Other properties</a></li>
+<li><a href="#systemproperties-java">B.11. Useful Java system properties</a></li>
 </ul>
 </li>
 <li><a href="#datatypeconversion">Appendix C: Data Type Conversion Table</a>
@@ -11436,7 +11437,42 @@ The &#8220;decrypt&#8221; buffer is only applied when wire encryption is used (t
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.9. Other properties</h3>
+<h3 id="systemproperties-force-close-on-fatal"><a class="anchor" href="#systemproperties-force-close-on-fatal"></a>B.9. Close connection on fatal error</h3>
+<div class="paragraph">
+<p><em class="since"><strong>Since:</strong> Jaybird 5.0.13/6.0.6</em></p>
+</div>
+<div class="paragraph">
+<p>The following system properties configure if Jaybird forcibly closes connections on fatal errors (default) or not.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>org.firebirdsql.jdbc.connection.forceCloseOnFatal</code></dt>
+<dd>
+<p>Boolean property.
+Configures force close behaviour of &#8220;normal&#8221; JDBC connections (i.e. created with <code>org.firebirdsql.jaybird.xca.FBStandAloneConnectionManager</code>);
+defaults to <code>true</code>.</p>
+</dd>
+<dt class="hdlist1"><code>org.firebirdsql.ds.xa.connection.forceCloseOnFatal</code></dt>
+<dd>
+<p>Boolean property.
+Configures force close behaviour of (XA) connections created by <code>org.firebirdsql.ds.FBXADataSource</code>;
+defaults to <code>true</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>These system properties are checked <em>dynamically</em>, so they can be changed at run time.</p>
+</div>
+<div class="paragraph">
+<p>These properties should only be used for debugging or workarounds.
+Correct behaviour of a connection after a fatal error is ignored is not guaranteed.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://github.com/FirebirdSQL/jaybird/blob/master/devdoc/jdp/jdp-2026-04-disable-closing-of-broken-connections.adoc">jdp-2026-04: Disable closing of broken connections</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="systemproperties-other"><a class="anchor" href="#systemproperties-other"></a>B.10. Other properties</h3>
 <div class="paragraph">
 <p>The following system properties control other global behaviour of Jaybird.</p>
 </div>
@@ -11469,7 +11505,7 @@ Technically, <code>org.firebirdsql.jna.syncWrapNativeLibrary</code> is dynamic, 
 </div>
 </div>
 <div class="sect2">
-<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.10. Useful Java system properties</h3>
+<h3 id="systemproperties-java"><a class="anchor" href="#systemproperties-java"></a>B.11. Useful Java system properties</h3>
 <div class="paragraph">
 <p>The following Java system properties are relevant for Jaybird.</p>
 </div>
@@ -14616,7 +14652,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-05 16:05:17 UTC
+Last updated 2026-04-07 07:32:56 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
