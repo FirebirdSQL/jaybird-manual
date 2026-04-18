@@ -506,10 +506,10 @@ table.wide-table{font-size:xx-small}
 </li>
 <li><a href="#statements">4. Executing statements</a>
 <ul class="sectlevel2">
-<li><a href="#_the_java_sql_statement_interface">4.1. The java.sql.Statement interface</a></li>
+<li><a href="#stmt-statement">4.1. The java.sql.Statement interface</a></li>
 <li><a href="#_statement_behind_the_scenes">4.2. Statement behind the scenes</a></li>
-<li><a href="#_the_java_sql_preparedstatement_interface">4.3. The java.sql.PreparedStatement interface</a></li>
-<li><a href="#callable-statement">4.4. The java.sql.CallableStatement interface</a></li>
+<li><a href="#stmt-prepared">4.3. The java.sql.PreparedStatement interface</a></li>
+<li><a href="#stmt-callable">4.4. The java.sql.CallableStatement interface</a></li>
 <li><a href="#_batch_updates">4.5. Batch Updates</a></li>
 <li><a href="#stmt-escape-syntax">4.6. Escape syntax</a></li>
 </ul>
@@ -2653,18 +2653,18 @@ The JDBC specification distinguishes three kinds of statements:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Regular statements to execute SQL statements without parameters,</p>
+<p><a href="#stmt-statement">Regular statements</a> to execute SQL statements without parameters,</p>
 </li>
 <li>
-<p>prepared statements to execute SQL statements with parameters,</p>
+<p><a href="#stmt-prepared">prepared statements</a> to execute SQL statements with parameters,</p>
 </li>
 <li>
-<p>and callable statements to execute stored procedures.</p>
+<p>and <a href="#stmt-callable">callable statements</a> to execute stored procedures.</p>
 </li>
 </ol>
 </div>
 <div class="sect2">
-<h3 id="_the_java_sql_statement_interface"><a class="anchor" href="#_the_java_sql_statement_interface"></a>4.1. The java.sql.Statement interface</h3>
+<h3 id="stmt-statement"><a class="anchor" href="#stmt-statement"></a>4.1. The java.sql.Statement interface</h3>
 <div class="paragraph">
 <p>The <code>java.sql.Statement</code> interface is the simplest interface to execute SQL statements.
 It distinguishes three types:</p>
@@ -2735,12 +2735,15 @@ However, despite that these resources are released when the connection closes, i
 If the specified statement does not produce a result set, an <code>SQLException</code> is thrown after statement execution<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup>.</p>
 </li>
 <li>
-<p><code>Statement.executeUpdate(String)</code>&#8201;&#8212;&#8201;executes other DML (Data Manipulation Language, e.g. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) or DDL (Data Definition Language<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>) statements and returns the number of updated rows.
+<p><code>Statement.executeUpdate(String)</code>&#8201;&#8212;&#8201;executes other DML (Data Manipulation Language, e.g. <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>) or DDL (Data Definition Language<sup class="footnote">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup>) statements and returns the number of updated rows&#8201;&#8212;&#8201;as <code>int</code>.
 If the specified statement is a query or otherwise produces a result set, an <code>SQLException</code> is thrown.</p>
 </li>
 <li>
+<p><code>Statement.executeLargeUpdate(String)</code>&#8201;&#8212;&#8201;same as previous, except it returns the update count as <code>long</code>.</p>
+</li>
+<li>
 <p><code>Statement.execute(String)</code>&#8201;&#8212;&#8201;executes a statement and returns <code>true</code> when the statement returned a result set, or <code>false</code> if the result has no result set, but has an update count or nothing as its result.
-You can use <code>Statement.getResultSet()</code> to get the result of the executed query, or you can use <code>Statement.getUpdateCount()</code> when you have executed an update statement.</p>
+You can use <code>Statement.getResultSet()</code> to get the result of the executed query, or you can use <code>Statement.getUpdateCount()</code> or <code>getLargeUpdateCount()</code> when you have executed an update statement.</p>
 <div class="paragraph">
 <p>Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.</p>
 </div>
@@ -2980,7 +2983,7 @@ Please check the documentation of your connection pool for more information.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_java_sql_preparedstatement_interface"><a class="anchor" href="#_the_java_sql_preparedstatement_interface"></a>4.3. The java.sql.PreparedStatement interface</h3>
+<h3 id="stmt-prepared"><a class="anchor" href="#stmt-prepared"></a>4.3. The java.sql.PreparedStatement interface</h3>
 <div class="paragraph">
 <p>As we have seen, Jaybird already performs internal optimization when it comes to multiple statement execution&#8201;&#8212;&#8201;it can reuse the allocated statement handle in subsequent calls.
 However, this improvement is very small and sometimes can even be negligible compared to the time needed to compile a SQL statement into its BLR form.</p>
@@ -3131,7 +3134,7 @@ Jaybird currently does not perform statement caching
 </div>
 </div>
 <div class="sect2">
-<h3 id="callable-statement"><a class="anchor" href="#callable-statement"></a>4.4. The java.sql.CallableStatement interface</h3>
+<h3 id="stmt-callable"><a class="anchor" href="#stmt-callable"></a>4.4. The java.sql.CallableStatement interface</h3>
 <div class="paragraph">
 <p>The <code>CallableStatement</code> interface extends <code>PreparedStatement</code> with methods for executing and retrieving results from stored procedures.
 It was introduced in the JDBC specification to unify access to the stored procedures across different database systems.
@@ -3152,7 +3155,7 @@ These features are of no interest to Jaybird users, since Firebird does not supp
 </div>
 <div class="paragraph">
 <p>The IN and OUT parameters are specified in one statement.
-The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter is will contain output values, the rest are considered to be IN parameters.</p>
+The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter contains output values, the rest are considered to be IN parameters.</p>
 </div>
 <div class="sect3">
 <h4 id="_firebird_stored_procedures"><a class="anchor" href="#_firebird_stored_procedures"></a>4.4.1. Firebird stored procedures</h4>
@@ -3340,6 +3343,28 @@ Not that it makes much sense to do this, but it might help in some cases when po
 <p>It is also allowed to use a procedure call parameter both as an input and output parameter.
 It is recommended to use this only when porting applications from the database servers that allow INOUT parameter types, such as Oracle.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Future Jaybird versions may become stricter in how they handle IN and OUT parameters.
+They will likely require a strict ordering of parameters to match the actual procedure definition, so interleaving IN and OUT, or marking a parameter position as both IN and OUT may no longer be supported.</p>
+</div>
+<div class="paragraph">
+<p>Our recommendation: always use the order of IN parameters in the procedure definition, followed by the OUT parameters in the <code>RETURNS</code> clause of the definition.</p>
+</div>
+<div class="paragraph">
+<p>Mixing order of parameters will then probably require use of Firebird 6.0 and its native <code>CALL</code> statement.
+This is not final yet, and we may offer a backwards compatibility option, for a transition period of at least one major Jaybird version.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The actual stored procedure call using the <code>CallableStatement</code> is equivalent to the call using the prepared statement as shown in the first example.
 There is no measurable performance differences when using the callable statement interface.</p>
@@ -3367,16 +3392,33 @@ There is no measurable performance differences when using the callable statement
 This syntax seems to be more intuitive, as it looks like a function call.
 It is possible to use this syntax for stored procedures that return more than one parameter by combining code from the second and the last examples.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Future Jaybird versions may become stricter in how they handle IN and OUT parameters, and especially the <code>{?=call ...}</code> syntax may be restricted to only support procedures with a single OUT parameter (i.e. a single parameter in the <code>RETURNS</code> clause of its definition).</p>
+</div>
+<div class="paragraph">
+<p>This is not final yet, and we may offer a backwards compatibility option, for a transition period of at least one major Jaybird version.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Firebird stored procedures can also return result sets.
-This is achieved by using the SUSPEND keyword inside the procedure body.
+This is achieved by using the <code>SUSPEND</code> keyword inside the procedure body.
 This keyword returns the current values of the output parameters as a single row to the client.</p>
 </div>
 <div class="paragraph">
 <p>The following example is more complex and shows a stored procedure that computes a set of factorial of the numbers up to the specified number of rows.</p>
 </div>
 <div class="paragraph">
-<p>The SELECT SQL statement is the natural way of accessing the selectable procedures in Firebird.
+<p>The <code>SELECT</code> SQL statement is the natural way of accessing the selectable procedures in Firebird.
 You &#8220;select&#8221; from such procedures using the <code>Statement</code> or <code>PreparedStatement</code> objects.</p>
 </div>
 <div class="paragraph">
@@ -3743,7 +3785,7 @@ omitted):</p>
 <div class="sect3">
 <h4 id="stmt-escape-sp"><a class="anchor" href="#stmt-escape-sp"></a>4.6.4. Stored procedures</h4>
 <div class="paragraph">
-<p>The escaped syntax for stored procedures is described in details in section <a href="#callable-statement">The java.sql.CallableStatement interface</a>.</p>
+<p>The escaped syntax for stored procedures is described in details in section <a href="#stmt-callable">The java.sql.CallableStatement interface</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -14652,7 +14694,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-07 07:32:56 UTC
+Last updated 2026-04-18 10:40:02 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
