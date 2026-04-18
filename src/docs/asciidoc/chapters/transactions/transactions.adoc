@@ -1,20 +1,20 @@
 [[transactions]]
 == Using transactions
 
-Transactions are used to group SQL statements into a single block that satisfies so-called ACID properties: atomicity, consistency, isolation and durability.
+Transactions are used to group SQL statements into a single block that satisfies so-called ACID properties: Atomicity, Consistency, Isolation and Durability.
 In other words, all statements executed within a transaction either succeed and their results will be permanently stored in the database, or the effect of the statement execution will be undone.
 
 === JDBC transactions
 
 Firebird supports multiple concurrent transactions over the same database connection.
-This allows applications that work via the native Firebird API to save the number of network connections, which in turn saves the resources on the serverfootnote:[
-Additionally, before the InterBase was open-sourced, this allowed application developers to create multi-threaded application without need to purchase additional user licenses.].
+This allows applications that work via the native Firebird API to reduce the number of network connections required, which in turn can save resources on the serverfootnote:[
+Additionally, before InterBase was open-sourced, this allowed application developers to create multithreaded application without need to purchase additional user licenses.].
 
-This model however cannot be applied to each database engine in the world and the designers of the JDBC API have chosen a model where each database connection has one and only one active transaction associated with it.
-Also, unlike the Firebird model, where transactions require explicit start, the JDBC specification requires the driver to start transaction automatically as soon as a transactional context is needed.
+This model however is not used by all database engines, and the designers of the JDBC API have chosen a model where each database connection has only one active transaction.
+Also, unlike the Firebird model, where transactions require an explicit start, the JDBC specification requires the driver to start a transaction automatically as soon as a transactional context is needed.
 
-The following code shows a very simple example of using transactions in JDBC where a hypothetical intruder that increases salary of each employee twice and uses explicit transaction control in JDBC.
-They also try to hide their identity and if the operations succeed, they commit the transaction, otherwise the roll the changes back.
+The following code shows a very simple example of using transactions in JDBC where a hypothetical intruder increases salary of each employee twice and uses explicit transaction control in JDBC.
+They also try to hide their identity and if the operations succeeds, they commit the transaction, otherwise they roll the changes back.
 
 [source,java]
 .Example of explicit transaction control
@@ -40,8 +40,8 @@ try (Statement stmt = connection.createStament()) {
 }
 ----
 
-To use transactions, the application first switches the auto-commit mode off (see below for more information), then creates a `java.sql.Statement` object, and executes an `UPDATE` statement.
-Please note, that there is no explicit transaction start, a new transaction will be started right before executing the statement (step 2).
+To use transactions, the application first switches auto-commit mode off (see below for more information), then creates a `java.sql.Statement` object, and executes an `UPDATE` statement.
+Please note, that there is no explicit transaction start: a new transaction will be started right before executing the statement (step 2).
 
 If we work with a database where not only referential integrity is preserved, but also reasonable security rules are encoded in the triggers, it will raise an error preventing cleaning the audit trails information.
 In this case the intruder chooses to undo all the changes they made, so that nobody notices anything.
@@ -50,10 +50,10 @@ But if no security rules are implemented, they commit the transaction.
 [TIP]
 ====
 Firebird PSQL has an `IN AUTONOMOUS TRANSACTION` block that can be used to prevent such abuse and prevent audit-records from being wiped out by a transaction rollback.
-Alternatively, you can use an external table to store the audit log.
+Alternatively, you can use an external table to store the audit log, or use the trace facility to log such operations.
 ====
 
-When a connection uses explicit transaction control, each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
+When a connection uses explicit transaction control (auto-commit disabled), each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
 If a transaction was not finished, but the `close` method is called, the active transaction is rolled back automatically.
 This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that `Connection` object became eligible for garbage collection.
 until:[Jaybird 5] In this case, the class finalizer implicitly invokes the `close()` method, which in turn rolls the transaction back.
@@ -68,7 +68,7 @@ since:[Jaybird 5] A number of finalizers have been removed in Jaybird 5, so tran
 
 === Auto-commit mode
 
-Each newly created connection by default has auto-commit mode enabled by default.
+Each newly created connection by default has auto-commit mode enabled.
 In other words, the duration of the transaction is limited by the duration of statement execution, or more formally -- the transaction is ended when the statement is completed.
 The point when statement execution is considered complete, is defined in the specification as:
 
@@ -91,31 +91,31 @@ Note – Some JDBC driver implementations may also implicitly `close` the `Resul
 '''
 ____
 
-until:[Jaybird 6] In Jaybird 5 and earlier, in auto-commit mode, a `TYPE_FORWARD_ONLY` result set was implicitly closed when `next()` returned false.
+until:[Jaybird 6] In Jaybird 5 and earlier, in auto-commit mode, a `TYPE_FORWARD_ONLY` result set is implicitly closed when `next()` returned false.
 This was to conform to the requirements of JDBC 3.0, but since this was relaxed in JDBC 4.0 (see quote above), this behaviour was changed in Jaybird 6.
 
 since:[Jaybird 6] In auto-commit mode, a result set will now remain open until explicitly closed using `ResultSet.close()`, when any statement is executed, when the auto-commit mode is disabled, or by the close of the `Statement` or `Connection`.
 
 If there is an ongoing transaction and the value of the auto-commit property is changed, the current transaction is committed.
 
-Note, when a connection is obtained via a `javax.sql.DataSource` object and container managed transactions are used (for example, the application is executing inside an EJB container), it is an error to call `setAutoCommit` method.
+Note, when a connection is obtained via a `javax.sql.DataSource` object and container managed transactions are used (for example, the application is executing inside an EJB container, or the connection is participating in a JTA-managed distributed transaction), it is an error to call `setAutoCommit`.
 
 Special care should be taken when using multiple statements in auto-commit mode.
 The JDBC 2.0 specification did not fully define the rules for the statement completion as it did not define the behavior of multiple `ResultSet` objects created using the same connection object in auto-commit mode.
 
-Since Firebird does not allow the result set to remain open after the transaction ends, Jaybird 1.5.x and below cached the complete result set in memory when `SELECT` statements were executed and the transaction was committed.
-This had an adverse effect on allocated memory when the result set is big, especially when it contains BLOB fields.
-The JDBC 3.0 specification addressed this unclear situation (see above) and Jaybird 2.1 was improved to correctly handle them.
+Since Firebird does not allow a result set to remain open after the transaction ends, Jaybird 1.5.x and below cached the complete result set in memory when `SELECT` statements were executed and the transaction was committed.
+This had an adverse effect on allocated memory when the result set is big, especially when it contains `BLOB` fields.
+The JDBC 3.0 specification addressed this unclear situation (see above) and Jaybird 2.1 was improved to correctly handle this.
 It also allowed to reduce the memory footprint -- the driver no longer caches non-scrollable and non-holdable result sets in memory.
 
-However, some Java applications that do not conform the current JDBC specification might no longer work with Jaybird 2.1 and above unless additional steps are taken.
+However, some Java applications that do not conform the current JDBC specifications might no longer work with Jaybird 2.1 and above unless additional steps are taken.
 
 The piece of code below works perfectly with explicit transaction control.
-However, it won't work correctly with auto-commit with a driver -- like Jaybird -- that complies with the JDBC 3.0 specification, when the `selectStmt` and `updateStmt` object are created by the same connection object (step 1).
-When the UPDATE is executed in step 3, the result set produced by the SELECT statement must be closed before the execution.
-When the Java application tries to fetch the next record by calling the `rs.next()` method, it will receive an `SQLException` with a message _"The result set is closed"_.
+However, it won't work correctly with auto-commit with a driver -- like Jaybird -- that complies with the JDBC 3.0 and higher specification, when the `selectStmt` and `updateStmt` object are created by the same connection object (step 1).
+When the `UPDATE` is executed in step 3, the result set produced by the `SELECT` statement must be closed before the execution.
+When the Java application tries to fetch the next record by calling the `rs.next()` method, it will receive an `SQLException` with a message "`__The result set is closed__`".
 
-The only correct solution to this situation is to fix the application by either using explicit transaction control, or by using two connection objects, one for SELECT statement and one for UPDATE statement.
+The correct solution to this situation is to fix the application by either using explicit transaction control, or by using two connection objects, one for the `SELECT` statement and one for the `UPDATE` statement.
 
 [source,java]
 .Non-compliant usage of nested statements in auto-commit mode
@@ -135,10 +135,10 @@ try (Statement selectStmt = connection.createStatement(); // <1>
 ----
 
 Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software. 
-To address this, Jaybird 2.1 introduced the connection parameter `defaultHoldable` which makes result sets holdable by default. 
-The holdable result sets will be fully cached in memory, but won't be closed automatically when transaction ends.footnote:[
+To address this, Jaybird 2.1 introduced the connection parameter <<ref-defaultholdable,`defaultHoldable`>> which makes result sets holdable by default.
+Holdable result sets are fully cached in memory, and will not be closed automatically when a transaction ends.footnote:[
 Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. 
-If you need result sets that can be "detached" from the statement object that created them, please check the `javax.sql.RowSet` implementations.] 
+If you need result sets that can be "`detached`" from the statement object that created them, please check the `javax.sql.RowSet` implementations.]
 This property also affects the default holdability of result sets when auto-commit is disabled.
 
 See <<ref-defaultholdable>> for more information.
@@ -162,58 +162,51 @@ Therefore, if you are sure that application won't modify the database in the tra
 [[transactions-isolation-levels]]
 === Transaction Isolation Levels
 
-The ANSI/ISO SQL standard defines four such levels, each next one weaker than the previous.
+The SQL standard defines four isolation levels, each next one weaker than the previous.
 These isolation levels are also used in the JDBC specification:
 
-[cols="2,3",options="header",]
 .JDBC transaction isolation levels and their characteristics
-|===
-|JDBC isolation level
-|Description
+`TRANSACTION_SERIALIZABLE`::
+Transactions with this isolation level prohibit phantom reads, the situation when one transaction reads all rows satisfying a `WHERE` condition, another transaction inserts a row satisfying that condition, and the first transaction re-executes the statement.
 
-m|TRANSACTION_SERIALIZABLE
-|Transactions with this isolation level prohibit phantom reads, the situation when one transaction reads all rows satisfying the WHERE condition, another transaction inserts a row satisfying that condition, and first transaction re-executes the statement.
-
-m|TRANSACTION_REPEATABLE_READ
-|This isolation level prevents non-repeatable reads, a situation when a row is read in one transaction, then modified in another transaction, and later re-read in the first transaction.
+`TRANSACTION_REPEATABLE_READ`::
+This isolation level prevents non-repeatable reads, a situation when a row is read in one transaction, then modified in another transaction, and later re-read in the first transaction.
 In this case different values had been read within the same transaction.
 
-m|TRANSACTION_READ_COMMITTED
-|Transactions with this isolation level can see only committed records.
+`TRANSACTION_READ_COMMITTED`::
+Transactions with this isolation level can see only committed records.
 However, it does not prevent so-called non-repeatable reads and phantom reads.
 
-m|TRANSACTION_READ_UNCOMMITTED
-|The weakest isolation level, or better to say level with no isolation.
-Such transactions can see the not yet committed changes to the data in the database from the concurrently running transactions.
-
-|===
+`TRANSACTION_READ_UNCOMMITTED`::
+The weakest isolation level, or better, a level without isolation.
+Such transactions can see the not yet committed changes from concurrently running transactions.
 
 Firebird, however, defines other isolation levels: `read_committed`, `concurrency` and `consistency`.
-Only the `read_committed` isolation level can be mapped to the same level defined by the ANSI/ISO SQL standard.
-Dirty reads are prevented, non-repeatable reads as well as phantom reads can occur.
+Only the `read_committed` isolation level can be mapped to the same level defined by the SQL standard.
+Dirty reads are prevented, non-repeatable reads and phantom reads can occur.
 
-The `concurrency` isolation level is stronger than repeatable read isolation defined in ANSI/SQL standard and satisfies the requirements of a serializable isolation level, however, unlike RDBMSes with locking concurrency control, it guarantees better performance.
+The `concurrency` isolation level is stronger than repeatable read isolation defined in the SQL standard and satisfies the requirements of a serializable isolation level, however, unlike RDBMSes with locking concurrency control, it guarantees better performance.
 
-And finally Firebird provides a `consistency` isolation level which in combination with table reservation feature guarantees the deadlock-free execution of transactions.
-A transaction will be prevented from starting if there is already another one with the overlapping sets of the reserved tables.
+And finally, Firebird provides a `consistency` isolation level which in combination with table reservation feature guarantees a deadlock-free execution of transactions.
+A transaction will be prevented from starting if there is already another one with an overlapping sets of reserved tables.
 This isolation level guarantees truly serial history of transaction execution.
 
 To satisfy the JDBC specification Jaybird provides the following default mapping of the JDBC transaction isolation levels to Firebird isolation levels:
 
-* TRANSACTION_READ_COMMITTED is mapped to `read_committed` isolation level in Firebird -- any changes made inside a transaction are not visible outside a transaction until the transaction is committed.
+* `TRANSACTION_READ_COMMITTED` is mapped to `read_committed` isolation level in Firebird -- any changes made inside a transaction are not visible outside a transaction until the transaction is committed.
 A transaction in read-committed mode sees all committed changes made by other transactions even if that happened after start of the current transaction.
-* TRANSACTION_REPEATABLE_READ is mapped to `concurrency` isolation level in Firebird -- any changes made inside this transaction are not visible outside a transaction until the transaction is committed.
+* `TRANSACTION_REPEATABLE_READ` is mapped to `concurrency` isolation level in Firebird -- any changes made inside this transaction are not visible outside a transaction until the transaction is committed.
 A transaction in repeatable-read sees only those changes that were committed before the transaction started.
 Any committed change in another transaction that happened after the start of this transaction is not visible in this transaction.
-* TRANSACTION_SERIALIZABLE is mapped into `consistency` isolation level in Firebird -- any modification to a table happens in serial way: all transactions wait until the current modification is done.
+* `TRANSACTION_SERIALIZABLE` is mapped into `consistency` isolation level in Firebird -- any modification to a table happens in serial way: all transactions wait until the current modification is done.
 This mode can be considered as a traditional pessimistic locking scheme, but the lock is placed on the whole table.
-See section "<<transactions-table-reservation>>" for more information.
+See section <<transactions-table-reservation>> for more information.
 
 The default mapping is specified in the Jaybird code and can be overridden via the connection properties.
 
 * via the `tpbMapping` property that specifies the name of the `ResourceBundle` with the new mapping of the isolation level;
 * via the direct specification of the JDBC transaction isolation level.
-The following code contains an example of such operation, the values in the mapping are described in section "<<transactions-tpb>>".
+The following code contains an example of such operation, the values in the mapping are described in section <<transactions-tpb>>.
 * via the data source configuration.
 
 [source,java]
@@ -271,7 +264,7 @@ Note, rolling back to the savepoint automatically releases and invalidates any s
 
 If the savepoint is no longer needed, you can use the `Connection.releaseSavepoint` method to release system resources.
 After releasing a savepoint, it is no longer possible to roll back the current transaction to that savepoint.
-Attempts to call the `rollback(Savepoint)` method will result in an `SQLException`.
+Attempts to call the `rollback(Savepoint)` method with a released savepoint will result in an `SQLException`.
 Savepoints that have been created within a transaction are automatically released when that transaction is committed or rolled back.
 
 [[transactions-tpb]]
@@ -370,7 +363,7 @@ since:[Firebird 4.0] With the `READ COMMITTED CONSISTENCY` mode introduced in Fi
 ==== Lock resolution mode
 
 Relational database systems that use pessimistic locking for concurrency control lock the records regardless of the operation type, read or write.
-When an application tries to read a record from the database, the database engine tries to obtain a "read lock" to that record.
+When an application tries to read a record from the database, the database engine tries to obtain a "`read lock`" to that record.
 If the operation succeeds and the application later tries to update the record, the lock is upgraded to a "`write lock`".
 And finally, if the resource is already locked for write, a concurrent transactions cannot lock it for reading, since the system cannot allow the transaction to make a decision based on data that might be rolled back later.
 This approach significantly decreases concurrency.
@@ -380,7 +373,7 @@ The only possible conflict happens when two concurrent transactions try to obtai
 Firebird belongs to the latter, and on `read_committed` and `concurrency` isolation levels it behaves appropriately -- there are no
 lock conflicts between readers and writers, and only writers competing for the same resource raise a lock conflict.
 However, on the `consistency` isolation level Firebird emulates the behavior of systems with pessimistic locking -- read operations will conflict with write operations.
-Even more, the locks are obtained for whole tables (see "<<transactions-table-reservation>>" for details).
+Even more, the locks are obtained for whole tables (see <<transactions-table-reservation>> for details).
 
 The following table summarizes the above for Firebird 2.0.
 It shows that read-committed or repeatable read transactions conflict only when they simultaneously update the same rows.
@@ -483,10 +476,10 @@ The lock conflict table depends on the isolation level of the transactions and h
 [#transactions-mgmt-stmts]
 === Transaction management statements
 
-The Firebird syntax also defines a number of transaction management statements.
-In this section we discuss the `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION` statements, which have a hard transaction boundary (either ending or starting a transaction).
+The Firebird syntax also defines a number of https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-transacs.html#fblangref50-transacs-statements[transaction management statements].
+In this section we discuss the `COMMIT [WORK]`, `ROLLBACK [WORK]` and `SET TRANSACTION` statements, which have a hard transaction boundary (either starting or ending a transaction).
 
-In general, you should not execute these methods with Jaybird.
+In general, you should not execute these statements with Jaybird.
 The JDBC specification formally discourages use of statements or functionality which is accessible through the JDBC API:
 
 [quote,java.sql.Connection,JDBC API documentation]
@@ -495,7 +488,8 @@ ____
 Applications should not invoke SQL commands directly to change the connection's configuration when there is a JDBC method available.
 ____
 
-In Jaybird 5 and older, the `COMMIT` and `ROLLBACK` statements can -- sometimes -- be executed, but they bring the connection in an inconsistent state, which will prevent further use of the connection, and execution of the `SET TRANSACTION` statement will always fail as the statement is executed with an active transaction.
+In Jaybird 5 and older, the `COMMIT` and `ROLLBACK` statements can -- sometimes -- be executed, but they bring the connection in an inconsistent state, which will prevent further use of the connection.
+Execution of the `SET TRANSACTION` statement will always fail, as the statement is executed with an active transaction.
 
 Since Jaybird 6, these statements are rejected by default, but support can be enabled with the <<ref-allowtxstmts,connection property `allowTxStmts`>>.
 
