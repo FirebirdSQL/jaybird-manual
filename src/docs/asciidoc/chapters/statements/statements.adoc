@@ -4,10 +4,11 @@
 After obtaining a connection, the next thing to do is to execute an SQL statement.
 The JDBC specification distinguishes three kinds of statements:
 
-1. Regular statements to execute SQL statements without parameters,
-2. prepared statements to execute SQL statements with parameters,
-3. and callable statements to execute stored procedures.
+1. <<stmt-statement,Regular statements>> to execute SQL statements without parameters,
+2. <<stmt-prepared,prepared statements>> to execute SQL statements with parameters,
+3. and <<stmt-callable,callable statements>> to execute stored procedures.
 
+[#stmt-statement]
 === The java.sql.Statement interface
 
 The `java.sql.Statement` interface is the simplest interface to execute SQL statements.
@@ -52,10 +53,11 @@ A statement can be executed using the following methods:
 
 * `Statement.executeQuery(String)` -- executes a `SELECT` or other result set producing statement, and returns a result set.
 If the specified statement does not produce a result set, an `SQLException` is thrown after statement executionfootnote:[This is an implementation detail and may change in the future to throw an exception _before_ execution].
-* `Statement.executeUpdate(String)` -- executes other DML (Data Manipulation Language, e.g. `INSERT`, `UPDATE`, `DELETE`) or DDL (Data Definition Languagefootnote:[This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]) statements and returns the number of updated rows.
+* `Statement.executeUpdate(String)` -- executes other DML (Data Manipulation Language, e.g. `INSERT`, `UPDATE`, `DELETE`) or DDL (Data Definition Languagefootnote:[This term is used to group all statements that are used to manipulate database schema, i.e. creation of tables, indices, views, etc.]) statements and returns the number of updated rows -- as `int`.
 If the specified statement is a query or otherwise produces a result set, an `SQLException` is thrown.
+* `Statement.executeLargeUpdate(String)` -- same as previous, except it returns the update count as `long`.
 * `Statement.execute(String)` -- executes a statement and returns `true` when the statement returned a result set, or `false` if the result has no result set, but has an update count or nothing as its result.
-You can use `Statement.getResultSet()` to get the result of the executed query, or you can use `Statement.getUpdateCount()` when you have executed an update statement.
+You can use `Statement.getResultSet()` to get the result of the executed query, or you can use `Statement.getUpdateCount()` or `getLargeUpdateCount()` when you have executed an update statement.
 +
 Formally, this method is also used for statements with multiple results (result sets and update counts), but Firebird only supports at most one result set and at most one update count.
 
@@ -216,6 +218,7 @@ In that case, statements are not released even if the `close()` method is called
 Likely, the only possibility to close pooled statements is to close the pooled connections.
 Please check the documentation of your connection pool for more information.
 
+[#stmt-prepared]
 === The java.sql.PreparedStatement interface
 
 As we have seen, Jaybird already performs internal optimization when it comes to multiple statement execution -- it can reuse the allocated statement handle in subsequent calls.
@@ -340,7 +343,7 @@ A JDBC driver can ignore the request to close the prepared statement, save it in
 
 NOTE: Jaybird currently does not perform statement caching
 
-[[callable-statement]]
+[#stmt-callable]
 === The java.sql.CallableStatement interface
 
 The `CallableStatement` interface extends `PreparedStatement` with methods for executing and retrieving results from stored procedures.
@@ -359,7 +362,7 @@ Though the interface is generic enough to support database engines that can retu
 These features are of no interest to Jaybird users, since Firebird does not support them.
 
 The IN and OUT parameters are specified in one statement.
-The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter is will contain output values, the rest are considered to be IN parameters.
+The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter contains output values, the rest are considered to be IN parameters.
 
 ==== Firebird stored procedures
 
@@ -526,6 +529,17 @@ Not that it makes much sense to do this, but it might help in some cases when po
 It is also allowed to use a procedure call parameter both as an input and output parameter.
 It is recommended to use this only when porting applications from the database servers that allow INOUT parameter types, such as Oracle.
 
+[WARNING]
+====
+Future Jaybird versions may become stricter in how they handle IN and OUT parameters.
+They will likely require a strict ordering of parameters to match the actual procedure definition, so interleaving IN and OUT, or marking a parameter position as both IN and OUT may no longer be supported.
+
+Our recommendation: always use the order of IN parameters in the procedure definition, followed by the OUT parameters in the `RETURNS` clause of the definition.
+
+Mixing order of parameters will then probably require use of Firebird 6.0 and its native `CALL` statement.
+This is not final yet, and we may offer a backwards compatibility option, for a transition period of at least one major Jaybird version.
+====
+
 The actual stored procedure call using the `CallableStatement` is equivalent to the call using the prepared statement as shown in the first example.
 There is no measurable performance differences when using the callable statement interface.
 
@@ -550,13 +564,20 @@ Note, that input parameter now has index 2, and not 1 as in the previous example
 This syntax seems to be more intuitive, as it looks like a function call.
 It is possible to use this syntax for stored procedures that return more than one parameter by combining code from the second and the last examples.
 
+[WARNING]
+====
+Future Jaybird versions may become stricter in how they handle IN and OUT parameters, and especially the `++{?=call ...}++` syntax may be restricted to only support procedures with a single OUT parameter (i.e. a single parameter in the `RETURNS` clause of its definition).
+
+This is not final yet, and we may offer a backwards compatibility option, for a transition period of at least one major Jaybird version.
+====
+
 Firebird stored procedures can also return result sets.
-This is achieved by using the SUSPEND keyword inside the procedure body.
+This is achieved by using the `SUSPEND` keyword inside the procedure body.
 This keyword returns the current values of the output parameters as a single row to the client.
 
 The following example is more complex and shows a stored procedure that computes a set of factorial of the numbers up to the specified number of rows.
 
-The SELECT SQL statement is the natural way of accessing the selectable procedures in Firebird.
+The `SELECT` SQL statement is the natural way of accessing the selectable procedures in Firebird.
 You "`select`" from such procedures using the `Statement` or `PreparedStatement` objects.
 
 // TODO Simplify example below
@@ -819,7 +840,7 @@ SELECT * FROM {oj tableA a
 [#stmt-escape-sp]
 ==== Stored procedures
 
-The escaped syntax for stored procedures is described in details in section <<callable-statement>>.
+The escaped syntax for stored procedures is described in details in section <<stmt-callable>>.
 
 [#stmt-escape-like-escape]
 ==== LIKE escape character
