@@ -1,10 +1,9 @@
 [#ref-catalog-as-package]
 === Opt-in feature for package information in DatabaseMetaData
 
-since:[Jaybird 6] +
-since:[Firebird 3.0]
+since:[Jaybird 6]
 
-Firebird 3.0 added packages, which can contain stored procedures and functions.
+Firebird supports packages, which are a way to bundle stored procedures and functions.
 The JDBC API does not provide a "`standard`" way of accessing information about packages, or the routines defined in packages.
 Instead of adding additional Jaybird-specific metadata methods, we've added an "`opt-in`" feature that provides access through normal metadata methods, using the "`catalog`" to report packages.
 

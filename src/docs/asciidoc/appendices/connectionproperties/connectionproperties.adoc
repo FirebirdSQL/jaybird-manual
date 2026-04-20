@@ -10,11 +10,10 @@ Some properties have one or more aliases.
 The first name is the primary and preferred property name;
 it's usually also the name of the property in the data source classes.
 
-The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false` (since:[Jaybird 5]), but also without a value, or with an empty value (which will both signify `true`).
+The properties marked as _boolean property_ can be included in the JDBC URL with values `true`, `false`, but also without a value, or with an empty value (which will both signify `true`).
 For readability, we suggest that you only specify these properties explicitly when you want to enable or disable them, and if you do, to use explicit values like `true` or `false`.
 
-In Jaybird 4 and earlier, the default for all _boolean_ properties is `false`. +
-In Jaybird 5 and higher, the default of _boolean_ properties varies (but unless explicitly mentioned, the default is `false`).
+The default of _boolean_ properties varies, but unless explicitly mentioned, the default is `false`.
 
 A subset of these properties is also exposed in the `javax.sql.DataSource` implementations in Jaybird.
 When using data sources, unexposed properties can be set using `setNonStandardProperty`.
@@ -100,7 +99,7 @@ In general, only specify `charSet` _or_ `encoding`, not both. +
 Default: `NONE` (unless `charSet` is specified).
 
 a|`charSet` +
-`localEncoding`, `charset` (since:[Jaybird 5])
+`localEncoding`, `charset`
 |Jaybird specific property.
 Character set for the connection using Java character set name.
 Similar to the previous property, but instead of Firebird-specific name accepts a Java character set name. +
@@ -189,7 +188,7 @@ For Type 2 (native) connections, the connect timeout works as the DPB item `isc_
 This means that for native connections the connect timeout will not detect unreachable hosts within the timeout.
 
 a|`wireCompression`
-|Jaybird specific property (since:[Firebird 3.0]).
+|Jaybird specific property.
 Boolean property.
 Enables zlib wire compression.
 See <<ref-wirecompression>> for more information.
@@ -215,14 +214,14 @@ Value `true` disables usage of procedure type metadata to decide to use `SELECT`
 See <<ref-callable-ignore-proctype>> for more information.
 
 a|`scrollableCursor`
-a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 5.0]).
+a|Jaybird specific property (since:[Firebird 5.0]).
 Allowed values: `EMULATED`, `SERVER` (case-insensitive)
 Configures use of server-side scrollable cursors (Firebird 5.0 and higher, pure Java connections only).
 See <<ref-scrollable-cursor>> for more information. +
 Default: `EMULATED`
 
 a|`useServerBatch`
-a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 4.0]).
+a|Jaybird specific property.
 Boolean property.
 Value `true` enables server-side batch if available (Firebird 4.0 and higher, pure Java connection only).
 Set to `false` to always use emulated batch updates.
@@ -230,7 +229,7 @@ See <<ref-batch-use-server-batch>> for more information. +
 Default value: `true`
 
 a|`serverBatchBufferSize`
-a|Jaybird specific property (since:[Jaybird 5] since:[Firebird 4.0]).
+a|Jaybird specific property.
 Size in bytes of the server-side batch buffer.
 Value `< 0` -- server-side default, `0` -- server-side maximum, `> 0` -- size (capped at server-side maximum)
 See <<ref-batch-server-batch-buffer-size>> for more information. +
@@ -238,39 +237,30 @@ Default value: `0`
 
 a|`dataTypeBind` +
 `set_bind`
-|Defines data type bind from one type to a different type. (since:[Firebird 4.0])
+|Defines data type bind from one type to a different type.
 Multiple bind definitions are separated by semicolons.
 When used in a JDBC url, the semicolon must be escaped using `%3B`.
 See <<ref-datatypebind>> for more information.
 
 a|`sessionTimeZone`
 |Configures the session time zone.
-In Jaybird 3, only configures the Firebird 4 server-side session time zone.
-In Jaybird 4 and higher, also configures the time zone used for legacy datetime conversion on all Firebird versions.
+This property also configures the time zone used for legacy datetime conversion on all Firebird versions.
 See <<ref-datetime-sessiontimezone>> for more information. +
-Default: the JVM default time zone (Jaybird 4 or higher), or not set (Jaybird 3 or earlier)
+Default: the JVM default time zone
 
 a|`decfloatRound` +
 `decfloat_round`
-|Defines server-side rounding behaviour for `DECFLOAT` data types (since:[Firebird 4.0])
+|Defines server-side rounding behaviour for `DECFLOAT` data types
 Possible values: `ceiling`, `up`, `half_up` (default), `half_even`, `half_down`, `down`, `floor`, `reround`
 See <<ref-decfloat-traps-round>> for more information.
 
 a|`decfloatTraps` +
 `decfloat_traps`
-|Defines server-side error behaviour for `DECFLOAT` data types (since:[Firebird 4.0])
+|Defines server-side error behaviour for `DECFLOAT` data types
 Comma-separated list with options: `Division_by_zero` (default), `Inexact`, `Invalid_operation` (default), `Overflow` (default), `Underflow`
 See <<ref-decfloat-traps-round>> for more information.
 
-a|`useStandarUdf` +
-`use_standard_udf`
-|Jaybird specific property (until:[Jaybird 5]).
-Boolean property. 
-Tells the JDBC driver to assume that the standard UDF library is registered in the database when converting escaped function calls.
-With recent versions of Firebird, it is advisable to not specify this property and rely on the built-in functions instead.
-See <<jdbcescape>> for more information.
-
-a|`timestampUsesLocalTimezone` 
+a|`timestampUsesLocalTimezone`
 |Jaybird specific property (until:[Jaybird 6]).
 Boolean property.
 Changes how `getTime`/`getTimestamp` methods accepting a `java.util.Calendar` apply the calendar offset in calculations.
@@ -319,7 +309,7 @@ Any subsequent connection uses the library that was loaded by the first connecti
 ====
 
 a|`useCatalogAsPackage`
-a|Jaybird specific property (since:[Jaybird 6] since:[Firebird 3.0]).
+a|Jaybird specific property (since:[Jaybird 6]).
 Boolean property.
 Enables support for reporting database metadata information on packages, and functions and stored procedures in packages.
 See <<ref-catalog-as-package>> for more information.
@@ -364,11 +354,11 @@ See <<ref-socket-factory>> for more information.
 
 |===
 
-In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems` (since:[Jaybird 5]), or `ISCConstants` (until:[Jaybird 5])).
+In addition, Jaybird allows using arbitrary Database Parameters Block entries as connection properties (provided they are defined in Jaybird's `DpbItems` and `SpbItems`).
 The current Firebird API has over 100 DPB parameters, however only few of them are interesting for regular users.
 If a DPB item called `isc_dpb_XXX` exists, then Jaybird allows these to be specified as `isc_dpb_XXX` and `XXX`. 
 By default properties are mapped as string DPB items. 
-If a DPB item requires another type, it will need to be explicitly defined in Jaybird.
+If a DPB item requires another type, it will need to be explicitly defined in Jaybird to work correctly.
 
 [[connectionproperties-isolation-levels]]
 === Transaction isolation levels

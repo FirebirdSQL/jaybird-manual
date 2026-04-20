@@ -1,9 +1,7 @@
 [[ref-boolean]]
 === Type BOOLEAN
 
-since:[Firebird 3.0]
-
-Firebird 3.0 introduced the SQL standard type `BOOLEAN`.
+The SQL datatype `BOOLEAN` is for Boolean (truth) values.
 
 [[ref-boolean-support]]
 ==== Support for BOOLEAN

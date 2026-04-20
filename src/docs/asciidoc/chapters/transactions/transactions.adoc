@@ -55,15 +55,12 @@ Alternatively, you can use an external table to store the audit log, or use the 
 
 When a connection uses explicit transaction control (auto-commit disabled), each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
 If a transaction was not finished, but the `close` method is called, the active transaction is rolled back automatically.
-This also happens when you did not commit or roll back the transaction, and did not close the connection explicitly and that `Connection` object became eligible for garbage collection.
-until:[Jaybird 5] In this case, the class finalizer implicitly invokes the `close()` method, which in turn rolls the transaction back.
+If you do not commit or roll back the transaction, and do not close the connection explicitly, the rollback will only occur after the connection has been garbage collected, when the server detects the connection is gone.
 
 [WARNING]
 ====
-Given the non-deterministic delay of garbage collection, make sure to explicitly end the transaction and close the connection.
+Given the non-deterministic delay of garbage collection and detection of terminated connections by the server, make sure to explicitly end the transaction and close the connection.
 Do not rely on the garbage collector for this.
-
-since:[Jaybird 5] A number of finalizers have been removed in Jaybird 5, so transaction rollback through garbage collection has become even less deterministic (though it is likely still to occur when the connection is forcibly closed).
 ====
 
 === Auto-commit mode
@@ -356,7 +353,7 @@ Therefore, it is recommended to set the read-only mode for the transaction when 
 
 [NOTE]
 ====
-since:[Firebird 4.0] With the `READ COMMITTED CONSISTENCY` mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.
+With the `READ COMMITTED CONSISTENCY` mode introduced in Firebird 4.0, even read-only transactions will inhibit garbage collection.
 ====
 
 [[transactions-lock-resolution]]

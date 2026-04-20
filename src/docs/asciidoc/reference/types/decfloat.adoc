@@ -1,86 +1,15 @@
 [[ref-decfloat]]
 === Decimal floating point type DECFLOAT
 
-since:[Firebird 4.0]
-
-Firebird 4.0 introduces the SQL:2016 `DECFLOAT` datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
+Firebird 4.0 introduced the SQL:2016 `DECFLOAT` datatype, a decimal floating point with a precision of 16 or 34 digits (backed by an IEEE-754 Decimal64 or Decimal128).
 See the Firebird 4.0 documentation for details on this datatype.
 
-[[ref-decfloat-jb4]]
-==== Decfloat support in Jaybird 4 and higher
-
-Jaybird 4 introduced support for the `DECFLOAT` datatype mapping to `java.math.BigDecimal`.
+Jaybird supports the `DECFLOAT` datatype mapping to `java.math.BigDecimal`.
 For more information, see <<ref-decfloat-support>>.
-
-[[ref-decfloat-jb3]]
-==== Workarounds for Jaybird 3
-
-Jaybird 3 does not support `DECFLOAT`, but starting with Jaybird 3.0.9, the connection property `dataTypeBind` can be used to convert to a datatype that is supported by Jaybird.
-
-We recommend either `dataTypeBind=decfloat to varchar` or `dataTypeBind=decfloat to double precision`.
-Option `varchar` has our preference as it is able to support the full range of values of the `DECFLOAT` types.
-
-See <<ref-decfloat-bind>> for details.
-
-For earlier Jaybird 3 versions, you can use the `SET BIND OF DECFLOAT TO <target-type>` statement to configure your connection to map `DECFLOAT` to a different datatype.
-When set, Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
-
-The available options are the same as documented in <<ref-decfloat-bind>>
-
-For example
-
-[source,java]
-----
-try (Connection connection = DriverManager.getConnection(..);
-     Statement stmt = connection.createStatement()) {
-    stmt.execute("SET BIND OF DECFLOAT TO varchar");
-    // DECFLOAT will now be mapped to a VARCHAR datatype
-}
-----
-
-WARNING: The effect of the `SET BIND` statement will be reset to the default when `ALTER SESSION RESET` is executed.
-
-[[ref-decfloat-bind]]
-==== Defining decfloat data type bind
-
-Jaybird 3.0.9 added the connection property `dataTypeBind` to defining data type mappings.
-This can be used to configure conversion of `DECFLOAT` to a different datatype.
-When set, Firebird will present columns or parameters of `DECFLOAT` as the specified type, allowing clients without support for `DECFLOAT` to read or set values.
-
-TIP: This property is also available in Jaybird 4, but we recommend to not use this property in Jaybird 4 and instead rely on the default behaviour (`native`) and support for `DECFLOAT`.
-
-To map `DECFLOAT(16)` and `DECFLOAT(34)` to a string type, you can use:
-
-[source,java]
-.Map all decfloat types to string
-----
-var props = new Properties();
-props.setProperty("dataTypeBind", "decfloat to varchar");
-----
-
-To map `DECFLOAT(16)` to `DOUBLE PRECISION` and `DECFLOAT(34)` to string, you can use:
-
-[source,java]
-.Map all decfloat types to string
-----
-var props = new Properties();
-props.setProperty(
-    "dataTypeBind", "decfloat(16) to double precision;decfloat(34) to varchar");
-----
-
-Firebird will convert a `DECFLOAT` type to the specified type using a cast to derive the value.
-
-Result set columns and parameters on prepared statements will behave as the defined type.
-This conversion is not applied to the database metadata which will always report `DECFLOAT` information.
-
-In general, we recommend binding to `VARCHAR` as this will allow you to get (and set) the full range of DECFLOAT values with precision.
-
-See also <<ref-datatypebind>>.
 
 [[ref-decfloat-support]]
 ==== DECFLOAT support
 
-Jaybird 4 introduced support for the `DECFLOAT` datatype.
 The 'default' object type for `DECFLOAT` is a `java.math.BigDecimal`, but conversion from and to the following datatypes is supported:
 
 - `java.math.BigDecimal` (see note <<decfloat-note-1,1>>)
@@ -100,7 +29,7 @@ The `DECFLOAT` type was not standardized in JDBC until the JDBC 4.5 specificatio
 until:[Jaybird 5.0.12/6.0.5] Up to Jaybird 5.0.11/6.0.4, Jaybird defines a custom type code with value `-6001`. +
 since:[Jaybird 5.0.12/6.0.5] Starting with Jaybird 5.0.12/6.0.5, Jaybird changed this type code to `2015`, as defined by JDBC 4.5.
 
-This value is available through constant `org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT`, or -- for JDBC 4.2 and higher -- `org.firebirdsql.jdbc.JaybirdType.DECFLOAT`, which is an enum implementing `java.sql.SQLType`.
+This value is available through constant `org.firebirdsql.jdbc.JaybirdTypeCodes.DECFLOAT`, and -- for JDBC 4.2 and higher -- `org.firebirdsql.jdbc.JaybirdType.DECFLOAT`, which is an enum implementing `java.sql.SQLType`.
 On Java 26 and higher, we recommend using `java.sql.Types.DECFLOAT` or `java.sql.JDBCType.DECFLOAT` instead.
 
 The `DECFLOAT` constants in `JaybirdTypeCodes` and `JaybirdType` may be deprecated for eventual removal once Jaybird no longer supports Java versions before Java 26.

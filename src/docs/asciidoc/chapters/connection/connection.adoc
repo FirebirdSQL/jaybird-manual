@@ -361,7 +361,7 @@ The following JDBC URL syntax is supported (_serverName_ became optional in Jayb
   [_serverName_[/_portNumber_]:]_databaseName_
 ----
 
-If _serverName_ is not specified, it defaults to `localhost` (since:[Jaybird 5]). +
+If _serverName_ is not specified, it defaults to `localhost`. +
 If _portNumber_ is not specified, it defaults to `3050`.
 
 In theory, even `<database-coordinates>` and _databaseName_ are optional, but this requires specifying the database name using connection property `databaseName`, which is possible, but not recommended.
@@ -424,13 +424,13 @@ To create a connection using the `NATIVE` JDBC driver to connect to a remote ser
   | [_serverName_[/_portNumber_]:]_databaseName_
 ----
 
-since:[Jaybird 5] Since Jaybird 5, all URLs supported by fbclient can be used.
+All URLs supported by fbclient can be used.
 The supported URLs depend on the fbclient version and the OS (e.g. XNET and WNET are Windows only, and WNET support has been removed in Firebird 5).
 
 [NOTE]
 .LOCAL protocol removed in Jaybird 5
 ====
-since:[Jaybird 5] The `LOCAL` protocol was removed in Jaybird 5, and is now simply an alias for `NATIVE`.
+The `LOCAL` protocol was removed in Jaybird 5, and is now simply an alias for `NATIVE`.
 To ensure local access, use a connection string using XNET (Windows only!):
 
 [listing]
@@ -614,7 +614,7 @@ All other notes for <<driver-pure-java>> apply.
 [NOTE]
 .OOREMOTE deprecated in Jaybird 5, and removed in Jaybird 6
 ====
-since:[Jaybird 5] The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
+The OOREMOTE protocol implementation is deprecated and has been removed in Jaybird 6.
 To connect to Firebird, use LibreOffice Base with connection option "`Firebird External`".
 ====
 
@@ -625,7 +625,7 @@ Each time a connection is opened via `DriverManager` or `FBSimpleDataSource`, a 
 It is closed when the connection is closed.
 To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.
 
-Since Jaybird 3, Jaybird no longer provides its own connection pool implementation.
+Jaybird does not provide its own connection pool implementation.
 If you need a `javax.sql.DataSource` implementation that provides a connection pool, either use the connection pool support of your application server, or consider using https://brettwooldridge.github.io/HikariCP/[HikariCP^], https://commons.apache.org/proper/commons-dbcp/[DBCP^], or https://www.mchange.com/projects/c3p0/[c3p0^].
 
 [[connection-pooling-hikaricp]]

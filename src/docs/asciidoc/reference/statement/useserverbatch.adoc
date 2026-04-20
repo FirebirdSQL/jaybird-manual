@@ -1,10 +1,7 @@
 [[ref-batch-use-server-batch]]
 === Connection property useServerBatch
 
-since:[Jaybird 5] +
-since:[Firebird 4.0]
-
-A Boolean property to configure use of server-side batch updates.
+Connection property `useServerBatch` is a Boolean property to configure use of server-side batch updates.
 The default value is `true`, to use server-side batch updates when possible.
 Set to `false` to disable server-side batch updates and always use emulated batch updates.
 

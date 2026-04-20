@@ -6,8 +6,6 @@
 [[ref-datetime-tz]]
 ==== Time zones
 
-since:[Firebird 4.0]
-
 Firebird 4.0 introduced time zone types, with types `TIME WITH TIME ZONE` and `TIMESTAMP WITH TIME ZONE`.
 See the https://firebirdsql.org/file/documentation/release_notes/html/en/4_0/rlsnotes40.html[Firebird 4.0 release notes^] and `doc/sql.extensions/README.time_zone.md` in the Firebird installation for details on these types.
 
@@ -31,10 +29,9 @@ Given the definition in JDBC, Jaybird defaults to offset time zones.
 On retrieval of a value with a named zone, Jaybird will make a best effort to convert to the equivalent offset using Java's time zone information.
 If no mapping is available the time will be returned at UTC (offset zero).
 
-since:[Jaybird 4.0.1] +
-Since Jaybird 4.0.1, it is also possible to get and set `java.time.ZonedDateTime`, which preserves the named zone information.
+It is also possible to get and set `java.time.ZonedDateTime`, which preserves the named zone information.
 
-Jaybird 4 supports the following Java types on fields of time zone types (those marked with * are not defined in JDBC)
+Jaybird supports the following Java types on fields of time zone types (those marked with * are not defined in JDBC)
 
 `TIME WITH TIME ZONE`:
 
@@ -46,7 +43,7 @@ The offset can be different from the offset of the `OffsetDateTime` for the same
 *** For a named zone, the time in the zone is derived at 2020-01-01 and then rebased to the current date.
 As a result, the offset can be different from an `OffsetTime`.
 ** On set the date information is removed
-* `java.time.ZonedDateTime` (*) since:[Jaybird 4.0.1]
+* `java.time.ZonedDateTime` (*)
 ** On get the time in the zone is derived at 2020-01-01 and then rebased to the current date.
 ** On set, the time is rebased to 2020-01-01 and then the date information is removed.
 * `java.lang.String`
@@ -65,7 +62,7 @@ As a result, the offset can be different from an `OffsetTime`.
 * `java.time.OffsetTime` (*)
 ** On get, the date information is removed
 ** On set, the current date is added
-* `java.time.ZonedDateTime` (*) since:[Jaybird 4.0.1]
+* `java.time.ZonedDateTime` (*)
 * `java.lang.String`
 ** On get applies `OffsetDateTime.toString()` (e.g. `2019-03-10T13:25:13.1+01:00`)
 ** On set tries the default parse format of either `OffsetTime` or `OffsetDateTime` (e.g. `13:25:13.1+01:00` or `2019-03-10T13:25:13+01:00`) and then sets as that type
@@ -180,15 +177,13 @@ Be aware that this is inconsistent if Firebird and Java are in different time zo
 [[ref-datetime-sessiontimezone-fb]]
 ====== Firebird session time zone
 
-since:[Firebird 4.0]
-
 The session time zone is used for conversion between `WITH TIME ZONE` values and `WITHOUT TIME ZONE` values (i.e. using cast or with legacy time zone bind), and for the value of `LOCALTIME`, `LOCALTIMESTAMP`, `CURRENT_TIME` and `CURRENT_TIMESTAMP`, and other uses of the session time zone as documented in the Firebird 4.0 documentation.
 
-The value of `sessionTimeZone` must be supported by Firebird 4.0.
+The value of `sessionTimeZone` must be supported by the Firebird server.
 It is possible that time zone identifiers used by Java are not supported by Firebird.
 If Firebird does not know the session time zone, error (`Invalid time zone region: <zone name>`) is reported on connect. 
 
-In Jaybird 4 and higher, Jaybird will apply the JVM default time zone as the default session time zone.
+Jaybird will apply the JVM default time zone as the default session time zone.
 The use of the JVM default time zone as the default session time zone will result in subtly different behaviour compared to previous versions of Jaybird and -- even with Jaybird 4 -- Firebird 3.0 or earlier, as current time values like `LOCALTIMESTAMP` (etc) will now reflect the time in the JVM time zone, and not the server time zone rebased on the JVM default time zone.
 
 As an example, with a Firebird in Europe/London and a Java application in Europe/Amsterdam with Firebird time 12:00, in Jaybird 3, the Java application will report this time as 12:00, in Jaybird 4 with Firebird 4.0, this will now report 13:00, as that is the time in Amsterdam if it is 12:00 in London (ignoring potential DST start/end differences).

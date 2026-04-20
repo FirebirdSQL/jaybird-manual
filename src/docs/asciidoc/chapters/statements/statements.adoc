@@ -649,7 +649,7 @@ Otherwise, the driver will try to prepare a procedure with an incorrect number o
 Batch updates are intended to group multiple update operations to be submitted to a database server to be processed at once.
 Firebird 3.0 and earlier did not provide support for such functionality, so Jaybird 4 and earlier emulate it by issuing separate update commands.
 
-since:[Jaybird 5] Firebird 4.0 added support for server-side batch updates, which is implemented in Jaybird 5 for prepared statements, see <<stmt-batch-server-side>>.
+Firebird 4.0 added support for server-side batch updates, which is supported by Jaybird for prepared statements, see <<stmt-batch-server-side>>.
 
 ==== Batch Updates with java.sql.Statement interface
 
@@ -734,10 +734,7 @@ try (CallableStatement stmt = connection.prepareCall(
 [[stmt-batch-server-side]]
 ==== Server-side Batch Updates
 
-since:[Jaybird 5] +
-since:[Firebird 4.0]
-
-Jaybird 5 adds support for server-side batch updates when connecting to Firebird 4.0 or higher.
+Jaybird supports server-side batch updates when connecting to Firebird 4.0 or higher.
 This support comes with a number of limitations:
 
 * Only supported on the pure Java protocol, not on native or embedded.

@@ -6,21 +6,13 @@ Jaybird is a JDBC (Java DataBase Connectivity) driver to connect to the https://
 Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
 The type 2 driver includes support for Firebird Embedded.
 
-.JCA -- Java Connector Architecture
-****
-Jaybird 4 and earlier are based on both the well-known JDBC standard and the JCA -- Java Connector Architecture -- standard for application server connections to enterprise information systems.
-The JCA standard specifies an architecture in which an application server can cooperate with a driver so that the application server manages transactions, security, and resource pooling, and the driver supplies only the connection functionality.
-
-The JCA implementation was removed in Jaybird 5, and Jaybird is now only a JDBC driver.
-****
-
 === This manual
 
-This manual covers Jaybird {jaybird-version} and may use Java 17 and Firebird 4.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird and Java.
-Features that were removed in Jaybird 3 or earlier are not covered.
+This manual covers Jaybird {jaybird-version} and may use Java 17 and Firebird 5.0 specific features, but most examples and information also apply to previous versions of Jaybird, Firebird, and Java.
+Features that were removed in Jaybird 5 or earlier are not covered.
 
-New or removed features are tagged with the version that introduced a feature (e.g. since:[Jaybird 5]) or removed feature (e.g. until:[Jaybird 5]).
-This tagging is only done for features introduced (or removed) _after_ Jaybird 4.0.0, or in Firebird 3.0 or later.
+New or removed features are tagged with the version that introduced a feature (e.g. since:[Jaybird 6]) or removed feature (e.g. until:[Jaybird 6]).
+This tagging is only done for features introduced (or removed) _after_ Jaybird 5.0.0, or in Firebird 5.0 or later.
 
 This manual may contain documentation of features of unreleased Jaybird versions to simplify manual maintenance and versioning.
 
@@ -41,12 +33,11 @@ It is represented by a number of interfaces and classes from the `org.firebirdsq
 +
 This API is implemented by a number of plugins that provide the pure java, native,
 local, and embedded implementations of the driver.
-* since:[Jaybird 5] The XCA layer represents the heart of the driver.
+* The XCA layer represents the heart of the driver.
 Here all connection and transaction management happens.
 Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.
 +
 The XCA layer is a replacement of the JCA layer of previous versions, and should be considered an internal implementation detail.
-* until:[Jaybird 5] The JCA layer is an implementation of the Java/Jakarta Connector Architecture specification, and fulfils the same role as the XCA layer in Jaybird 5 and later.
 * The JDBC layer is an implementation of the https://jcp.org/en/jsr/detail?id=221[JDBC Specification^].
 
 The <<services,Services API>> allows you to manage databases and the server itself.

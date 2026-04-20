@@ -39,7 +39,7 @@ a|`portNumber` +
 |int
 |Port to which we make the request, 3050 by default.
 
-3+a|NOTE: since:[Jaybird 5] `serverName` and `portNumber` are replacements for `host` and `port`, which have been deprecated for removal in Jaybird 6.
+3+a|NOTE: `serverName` and `portNumber` are replacements for `host` and `port`, which were removed in Jaybird 6.
 
 |database
 |String
@@ -60,7 +60,7 @@ The meaning of the property depends on the service being invoked and will be des
 
 |expectedDb
 |String
-a|since:[Jaybird 5] With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+a|With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. _Optional_.
 
 |authPlugins
@@ -70,33 +70,31 @@ Use `null` (the default) to use Jaybird defaults.
 
 |processId
 |int
-a|since:[Jaybird 5] Process id to report to the server.
+a|Process id to report to the server.
 
 |processName
 |String
-a|since:[Jaybird 5] Process name to report to the server.
+a|Process name to report to the server.
 
 |socketBufferSize
 |int
-a|since:[Jaybird 5] Socket buffer size in bytes
+a|Socket buffer size in bytes
 
 |soTimeout
 |int
-a|since:[Jaybird 5] Socket blocking read timeout in milliseconds (`0` is OS default timeout)
+a|Socket blocking read timeout in milliseconds (`0` is OS default timeout)
 
 |connectTimeout
 |int
-a|since:[Jaybird 5] Socket connect timeout in milliseconds (`0` is OS default timeout)
+a|Socket connect timeout in milliseconds (`0` is OS default timeout)
 
 |wireCrypt
-a|`String` or `WireCrypt`
+|String
 a|Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
-In Jaybird 3.0.4+ and Jaybird 4, the property is type `WireCrypt`.
-In Jaybird 5, the property is type `String`.
 
 |wireCryptAsEnum
 |WireCrypt
-a|since:[Jaybird 5] Alternative to `WireCrypt` to use `WireCrypt` enum.
+a|Alternative to `WireCrypt` to use `WireCrypt` enum.
 
 |dbCryptConfig
 |String
@@ -464,7 +462,7 @@ Defaults to `0` if `backupGuid` has not been set.
 
 |backupGuid
 |String
-a|since:[Jaybird 4.0.4] Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
+a|Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
 This will back up all data pages modified since the backup identified by the GUID.
 The GUID must be enclosed in braces (`++{++` and `++}++`).
 
@@ -474,27 +472,27 @@ The GUID must be enclosed in braces (`++{++` and `++}++`).
 
 |inPlaceRestore
 |boolean
-a|since:[Jaybird 4.0.4] Enables in-place restore (requires Firebird 4.0 or higher).
+a|Enables in-place restore (requires Firebird 4.0 or higher).
 This allows incremental restore, for example for a read-only replica, or a hot standby.
 
 |preserveSequence
 |boolean
-a|since:[Jaybird 5] Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
+a|Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
 This preserves the GUID and replication sequence of the original database.
 
 |cleanHistory
 |boolean
-a|since:[Jaybird 4.0.7] Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
+a|Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
 One of the properties `keepRows` _or_ `keepDays` must also be set.
 When enabled, after performing a backup, old records from `RDB$BACKUP_HISTORY` will be removed.
 
 |keepDays
 |int
-a|since:[Jaybird 4.0.7] Number of days to keep backup history when `cleanHistory` is enabled.
+a|Number of days to keep backup history when `cleanHistory` is enabled.
 
 |keepRows
 |int
-a|since:[Jaybird 4.0.7] Number of rows (including the new backup!) to keep backup history when `cleanHistory` is enabled.
+a|Number of rows (including the new backup!) to keep backup history when `cleanHistory` is enabled.
 
 |===
 
@@ -520,7 +518,7 @@ For restore, the files must be in the correct order to form the chain of the lev
 |Perform restore.
 
 |fixupDatabase()
-a|since:[Jaybird 5] Perform the nbackup fixup operation.
+a|Perform the _nbackup_ fixup operation.
 A fixup will switch a locked database back to "`normal`" state without merging the delta, so this is a potentially *destructive* action.
 The normal use-case of this option is to unlock a copy of a database file where the source database file was locked with `nbackup -L` or `ALTER DATABASE BEGIN BACKUP`.
 Enable `preserveSequence` to preserve the original database GUID and replication sequence.
@@ -923,8 +921,6 @@ Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gf
 
 [#services-table-statistics-manager]
 === Table statistics of a connection (experimental)
-
-since:[Jaybird 5]
 
 The class `org.firebirdsql.management.FBTableStatisticsManager` can be used to retrieve the table statistics of a connection.
 

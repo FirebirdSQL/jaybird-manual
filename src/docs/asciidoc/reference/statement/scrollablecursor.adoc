@@ -1,10 +1,9 @@
 [[ref-scrollable-cursor]]
 === Connection property scrollableCursor
 
-since:[Jaybird 5] +
 since:[Firebird 5.0]
 
-On Firebird 5.0 and higher, Jaybird 5 and higher support server-side scrollable cursors..
+On Firebird 5.0 and higher, Jaybird supports server-side scrollable cursors.
 
 This feature is only available on pure Java connections, and only when explicitly enabled with connection property `scrollableCursor`.
 Support is only available in pure Java, as the bindings for native and embedded use the legacy fbclient API, and scrollable cursors are not exposed in the legacy fbclient API.
@@ -16,6 +15,11 @@ The connection property `scrollableCursor` has the following values (case-insens
 this is the same behaviour as previous Jaybird versions used
 `SERVER`::
 Use server-side scrollable cursors, if possible
+
+[NOTE]
+====
+A future version of Jaybird may make `SERVER` the default.
+====
 
 If a connection does not support scrollable cursors, or if holdable cursors are requested, the behaviour will silently fall back to _emulated_ scrollable cursors.
 

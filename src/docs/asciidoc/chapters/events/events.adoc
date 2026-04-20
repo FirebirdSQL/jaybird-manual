@@ -85,7 +85,7 @@ a|`portNumber` +
 |Path to the database.
 The path is specified for the remote host but must be absolute. __Required__.
 
-3+a|NOTE: since:[Jaybird 5] `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `database`, which have been deprecated for removal in Jaybird 6.
+3+a|NOTE: `serverName`, `portNumber` and `databaseName` are replacements for `host`, `port` and `database`, which were removed in Jaybird 6.
 
 |user
 |String
@@ -101,7 +101,7 @@ The path is specified for the remote host but must be absolute. __Required__.
 
 |expectedDb
 |String
-|since:[Jaybird 5] With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
+|With Firebird 3.0 and higher, this is used to find the non-default security database to use when authenticating.
 Value is a database path or alias the user can connect to. _Optional_.
 
 |authPlugins
@@ -111,33 +111,31 @@ Use `null` (the default) to use Jaybird defaults.
 
 |processId
 |int
-|since:[Jaybird 5] Process id to report to the server.
+|Process id to report to the server.
 
 |processName
 |String
-|since:[Jaybird 5] Process name to report to the server.
+|Process name to report to the server.
 
 |socketBufferSize
 |int
-|since:[Jaybird 5] Socket buffer size in bytes
+|Socket buffer size in bytes
 
 |soTimeout
 |int
-|since:[Jaybird 5] Socket blocking read timeout in milliseconds (`0` is OS default timeout)
+|Socket blocking read timeout in milliseconds (`0` is OS default timeout)
 
 |connectTimeout
 |int
-|since:[Jaybird 5] Socket connect timeout in milliseconds (`0` is OS default timeout)
+|Socket connect timeout in milliseconds (`0` is OS default timeout)
 
 |wireCrypt
-a|`String` or `WireCrypt`
+|String
 |Wire encryption level (`DISABLED`, `ENABLED`, `REQUIRED`, `DEFAULT`).
-In Jaybird 3.0.4+ and Jaybird 4, the property is type `WireCrypt`.
-In Jaybird 5, the property is type `String`.
 
 |wireCryptAsEnum
 |WireCrypt
-|since:[Jaybird 5] Alternative to `WireCrypt` to use `WireCrypt` enum.
+|Alternative to `WireCrypt` to use `WireCrypt` enum.
 
 |dbCryptConfig
 |String

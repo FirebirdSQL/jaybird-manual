@@ -1,12 +1,9 @@
 [[ref-batch-server-batch-buffer-size]]
 === Connection property serverBatchBufferSize
 
-since:[Jaybird 5] +
-since:[Firebird 4.0]
+Connection property `serverBatchBufferSize` configures the server-side batch buffer size in bytes.
 
-Configures the server-side batch buffer size in bytes.
-
-[horizontal]
+[horizontal.compact]
 .Possible values
 `< 0`:: use server-side default (16MB as of Firebird 4.0)
 `0`:: (default) use server-side maximum (256MB as of Firebird 4.0)

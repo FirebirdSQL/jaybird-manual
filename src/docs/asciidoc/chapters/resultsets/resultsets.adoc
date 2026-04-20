@@ -33,11 +33,10 @@ Due to missing support for scrollable cursors in Firebird 4.0 and earlier, suppo
 Scrolling happens in memory on the client.
 This can have adverse effect on the system memory usage and performance when the result set is large.
 
-since:[Jaybird 5] +
 since:[Firebird 5.0]
 
 Starting with Firebird 5.0, server-side scrollable cursors are supported, but not enabled by default.
-Jaybird 5 introduced support for scrollable non-holdable result set when the connection property `scrollableCursor` is set to value `SERVER`, and the connection is a pure Java connection (not native or embedded).
+Jaybird will use scrollable non-holdable result set when <<ref-scrollable-cursor,connection property `scrollableCursor`>> is set to value `SERVER`, and the connection is a pure Java connection (not native or embedded).
 A future version may enable this behaviour by default.
 
 [[resultsets-concurrency]]

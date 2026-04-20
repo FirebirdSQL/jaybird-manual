@@ -1,15 +1,9 @@
 [[ref-datatypebind]]
 === Data type bind support
 
-since:[Firebird 4.0]
+The `SET BIND` statement and `isc_dpb_set_bind` DPB item allow you to define data type conversion rules for compatibility or ease of processing data.
 
-Firebird 4.0 introduced the `SET BIND` statement and `isc_dpb_set_bind` DPB item.
-This allows you to define data type conversion rules for compatibility or ease of processing data.
-
-This feature is specifically necessary for using the `WITH TIME ZONE` types under Jaybird 3, or Jaybird 4 on Java 7.
-See also <<ref-datetime-timezonebind>>.
-
-In Jaybird this is exposed as connection property `dataTypeBind` (alias `set_bind`).
+In Jaybird `isc_dpb_set_bind` is exposed as connection property `dataTypeBind` (alias `set_bind`).
 The value of this connection property is a semicolon-separated list of data type bind definitions.
 
 A data type bind definition is of the form `<from-type> TO <to-type>`.

@@ -57,12 +57,12 @@ a|`NUMERIC` +
 
 |`BINARY`
 a|`CHAR CHARACTER SET OCTETS` +
-`BINARY` (since:[Firebird 4.0])
+`BINARY`
 |`byte[]`
 
 |`VARBINARY`
 a|`VARCHAR CHARACTER SET OCTETS` +
-`VARBINARY` (since:[Firebird 4.0])
+`VARBINARY`
 |`byte[]`
 
 |`LONGVARBINARY` 
@@ -78,7 +78,7 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`java.sql.Time`
 
 |`TIME_WITH_TIMEZONE`
-|`TIME WITH TIME ZONE` (since:[Firebird 4.0])
+|`TIME WITH TIME ZONE`
 |`java.time.OffsetTime`
 
 |`TIMESTAMP` 
@@ -86,7 +86,7 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`java.sql.Timestamp`
 
 |`TIMESTAMP_WITH_TIMEZONE`
-|`TIMESTAMP WITH TIME ZONE` (since:[Firebird 4.0])
+|`TIMESTAMP WITH TIME ZONE`
 |`java.time.OffsetDateTime`
 
 |`BLOB` 
@@ -94,12 +94,12 @@ a|`VARCHAR CHARACTER SET OCTETS` +
 |`java.sql.Blob`
 
 |`BOOLEAN`
-|`BOOLEAN` (since:[Firebird 3.0])
+|`BOOLEAN`
 |`Boolean`
 
 a|`DECFLOAT` (since:[JDBC 4.5/Java 26]) +
 ``JaybirdTypeCodes.DECFLOAT``footnote:[JDBC 4.4 and earlier do not yet define a `java.sql.Types` code for `DECFLOAT`]
-|`DECFLOAT` (since:[Firebird 4.0])
+|`DECFLOAT`
 |`java.math.BigDecimal`
 |===
 
