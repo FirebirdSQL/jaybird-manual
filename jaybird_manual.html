@@ -686,7 +686,7 @@ Features that were removed in Jaybird 5 or earlier are not covered.</p>
 This tagging is only done for features introduced (or removed) <em>after</em> Jaybird 5.0.0, or in Firebird 5.0 or later.</p>
 </div>
 <div class="paragraph">
-<p>This manual may contain documentation of features of unreleased Jaybird versions to simplify manual maintenance and versioning.</p>
+<p>This manual may contain documentation of features of unreleased Jaybird and Firebird versions to simplify manual maintenance.</p>
 </div>
 </div>
 <div class="sect2">
@@ -728,9 +728,9 @@ Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <a href="#services">Services API</a> allows you to manage databases and the server itself.
+<p>Separately, the <a href="#services">Services API</a>&#8201;&#8212;&#8201;also layered on GDS-ng&#8201;&#8212;&#8201;allows you to manage databases and the server itself.
 It offers a Manager component to create and drop databases.
-Other classes provide access to the Firebird Services Manager for database backup/restore, user management, statistics gathering, etc.</p>
+Other classes provide access to the Firebird Services Manager for database backup/restore, tracing, statistics gathering, etc.</p>
 </div>
 </div>
 <div class="sect2">
@@ -740,20 +740,43 @@ Other classes provide access to the Firebird Services Manager for database backu
 See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
 <div class="paragraph">
-<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare" target="_blank" rel="noopener">https://firebirdsql.org/en/jdbc-driver/</a></p>
+<p>The latest version of Jaybird can be downloaded from <a href="https://firebirdsql.org/en/jdbc-driver/" class="bare">https://firebirdsql.org/en/jdbc-driver/</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.4.1. Maven</h4>
 <div class="paragraph">
-<p>Alternatively, you can use maven to automatically download Jaybird and its dependencies.</p>
+<p>Alternatively, you can use Maven, or <a href="#distribution-gradle">Gradle</a>, to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird 6 is available from Maven central:</p>
 </div>
-<div class="paragraph">
-<p>Groupid: <code>org.firebirdsql.jdbc</code>,<br>
-Artifactid: <code>jaybird</code>,<br>
-Version: <code>6.0.5</code></p>
+<div class="hdlist compact">
+<table>
+<tr>
+<td class="hdlist1">
+groupId
+</td>
+<td class="hdlist2">
+<p><code>org.firebirdsql.jdbc</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+artifactId
+</td>
+<td class="hdlist2">
+<p><code>jaybird</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+version
+</td>
+<td class="hdlist2">
+<p><code>6.0.5</code></p>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -14043,7 +14066,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-20 10:42:39 UTC
+Last updated 2026-04-20 10:56:11 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
