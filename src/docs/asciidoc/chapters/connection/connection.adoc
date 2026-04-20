@@ -473,8 +473,8 @@ jdbc:firebird:native:employee
 [[driver-native-maven]]
 ===== Maven dependency for native client
 
-When using Jaybird 3 and later, you can use a library to provide the Firebird client library for the `NATIVE` protocol.
-For Windows, Linux, and macOS, you can add the https://github.com/mrotteveel/jaybird-fbclient[`org.firebirdsql.jdbc:fbclient`^] dependency on your classpath.
+You can use a library to provide the Firebird client library for the `NATIVE` protocol.
+For Windows, Linux, and macOS, you can add the https://github.com/mrotteveel/jaybird-fbclient[`org.firebirdsql.jdbc:fbclient`^] dependency to your classpath.
 This dependency does not support the `embedded` protocol.
 
 .Native libraries for all supported OS and architectures
@@ -509,7 +509,7 @@ See next sections for other solutions.
 [[driver-native-windows]]
 ===== Windows
 
-For Jaybird 3 and later, we recommend using the solution documented in <<driver-native-maven>>.
+TIP: We recommend using the solution documented in <<driver-native-maven>>.
 
 On Windows, you need to make sure that `fbclient.dll` is located on the `PATH` environment variable.
 Alternatively, you can specify the directory containing this DLL in the `jna.library.path` system property or the <<connectionproperties-other,connection property>> ``nativeLibraryPath``footnote:first-native[This connection property will only work for the *first* native connection made.].
@@ -526,7 +526,7 @@ If your Java installation is 64-bit, you need a 64-bit `fbclient.dll`, for 32-bi
 [[driver-native-linux]]
 ===== Linux
 
-For Jaybird 3 and later, we recommend using the solution documented in <<driver-native-maven>>.
+TIP: We recommend using the solution documented in <<driver-native-maven>>.
 
 On Linux, you need to make sure that `libfbclient.so` is available through the `LD_LIBRARY_PATH` environment variable.
 
@@ -593,7 +593,7 @@ This can be changed with the `ServerMode` setting in `firebird.conf`.
 
 until:[Jaybird 6]
 
-The `OOREMOTE` type is a JDBC Type 4 specifically for use with OpenOffice.org and LibreOffice.
+The `OOREMOTE` type is a JDBC Type 4 driver specifically for use with OpenOffice.org and LibreOffice.
 It addresses some differences in interpretation of the JDBC specification, and provides alternative metadata in certain cases to allow OpenOffice.org and LibreOffice to function correctly.
 
 [NOTE]
@@ -622,8 +622,8 @@ To connect to Firebird, use LibreOffice Base with connection option "`Firebird E
 === Connection Pooling
 
 Each time a connection is opened via `DriverManager` or `FBSimpleDataSource`, a new physical connection to the server is opened.
-It is closed when the connection is closed.
-To avoid the overhead of creating connections, you can use a connection pool implementation to maintain a cache of open physical connections that can be reused between user sessions.
+This physical connection is closed when the connection is closed.
+To avoid the overhead of creating connections, you can use a connection pool to maintain a cache (pool) of open physical connections that can be reused.
 
 Jaybird does not provide its own connection pool implementation.
 If you need a `javax.sql.DataSource` implementation that provides a connection pool, either use the connection pool support of your application server, or consider using https://brettwooldridge.github.io/HikariCP/[HikariCP^], https://commons.apache.org/proper/commons-dbcp/[DBCP^], or https://www.mchange.com/projects/c3p0/[c3p0^].
@@ -709,10 +709,10 @@ private static HikariDataSource initDataSourceAlternative2() {
 [[data-source-implementation]]
 === The javax.sql.DataSource implementation
 
-Connection pool implementations, whether provided by a Java EE/Jakarta EE application server or a third-party library, are exposed as an implementation of the `javax.sql.DataSource` interface.
+Connection pool implementations, whether provided by a Java EE/Jakarta EE application server or a third-party library, are exposed as an implementation of the `javax.sql.DataSource` interface -- just like "`basic`" data sources.
 
-The most important method exposed by this interface is the `getConnection()` method, which will return a connection based on the configuration of the data source.
-For a "`basic`" (non-pooling) data source this will create a new, physical, connection.
+The most important method exposed by this interface is the `getConnection()` method, which returns a connection based on the configuration of the data source.
+For a "`basic`" (non-pooling) data source, this will create a new, physical, connection.
 For a connection pool, this will create a logical connection that wraps a physical connection from the pool.
 
 [NOTE]
@@ -721,10 +721,10 @@ The "`user`" of a connection should not care whether the connection is pooled or
 This allows for swapping between a non-pooling and pooling data source in an application without any changes to the code using the data source.
 ====
 
-When the application is done with a connection, it should call `close()` on the connection.
-A connection from a non-pooling data source will be closed.
+When the application ("`user`") is done with a connection, it should call `close()` on the connection.
+When from a non-pooling data source, the physical connection will be closed.
 For a logical connection from a connection pool, `close()` will invalidate the logical connection (which will make it behave like a closed connection), and return the underlying physical connection to the connection pool.
-The connection pool will either keep it for re-use, or close the physical connection.
+The connection pool will either keep it in the pool for re-use, or close the physical connection (e.g. if the pool has too many idle connections).
 
 [TIP]
 ====
