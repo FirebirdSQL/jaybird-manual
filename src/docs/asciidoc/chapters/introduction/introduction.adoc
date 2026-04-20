@@ -14,7 +14,7 @@ Features that were removed in Jaybird 5 or earlier are not covered.
 New or removed features are tagged with the version that introduced a feature (e.g. since:[Jaybird 6]) or removed feature (e.g. until:[Jaybird 6]).
 This tagging is only done for features introduced (or removed) _after_ Jaybird 5.0.0, or in Firebird 5.0 or later.
 
-This manual may contain documentation of features of unreleased Jaybird versions to simplify manual maintenance and versioning.
+This manual may contain documentation of features of unreleased Jaybird and Firebird versions to simplify manual maintenance.
 
 === History
 
@@ -40,9 +40,9 @@ Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.
 The XCA layer is a replacement of the JCA layer of previous versions, and should be considered an internal implementation detail.
 * The JDBC layer is an implementation of the https://jcp.org/en/jsr/detail?id=221[JDBC Specification^].
 
-The <<services,Services API>> allows you to manage databases and the server itself.
+Separately, the <<services,Services API>> -- also layered on GDS-ng -- allows you to manage databases and the server itself.
 It offers a Manager component to create and drop databases.
-Other classes provide access to the Firebird Services Manager for database backup/restore, user management, statistics gathering, etc.
+Other classes provide access to the Firebird Services Manager for database backup/restore, tracing, statistics gathering, etc.
 
 [[distribution]]
 === Jaybird Distribution
@@ -50,18 +50,19 @@ Other classes provide access to the Firebird Services Manager for database backu
 Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher.
 See <<jaybirdversions>> for detailed information on supported Java and Firebird versions per Jaybird version.
 
-The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/[^]
+The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/.
 
 [[distribution-maven]]
 ==== Maven
 
-Alternatively, you can use maven to automatically download Jaybird and its dependencies.
+Alternatively, you can use Maven, or <<distribution-gradle>>, to automatically download Jaybird and its dependencies.
 
 Jaybird {jaybird-version} is available from Maven central:
 
-Groupid: `org.firebirdsql.jdbc`, +
-Artifactid: `jaybird`, +
-Version: `{jaybird-template-version}`
+[horizontal.compact]
+groupId:: `org.firebirdsql.jdbc`
+artifactId:: `jaybird`
+version:: `{jaybird-template-version}`
 
 For example:
 
