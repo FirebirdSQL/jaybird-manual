@@ -76,5 +76,10 @@ tasks.register('makePages') {
             from asciidoctorPdf.outputs
             into layout.buildDirectory.dir('pages')
         }
+        copy {
+            from layout.projectDirectory.dir('src/docs/theme/jaybird-html')
+            include 'favicon.ico'
+            into layout.buildDirectory.dir('pages')
+        }
     }
 }

@@ -24,5 +24,6 @@
 *.png           binary
 *.so            binary
 *.odt           binary
+*.ico           binary
 
 /gradlew        text    eol=lf
