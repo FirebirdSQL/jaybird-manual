@@ -64,7 +64,7 @@ Jaybird 5 does not support sending blobs as part of batch execution.
 
 Jaybird 5 only supports the ChaCha wire encryption plugin using the Java 11 version of the driver.
 Jaybird 5 does not support the ChaCha64 wire encryption plugin.
-Support for ChaCha64 will be added in Jaybird 6.
+Support for ChaCha64 was added in <<jb6,Jaybird 6>>.
 
 See also <<jb5-firebird3>>
 
@@ -164,3 +164,22 @@ If you want to use Type 2 support (native or embedded), you need to explicitly i
 
 For native connections you can use the `org.firebirdsql.jdbc:fbclient` dependency to provide the client library.
 See <<driver-native-maven>> for details.
+
+[[jb5-distribution-gradle]]
+===== Gradle
+
+See also <<jb5-distribution-maven>>.
+
+Equivalent declarations for Gradle:
+
+.Main Jaybird artifact
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:jaybird:{jaybird5-example-version}'
+----
+
+.JNA dependency for native and embedded
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'net.java.dev.jna:jna:{jaybird5-jna-version}'
+----

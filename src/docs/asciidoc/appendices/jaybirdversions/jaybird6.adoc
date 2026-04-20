@@ -119,14 +119,14 @@ Provides only pure Java connections.
 |Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.
 
 |`lib/bcprov-jdk18on-{jaybird6-bc-version}.jar`
-|Optional dependency, required for the ChaCha64 support (with `chacha64-plugin`)
+|Optional dependency, required for ChaCha64 support (with `chacha64-plugin`)
 
 |`jaybird-native-{jaybird6-full-version}.jar`
-|Options dependency, support for native and embedded connections.
+|Optional dependency, support for native and embedded connections.
 Requires `lib/jna-jpms-{jaybird6-jna-version}.jar`.
 
 |`lib/jna-jpms-{jaybird6-jna-version}.jar`
-|Optional dependency, required if you want to use Type 2 native, or embedded protocols (with `jaybird-native`)
+|Optional dependency, required if you want to use Type 2 native or embedded protocols (with `jaybird-native`)
 
 |===
 
@@ -177,3 +177,28 @@ If you want to use Type 2 support (native or embedded), you need to explicitly i
 
 In addition, for native connections you can use the `org.firebirdsql.jdbc:fbclient` dependency to provide the client library (`fbclient.dll`/`libfbclient.so`) on Windows and Linux.
 See <<driver-native-maven>> for details.
+
+[[jb6-distribution-gradle]]
+===== Gradle
+
+See also <<jb6-distribution-maven>>.
+
+Examples:
+
+.Main Jaybird artifact
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:jaybird:{jaybird6-full-version}'
+----
+
+.Jaybird native artifact (native and embedded protocol)
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:jaybird-native:{jaybird6-full-version}'
+----
+
+.ChaCha64 wire encryption plugin
+[source,groovy,subs="verbatim,attributes"]
+----
+implementation 'org.firebirdsql.jdbc:chacha64-plugin:{jaybird6-full-version}'
+----
