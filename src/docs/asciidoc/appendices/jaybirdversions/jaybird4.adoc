@@ -4,7 +4,7 @@
 [NOTE]
 ====
 Jaybird 4 is end-of-life and will not receive further updates.
-We recommend upgrading to <<jb5,Jaybird 5>>.
+We recommend upgrading to <<jb6,Jaybird 6>>.
 ====
 
 [[jb4-java]]

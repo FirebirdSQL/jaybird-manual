@@ -1,6 +1,11 @@
 [[jb5]]
 === Jaybird 5
 
+[NOTE]
+====
+Although Jaybird 5 is still supported, we recommend upgrading to <<jb6,Jaybird 6>> if you target Java 17 or higher and Firebird 3.0 and higher.
+====
+
 [[jb5-java]]
 ==== Java support
 
@@ -11,11 +16,11 @@ Currently, that means we support Java 8, Java 11, Java 17, Java 21, Java 25, and
 
 [NOTE]
 ====
-Jaybird 5 will be the last version to support Java 8 and 11.
-Jaybird 6 will use Java 17 as the baseline (minimum) version.
-We highly recommend upgrading to Java 17 or higher.
+Jaybird 5 is the last version to support Java 8 and 11.
+<<jb6,Jaybird 6>> uses Java 17 as the baseline (minimum) version.
+We highly recommend upgrading to Java 17 or higher and to Jaybird 6.
 
-Jaybird 5 will serve as a "`long-term support`" version for Java 8 and 11, with maintenance releases at least until the release of Jaybird 7.
+Jaybird 5 serves as a "`long-term support`" version for Java 8 and 11, with maintenance releases at least until the release of Jaybird 7.
 
 It is possible future maintenance releases of Jaybird 5 stop expanding Java support to include newly released Java versions.
 A reason can be -- but is not limited to -- if adding support for a newer Java version results in breaking support for Java 8 or Java 11, or JDBC 4.2 or JDBC 4.3, or require changes that would limit testability on those versions.
