@@ -719,7 +719,7 @@ local, and embedded implementations of the driver.</p>
 Here all connection and transaction management happens.
 Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.</p>
 <div class="paragraph">
-<p>The XCA layer is a replacement of the JCA layer of previous versions, and should be considered an internal implementation detail.</p>
+<p>The XCA layer is a replacement of the JCA layer of earlier versions, and should be considered an internal implementation detail.</p>
 </div>
 </li>
 <li>
@@ -2343,13 +2343,7 @@ For a table of allowed type conversions see <a href="#datatypeconversion">Data T
 </div>
 </li>
 <li>
-<p><em class="until"><strong>Removed in:</strong> Jaybird 5</em> Subclasses of <code>javax.resource.ResourceException</code> are thrown by the JCA layer when an error happens in the JCA-related code.
-The upper layer converts this exception into a subclass of <code>java.sql.SQLException</code>.
-If the <code>ResourceException</code> was caused by a <code>SQLException</code> or <code>GDSException</code>, the latter is extracted during conversion, preserving the error code.
-If <code>ResourceException</code> was caused by an error condition not related to an error returned by the database engine, the error code of the <code>SQLException</code> remains 0.</p>
-</li>
-<li>
-<p>Subclasses of <code>javax.transaction.XAException</code> are thrown when an XA protocol error happens in the JCA/XCA layer.
+<p>Subclasses of <code>javax.transaction.XAException</code> are thrown when an XA protocol error happens in the XCA layer.
 Similar to the previous case, <code>XAException</code> can wrap the <code>SQLException</code> or <code>GDSException</code>, which are extracted during exception conversion to preserve the error code.</p>
 </li>
 </ul>
@@ -6845,7 +6839,7 @@ It also includes plugins <code>Legacy_Auth</code> that supports the pre-Firebird
 Firebird 4.0 introduced the plugins <code>Srp224</code>, <code>Srp384</code> and <code>Srp512</code>.</p>
 </div>
 <div class="paragraph">
-<p>The original <code>Srp</code> plugin uses SHA-1, the new Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
+<p>The <code>Srp</code> plugin uses SHA-1, the other Srp-variants use SHA-224, SHA-256, SHA-384 and SHA-512 respectively.<sup class="footnote">[<a id="_footnoteref_20" class="footnote" href="#_footnotedef_20" title="View footnote.">20</a>]</sup></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6856,7 +6850,7 @@ Firebird 4.0 introduced the plugins <code>Srp224</code>, <code>Srp384</code> and
 <td class="content">
 <div class="paragraph">
 <p>Support for these plugins depends on support of these hash algorithms in the JVM.
-For example, SHA-224 is not supported in Oracle Java 7 by default and may require additional JCE libraries.</p>
+For example, SHA-224 was not supported in Oracle Java 7 by default and required an additional JCE library.</p>
 </div>
 </td>
 </tr>
@@ -6872,7 +6866,7 @@ This applies only for the pure Java protocol and only when connecting to Firebir
 The native implementation will use its own default or the value configured through its <code>firebird.conf</code>.</p>
 </div>
 <div class="paragraph">
-<p>When connecting to Firebird 3.0 or higher, the pure Java protocol in Jaybird 4 and higher will no longer try the <code>Legacy_Auth</code> plugin by default as it is an unsafe authentication mechanism.
+<p>When connecting to Firebird 3.0 or higher, the pure Java protocol in Jaybird will not try the <code>Legacy_Auth</code> plugin by default as it is an unsafe authentication mechanism.
 We strongly suggest to use SRP users only, but if you really need to use legacy authentication, you can specify connection property <code>authPlugins=Legacy_Auth</code>, see <a href="#ref-auth-plugins-config">Configure authentication plugins</a> for details.</p>
 </div>
 <div class="paragraph">
@@ -6896,28 +6890,6 @@ After an attempt to use <code>Srp256</code> fails, authentication continues with
 </div>
 <div class="paragraph">
 <p>See section on <a href="#ref-auth-plugins-default-jb6">Jaybird 6</a> for further details.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="ref-auth-plugins-default-jb4"><a class="anchor" href="#ref-auth-plugins-default-jb4"></a>Jaybird 4</h5>
-<div class="paragraph">
-<p>The default plugins applied by Jaybird 4 are&#8201;&#8212;&#8201;in order&#8201;&#8212;&#8201;<code>Srp256</code> and <code>Srp</code>.</p>
-</div>
-<div class="paragraph">
-<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
-</div>
-<div class="paragraph">
-<p>See section on <a href="#ref-auth-plugins-default-jb6">Jaybird 6</a> for further details.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="ref-auth-plugins-default-jb3"><a class="anchor" href="#ref-auth-plugins-default-jb3"></a>Jaybird 3</h5>
-<div class="paragraph">
-<p>Jaybird 3 will try&#8201;&#8212;&#8201;in order&#8201;&#8212;&#8201;<code>Srp256</code>, <code>Srp</code> and <code>Legacy_Auth</code>.
-It is not possible to specify a different configuration in Jaybird 3.</p>
-</div>
-<div class="paragraph">
-<p>Firebird 2.5 and earlier will always use legacy authentication.</p>
 </div>
 </div>
 </div>
@@ -7131,7 +7103,7 @@ If you want to develop such a plugin, contact us on the <a href="https://groups.
 </table>
 </div>
 <div class="paragraph">
-<p>On Java 11 or higher, Jaybird 5 and higher also support the <code>ChaCha</code> wire encryption.<br>
+<p>On Java 11 or higher, Jaybird also supports the <code>ChaCha</code> wire encryption.<br>
 <em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, the <code>ChaCha64</code> wire encryption is supported <strong>if</strong> the <code>chacha64-plugin</code> artifact and its Bouncy Castle dependency are on the classpath.</p>
 </div>
 </div>
@@ -7189,14 +7161,13 @@ As with <code>base64:</code>, the <code>=</code> padding characters are optional
 </ul>
 </div>
 <div class="paragraph">
-<p>Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with <code>&amp;</code> or <code>;</code>.
+<p>Because of the limitation of connection URL parsing, avoid plain string values with <code>&amp;</code> or <code>;</code>.
 Likewise, avoid <code>:</code> so that we can support other prefixes similar to <code>base64:</code> and <code>base64url:</code> in the future.
 If you need these characters, consider using a base64 encoded value instead.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird expects keys and values in the JDBC URL to be URL encoded.
-When the <em>base64</em> encoded value contains <code>&#43;</code>, it must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
-Jaybird 5 introduced <em>base64url</em>, an alternative to <em>base64</em>, which doesn&#8217;t use <code>&#43;</code>, thus avoiding the need to escape.</p>
+We recommend using <em>base64url</em>, and <strong>not</strong> <em>base64</em>, as <em>base64</em> encoded values can contain <code>&#43;</code>, which must be escaped as <code>%2B</code> in the JDBC URL, otherwise it is decoded to a space and decoding will fail.</p>
 </div>
 <div class="paragraph">
 <p>For service operations, as implemented in the <code>org.firebirdsql.management</code> package, Firebird requires the <code>KeyHolderPlugin</code> configuration to be globally defined in <code>firebird.conf</code>.
@@ -7254,9 +7225,6 @@ With the default result set holdability, close on commit, doing this yields a <c
 <ul>
 <li>
 <p>connection property <code>defaultResultSetHoldable</code> with no value, empty value or <code>true</code> (aliases: <code>defaultHoldable</code> and <code>result_set_holdable</code>);</p>
-</li>
-<li>
-<p><em class="until"><strong>Removed in:</strong> Jaybird 5</em> database parameter buffer member <code>isc_dpb_result_set_holdable</code>;</p>
 </li>
 <li>
 <p><code>FirebirdConnectionProperties</code> interface methods <code>isDefaultResultSetHoldable()</code> and <code>setDefaultResultSetHoldable(boolean)</code></p>
@@ -14084,7 +14052,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-20 11:15:40 UTC
+Last updated 2026-04-21 09:10:51 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
