@@ -37,7 +37,7 @@ local, and embedded implementations of the driver.
 Here all connection and transaction management happens.
 Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.
 +
-The XCA layer is a replacement of the JCA layer of previous versions, and should be considered an internal implementation detail.
+The XCA layer is a replacement of the JCA layer of earlier versions, and should be considered an internal implementation detail.
 * The JDBC layer is an implementation of the https://jcp.org/en/jsr/detail?id=221[JDBC Specification^].
 
 Separately, the <<services,Services API>> -- also layered on GDS-ng -- allows you to manage databases and the server itself.

@@ -232,11 +232,7 @@ SQL state is `0A000`.
 SQL state is `42000`.
 ** `org.firebirdsql.jdbc.field.TypeConversionException` -- this exception is thrown when the driver is asked to perform a type conversion that is not defined in the JDBC specification, or otherwise not supported by Jaybird.
 For a table of allowed type conversions see <<Data Type Conversion Table>>.
-* until:[Jaybird 5] Subclasses of `javax.resource.ResourceException` are thrown by the JCA layer when an error happens in the JCA-related code.
-The upper layer converts this exception into a subclass of `java.sql.SQLException`.
-If the `ResourceException` was caused by a `SQLException` or `GDSException`, the latter is extracted during conversion, preserving the error code.
-If `ResourceException` was caused by an error condition not related to an error returned by the database engine, the error code of the `SQLException` remains 0.
-* Subclasses of `javax.transaction.XAException` are thrown when an XA protocol error happens in the JCA/XCA layer.
+* Subclasses of `javax.transaction.XAException` are thrown when an XA protocol error happens in the XCA layer.
 Similar to the previous case, `XAException` can wrap the `SQLException` or `GDSException`, which are extracted during exception conversion to preserve the error code.
 
 === SQL states
