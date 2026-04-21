@@ -19,13 +19,12 @@ The `=` padding characters are optional, but when present they must be valid (th
 As with `base64:`, the `=` padding characters are optional
 * Plain string value -- string is encoded to bytes using UTF-8, and these bytes are used as the response.
     
-Because of the limitation of connection URL parsing, we strongly suggest to avoid plain string values with `&` or `;`. 
+Because of the limitation of connection URL parsing, avoid plain string values with `&` or `;`.
 Likewise, avoid `:` so that we can support other prefixes similar to `base64:` and `base64url:` in the future.
 If you need these characters, consider using a base64 encoded value instead.
 
 Jaybird expects keys and values in the JDBC URL to be URL encoded.
-When the _base64_ encoded value contains `{plus}`, it must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
-Jaybird 5 introduced _base64url_, an alternative to _base64_, which doesn't use `{plus}`, thus avoiding the need to escape.
+We recommend using _base64url_, and *not* _base64_, as _base64_ encoded values can contain `{plus}`, which must be escaped as `%2B` in the JDBC URL, otherwise it is decoded to a space and decoding will fail.
 
 For service operations, as implemented in the `org.firebirdsql.management` package, Firebird requires the `KeyHolderPlugin` configuration to be globally defined in `firebird.conf`. 
 Database-specific configuration in `databases.conf` will be ignored for service operations. 
