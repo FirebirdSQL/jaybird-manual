@@ -7410,8 +7410,7 @@ Changes to these system properties will only affect connections created after th
 <p>The connection properties take precedence over the system properties.</p>
 </div>
 <div class="paragraph">
-<p>Since Jaybird 5, these properties are also exposed on data sources.
-In earlier versions, use <code>setNonStandardProperty</code>.</p>
+<p>These properties are also exposed on data sources.</p>
 </div>
 </div>
 </div>
@@ -8210,31 +8209,6 @@ It is possible to retrieve the result set using <code>getGeneratedKeys()</code>.
 </li>
 </ol>
 </div>
-<div class="sidebarblock">
-<div class="content">
-<div class="title">ANTLR Runtime required in Jaybird 4.0.7 and earlier</div>
-<div class="paragraph">
-<p>For Jaybird 4.0.7 and earlier, the generated keys functionality will only be available if the ANTLR runtime classes are on the classpath.
-Except for calling methods with <code>NO_GENERATED_KEYS</code>, absence of the ANTLR runtime will throw <code>FBDriverNotCapableException</code>.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The required ANTLR runtime version depends on the Jaybird version, check the release notes of your version for details.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Since Jaybird 4.0.8, Jaybird uses a custom parser and no longer requires ANTLR for the generated keys feature.
-If you previously relied on absence of ANTLR to disable generated keys support, the generated keys feature can be disabled by setting <a href="#ref-generatedkeys-config">connection property <code>generatedKeysEnabled</code></a> to <code>disabled</code>.</p>
-</div>
-</div>
-</div>
 <div class="paragraph">
 <p>This functionality is available for <code>INSERT</code>, <code>UPDATE</code>, <code>UPDATE OR INSERT</code>, <code>DELETE</code>, and <code>MERGE</code>.</p>
 </div>
@@ -8426,12 +8400,10 @@ This makes sense if you consider that once prepared, the statement can be reused
 </td>
 <td class="content">
 <div class="paragraph">
-<p>In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
-In Jaybird 4, this behaviour has changed and instead will throw an exception with message &#8220;<em>Generated keys array columnIndexes was empty or null. A non-empty array is required.</em>&#8221;</p>
+<p>Passing a null or empty array will throw an exception with message &#8220;<em>Generated keys array columnIndexes was empty or null. A non-empty array is required.</em>&#8221;</p>
 </div>
 <div class="paragraph">
-<p>In Jaybird 3 and earlier, invalid ordinal positions are ignored and silently dropped: passing <code>new int[] { 1, 5, 6 }</code> will work, even if there is no sixth column.
-Since Jaybird 4, this behavior has changed and instead will throw an exception with message &#8220;<em>Generated keys column position &lt;position&gt; does not exist for table &lt;tablename&gt;. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values.</em>&#8221;</p>
+<p>Passing invalid ordinal positions will throw an exception with message &#8220;<em>Generated keys column position &lt;position&gt; does not exist for table &lt;tablename&gt;. Check DatabaseMetaData.getColumns (column ORDINAL_POSITION) for valid values.</em>&#8221;</p>
 </div>
 </td>
 </tr>
@@ -8506,22 +8478,6 @@ As this is the second column in the result set, it is retrieved from the result 
 </tr>
 </table>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>In Jaybird 3 and earlier, the array of indices is sorted in ascending order before use: passing <code>new int[] { 4, 1, 3 }</code> will yield columns in order <code>ID</code>, <code>LASTNAME</code>, <code>BIRTHDATE</code>.
-Since Jaybird 4, this sort is no longer applied, so columns will be in the order specified by the array: <code>BIRTHDATE</code>, <code>ID</code>, <code>LASTNAME</code>.
-To avoid issues, we recommend specifying the columns in ascending order, or always retrieve them by name.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 <div class="sect3">
@@ -8559,8 +8515,7 @@ This method is the fastest as it does not retrieve metadata from the server.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>In Jaybird 3 and earlier, a null or empty array was silently ignored and the statement was executed normally (not producing generated keys).
-Since Jaybird 4, this behaviour has changed and instead will throw an exception with message &#8220;<em>Generated keys array columnNames was empty or null. A non-empty array is required.</em>&#8221;</p>
+<p>Passing a null or empty array will throw an exception with message &#8220;<em>Generated keys array columnNames was empty or null. A non-empty array is required.</em>&#8221;</p>
 </div>
 </td>
 </tr>
@@ -14052,7 +14007,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-04-21 09:10:51 UTC
+Last updated 2026-04-23 08:16:32 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
