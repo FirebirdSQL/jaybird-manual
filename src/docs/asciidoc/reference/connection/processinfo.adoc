@@ -53,5 +53,4 @@ This property is ignored on native connections, which will always report the act
 
 The connection properties take precedence over the system properties.
 
-Since Jaybird 5, these properties are also exposed on data sources.
-In earlier versions, use `setNonStandardProperty`.
+These properties are also exposed on data sources.
