@@ -2,14 +2,14 @@
 == Working with Services
 
 In addition to normal database connections, Firebird features server-wide connections.
-These are used to perform various administrative tasks in Firebird, e.g. database backup, maintenance, statistics.
+These are used to perform various administrative tasks in Firebird, e.g. <<services-backup-and-restore>>, <<services-maintenance>>, <<services-db-stats>>.
 The set of API calls to perform such tasks are known under the name "`Services API`" or "`Services Manager`".
-Additionally, client applications can use the Services API to get some limited information about the server environment and configuration.
+Additionally, client applications can use the Services API to get limited information about the server environment and configuration.
 
-The actual execution of the Services API calls can be viewed as a tasks triggered from the client application to be executed on server.
-The parameters passed in the calls are internally used to construct the arguments similar to the ones that are passed to command-line tools.
-Later these arguments are passed into the entry routines of the _gbak_, _gfix_, _gsec_ or _gstat_ utility.
-The output of the utility, which in normal case is printed to standard out, is in this case transmitted over the network to the client application.
+The execution of Services API calls can be viewed as a task triggered by the client application to be executed on the server.
+The parameters passed in the calls are similar to the ones that are passed to equivalent command-line tools.
+The processed parameter values are passed into the entry routines of the _gbak_, _gfix_, _gsec_ or _gstat_ utility.
+The output of the utility is transmitted over the network to the client application -- instead of the standard out when run from the commandline.
 
 Jaybird attempts to hide the complexity of the original API by providing a set of interfaces and their implementations to perform the administrative tasks regardless of the usage mode (i.e. remote server and embedded engine, wire protocol and access via native client library).
 
@@ -17,7 +17,7 @@ This chapter describes the Java API for the administrative tasks.
 All classes and interfaces described below are defined in the `org.firebirdsql.management` package.
 Each management class works as a standalone object and does not require an open connection to the server.
 
-[[servicemanager]]
+[#servicemanager]
 === ServiceManager[[_servicemanager]]
 
 The `ServiceManager` interface and the `FBServiceManager` class are defined as the common superclasses providing setters and getters for common properties as well as some common routines.
@@ -31,7 +31,7 @@ a|`serverName` +
 `host` (until:[Jaybird 6])
 
 |String
-|Name or the IP address of the host to which we make the Service API request. _Required_.
+|Name or IP address of the host to which we make the Service API request. _Required_.
 
 a|`portNumber` +
 `port` (until:[Jaybird 6])
@@ -44,7 +44,7 @@ a|`portNumber` +
 |database
 |String
 |Path to the database. 
-The meaning of the property depends on the service being invoked and will be described in each of chapters below.
+The meaning of the property depends on the service being invoked and will be described in each of sections below.
 
 |user
 |String
@@ -72,9 +72,16 @@ Use `null` (the default) to use Jaybird defaults.
 |int
 a|Process id to report to the server.
 
+Native connections will always use the actual process id and ignore this property. +
+since:[Jaybird 6] Since Jaybird 6, pure Java connections will default to the actual process id.
+
+See also <<ref-processinfo>>.
+
 |processName
 |String
 a|Process name to report to the server.
+
+See also <<ref-processinfo>>.
 
 |socketBufferSize
 |int
@@ -82,11 +89,11 @@ a|Socket buffer size in bytes
 
 |soTimeout
 |int
-a|Socket blocking read timeout in milliseconds (`0` is OS default timeout)
+a|Socket blocking read timeout in milliseconds (`0` uses OS default timeout)
 
 |connectTimeout
 |int
-a|Socket connect timeout in milliseconds (`0` is OS default timeout)
+a|Socket connect timeout in milliseconds (`0` uses OS default timeout)
 
 |wireCrypt
 |String
@@ -124,46 +131,42 @@ The only requirement is to detach from the service manager when it is no longer 
 [[services-backup-and-restore]]
 === Backup and restore[[_backup_and_restore]]
 
-Jaybird supports server-side _gbak_, streaming _gbak_, and _nbackup_ backup and restore.
+Jaybird supports <<services-backup-and-restore-gbak,server-side _gbak_>>, <<services-backup-and-restore-gbak-streaming,streaming _gbak_>>, and <<services-backup-and-restore-nbackup,_nbackup_>> backup and restore.
 
-[[services-backup-and-restore-gbak]]
+[#services-backup-and-restore-gbak]
 ==== Gbak backup and restore
 
 The _gbak_ backup and restore routines are defined in the `BackupManager` interface and are implemented in the `FBBackupManager` class.
 This class provides server-side _gbak_ backups.
 For details on _gbak_ itself, consult the https://firebirdsql.org/file/documentation/html/en/firebirddocs/gbak/firebird-gbak.html[Firebird Backup & Restore Utility^] documentation.
 
-In addition to the setters and getters described in the previous section, the following methods are used to specify the backup and restore paths and properties:
+In addition to the setters and getters described in <<servicemanager>>, the following properties and methods are used to specify the backup and restore paths and other configuration:
 
-[cols="2m,1m,4",options="header",]
+[cols="2m,1m,4a",options="header",]
 |===
 |Name |Type |Description
 
 |database
 |String
-|For a backup operation, it specifies the path or alias of the database to back up.
-
-For a restore operation, it specifies the path to the database into which the backup file will be restored.
-In case when multi-file database should be created, use the `addRestorePath(String, int)` method instead.
+|For backup, the path or alias of the database to back up. +
+For restore, the path to the database into which the backup file will be restored.
+To restore a multi-file database, use the `addRestorePath(String, int)` method instead.
 
 |backupPath
 |String
-|Path to the backup file. 
-For a backup operation, specifies the path and the file name of the newly created backup file.
-If multi-file backup files are to be created, use the `addBackupPath(String, int)` method instead.
-For a restore operation, it specifies the path to the single backup file.
+|For a backup, the path of the newly created backup file.
+For multi-file backup files, use the `addBackupPath(String, int)` method instead. +
+For a restore, the path to the single backup file.
 If a database should be restored from a multi-file backup, use the `addBackupPath(String)` method instead.
 
 |restorePageBufferCount
 |int
-|Number of pages that will be cached of this particular database. 
-Should be used only for restore operation.
-If not set, the page cache size recorded in the backup is used.
+|Page buffers size to configure in the restored database (restore only).
+If not set, the size recorded in the backup is used.
 
 |restorePageSize
 |int
-|Database page size.
-Should be used only for restore operation. 
+|Database page size (restore only).
 Valid values depend on the Firebird version, but should be one of the 1024, 2048, 4096, 8192, 16384 or 32768.
 If not set, the page size recorded in the backup is used.
 
@@ -176,7 +179,7 @@ If not set, the page size recorded in the backup is used.
 a|Set to `true` if restore should replace the existing database with the one from backup.
 
 WARNING: It is easy to drop an existing database if the backup can't be restored, as the existing database is first deleted and only after that the restore process starts. 
-To avoid such situation it is recommended to restore a database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
+To avoid such situation it is recommended to restore a database into some dummy file first and then use filesystem commands to replace the existing database with the newly created one.
 
 |verbose
 |boolean
@@ -187,7 +190,7 @@ The service called on the server will produce lots of output that will be writte
 
 In addition to the properties, the following methods are used to configure the paths to back up and database files when multi-file back up or restore operations are used.
 
-[cols="3m,4",]
+[cols="3m,4a",]
 |===
 |Method |Description
 
@@ -205,11 +208,10 @@ Should be used for backup operation only.
 The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by `restorePageSize` parameter)
 
 |clearBackupPaths()
-|Clear all the specified backup paths. 
-This method also clears the path specified in `backupPath` property.
+|Clear all specified backup paths.
 
 |clearRestorePaths()
-|Clear all the specified restore paths. 
+|Clear all specified restore paths.
 This method also clears the path specified in the `database` property.
 |===
 
@@ -222,7 +224,7 @@ This has the following implications:
 
 The `FBStreamingBackupManager` can be used to perform a backup and restore streaming the backup data to/from the client, see <<services-backup-and-restore-gbak-streaming>>.
 
-After specifying the needed properties, the application developer can use methods `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` to perform the backup and restore tasks.
+After configuration, use methods `backupDatabase()`, `backupMetadata()` and `restoreDatabase()` to perform the backup or restore tasks.
 These methods will block until the operation is finished.
 If the `logger` property was set, the output of the service will be written into the specified output stream, otherwise it will be ignored.footnote:[The output of the service is always transferred over the network regardless whether the logger property is set or not.
 In addition to providing a possibility to the user to track the service progress, it acts also as a signal of operation completion -- in this case the Java code will receive an EOF marker.]
@@ -269,7 +271,7 @@ This can result in loss of your database if the restore fails, or if you pointed
 The methods `backupDatabase(int)` and `restoreDatabase(int)` can be used to specify additional backup and restore options that cannot be specified via the properties of this class.
 The parameter value is a bitwise OR of the following constants:
 
-[cols="3m,4",options="header",]
+[cols="3m,4a",options="header",]
 |===
 |Constant |Description
 
@@ -401,7 +403,7 @@ backupManager.restoreDatabase(
 It will unconditionally drop (delete) the database before restore.
 This can result in loss of your database if the restore fails, or if you pointed to the wrong database file.
 
-[[services-backup-and-restore-gbak-streaming]]
+[#services-backup-and-restore-gbak-streaming]
 ==== Gbak streaming backup and restore
 
 The `FBStreamingBackupManager` class is a sibling of `FBBackupManager`, providing streaming backup and restore.
@@ -427,7 +429,7 @@ In addition, the class defines the following methods:
 
 |===
 
-[[services-backup-and-restore-nbackup]]
+[#services-backup-and-restore-nbackup]
 ==== Nbackup
 
 The `NBackupManager` interface and its implementation `FBNbackupManager` provides _nbackup_ backup and restore through the service API.
@@ -436,33 +438,31 @@ For information about _nbackup_, consult the https://firebirdsql.org/file/docume
 
 In addition to the setters and getters described in <<servicemanager>>, the following methods are used to specify the backup and restore paths and properties:
 
-[cols="2m,1m,4",options="header",]
+[cols="2m,1m,4a",options="header",]
 |===
 |Name |Type |Description
 
 |database
 |String
-|For a backup operation, it specifies the path or alias of the database to back up.
-
-For a restore operation, it specifies the path to the database into which the backup file will be restored.
+|For a backup, the path or alias of the database to back up. +
+For a restore, the path to the database into which the backup file will be restored.
 
 |backupFile
 |String
-|Path to the backup file.
-For a backup operation, it specifies the path and the file name of the newly created backup file on the server.
-For a restore operation, it specifies the path to a single backup file.
+|For a backup, the path of the newly created backup file on the server. +
+For a restore, the path to a single backup file.
 If a database should be restored from a multi-file backup, use the `addBackupFile(String)` method for additional files.
 
 |backupLevel
 |int
 |The level of backup to perform.
 Setting a level of `0` performs a full backup.
-A level of `N` with `N > 1` will back up all data pages modified since the last level `N - 1` backup.
+A level of `N` with `N > 0` will back up all data pages modified since the last level `N - 1` backup.
 Defaults to `0` if `backupGuid` has not been set.
 
 |backupGuid
 |String
-a|Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
+|Sets the GUID of a previous backup (requires Firebird 4.0 or higher).
 This will back up all data pages modified since the backup identified by the GUID.
 The GUID must be enclosed in braces (`++{++` and `++}++`).
 
@@ -472,33 +472,33 @@ The GUID must be enclosed in braces (`++{++` and `++}++`).
 
 |inPlaceRestore
 |boolean
-a|Enables in-place restore (requires Firebird 4.0 or higher).
+|Enables in-place restore (requires Firebird 4.0 or higher).
 This allows incremental restore, for example for a read-only replica, or a hot standby.
 
 |preserveSequence
 |boolean
-a|Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
+|Enables preserve sequence for restore or fixup (requires Firebird 4.0 or higher).
 This preserves the GUID and replication sequence of the original database.
 
 |cleanHistory
 |boolean
-a|Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
+|Enable the _clean history_ option (requires Firebird 4.0.3 or higher).
 One of the properties `keepRows` _or_ `keepDays` must also be set.
 When enabled, after performing a backup, old records from `RDB$BACKUP_HISTORY` will be removed.
 
 |keepDays
 |int
-a|Number of days to keep backup history when `cleanHistory` is enabled.
+|Number of days to keep backup history when `cleanHistory` is enabled.
 
 |keepRows
 |int
-a|Number of rows (including the new backup!) to keep backup history when `cleanHistory` is enabled.
+|Number of rows (including the new backup!) to keep backup history when `cleanHistory` is enabled.
 
 |===
 
 In addition to the properties, the following methods are used to configure the paths to backup-files when multi-file restore operations are used.
 
-[cols="3m,4",]
+[cols="3m,4a",]
 |===
 |Method |Description
 
@@ -518,14 +518,14 @@ For restore, the files must be in the correct order to form the chain of the lev
 |Perform restore.
 
 |fixupDatabase()
-a|Perform the _nbackup_ fixup operation.
+|Perform the _nbackup_ fixup operation.
 A fixup will switch a locked database back to "`normal`" state without merging the delta, so this is a potentially *destructive* action.
 The normal use-case of this option is to unlock a copy of a database file where the source database file was locked with `nbackup -L` or `ALTER DATABASE BEGIN BACKUP`.
 Enable `preserveSequence` to preserve the original database GUID and replication sequence.
 
 |===
 
-After specifying the needed properties, the application developer can use the `backupDatabase()`, `restoreDatabase()` and `fixupDatabase` methods to perform the backup and restore tasks.
+After configuration, use the `backupDatabase()`, `restoreDatabase()` and `fixupDatabase` methods to perform the backup or restore tasks.
 These methods will block until the operation is finished.
 No output is written to the `logger`.
 
@@ -561,66 +561,67 @@ Starting with Firebird 3.0, user management through the Services API has been de
 You should use the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-security-user.html[SQL statements for user management] instead.
 ====
 
-The next service available is the user management.
-The routines are defined in the `UserManager` interface and are implemented in the `FBUserManager` class.
+The user management routines are defined in the `UserManager` interface and are implemented in the `FBUserManager` class.
 Additionally, there is a `User` interface providing getters and setters for properties of a user account on the server and corresponding implementation in the `FBUser` class.footnote:[
 The class implementation is a simple bean publishing the properties via getters and setters.
 You can replace it with any other implementation of the `User` interface.]
 The available properties of the `FBUser` class are:
 
-[cols="2,1,4",options="header",]
+[cols="2m,1m,4a",options="header",]
 |===
 |Name |Type |Description
 
-|`userName` 
-|`String` 
+|userName
+|String
 |Unique name of the user on the Firebird server. Required.
 Maximum length is 31 byte.
 
-|`password` 
-|`String` 
+|password
+|String
 |Corresponding password. 
 Getter return value only if the password had been set
 
-|`firstName` 
-|`String` 
+|firstName
+|String
 |First name of the user. Optional.
 
-|`middleName` 
-|`String` 
+|middleName
+|String
 |Middle name of the user. Optional.
 
-|`lastName` 
-|`String` 
+|lastName
+|String
 |Last name of the user. Optional.
 
-|`userId` 
-|`int` 
+|userId
+|int
 |ID of the user on Unix. Optional.
 
-|`groupId` 
-|`int` 
+|groupId
+|int
 |ID of the group on Unix. Optional.
+
 |===
 
 The management class, `FBUserManager` has the following methods to manipulate the user accounts on the server:
 
-[cols="3,4",options="header",]
+[cols="3m,4a",options="header",]
 |===
 |Method |Description
 
-|`getUsers():Map` 
+|getUsers():Map
 |Method delivers a map containing usernames as keys and instances of `FBUser` class as values containing all users that are registered on the server.
 The instances of `FBUser` class do not contain passwords, the corresponding property is `null`.
 
-|`add(User)`
+|add(User)
 |Create the user account on the server.
 
-|`update(User)`
+|update(User)
 |Update the user account on the server.
 
-|`delete(User)`
+|delete(User)
 |Delete the user account on the server.
+
 |===
 
 An example of using the `FBUserManager` class:
@@ -645,38 +646,34 @@ user.setLastName("Doe");
 userManager.add(user);
 ----
 
-=== Database maintenance
+[#services-maintenance]
+=== Database maintenance [[_database_maintenance]]
 
-Database maintenance is something that everybody would prefer to
-avoid, and, contrary to the backup/restore and user management
-procedures, there is little automation that can be done here. Usually the
-maintenance tasks are performed on the server by the database
-administrator, but some routines are needed to perform the automated
-database upgrade or perform periodic checks of the database validity.
+Database maintenance is something that everybody would prefer to avoid, and, contrary to the backup/restore and user management procedures, there is little automation that can be done here.
+Usually the maintenance tasks are performed on the server by the database administrator, but some routines are needed to perform automated database upgrade or perform periodic checks for database validity.
 
-This chapter describes the methods declared in the `MaintenanceManager`
-interface and its implementation, the `FBMaintenanceManager` class.
+This chapter describes the methods declared in the `MaintenanceManager` interface and its implementation, the `FBMaintenanceManager` class.
 
 ==== Database shutdown and restart
 
 One of the most often used maintenance operations is database shutdown and/or bringing it back online.
-When a database was shutdown, only the user that initiated the shutdown, either SYSDBA or the database owner, can connect to the database and perform other tasks, e.g. metadata modification or database validation and repair.
+When a database is shut down, only the user that initiated the shutdown, either SYSDBA or the database owner, can connect to the database and perform other tasks, e.g. metadata modification or database validation and repair.
 
-The database shutdown is performed by `shutdownDatabase(int, int)` method.
-The first parameter is the shutdown mode, the second -- the maximum allowed time for operation.
+The database shutdown is performed with the `shutdownDatabase(int, int)` method.
+The first parameter is the shutdown mode, the second is the maximum allowed time for operation.
 
 There are three shutdown modes:
 
-[cols="1,2",options="header",]
+[cols="1m,2a",options="header",]
 |===
 |Shutdown mode |Description
 
-|`SHUTDOWN_ATTACH` 
+|SHUTDOWN_ATTACH
 |The shutdown process is initiated, and it is not possible to obtain a new connection to the database, but the currently open connections are fully functional.
 
 When, after the maximum allowed time for operation, there are still open connections to the database, the shutdown process is aborted.
 
-|`SHUTDOWN_TRANSACTIONAL` 
+|SHUTDOWN_TRANSACTIONAL
 |The shutdown process is started, and it is not possible to start new transactions or open new connections to the database.
 The transactions that were running at the time of shutdown initiation are fully functional.
 
@@ -684,7 +681,7 @@ When, after the maximum allowed time for operation, there are still running tran
 
 If no running transactions are found, the currently open connections are allowed to disconnect.
 
-|`SHUTDOWN_FORCE` 
+|SHUTDOWN_FORCE
 |The shutdown process is started and will be completed before or when the maximum allowed time for operation is reached.
 New connections and transactions are not prohibited during the wait.
 
@@ -731,7 +728,7 @@ which the management class is connected.
 ==== Database validation and repair
 
 The Firebird server does its best to keep the database file in a consistent state.
-This is achieved by an algorithm called _careful writes_, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
+This is achieved by an algorithm called _careful writes_, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file remains in a consistent state.
 Unfortunately, it is still possible that under certain conditions, e.g. a crash of the file system or hardware failure, the database file becomes corrupted.
 Firebird server can detect such cases including
 
@@ -743,7 +740,7 @@ These are database pages that were corrupted/damaged by operating system or hard
 
 The `MaintenanceManager` class provides a `validateDatabase()` method to perform a simple health check of the database, releasing orphan pages if needed.
 This is the equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-db-validation[`gfix -validate`].
-It also reports presence of the checksum errors.
+It also reports presence of checksum errors.
 The output of the routine is written to the output stream configured in the `logger` property.
 
 The `validateDatabase(int)` method can be used to customize the validation process:
@@ -832,9 +829,10 @@ Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gf
 
 The in-limbo transactions are not the only kind of transactions that prevent garbage collection.
 Another type are transactions are those that were finished by "`rollback`" and the changes made in such transactions were not automatically undone by the internal savepoint mechanism, e.g. when there were a lot of changes made in the transaction (e.g. 10,000 records and more), or for transactions started with "`NO AUTO UNDO`"/`isc_tpb_no_auto_undo`.
-Such transactions are marked as "rollback" transactions on the Transaction Inventory Page and this prevents advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
-On each access to the records, Firebird has to check all record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
-To solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes the changes made by the rolled back transactions and moves forward the OIT.footnote:[
+Such transactions are marked as "rollback" transactions on the Transaction Inventory Page.
+These transactions prevent advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
+On each access to a record, Firebird has to check all record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
+To solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes changes made by rolled back transactions and moves forward the OIT.footnote:[
 For more information please read the following article by Ann Harrison, https://web.archive.org/web/20231004130607/https://www.ibphoenix.com/resources/documents/design/doc_21["`Firebird for the Database Expert: Episode 4 - OAT, OIT, & Sweep`"^]]
 
 The sweep process is controlled by a threshold parameter, a difference between the Next Transaction and OIT, by default it is set to 20,000.
@@ -875,7 +873,8 @@ Possible values are:
 * `ACCESS_MODE_READ_ONLY` -- make database read-only;
 * `ACCESS_MODE_READ_WRITE` -- allow writes into the database.
 
-Please note, only read-only databases can be placed on read-only media, read-write databases will need to be able to write even if only accessed with read-only transactions.
+Only read-only databases can be placed on read-only media.
+Read-write databases will need write access even if only accessed with read-only transactions.
 
 Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-dbmode[`gfix -mode`].
 
@@ -886,18 +885,18 @@ Allowed values are 1 (deprecated) and 3.
 Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-dialect[`gfix -sql_dialect`].
 
 |setDefaultCacheBuffer(int)
-|Change the number of database pages to cache.
+|Configure page buffers (page cache size) of the database.
 
-This setting applies to this specific database, overriding the system-wide configuration.
+This setting applies to this specific database, overriding the system-wide default.
 
 Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-buffers[`gfix -buffers`].
 
 |setForcedWrites(boolean)
 |Change the forced writes setting for the database.
 
-When forced writes are switched off, the database engine does not enforce flushing pending changes to disk, and they are kept in OS cache.
-If the same page is changed again later, the write happens in memory, which in many cases increases the performance.
-However, in case of OS or hardware crashes, the database might get corrupted.
+When forced writes are switched off, the database engine does not enforce flushing pending changes to disk, so they might be kept in the OS cache.
+If the same page is changed again later, the write may happen in memory, which in many cases increases performance.
+However, in case of OS or hardware crashes, the database might get corrupted as some or all of the changes might not have been written to disk yet.
 
 Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-sync[`gfix -write`].
 
@@ -906,9 +905,9 @@ Equivalent of https://firebirdsql.org/file/documentation/html/en/firebirddocs/gf
 
 By default, Firebird leaves some free space on each database page for future record versions.
 
-It is possible to tell Firebird not to reserve the space.
-This makes sense for read-only databases, since more data fits the page, which reduces database size and increases performance.
-For read-write database, this is more likely to decrease performance.
+It is possible to tell Firebird not to reserve this space.
+This makes sense for read-only databases, since more data fits the page, which reduces database size and may increase performance.
+For read-write database, this is likely to decrease performance.
 
 Allowed values are:
 
@@ -946,7 +945,8 @@ This is an experimental feature.
 Its API may change in point releases, or it may be removed or replaced entirely in a future major release.
 ====
 
-=== Database statistics
+[#services-db-stats]
+=== Database statistics [[_database_statistics]]
 
 The `StatisticsManager` interface and corresponding implementation in the `FBStatisticsManager` class can be used to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.
 
