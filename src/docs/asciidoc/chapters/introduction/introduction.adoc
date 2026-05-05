@@ -3,8 +3,8 @@
 
 Jaybird is a JDBC (Java DataBase Connectivity) driver to connect to the https://firebirdsql.org[Firebird] database server.
 
-Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
-The type 2 driver includes support for Firebird Embedded.
+Jaybird is a JDBC driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
+The Type 2 driver includes support for Firebird Embedded.
 
 === This manual
 
@@ -25,14 +25,12 @@ This implementation became the basis for Jaybird, a Type 2 and Type 4 JDBC drive
 
 === Jaybird Architecture
 
-The Jaybird driver consists of three layers, each of which is
-responsible for its part of the functionality.
+The Jaybird driver consists of three layers, each responsible for a part of the functionality.
 
 * The GDS-ng layer represents a Java translation of the Firebird API.
 It is represented by a number of interfaces and classes from the `org.firebirdsql.gds` package (and sub-packages).
 +
-This API is implemented by a number of plugins that provide the pure java, native,
-local, and embedded implementations of the driver.
+This API is implemented by a number of plugins that provide the pure Java, native, and embedded implementations of the driver.
 * The XCA layer represents the heart of the driver.
 Here all connection and transaction management happens.
 Additionally, this layer adapts the GDS-ng API for use by the JDBC layer.
@@ -76,7 +74,7 @@ For example:
 </dependency>
 ----
 
-If you want to use ChaCha64 wire encryption, you need to explicitly include `chacha64-plugin` as a dependency:
+If you want to use ChaCha64 wire encryption, you need to add `chacha64-plugin` as a dependency:
 
 .ChaCha64 wire encryption plugin
 [source,xml,subs="verbatim,attributes"]
@@ -88,7 +86,7 @@ If you want to use ChaCha64 wire encryption, you need to explicitly include `cha
 </dependency>
 ----
 
-If you want to use Type 2 support (native or embedded), you need to explicitly include `jaybird-native` as a dependency:
+If you want to use Type 2 support (native or embedded), you need to add `jaybird-native` as a dependency:
 
 .Jaybird native artifact (native and embedded protocol)
 [source,xml,subs="verbatim,attributes"]
@@ -100,8 +98,10 @@ If you want to use Type 2 support (native or embedded), you need to explicitly i
 </dependency>
 ----
 
-The Firebird client library is available as a Maven dependencies, see <<driver-native-maven>>.
+The Firebird client library is available as a Maven dependency, see <<driver-native-maven>>.
+
 In the future, a Maven dependency for Firebird embedded may become available as well.
+An experimental version -- for Windows -- is available from https://github.com/mrotteveel/jaybird-embedded-win32-x86-64[^].
 
 [#distribution-gradle]
 ==== Gradle
@@ -171,13 +171,13 @@ There are several ways you can contribute to Jaybird or Firebird in general:
 * Participate on the https://firebirdsql.org/en/mailing-lists/[mailing lists]
 * Report bugs or submit patches on the tracker (see <<intro-reporting-bugs>>)
 * Create pull requests on GitHub (https://github.com/FirebirdSQL/jaybird[^])
-* Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use the https://groups.google.com/g/firebird-devel[firebird-devel Google Group^])
+* Become a developer (for Jaybird contact us on https://groups.google.com/g/firebird-java[firebird-java^], for Firebird in general, use https://groups.google.com/g/firebird-devel[firebird-devel^])
 * Become a paying Associate, Partner or sponsor of the https://firebirdsql.org/en/firebird-foundation/[Firebird Foundation] (see also https://firebirdsql.org/en/donate[Support Firebird: Donation and Sponsorship Opportunities])
 
 [[intro-reporting-bugs]]
 ==== Reporting Bugs
 
-The developers follow the https://groups.google.com/g/firebird-java[firebird-java Google Group^] and mailing list.
+The developers follow https://groups.google.com/g/firebird-java[firebird-java^].
 Join the list and post information about suspected bugs.
 List members may be able to help out to determine if it is an actual bug, provide a workaround and get you going again, whereas bug fixes might take a while.
 
