@@ -538,9 +538,9 @@ table.wide-table{font-size:xx-small}
 <li><a href="#servicemanager">7.1. ServiceManager</a></li>
 <li><a href="#services-backup-and-restore">7.2. Backup and restore</a></li>
 <li><a href="#_user_management">7.3. User management</a></li>
-<li><a href="#_database_maintenance">7.4. Database maintenance</a></li>
+<li><a href="#services-maintenance">7.4. Database maintenance </a></li>
 <li><a href="#services-table-statistics-manager">7.5. Table statistics of a connection (experimental)</a></li>
-<li><a href="#_database_statistics">7.6. Database statistics</a></li>
+<li><a href="#services-db-stats">7.6. Database statistics </a></li>
 </ul>
 </li>
 <li><a href="#events">8. Working with Events</a>
@@ -672,8 +672,8 @@ table.wide-table{font-size:xx-small}
 <p>Jaybird is a JDBC (Java DataBase Connectivity) driver to connect to the <a href="https://firebirdsql.org">Firebird</a> database server.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird is a driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
-The type 2 driver includes support for Firebird Embedded.</p>
+<p>Jaybird is a JDBC driver that provides both Type 4 (pure Java) and Type 2 (native binding) support.
+The Type 2 driver includes support for Firebird Embedded.</p>
 </div>
 <div class="sect2">
 <h3 id="_this_manual"><a class="anchor" href="#_this_manual"></a>1.1. This manual</h3>
@@ -701,8 +701,7 @@ This implementation became the basis for Jaybird, a Type 2 and Type 4 JDBC drive
 <div class="sect2">
 <h3 id="_jaybird_architecture"><a class="anchor" href="#_jaybird_architecture"></a>1.3. Jaybird Architecture</h3>
 <div class="paragraph">
-<p>The Jaybird driver consists of three layers, each of which is
-responsible for its part of the functionality.</p>
+<p>The Jaybird driver consists of three layers, each responsible for a part of the functionality.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -710,8 +709,7 @@ responsible for its part of the functionality.</p>
 <p>The GDS-ng layer represents a Java translation of the Firebird API.
 It is represented by a number of interfaces and classes from the <code>org.firebirdsql.gds</code> package (and sub-packages).</p>
 <div class="paragraph">
-<p>This API is implemented by a number of plugins that provide the pure java, native,
-local, and embedded implementations of the driver.</p>
+<p>This API is implemented by a number of plugins that provide the pure Java, native, and embedded implementations of the driver.</p>
 </div>
 </li>
 <li>
@@ -792,7 +790,7 @@ version
 </div>
 </div>
 <div class="paragraph">
-<p>If you want to use ChaCha64 wire encryption, you need to explicitly include <code>chacha64-plugin</code> as a dependency:</p>
+<p>If you want to use ChaCha64 wire encryption, you need to add <code>chacha64-plugin</code> as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="title">ChaCha64 wire encryption plugin</div>
@@ -805,7 +803,7 @@ version
 </div>
 </div>
 <div class="paragraph">
-<p>If you want to use Type 2 support (native or embedded), you need to explicitly include <code>jaybird-native</code> as a dependency:</p>
+<p>If you want to use Type 2 support (native or embedded), you need to add <code>jaybird-native</code> as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="title">Jaybird native artifact (native and embedded protocol)</div>
@@ -818,8 +816,11 @@ version
 </div>
 </div>
 <div class="paragraph">
-<p>The Firebird client library is available as a Maven dependencies, see <a href="#driver-native-maven">Maven dependency for native client</a>.
-In the future, a Maven dependency for Firebird embedded may become available as well.</p>
+<p>The Firebird client library is available as a Maven dependency, see <a href="#driver-native-maven">Maven dependency for native client</a>.</p>
+</div>
+<div class="paragraph">
+<p>In the future, a Maven dependency for Firebird embedded may become available as well.
+An experimental version&#8201;&#8212;&#8201;for Windows&#8201;&#8212;&#8201;is available from <a href="https://github.com/mrotteveel/jaybird-embedded-win32-x86-64" class="bare" target="_blank" rel="noopener">https://github.com/mrotteveel/jaybird-embedded-win32-x86-64</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -925,7 +926,7 @@ Alternatively, you can join the group at the <a href="https://groups.google.com/
 <p>Create pull requests on GitHub (<a href="https://github.com/FirebirdSQL/jaybird" class="bare" target="_blank" rel="noopener">https://github.com/FirebirdSQL/jaybird</a>)</p>
 </li>
 <li>
-<p>Become a developer (for Jaybird contact us on <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a>, for Firebird in general, use the <a href="https://groups.google.com/g/firebird-devel" target="_blank" rel="noopener">firebird-devel Google Group</a>)</p>
+<p>Become a developer (for Jaybird contact us on <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a>, for Firebird in general, use <a href="https://groups.google.com/g/firebird-devel" target="_blank" rel="noopener">firebird-devel</a>)</p>
 </li>
 <li>
 <p>Become a paying Associate, Partner or sponsor of the <a href="https://firebirdsql.org/en/firebird-foundation/">Firebird Foundation</a> (see also <a href="https://firebirdsql.org/en/donate">Support Firebird: Donation and Sponsorship Opportunities</a>)</p>
@@ -935,7 +936,7 @@ Alternatively, you can join the group at the <a href="https://groups.google.com/
 <div class="sect3">
 <h4 id="intro-reporting-bugs"><a class="anchor" href="#intro-reporting-bugs"></a>1.7.1. Reporting Bugs</h4>
 <div class="paragraph">
-<p>The developers follow the <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java Google Group</a> and mailing list.
+<p>The developers follow <a href="https://groups.google.com/g/firebird-java" target="_blank" rel="noopener">firebird-java</a>.
 Join the list and post information about suspected bugs.
 List members may be able to help out to determine if it is an actual bug, provide a workaround and get you going again, whereas bug fixes might take a while.</p>
 </div>
@@ -4979,15 +4980,15 @@ Execution of the <code>SET TRANSACTION</code> statement will always fail, as the
 <div class="sectionbody">
 <div class="paragraph">
 <p>In addition to normal database connections, Firebird features server-wide connections.
-These are used to perform various administrative tasks in Firebird, e.g. database backup, maintenance, statistics.
+These are used to perform various administrative tasks in Firebird, e.g. <a href="#services-backup-and-restore">Backup and restore</a>, <a href="#services-maintenance">Database maintenance </a>, <a href="#services-db-stats">Database statistics </a>.
 The set of API calls to perform such tasks are known under the name &#8220;Services API&#8221; or &#8220;Services Manager&#8221;.
-Additionally, client applications can use the Services API to get some limited information about the server environment and configuration.</p>
+Additionally, client applications can use the Services API to get limited information about the server environment and configuration.</p>
 </div>
 <div class="paragraph">
-<p>The actual execution of the Services API calls can be viewed as a tasks triggered from the client application to be executed on server.
-The parameters passed in the calls are internally used to construct the arguments similar to the ones that are passed to command-line tools.
-Later these arguments are passed into the entry routines of the <em>gbak</em>, <em>gfix</em>, <em>gsec</em> or <em>gstat</em> utility.
-The output of the utility, which in normal case is printed to standard out, is in this case transmitted over the network to the client application.</p>
+<p>The execution of Services API calls can be viewed as a task triggered by the client application to be executed on the server.
+The parameters passed in the calls are similar to the ones that are passed to equivalent command-line tools.
+The processed parameter values are passed into the entry routines of the <em>gbak</em>, <em>gfix</em>, <em>gsec</em> or <em>gstat</em> utility.
+The output of the utility is transmitted over the network to the client application&#8201;&#8212;&#8201;instead of the standard out when run from the commandline.</p>
 </div>
 <div class="paragraph">
 <p>Jaybird attempts to hide the complexity of the original API by providing a set of interfaces and their implementations to perform the administrative tasks regardless of the usage mode (i.e. remote server and embedded engine, wire protocol and access via native client library).</p>
@@ -5023,7 +5024,7 @@ The following properties can be specified:</p>
 <code>host</code> (<em class="until"><strong>Removed in:</strong> Jaybird 6</em>)</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Name or the IP address of the host to which we make the Service API request. <em>Required</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name or IP address of the host to which we make the Service API request. <em>Required</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -5051,7 +5052,7 @@ The following properties can be specified:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>database</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Path to the database.
-The meaning of the property depends on the service being invoked and will be described in each of chapters below.</p></td>
+The meaning of the property depends on the service being invoked and will be described in each of sections below.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>user</code></p></td>
@@ -5089,6 +5090,13 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Process id to report to the server.</p>
+</div>
+<div class="paragraph">
+<p>Native connections will always use the actual process id and ignore this property.<br>
+<em class="since"><strong>Since:</strong> Jaybird 6</em> Since Jaybird 6, pure Java connections will default to the actual process id.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#ref-processinfo">Process information</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5096,6 +5104,9 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Process name to report to the server.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#ref-processinfo">Process information</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5109,14 +5120,14 @@ Use <code>null</code> (the default) to use Jaybird defaults.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>soTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Socket blocking read timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p>Socket blocking read timeout in milliseconds (<code>0</code> uses OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectTimeout</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Socket connect timeout in milliseconds (<code>0</code> is OS default timeout)</p>
+<p>Socket connect timeout in milliseconds (<code>0</code> uses OS default timeout)</p>
 </div></div></td>
 </tr>
 <tr>
@@ -5173,7 +5184,7 @@ The only requirement is to detach from the service manager when it is no longer 
 <div class="sect2">
 <h3 id="services-backup-and-restore"><a class="anchor" href="#services-backup-and-restore"></a>7.2. Backup and restore<a id="_backup_and_restore"></a></h3>
 <div class="paragraph">
-<p>Jaybird supports server-side <em>gbak</em>, streaming <em>gbak</em>, and <em>nbackup</em> backup and restore.</p>
+<p>Jaybird supports <a href="#services-backup-and-restore-gbak">server-side <em>gbak</em></a>, <a href="#services-backup-and-restore-gbak-streaming">streaming <em>gbak</em></a>, and <a href="#services-backup-and-restore-nbackup"><em>nbackup</em></a> backup and restore.</p>
 </div>
 <div class="sect3">
 <h4 id="services-backup-and-restore-gbak"><a class="anchor" href="#services-backup-and-restore-gbak"></a>7.2.1. Gbak backup and restore</h4>
@@ -5183,7 +5194,7 @@ This class provides server-side <em>gbak</em> backups.
 For details on <em>gbak</em> itself, consult the <a href="https://firebirdsql.org/file/documentation/html/en/firebirddocs/gbak/firebird-gbak.html" target="_blank" rel="noopener">Firebird Backup &amp; Restore Utility</a> documentation.</p>
 </div>
 <div class="paragraph">
-<p>In addition to the setters and getters described in the previous section, the following methods are used to specify the backup and restore paths and properties:</p>
+<p>In addition to the setters and getters described in <a href="#servicemanager">ServiceManager</a>, the following properties and methods are used to specify the backup and restore paths and other configuration:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5202,38 +5213,45 @@ For details on <em>gbak</em> itself, consult the <a href="https://firebirdsql.or
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>database</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For a backup operation, it specifies the path or alias of the database to back up.</p>
-<p class="tableblock">For a restore operation, it specifies the path to the database into which the backup file will be restored.
-In case when multi-file database should be created, use the <code>addRestorePath(String, int)</code> method instead.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For backup, the path or alias of the database to back up.<br>
+For restore, the path to the database into which the backup file will be restored.
+To restore a multi-file database, use the <code>addRestorePath(String, int)</code> method instead.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupPath</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the backup file.
-For a backup operation, specifies the path and the file name of the newly created backup file.
-If multi-file backup files are to be created, use the <code>addBackupPath(String, int)</code> method instead.
-For a restore operation, it specifies the path to the single backup file.
-If a database should be restored from a multi-file backup, use the <code>addBackupPath(String)</code> method instead.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For a backup, the path of the newly created backup file.
+For multi-file backup files, use the <code>addBackupPath(String, int)</code> method instead.<br>
+For a restore, the path to the single backup file.
+If a database should be restored from a multi-file backup, use the <code>addBackupPath(String)</code> method instead.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restorePageBufferCount</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of pages that will be cached of this particular database.
-Should be used only for restore operation.
-If not set, the page cache size recorded in the backup is used.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Page buffers size to configure in the restored database (restore only).
+If not set, the size recorded in the backup is used.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restorePageSize</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database page size.
-Should be used only for restore operation.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Database page size (restore only).
 Valid values depend on the Firebird version, but should be one of the 1024, 2048, 4096, 8192, 16384 or 32768.
-If not set, the page size recorded in the backup is used.</p></td>
+If not set, the page size recorded in the backup is used.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restoreReadOnly</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set to <code>true</code> if the database should be restored in read-only mode.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Set to <code>true</code> if the database should be restored in read-only mode.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restoreReplace</code></p></td>
@@ -5249,7 +5267,7 @@ If not set, the page size recorded in the backup is used.</p></td>
 </td>
 <td class="content">
 It is easy to drop an existing database if the backup can&#8217;t be restored, as the existing database is first deleted and only after that the restore process starts.
-To avoid such situation it is recommended to restore a database into some dummy file first and then use file system commands to replace the existing database with the newly created one.
+To avoid such situation it is recommended to restore a database into some dummy file first and then use filesystem commands to replace the existing database with the newly created one.
 </td>
 </tr>
 </table>
@@ -5258,8 +5276,12 @@ To avoid such situation it is recommended to restore a database into some dummy 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>verbose</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Be verbose when writing to the log.</p>
-<p class="tableblock">The service called on the server will produce lots of output that will be written to the output stream specified in logger property.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Be verbose when writing to the log.</p>
+</div>
+<div class="paragraph">
+<p>The service called on the server will produce lots of output that will be written to the output stream specified in logger property.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5280,29 +5302,38 @@ To avoid such situation it is recommended to restore a database into some dummy 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addBackupPath(String)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a path to a backup file from a multi-file backup.
-Should be used for restore operation only.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Add a path to a backup file from a multi-file backup.
+Should be used for restore operation only.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addBackupPath(String, int)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a path to the multi-file backup.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Add a path to the multi-file backup.
 The second parameter specifies the maximum size of the particular file in bytes.
-Should be used for backup operation only.</p></td>
+Should be used for backup operation only.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addRestorePath(String, int)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a path for the multi-file database.
-The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by <code>restorePageSize</code> parameter)</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Add a path for the multi-file database.
+The second parameter specifies the maximum size of the database file in pages (in other words, the maximum size in bytes can be obtained by multiplying this value by <code>restorePageSize</code> parameter)</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clearBackupPaths()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clear all the specified backup paths.
-This method also clears the path specified in <code>backupPath</code> property.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Clear all specified backup paths.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clearRestorePaths()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clear all the specified restore paths.
-This method also clears the path specified in the <code>database</code> property.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Clear all specified restore paths.
+This method also clears the path specified in the <code>database</code> property.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5324,7 +5355,7 @@ This has the following implications:</p>
 <p>The <code>FBStreamingBackupManager</code> can be used to perform a backup and restore streaming the backup data to/from the client, see <a href="#services-backup-and-restore-gbak-streaming">Gbak streaming backup and restore</a>.</p>
 </div>
 <div class="paragraph">
-<p>After specifying the needed properties, the application developer can use methods <code>backupDatabase()</code>, <code>backupMetadata()</code> and <code>restoreDatabase()</code> to perform the backup and restore tasks.
+<p>After configuration, use methods <code>backupDatabase()</code>, <code>backupMetadata()</code> and <code>restoreDatabase()</code> to perform the backup or restore tasks.
 These methods will block until the operation is finished.
 If the <code>logger</code> property was set, the output of the service will be written into the specified output stream, otherwise it will be ignored.<sup class="footnote">[<a id="_footnoteref_11" class="footnote" href="#_footnotedef_11" title="View footnote.">11</a>]</sup></p>
 </div>
@@ -5392,95 +5423,163 @@ The parameter value is a bitwise OR of the following constants:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_CONVERT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backup external files as tables.</p>
-<p class="tableblock">By default, external tables are not backed up, only paths to the external data files are stored in the backup file.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Backup external files as tables.</p>
+</div>
+<div class="paragraph">
+<p>By default, external tables are not backed up, only paths to the external data files are stored in the backup file.
 When this option is used, the backup will store the external table as if they were regular tables.
-On restore the tables are created as regular tables.</p></td>
+On restore the tables are created as regular tables.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_EXPAND</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No data compression.</p>
-<p class="tableblock">The <em>gbak</em> utility uses RLE compression for the strings in backup file.
-Using this option tells it to write strings in their full length, possibly fully consisting of empty characters, etc.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>No data compression.</p>
+</div>
+<div class="paragraph">
+<p>The <em>gbak</em> utility uses RLE compression for the strings in backup file.
+Using this option tells it to write strings in their full length, possibly fully consisting of empty characters, etc.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_IGNORE_CHECKSUMS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore checksums.</p>
-<p class="tableblock">The backup utility can&#8217;t back up a database with page checksum errors.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ignore checksums.</p>
+</div>
+<div class="paragraph">
+<p>The backup utility can&#8217;t back up a database with page checksum errors.
 Such database is considered corrupted and the completeness and correctness of the backup cannot be guaranteed.
 However, in some cases such errors can be ignored, e.g. when the index page is corrupted.
 In such cases the data in the database are OK and the error disappears when the database is restored and index is recreated.</p>
-<p class="tableblock">Use this option only when checksum errors are detected and can&#8217;t be corrected without full backup/restore cycle.
-Ensure that the restored database contains correct data afterwards.</p></td>
+</div>
+<div class="paragraph">
+<p>Use this option only when checksum errors are detected and can&#8217;t be corrected without full backup/restore cycle.
+Ensure that the restored database contains correct data afterwards.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_IGNORE_LIMBO</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore in-limbo transactions.</p>
-<p class="tableblock">The backup utility can&#8217;t back up a database with in-limbo transactions.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Ignore in-limbo transactions.</p>
+</div>
+<div class="paragraph">
+<p>The backup utility can&#8217;t back up a database with in-limbo transactions.
 When such situation occurs, the backup has to wait for the decision about the outcome of the in-limbo transaction.
 After a wait timeout, an exception is thrown and the backup is aborted.
-This option allows to work around this situation&#8201;&#8212;&#8201;<em>gbak</em> looks for the most recent committed version of the record and writes it into the backup.</p></td>
+This option allows to work around this situation&#8201;&#8212;&#8201;<em>gbak</em> looks for the most recent committed version of the record and writes it into the backup.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_METADATA_ONLY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backup metadata only.</p>
-<p class="tableblock">When this option is specified, the backup utility creates a backup of only the metadata information (e.g. table and view structures, stored procedures, etc.), but no data are backed up.
-This allows restoring a clean database from the backup.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Backup metadata only.</p>
+</div>
+<div class="paragraph">
+<p>When this option is specified, the backup utility creates a backup of only the metadata information (e.g. table and view structures, stored procedures, etc.), but no data are backed up.
+This allows restoring a clean database from the backup.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_NO_GARBAGE_COLLECT</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Do not collect garbage during backup.</p>
-<p class="tableblock">The backup process reads all records in the tables one by one.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Do not collect garbage during backup.</p>
+</div>
+<div class="paragraph">
+<p>The backup process reads all records in the tables one by one.
 When cooperative garbage collection is enabled<sup class="footnote">[<a id="_footnoteref_12" class="footnote" href="#_footnotedef_12" title="View footnote.">12</a>]</sup>
 the transaction that accesses the latest version of the record is also responsible for marking the previous versions as garbage.
 This process is time-consuming and can be switched off when creating a backup for immediate restore, reading only the latest record versions.</p>
-<p class="tableblock">After backup, an operator can restore the database from the backup.
-In databases with many back-versions of the records, the backup-restore cycle can be faster than traditional garbage collection.</p></td>
+</div>
+<div class="paragraph">
+<p>After backup, an operator can restore the database from the backup.
+In databases with many back-versions of the records, the backup-restore cycle can be faster than traditional garbage collection.</p>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_12">
+<a href="#_footnoteref_12">12</a>. Cooperative garbage collection can be switched off in SuperServer architecture with configuration option &#8220;<code>GCPolicy</code>&#8221;. It can&#8217;t be switched off in ClassicServer and SuperClassic architectures.
+</div>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_NON_TRANSPORTABLE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use non-transportable backup format.</p>
-<p class="tableblock">By default, <em>gbak</em> creates a so-called transportable backup where it does not make difference whether it is later restored on a big-endian or little-endian platform.
-By using this option, a non-transportable format will be used which only allows restoring the database on the same architecture.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Use non-transportable backup format.</p>
+</div>
+<div class="paragraph">
+<p>By default, <em>gbak</em> creates a so-called transportable backup where it does not make difference whether it is later restored on a big-endian or little-endian platform.
+By using this option, a non-transportable format will be used which only allows restoring the database on the same architecture.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BACKUP_OLD_DESCRIPTIONS</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Save old style metadata descriptions.</p>
-<p class="tableblock">Actually no real information exist for this option, by default it is switched off.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Save old style metadata descriptions.</p>
+</div>
+<div class="paragraph">
+<p>Actually no real information exist for this option, by default it is switched off.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RESTORE_DEACTIVATE_INDEX</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deactivate indexes during restore.</p>
-<p class="tableblock">By default, indexes are created at the beginning of the restore process, and they are updated with each record being restored from the backup file.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Deactivate indexes during restore.</p>
+</div>
+<div class="paragraph">
+<p>By default, indexes are created at the beginning of the restore process, and they are updated with each record being restored from the backup file.
 For big tables, it is more efficient first to store data in the database and to update the index afterwards.
 When this option is specified, the indexes will be restored in the inactive state.
 The downside of this option is that the database administrator is required to activate indexes afterwards;
-it won&#8217;t happen automatically.</p></td>
+it won&#8217;t happen automatically.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RESTORE_NO_SHADOW</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Do not restore shadow database.</p>
-<p class="tableblock">If a shadow database is configured, an absolute path to the shadow is stored in the backup file.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Do not restore shadow database.</p>
+</div>
+<div class="paragraph">
+<p>If a shadow database is configured, an absolute path to the shadow is stored in the backup file.
 If such a backup is restored on a different system where the path does not exist (e.g. moving a database from Windows to Linux or otherwise), the restore will fail.
-Using this option allows to overcome such situations.</p></td>
+Using this option allows to overcome such situations.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RESTORE_NO_VALIDITY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Do not restore validity constraints.</p>
-<p class="tableblock">This option is usually needed when the validity constraints (e.g. <code>NOT NULL</code> constraints) were added after the data were already in the database, but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p>
-<p class="tableblock">When this option is specified, the validity constraints won&#8217;t be restored.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Do not restore validity constraints.</p>
+</div>
+<div class="paragraph">
+<p>This option is usually needed when the validity constraints (e.g. <code>NOT NULL</code> constraints) were added after the data were already in the database, but the database contains records that do not satisfy such constraints<sup class="footnote">[<a id="_footnoteref_13" class="footnote" href="#_footnotedef_13" title="View footnote.">13</a>]</sup>.</p>
+</div>
+<div class="paragraph">
+<p>When this option is specified, the validity constraints won&#8217;t be restored.
 This allows to recover the data and perform cleanup tasks.
-The application and/or database administrators are responsible for restoring the validity constrains afterwards.</p></td>
+The application and/or database administrators are responsible for restoring the validity constrains afterwards.</p>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_13">
+<a href="#_footnoteref_13">13</a>. Firebird 2.5 and older allow you to define validity constraints despite the table(s) containing data that do not satisfy them.  Only new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
+</div>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RESTORE_ONE_AT_A_TIME</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Commit after completing restore of each table.</p>
-<p class="tableblock">By default, all data is restored in one transaction.
-If for some reason a complete restore is not possible, using this option will allow to restore at least some of the data.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Commit after completing restore of each table.</p>
+</div>
+<div class="paragraph">
+<p>By default, all data is restored in one transaction.
+If for some reason a complete restore is not possible, using this option will allow to restore at least some of the data.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RESTORE_USE_ALL_SPACE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Do not reserve space on each data page for the future record versions, useful for read-only databases.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Do not reserve space on each data page for the future record versions, useful for read-only databases.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5591,24 +5690,29 @@ For information about <em>nbackup</em>, consult the <a href="https://firebirdsql
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>database</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For a backup operation, it specifies the path or alias of the database to back up.</p>
-<p class="tableblock">For a restore operation, it specifies the path to the database into which the backup file will be restored.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For a backup, the path or alias of the database to back up.<br>
+For a restore, the path to the database into which the backup file will be restored.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupFile</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path to the backup file.
-For a backup operation, it specifies the path and the file name of the newly created backup file on the server.
-For a restore operation, it specifies the path to a single backup file.
-If a database should be restored from a multi-file backup, use the <code>addBackupFile(String)</code> method for additional files.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>For a backup, the path of the newly created backup file on the server.<br>
+For a restore, the path to a single backup file.
+If a database should be restored from a multi-file backup, use the <code>addBackupFile(String)</code> method for additional files.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupLevel</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The level of backup to perform.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The level of backup to perform.
 Setting a level of <code>0</code> performs a full backup.
-A level of <code>N</code> with <code>N &gt; 1</code> will back up all data pages modified since the last level <code>N - 1</code> backup.
-Defaults to <code>0</code> if <code>backupGuid</code> has not been set.</p></td>
+A level of <code>N</code> with <code>N &gt; 0</code> will back up all data pages modified since the last level <code>N - 1</code> backup.
+Defaults to <code>0</code> if <code>backupGuid</code> has not been set.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupGuid</code></p></td>
@@ -5622,7 +5726,9 @@ The GUID must be enclosed in braces (<code>{</code> and <code>}</code>).</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>noDbTriggers</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disable database triggers for <em>nbackup</em> operations that connect to the database.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Disable database triggers for <em>nbackup</em> operations that connect to the database.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>inPlaceRestore</code></p></td>
@@ -5682,22 +5788,30 @@ When enabled, after performing a backup, old records from <code>RDB$BACKUP_HISTO
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addBackupFile(String)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Add a path to a backup file from a multi-file backup.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Add a path to a backup file from a multi-file backup.
 In practice, <code>setBackupFile</code> does the same as <code>addBackupFile</code>.
 For backup, only the first file set or added is used.
-For restore, the files must be in the correct order to form the chain of the level <code>0</code> backup up to the highest level or last GUID-based backup to restore.</p></td>
+For restore, the files must be in the correct order to form the chain of the level <code>0</code> backup up to the highest level or last GUID-based backup to restore.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>clearBackupFiles()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clears the list of backup files.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Clears the list of backup files.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>backupDatabase()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Perform backup.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Perform backup.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>restoreDatabase()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Perform restore.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Perform restore.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixupDatabase()</code></p></td>
@@ -5711,7 +5825,7 @@ Enable <code>preserveSequence</code> to preserve the original database GUID and 
 </tbody>
 </table>
 <div class="paragraph">
-<p>After specifying the needed properties, the application developer can use the <code>backupDatabase()</code>, <code>restoreDatabase()</code> and <code>fixupDatabase</code> methods to perform the backup and restore tasks.
+<p>After configuration, use the <code>backupDatabase()</code>, <code>restoreDatabase()</code> and <code>fixupDatabase</code> methods to perform the backup or restore tasks.
 These methods will block until the operation is finished.
 No output is written to the <code>logger</code>.</p>
 </div>
@@ -5759,8 +5873,7 @@ You should use the <a href="https://firebirdsql.org/file/documentation/chunk/en/
 </table>
 </div>
 <div class="paragraph">
-<p>The next service available is the user management.
-The routines are defined in the <code>UserManager</code> interface and are implemented in the <code>FBUserManager</code> class.
+<p>The user management routines are defined in the <code>UserManager</code> interface and are implemented in the <code>FBUserManager</code> class.
 Additionally, there is a <code>User</code> interface providing getters and setters for properties of a user account on the server and corresponding implementation in the <code>FBUser</code> class.<sup class="footnote">[<a id="_footnoteref_14" class="footnote" href="#_footnotedef_14" title="View footnote.">14</a>]</sup>
 The available properties of the <code>FBUser</code> class are:</p>
 </div>
@@ -5781,39 +5894,53 @@ The available properties of the <code>FBUser</code> class are:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>userName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Unique name of the user on the Firebird server. Required.
-Maximum length is 31 byte.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Unique name of the user on the Firebird server. Required.
+Maximum length is 31 byte.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Corresponding password.
-Getter return value only if the password had been set</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Corresponding password.
+Getter return value only if the password had been set</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>firstName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">First name of the user. Optional.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>First name of the user. Optional.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>middleName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Middle name of the user. Optional.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Middle name of the user. Optional.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>lastName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Last name of the user. Optional.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Last name of the user. Optional.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the user on Unix. Optional.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ID of the user on Unix. Optional.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the group on Unix. Optional.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>ID of the group on Unix. Optional.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5834,20 +5961,28 @@ Getter return value only if the password had been set</p></td>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getUsers():Map</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method delivers a map containing usernames as keys and instances of <code>FBUser</code> class as values containing all users that are registered on the server.
-The instances of <code>FBUser</code> class do not contain passwords, the corresponding property is <code>null</code>.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Method delivers a map containing usernames as keys and instances of <code>FBUser</code> class as values containing all users that are registered on the server.
+The instances of <code>FBUser</code> class do not contain passwords, the corresponding property is <code>null</code>.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>add(User)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Create the user account on the server.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Create the user account on the server.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>update(User)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Update the user account on the server.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Update the user account on the server.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>delete(User)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Delete the user account on the server.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Delete the user account on the server.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5876,28 +6011,23 @@ userManager.add(user);</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_database_maintenance"><a class="anchor" href="#_database_maintenance"></a>7.4. Database maintenance</h3>
+<h3 id="services-maintenance"><a class="anchor" href="#services-maintenance"></a>7.4. Database maintenance <a id="_database_maintenance"></a></h3>
 <div class="paragraph">
-<p>Database maintenance is something that everybody would prefer to
-avoid, and, contrary to the backup/restore and user management
-procedures, there is little automation that can be done here. Usually the
-maintenance tasks are performed on the server by the database
-administrator, but some routines are needed to perform the automated
-database upgrade or perform periodic checks of the database validity.</p>
+<p>Database maintenance is something that everybody would prefer to avoid, and, contrary to the backup/restore and user management procedures, there is little automation that can be done here.
+Usually the maintenance tasks are performed on the server by the database administrator, but some routines are needed to perform automated database upgrade or perform periodic checks for database validity.</p>
 </div>
 <div class="paragraph">
-<p>This chapter describes the methods declared in the <code>MaintenanceManager</code>
-interface and its implementation, the <code>FBMaintenanceManager</code> class.</p>
+<p>This chapter describes the methods declared in the <code>MaintenanceManager</code> interface and its implementation, the <code>FBMaintenanceManager</code> class.</p>
 </div>
 <div class="sect3">
 <h4 id="_database_shutdown_and_restart"><a class="anchor" href="#_database_shutdown_and_restart"></a>7.4.1. Database shutdown and restart</h4>
 <div class="paragraph">
 <p>One of the most often used maintenance operations is database shutdown and/or bringing it back online.
-When a database was shutdown, only the user that initiated the shutdown, either SYSDBA or the database owner, can connect to the database and perform other tasks, e.g. metadata modification or database validation and repair.</p>
+When a database is shut down, only the user that initiated the shutdown, either SYSDBA or the database owner, can connect to the database and perform other tasks, e.g. metadata modification or database validation and repair.</p>
 </div>
 <div class="paragraph">
-<p>The database shutdown is performed by <code>shutdownDatabase(int, int)</code> method.
-The first parameter is the shutdown mode, the second&#8201;&#8212;&#8201;the maximum allowed time for operation.</p>
+<p>The database shutdown is performed with the <code>shutdownDatabase(int, int)</code> method.
+The first parameter is the shutdown mode, the second is the maximum allowed time for operation.</p>
 </div>
 <div class="paragraph">
 <p>There are three shutdown modes:</p>
@@ -5916,21 +6046,35 @@ The first parameter is the shutdown mode, the second&#8201;&#8212;&#8201;the max
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHUTDOWN_ATTACH</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The shutdown process is initiated, and it is not possible to obtain a new connection to the database, but the currently open connections are fully functional.</p>
-<p class="tableblock">When, after the maximum allowed time for operation, there are still open connections to the database, the shutdown process is aborted.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The shutdown process is initiated, and it is not possible to obtain a new connection to the database, but the currently open connections are fully functional.</p>
+</div>
+<div class="paragraph">
+<p>When, after the maximum allowed time for operation, there are still open connections to the database, the shutdown process is aborted.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHUTDOWN_TRANSACTIONAL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The shutdown process is started, and it is not possible to start new transactions or open new connections to the database.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The shutdown process is started, and it is not possible to start new transactions or open new connections to the database.
 The transactions that were running at the time of shutdown initiation are fully functional.</p>
-<p class="tableblock">When, after the maximum allowed time for operation, there are still running transactions, the shutdown process is aborted.</p>
-<p class="tableblock">If no running transactions are found, the currently open connections are allowed to disconnect.</p></td>
+</div>
+<div class="paragraph">
+<p>When, after the maximum allowed time for operation, there are still running transactions, the shutdown process is aborted.</p>
+</div>
+<div class="paragraph">
+<p>If no running transactions are found, the currently open connections are allowed to disconnect.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHUTDOWN_FORCE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The shutdown process is started and will be completed before or when the maximum allowed time for operation is reached.
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>The shutdown process is started and will be completed before or when the maximum allowed time for operation is reached.
 New connections and transactions are not prohibited during the wait.</p>
-<p class="tableblock">After the timeout, any running transaction won&#8217;t be able to commit.</p></td>
+</div>
+<div class="paragraph">
+<p>After the timeout, any running transaction won&#8217;t be able to commit.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -5995,7 +6139,7 @@ which the management class is connected.</p>
 <h4 id="_database_validation_and_repair"><a class="anchor" href="#_database_validation_and_repair"></a>7.4.3. Database validation and repair</h4>
 <div class="paragraph">
 <p>The Firebird server does its best to keep the database file in a consistent state.
-This is achieved by an algorithm called <em>careful writes</em>, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file always remains in a consistent state.
+This is achieved by an algorithm called <em>careful writes</em>, which guarantees that the server writes data on disk in such a manner that despite events like a server crash, the database file remains in a consistent state.
 Unfortunately, it is still possible that under certain conditions, e.g. a crash of the file system or hardware failure, the database file becomes corrupted.
 Firebird server can detect such cases including</p>
 </div>
@@ -6015,7 +6159,7 @@ Such pages have to be marked as unused, so the server can use them again.</p>
 <div class="paragraph">
 <p>The <code>MaintenanceManager</code> class provides a <code>validateDatabase()</code> method to perform a simple health check of the database, releasing orphan pages if needed.
 This is the equivalent of <a href="https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-db-validation"><code>gfix -validate</code></a>.
-It also reports presence of the checksum errors.
+It also reports presence of checksum errors.
 The output of the routine is written to the output stream configured in the <code>logger</code> property.</p>
 </div>
 <div class="paragraph">
@@ -6165,9 +6309,10 @@ Alternatively, use one of the following two methods.</p>
 <div class="paragraph">
 <p>The in-limbo transactions are not the only kind of transactions that prevent garbage collection.
 Another type are transactions are those that were finished by &#8220;rollback&#8221; and the changes made in such transactions were not automatically undone by the internal savepoint mechanism, e.g. when there were a lot of changes made in the transaction (e.g. 10,000 records and more), or for transactions started with &#8220;NO AUTO UNDO&#8221;/<code>isc_tpb_no_auto_undo</code>.
-Such transactions are marked as "rollback" transactions on the Transaction Inventory Page and this prevents advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
-On each access to the records, Firebird has to check all record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
-To solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes the changes made by the rolled back transactions and moves forward the OIT.<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnotedef_18" title="View footnote.">18</a>]</sup></p>
+Such transactions are marked as "rollback" transactions on the Transaction Inventory Page.
+These transactions prevent advancing the so-called Oldest Interesting Transaction (OIT), the ID of the oldest transaction which created record versions that are relevant to any of the currently running transactions.
+On each access to a record, Firebird has to check all record versions between the current transaction and the OIT, which leads to performance degradation on large databases.
+To solve the issue, Firebird periodically starts a database sweeping process, that traverses all database records, removes changes made by rolled back transactions and moves forward the OIT.<sup class="footnote">[<a id="_footnoteref_18" class="footnote" href="#_footnotedef_18" title="View footnote.">18</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>The sweep process is controlled by a threshold parameter, a difference between the Next Transaction and OIT, by default it is set to 20,000.
@@ -6245,7 +6390,8 @@ Possible values are:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Please note, only read-only databases can be placed on read-only media, read-write databases will need to be able to write even if only accessed with read-only transactions.</p>
+<p>Only read-only databases can be placed on read-only media.
+Read-write databases will need write access even if only accessed with read-only transactions.</p>
 </div>
 <div class="paragraph">
 <p>Equivalent of <a href="https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-dbmode"><code>gfix -mode</code></a>.</p>
@@ -6264,10 +6410,10 @@ Allowed values are 1 (deprecated) and 3.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>setDefaultCacheBuffer(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Change the number of database pages to cache.</p>
+<p>Configure page buffers (page cache size) of the database.</p>
 </div>
 <div class="paragraph">
-<p>This setting applies to this specific database, overriding the system-wide configuration.</p>
+<p>This setting applies to this specific database, overriding the system-wide default.</p>
 </div>
 <div class="paragraph">
 <p>Equivalent of <a href="https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-buffers"><code>gfix -buffers</code></a>.</p>
@@ -6279,9 +6425,9 @@ Allowed values are 1 (deprecated) and 3.</p>
 <p>Change the forced writes setting for the database.</p>
 </div>
 <div class="paragraph">
-<p>When forced writes are switched off, the database engine does not enforce flushing pending changes to disk, and they are kept in OS cache.
-If the same page is changed again later, the write happens in memory, which in many cases increases the performance.
-However, in case of OS or hardware crashes, the database might get corrupted.</p>
+<p>When forced writes are switched off, the database engine does not enforce flushing pending changes to disk, so they might be kept in the OS cache.
+If the same page is changed again later, the write may happen in memory, which in many cases increases performance.
+However, in case of OS or hardware crashes, the database might get corrupted as some or all of the changes might not have been written to disk yet.</p>
 </div>
 <div class="paragraph">
 <p>Equivalent of <a href="https://firebirdsql.org/file/documentation/html/en/firebirddocs/gfix/firebird-gfix.html#gfix-sync"><code>gfix -write</code></a>.</p>
@@ -6296,9 +6442,9 @@ However, in case of OS or hardware crashes, the database might get corrupted.</p
 <p>By default, Firebird leaves some free space on each database page for future record versions.</p>
 </div>
 <div class="paragraph">
-<p>It is possible to tell Firebird not to reserve the space.
-This makes sense for read-only databases, since more data fits the page, which reduces database size and increases performance.
-For read-write database, this is more likely to decrease performance.</p>
+<p>It is possible to tell Firebird not to reserve this space.
+This makes sense for read-only databases, since more data fits the page, which reduces database size and may increase performance.
+For read-write database, this is likely to decrease performance.</p>
 </div>
 <div class="paragraph">
 <p>Allowed values are:</p>
@@ -6383,7 +6529,7 @@ Its API may change in point releases, or it may be removed or replaced entirely 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_database_statistics"><a class="anchor" href="#_database_statistics"></a>7.6. Database statistics</h3>
+<h3 id="services-db-stats"><a class="anchor" href="#services-db-stats"></a>7.6. Database statistics <a id="_database_statistics"></a></h3>
 <div class="paragraph">
 <p>The <code>StatisticsManager</code> interface and corresponding implementation in the <code>FBStatisticsManager</code> class can be used to obtain statistical information for the database, like page size, values of OIT and Next transactions, database dialect, database page allocation and its distribution.</p>
 </div>
@@ -13899,12 +14045,6 @@ All Rights Reserved.
 <div class="footnote" id="_footnotedef_11">
 <a href="#_footnoteref_11">11</a>. The output of the service is always transferred over the network regardless whether the logger property is set or not. In addition to providing a possibility to the user to track the service progress, it acts also as a signal of operation completion&#8201;&#8212;&#8201;in this case the Java code will receive an EOF marker.
 </div>
-<div class="footnote" id="_footnotedef_12">
-<a href="#_footnoteref_12">12</a>. Cooperative garbage collection can be switched off in SuperServer architecture with configuration option &#8220;<code>GCPolicy</code>&#8221;. It can&#8217;t be switched off in ClassicServer and SuperClassic architectures.
-</div>
-<div class="footnote" id="_footnotedef_13">
-<a href="#_footnoteref_13">13</a>. Firebird 2.5 and older allow you to define validity constraints despite the table(s) containing data that do not satisfy them.  Only new records will be validated, and it is responsibility of the database administrator to ensure the validity of existing ones.
-</div>
 <div class="footnote" id="_footnotedef_14">
 <a href="#_footnoteref_14">14</a>. The class implementation is a simple bean publishing the properties via getters and setters. You can replace it with any other implementation of the <code>User</code> interface.
 </div>
@@ -14007,7 +14147,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-05-05 07:47:08 UTC
+Last updated 2026-05-05 11:48:21 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
