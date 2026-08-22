@@ -734,7 +734,7 @@ Other classes provide access to the Firebird Services Manager for database backu
 <div class="sect2">
 <h3 id="distribution"><a class="anchor" href="#distribution"></a>1.4. Jaybird Distribution</h3>
 <div class="paragraph">
-<p>Jaybird 6 supports Firebird 3.0 and higher.
+<p>Jaybird 6 supports Firebird 3.0 and higher on Java 17 and higher.
 See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on supported Java and Firebird versions per Jaybird version.</p>
 </div>
 <div class="paragraph">
@@ -743,10 +743,10 @@ See <a href="#jaybirdversions">Jaybird versions</a> for detailed information on 
 <div class="sect3">
 <h4 id="distribution-maven"><a class="anchor" href="#distribution-maven"></a>1.4.1. Maven</h4>
 <div class="paragraph">
-<p>Alternatively, you can use Maven, or <a href="#distribution-gradle">Gradle</a>, to automatically download Jaybird and its dependencies.</p>
+<p>You can also use Maven, or <a href="#distribution-gradle">Gradle</a>, to automatically download Jaybird and its dependencies.</p>
 </div>
 <div class="paragraph">
-<p>Jaybird 6 is available from Maven central:</p>
+<p>Jaybird 6 is available from Maven Central:</p>
 </div>
 <div class="hdlist compact">
 <table>
@@ -803,7 +803,7 @@ version
 </div>
 </div>
 <div class="paragraph">
-<p>If you want to use Type 2 support (native or embedded), you need to add <code>jaybird-native</code> as a dependency:</p>
+<p>If you want to use native or embedded (JDBC Type 2), you need to add <code>jaybird-native</code> as a dependency:</p>
 </div>
 <div class="listingblock">
 <div class="title">Jaybird native artifact (native and embedded protocol)</div>
@@ -854,7 +854,7 @@ An experimental version&#8201;&#8212;&#8201;for Windows&#8201;&#8212;&#8201;is a
 <div class="sect2">
 <h3 id="_quality_assurance"><a class="anchor" href="#_quality_assurance"></a>1.5. Quality Assurance</h3>
 <div class="paragraph">
-<p>The Jaybird team uses JUnit test cases to assure the quality of the released driver.
+<p>The Jaybird developers uses JUnit test cases to assure the quality of the released driver.
 During development unit tests are extensively used.
 Committing a code change to the source control is not allowed until it passes all existing unit tests.
 Each reproducible bug usually gets its own test case.
@@ -1025,6 +1025,18 @@ public class HelloServer {
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This loads the driver (optional, see also next paragraphs)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Creates a connection</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The first line of this code used to be important&#8201;&#8212;&#8201;it tells Java to load the Jaybird JDBC driver.
 As required by the JDBC specification, at this point the driver registers itself with <code>java.sql.DriverManager</code>.</p>
@@ -1174,7 +1186,7 @@ public class HelloServerWithEncoding {
 Nearly all other property names&#8201;&#8212;&#8201;like <code>encoding</code> here&#8201;&#8212;&#8201;are driver-specific.</p>
 </div>
 <div class="paragraph">
-<p>Additional properties, for example the SQL role for the connection can be added to the <code>props</code> object.
+<p>Additional properties, for example the SQL role for the connection, can be added to the <code>props</code> object.
 The list of properties available in Jaybird can be found in <a href="#connectionproperties">Extended connection properties</a>.</p>
 </div>
 <div class="paragraph">
@@ -3177,6 +3189,21 @@ These features are of no interest to Jaybird users, since Firebird does not supp
 <p>The IN and OUT parameters are specified in one statement.
 The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter contains output values, the rest are considered to be IN parameters.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is perfectly fine to execute stored procedures using a normal <code>Statement</code> or <code>PreparedStatement</code>.
+In fact, most of the time it&#8217;s simpler to do so.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect3">
 <h4 id="_firebird_stored_procedures"><a class="anchor" href="#_firebird_stored_procedures"></a>4.4.1. Firebird stored procedures</h4>
 <div class="paragraph">
@@ -3771,7 +3798,7 @@ omitted):</p>
 <div class="sect3">
 <h4 id="stmt-escape-oj"><a class="anchor" href="#stmt-escape-oj"></a>4.6.3. Outer Joins</h4>
 <div class="paragraph">
-<p>Due to the various approaches to specify outer joins (for instance, the Oracle "(+)" syntax), the JDBC specification provides the following syntax:</p>
+<p>Due to the&#8201;&#8212;&#8201;historically&#8201;&#8212;&#8201;various approaches to specify outer joins (for example, the Oracle &#8220;<code>(+)</code>&#8221; syntax), the JDBC specification provides the following syntax:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -3801,14 +3828,14 @@ omitted):</p>
 <div class="sect3">
 <h4 id="stmt-escape-sp"><a class="anchor" href="#stmt-escape-sp"></a>4.6.4. Stored procedures</h4>
 <div class="paragraph">
-<p>The escaped syntax for stored procedures is described in details in section <a href="#stmt-callable">The java.sql.CallableStatement interface</a>.</p>
+<p>The escaped syntax for stored procedures is described in detail in section <a href="#stmt-callable">The java.sql.CallableStatement interface</a>.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="stmt-escape-like-escape"><a class="anchor" href="#stmt-escape-like-escape"></a>4.6.5. LIKE escape character</h4>
 <div class="paragraph">
 <p>The percent sign (&#8216;<code>%</code>&#8217;) and underscore (&#8216;<code>_</code>&#8217;) characters are wildcards in the LIKE predicate of SQL.
-To interpret them literally they must be escaped using the escape character.
+To interpret them literally they must be escaped using an escape character.
 The escaped syntax for this case identifies which character is used as an escape character:</p>
 </div>
 <div class="literalblock">
@@ -14147,7 +14174,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-21 13:09:55 UTC
+Last updated 2026-08-22 11:52:54 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
