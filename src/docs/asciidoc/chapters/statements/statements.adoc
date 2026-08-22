@@ -364,6 +364,12 @@ These features are of no interest to Jaybird users, since Firebird does not supp
 The IN and OUT parameters are specified in one statement.
 The syntax above does not allow to specify the type of the parameter, therefore additional facilities are needed to tell the driver which parameter contains output values, the rest are considered to be IN parameters.
 
+[TIP]
+====
+It is perfectly fine to execute stored procedures using a normal `Statement` or `PreparedStatement`.
+In fact, most of the time it's simpler to do so.
+====
+
 ==== Firebird stored procedures
 
 Firebird stored procedures represent a piece of code written in the PSQL language that allows SQL statement execution at the native speed of the engine and provides capabilities for a limited execution flow control.
@@ -813,7 +819,7 @@ omitted):
 [#stmt-escape-oj]
 ==== Outer Joins
 
-Due to the various approaches to specify outer joins (for instance, the Oracle "(+)" syntax), the JDBC specification provides the following syntax:
+Due to the -- historically -- various approaches to specify outer joins (for example, the Oracle "```(+)```" syntax), the JDBC specification provides the following syntax:
 
 ....
 {oj <outer join>}
@@ -837,13 +843,13 @@ SELECT * FROM {oj tableA a
 [#stmt-escape-sp]
 ==== Stored procedures
 
-The escaped syntax for stored procedures is described in details in section <<stmt-callable>>.
+The escaped syntax for stored procedures is described in detail in section <<stmt-callable>>.
 
 [#stmt-escape-like-escape]
 ==== LIKE escape character
 
 The percent sign ('```%```') and underscore ('```_```') characters are wildcards in the LIKE predicate of SQL.
-To interpret them literally they must be escaped using the escape character.
+To interpret them literally they must be escaped using an escape character.
 The escaped syntax for this case identifies which character is used as an escape character:
 
 ....

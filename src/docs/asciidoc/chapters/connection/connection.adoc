@@ -52,6 +52,8 @@ public class HelloServer {
   }
 }
 ----
+<1> This loads the driver (optional, see also next paragraphs)
+<2> Creates a connection
 
 The first line of this code used to be important -- it tells Java to load the Jaybird JDBC driver.
 As required by the JDBC specification, at this point the driver registers itself with `java.sql.DriverManager`.
@@ -158,7 +160,7 @@ public class HelloServerWithEncoding {
 The `user` and `password` properties are defined in JDBC.
 Nearly all other property names -- like `encoding` here -- are driver-specific.
 
-Additional properties, for example the SQL role for the connection can be added to the `props` object.
+Additional properties, for example the SQL role for the connection, can be added to the `props` object.
 The list of properties available in Jaybird can be found in <<connectionproperties>>.
 
 It is not always possible to use the above described method to add properties.

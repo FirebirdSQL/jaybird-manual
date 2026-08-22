@@ -45,7 +45,7 @@ Other classes provide access to the Firebird Services Manager for database backu
 [[distribution]]
 === Jaybird Distribution
 
-Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher.
+Jaybird {jaybird-version} supports Firebird {min-support-firebird} and higher on Java {min-support-java} and higher.
 See <<jaybirdversions>> for detailed information on supported Java and Firebird versions per Jaybird version.
 
 The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/jdbc-driver/.
@@ -53,9 +53,9 @@ The latest version of Jaybird can be downloaded from https://firebirdsql.org/en/
 [[distribution-maven]]
 ==== Maven
 
-Alternatively, you can use Maven, or <<distribution-gradle>>, to automatically download Jaybird and its dependencies.
+You can also use Maven, or <<distribution-gradle>>, to automatically download Jaybird and its dependencies.
 
-Jaybird {jaybird-version} is available from Maven central:
+Jaybird {jaybird-version} is available from Maven Central:
 
 [horizontal.compact]
 groupId:: `org.firebirdsql.jdbc`
@@ -86,7 +86,7 @@ If you want to use ChaCha64 wire encryption, you need to add `chacha64-plugin` a
 </dependency>
 ----
 
-If you want to use Type 2 support (native or embedded), you need to add `jaybird-native` as a dependency:
+If you want to use native or embedded (JDBC Type 2), you need to add `jaybird-native` as a dependency:
 
 .Jaybird native artifact (native and embedded protocol)
 [source,xml,subs="verbatim,attributes"]
@@ -130,7 +130,7 @@ implementation 'org.firebirdsql.jdbc:jaybird-native:{jaybird-example-version}'
 
 === Quality Assurance
 
-The Jaybird team uses JUnit test cases to assure the quality of the released driver. 
+The Jaybird developers uses JUnit test cases to assure the quality of the released driver.
 During development unit tests are extensively used. 
 Committing a code change to the source control is not allowed until it passes all existing unit tests. 
 Each reproducible bug usually gets its own test case. 
