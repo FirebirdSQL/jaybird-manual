@@ -41,6 +41,8 @@ Ignored for native and embedded connections
 
 The property values are read for each connect, so the value can be changed at any time.
 
+See also <<ref-processinfo>>.
+
 [[systemproperties-charset]]
 === Character set defaults
 
