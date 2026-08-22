@@ -203,9 +203,8 @@ a|`useStreamBlobs` +
 `use_stream_blobs`
 a|Jaybird specific property.
 Boolean property.
-BLOBs are created as stream BLOBs. +
-Default: Jaybird 5 and higher: `true` (stream BLOBS) +
-Jaybird 4 and earlier: `false` (segmented BLOBs)
+Blobs are created as stream (`true`) or segmented (`false`) blobs. +
+Default: `true`
 
 a|`ignoreProcedureType`
 |Jaybird specific property.
