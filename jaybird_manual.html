@@ -771,7 +771,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>6.0.6</code></p>
+<p><code>6.0.7</code></p>
 </td>
 </tr>
 </table>
@@ -785,7 +785,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -798,7 +798,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -811,7 +811,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -834,19 +834,19 @@ An experimental version&#8201;&#8212;&#8201;for Windows&#8201;&#8212;&#8201;is a
 <div class="listingblock">
 <div class="title">Main Jaybird artifact</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.7'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">ChaCha64 wire encryption plugin</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.7'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Jaybird native artifact (native and embedded protocol)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.7'</code></pre>
 </div>
 </div>
 </div>
@@ -991,7 +991,10 @@ JDBC subprotocol, identifies driver to use, in this case Jaybird</p>
 <li>
 <p><code>//localhost:3050/c:/database/example.fdb</code></p>
 <div class="paragraph">
-<p>This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird that is <code>//[&lt;host&gt;:[&lt;port&gt;]]/&lt;path to database&gt;</code></p>
+<p>This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird, the primary URL format is <code>//[&lt;host&gt;:[&lt;port&gt;]]/&lt;path to database&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="#driver-types">Driver types</a> for more in-depth coverage of the syntax of Jaybird JDBC URLs.</p>
 </div>
 </li>
 </ul>
@@ -1149,7 +1152,7 @@ Having to include the root has the effect that a database in <code>/var/firebird
 </div>
 <div class="paragraph">
 <p>It is possible to specify a relative path, but as this depends on the server configuration, this may be confusing or easily lead to errors.
-We recommend to not use a relative path, and instead use an alias.</p>
+We recommend to not use a relative path, and instead use an alias (see also <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-databases.html"><code>databases.conf</code></a> in the <em>Firebird Configuration Reference</em>.</p>
 </div>
 <div class="sect3">
 <h4 id="connection-drivermanager-props"><a class="anchor" href="#connection-drivermanager-props"></a>2.1.1. Specifying extended properties</h4>
@@ -4348,8 +4351,8 @@ But if no security rules are implemented, they commit the transaction.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Firebird PSQL has an <code>IN AUTONOMOUS TRANSACTION</code> block that can be used to prevent such abuse and prevent audit-records from being wiped out by a transaction rollback.
-Alternatively, you can use an external table to store the audit log, or use the trace facility to log such operations.</p>
+<p>Firebird PSQL has an <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-inauton"><code>IN AUTONOMOUS TRANSACTION</code> block</a> that can be used to prevent such abuse and prevent audit-records from being wiped out by a transaction rollback.
+Alternatively, you can use an <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-ddl-table.html#fblangref50-ddl-tbl-external">external table</a> to store the audit log, or use the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-trace.html#fbconf-trace">trace facility</a> to log such operations.</p>
 </div>
 </td>
 </tr>
@@ -4357,7 +4360,7 @@ Alternatively, you can use an external table to store the audit log, or use the 
 </div>
 <div class="paragraph">
 <p>When a connection uses explicit transaction control (auto-commit disabled), each transaction must be finished by calling the <code>commit()</code> or <code>rollback()</code> methods of the <code>Connection</code> object before the connection is closed.
-If a transaction was not finished, but the <code>close</code> method is called, the active transaction is rolled back automatically.
+If a transaction was not finished, but the <code>close</code> method of the connection is called, the active transaction is rolled back automatically.
 If you do not commit or roll back the transaction, and do not close the connection explicitly, the rollback will only occur after the connection has been garbage collected, when the server detects the connection is gone.</p>
 </div>
 <div class="admonitionblock warning">
@@ -4437,20 +4440,20 @@ This was to conform to the requirements of JDBC 3.0, but since this was relaxed 
 </div>
 <div class="paragraph">
 <p>Special care should be taken when using multiple statements in auto-commit mode.
-The JDBC 2.0 specification did not fully define the rules for the statement completion as it did not define the behavior of multiple <code>ResultSet</code> objects created using the same connection object in auto-commit mode.</p>
+The earlier JDBC specifications did not fully define the rules for the statement completion as it did not define the behaviour of multiple <code>ResultSet</code> objects created using the same connection object in auto-commit mode.</p>
 </div>
 <div class="paragraph">
 <p>Since Firebird does not allow a result set to remain open after the transaction ends, Jaybird 1.5.x and below cached the complete result set in memory when <code>SELECT</code> statements were executed and the transaction was committed.
 This had an adverse effect on allocated memory when the result set is big, especially when it contains <code>BLOB</code> fields.
 The JDBC 3.0 specification addressed this unclear situation (see above) and Jaybird 2.1 was improved to correctly handle this.
-It also allowed to reduce the memory footprint&#8201;&#8212;&#8201;the driver no longer caches non-scrollable and non-holdable result sets in memory.</p>
+This also reduces the memory footprint&#8201;&#8212;&#8201;the driver no longer caches non-scrollable and non-holdable result sets in memory.</p>
 </div>
 <div class="paragraph">
-<p>However, some Java applications that do not conform the current JDBC specifications might no longer work with Jaybird 2.1 and above unless additional steps are taken.</p>
+<p>However, some Java applications that do not conform to the current JDBC specifications might no longer work with Jaybird 2.1 and above unless additional steps are taken.</p>
 </div>
 <div class="paragraph">
 <p>The piece of code below works perfectly with explicit transaction control.
-However, it won&#8217;t work correctly with auto-commit with a driver&#8201;&#8212;&#8201;like Jaybird&#8201;&#8212;&#8201;that complies with the JDBC 3.0 and higher specification, when the <code>selectStmt</code> and <code>updateStmt</code> object are created by the same connection object (step 1).
+However, it won&#8217;t work correctly with auto-commit with a driver&#8201;&#8212;&#8201;like Jaybird&#8201;&#8212;&#8201;that complies with the JDBC specification, when the <code>selectStmt</code> and <code>updateStmt</code> object are created by the same connection object (step 1).
 When the <code>UPDATE</code> is executed in step 3, the result set produced by the <code>SELECT</code> statement must be closed before the execution.
 When the Java application tries to fetch the next record by calling the <code>rs.next()</code> method, it will receive an <code>SQLException</code> with a message &#8220;<em>The result set is closed</em>&#8221;.</p>
 </div>
@@ -4475,8 +4478,8 @@ When the Java application tries to fetch the next record by calling the <code>rs
 </div>
 </div>
 <div class="paragraph">
-<p>Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software.
-To address this, Jaybird 2.1 introduced the connection parameter <a href="#ref-defaultholdable"><code>defaultHoldable</code></a> which makes result sets holdable by default.
+<p>Unfortunately, not all applications can be changed, either because there is no source code available or, simply, because any change in the code requires complete release testing of the software.
+To address this, Jaybird provides the connection property <a href="#ref-defaultholdable"><code>defaultHoldable</code></a> which makes result sets holdable by default.
 Holdable result sets are fully cached in memory, and will not be closed automatically when a transaction ends.<sup class="footnote">[<a id="_footnoteref_9" class="footnote" href="#_footnotedef_9" title="View footnote.">9</a>]</sup>
 This property also affects the default holdability of result sets when auto-commit is disabled.</p>
 </div>
@@ -4710,6 +4713,9 @@ fbConnection.setTransactionParameters(tpb);</code></pre>
 Earlier versions have constants of the same name defined in <code>org.firebirdsql.gds.ISCConstants</code>, and similarly named constants in <code>org.firebirdsql.gds.TransactionParameterBuffer</code> (i.e. without <code>isc_tpb_</code> prefix and fully capitalized).
 Those older constants will be removed in Jaybird 6 in favour of <code>org.firebirdsql.jaybird.fb.constants.TpbItems</code>.</p>
 </div>
+<div class="paragraph">
+<p>If accessing the Jaybird extension API is not possible or cumbersome, it is also possible to execute the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-transacs.html#fblangref50-transacs-settransac"><code>SET TRANSACTION</code> statement</a>, <strong>if</strong> <a href="#ref-allowtxstmts">Connection property allowTxStmts</a> is enabled.</p>
+</div>
 <div class="sect3">
 <h4 id="_isolation_level"><a class="anchor" href="#_isolation_level"></a>6.6.1. Isolation level</h4>
 <div class="paragraph">
@@ -4751,7 +4757,7 @@ The outcome of the operation is then controlled by the lock resolution mode (see
 <div class="title">Firebird 4.0 and higher default to always use <code>isc_tpb_read_consistency</code></div>
 <div class="paragraph">
 <p>With default settings, Firebird 4.0 and higher will ignore <code>isc_tpb_rec_version</code> and <code>isc_tpb_no_rec_version</code>, and behave as if <code>isc_tpb_read_consistency</code> was specified.
-This is controlled through the <a href="https://firebirdsql.org/file/documentation/html/en/refdocs/fbconf/firebird-configuration-reference.html#fbconf-read-consistency" target="_blank" rel="noopener"><code>ReadConsistency</code></a> setting in <code>firebird.conf</code> or&#8201;&#8212;&#8201;per database&#8201;&#8212;&#8201;in <code>databases.conf</code>.</p>
+This is controlled through the <a href="https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-firebird-cfg.html#fbconf-read-consistency" target="_blank" rel="noopener"><code>ReadConsistency</code></a> setting in <code>firebird.conf</code> or&#8201;&#8212;&#8201;per database&#8201;&#8212;&#8201;in <code>databases.conf</code>.</p>
 </div>
 </td>
 </tr>
@@ -7525,7 +7531,7 @@ This cannot be overridden using the options below.</p>
 </div>
 <div class="paragraph">
 <p>Since Firebird 3.0, the <code>MON$ATTACHMENTS</code> table also includes the column <code>MON$CLIENT_VERSION</code>.
-Jaybird will report its full version (e.g. <code>Jaybird jaybird-6.0.6</code>).</p>
+Jaybird will report its full version (e.g. <code>Jaybird jaybird-6.0.7</code>).</p>
 </div>
 <div class="paragraph">
 <p>It is possible to specify the process name and process id in two ways:</p>
@@ -13327,7 +13333,7 @@ To support the ChaCha64 wire encryption plugin, the artifact <code>org.firebirds
 <p>For native or embedded connections, the <code>jaybird-native</code> artifact and <code>jna-jpms</code> 5.19.1 need to be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.85.2 (Bouncy Castle JCE provider) need to be on the classpath.</p>
+<p>For ChaCha64 wire encryption, the <code>chacha64-plugin</code> artifact and <code>bcprov-jdk18on</code> 1.86 (Bouncy Castle JCE provider) need to be on the classpath.</p>
 </div>
 <div class="sect4">
 <h5 id="jb6-distribution-package"><a class="anchor" href="#jb6-distribution-package"></a>Distribution package</h5>
@@ -13350,20 +13356,20 @@ To support the ChaCha64 wire encryption plugin, the artifact <code>org.firebirds
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.6.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-6.0.7.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The main JDBC driver, the Services API and event management classes.
 Provides only pure Java connections.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.6.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>chacha64-plugin-6.0.7.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for the ChaCha64 wire encryption for pure Java connections.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/bcprov-jdk18on-1.85.2.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lib/bcprov-jdk18on-1.86.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, required for ChaCha64 support (with <code>chacha64-plugin</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.6.jar</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jaybird-native-6.0.7.jar</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optional dependency, support for native and embedded connections.
 Requires <code>lib/jna-jpms-5.19.1.jar</code>.</p></td>
 </tr>
@@ -13405,7 +13411,7 @@ artifactId
 version
 </td>
 <td class="hdlist2">
-<p><code>6.0.6</code></p>
+<p><code>6.0.7</code></p>
 </td>
 </tr>
 </table>
@@ -13418,7 +13424,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13430,7 +13436,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;chacha64-plugin&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13442,7 +13448,7 @@ version
 <pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.firebirdsql.jdbc&lt;/groupId&gt;
   &lt;artifactId&gt;jaybird-native&lt;/artifactId&gt;
-  &lt;version&gt;6.0.6&lt;/version&gt;
+  &lt;version&gt;6.0.7&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -13462,19 +13468,19 @@ See <a href="#driver-native-maven">Maven dependency for native client</a> for de
 <div class="listingblock">
 <div class="title">Main Jaybird artifact</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird:6.0.7'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Jaybird native artifact (native and embedded protocol)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:jaybird-native:6.0.7'</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">ChaCha64 wire encryption plugin</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.6'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'org.firebirdsql.jdbc:chacha64-plugin:6.0.7'</code></pre>
 </div>
 </div>
 </div>
@@ -14063,10 +14069,10 @@ All Rights Reserved.
 <a href="#_footnoteref_7">7</a>. The call escape syntax in limited form also works for <code>Statement</code> and <code>PreparedStatement</code>
 </div>
 <div class="footnote" id="_footnotedef_8">
-<a href="#_footnoteref_8">8</a>. Additionally, before InterBase was open-sourced, this allowed application developers to create multithreaded application without need to purchase additional user licenses.
+<a href="#_footnoteref_8">8</a>. Before InterBase was open-sourced, this allowed application developers to create multithreaded application without need to purchase additional user licenses.
 </div>
 <div class="footnote" id="_footnotedef_9">
-<a href="#_footnoteref_9">9</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be &#8220;detached&#8221; from the statement object that created them, please check the <code>javax.sql.RowSet</code> implementations.
+<a href="#_footnoteref_9">9</a>. Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. If you need result sets that can be &#8220;detached&#8221; from the statement object that created them, please look at a <code>javax.sql.RowSet</code> implementation.
 </div>
 <div class="footnote" id="_footnotedef_10">
 <a href="#_footnoteref_10">10</a>. This approach follows the two-phase locking protocol, where all locks are acquired on the beginning of the transaction and are released only when transaction is finished.
@@ -14176,7 +14182,7 @@ All Rights Reserved.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-10 10:26:46 UTC
+Last updated 2026-10-11 12:29:55 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
