@@ -8,7 +8,7 @@ In other words, all statements executed within a transaction either succeed and 
 
 Firebird supports multiple concurrent transactions over the same database connection.
 This allows applications that work via the native Firebird API to reduce the number of network connections required, which in turn can save resources on the serverfootnote:[
-Additionally, before InterBase was open-sourced, this allowed application developers to create multithreaded application without need to purchase additional user licenses.].
+Before InterBase was open-sourced, this allowed application developers to create multithreaded application without need to purchase additional user licenses.].
 
 This model however is not used by all database engines, and the designers of the JDBC API have chosen a model where each database connection has only one active transaction.
 Also, unlike the Firebird model, where transactions require an explicit start, the JDBC specification requires the driver to start a transaction automatically as soon as a transactional context is needed.
@@ -49,12 +49,12 @@ But if no security rules are implemented, they commit the transaction.
 
 [TIP]
 ====
-Firebird PSQL has an `IN AUTONOMOUS TRANSACTION` block that can be used to prevent such abuse and prevent audit-records from being wiped out by a transaction rollback.
-Alternatively, you can use an external table to store the audit log, or use the trace facility to log such operations.
+Firebird PSQL has an https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-psql-coding.html#fblangref50-psql-inauton[`IN AUTONOMOUS TRANSACTION` block] that can be used to prevent such abuse and prevent audit-records from being wiped out by a transaction rollback.
+Alternatively, you can use an https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-ddl-table.html#fblangref50-ddl-tbl-external[external table] to store the audit log, or use the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-trace.html#fbconf-trace[trace facility] to log such operations.
 ====
 
 When a connection uses explicit transaction control (auto-commit disabled), each transaction must be finished by calling the `commit()` or `rollback()` methods of the `Connection` object before the connection is closed.
-If a transaction was not finished, but the `close` method is called, the active transaction is rolled back automatically.
+If a transaction was not finished, but the `close` method of the connection is called, the active transaction is rolled back automatically.
 If you do not commit or roll back the transaction, and do not close the connection explicitly, the rollback will only occur after the connection has been garbage collected, when the server detects the connection is gone.
 
 [WARNING]
@@ -98,17 +98,17 @@ If there is an ongoing transaction and the value of the auto-commit property is 
 Note, when a connection is obtained via a `javax.sql.DataSource` object and container managed transactions are used (for example, the application is executing inside an EJB container, or the connection is participating in a JTA-managed distributed transaction), it is an error to call `setAutoCommit`.
 
 Special care should be taken when using multiple statements in auto-commit mode.
-The JDBC 2.0 specification did not fully define the rules for the statement completion as it did not define the behavior of multiple `ResultSet` objects created using the same connection object in auto-commit mode.
+The earlier JDBC specifications did not fully define the rules for the statement completion as it did not define the behaviour of multiple `ResultSet` objects created using the same connection object in auto-commit mode.
 
 Since Firebird does not allow a result set to remain open after the transaction ends, Jaybird 1.5.x and below cached the complete result set in memory when `SELECT` statements were executed and the transaction was committed.
 This had an adverse effect on allocated memory when the result set is big, especially when it contains `BLOB` fields.
 The JDBC 3.0 specification addressed this unclear situation (see above) and Jaybird 2.1 was improved to correctly handle this.
-It also allowed to reduce the memory footprint -- the driver no longer caches non-scrollable and non-holdable result sets in memory.
+This also reduces the memory footprint -- the driver no longer caches non-scrollable and non-holdable result sets in memory.
 
-However, some Java applications that do not conform the current JDBC specifications might no longer work with Jaybird 2.1 and above unless additional steps are taken.
+However, some Java applications that do not conform to the current JDBC specifications might no longer work with Jaybird 2.1 and above unless additional steps are taken.
 
 The piece of code below works perfectly with explicit transaction control.
-However, it won't work correctly with auto-commit with a driver -- like Jaybird -- that complies with the JDBC 3.0 and higher specification, when the `selectStmt` and `updateStmt` object are created by the same connection object (step 1).
+However, it won't work correctly with auto-commit with a driver -- like Jaybird -- that complies with the JDBC specification, when the `selectStmt` and `updateStmt` object are created by the same connection object (step 1).
 When the `UPDATE` is executed in step 3, the result set produced by the `SELECT` statement must be closed before the execution.
 When the Java application tries to fetch the next record by calling the `rs.next()` method, it will receive an `SQLException` with a message "`__The result set is closed__`".
 
@@ -131,11 +131,11 @@ try (Statement selectStmt = connection.createStatement(); // <1>
 }
 ----
 
-Unfortunately, not all applications can be changed either because there is no source code available or, simply, because any change in the code requires complete release testing of the software. 
-To address this, Jaybird 2.1 introduced the connection parameter <<ref-defaultholdable,`defaultHoldable`>> which makes result sets holdable by default.
+Unfortunately, not all applications can be changed, either because there is no source code available or, simply, because any change in the code requires complete release testing of the software.
+To address this, Jaybird provides the connection property <<ref-defaultholdable,`defaultHoldable`>> which makes result sets holdable by default.
 Holdable result sets are fully cached in memory, and will not be closed automatically when a transaction ends.footnote:[
 Other cases, e.g. closing the statement object or the connection object will still ensure that the result set object is closed. 
-If you need result sets that can be "`detached`" from the statement object that created them, please check the `javax.sql.RowSet` implementations.]
+If you need result sets that can be "`detached`" from the statement object that created them, please look at a `javax.sql.RowSet` implementation.]
 This property also affects the default holdability of result sets when auto-commit is disabled.
 
 See <<ref-defaultholdable>> for more information.
@@ -306,6 +306,8 @@ The constants used in the examples in this chapter were introduced in Jaybird 5.
 Earlier versions have constants of the same name defined in `org.firebirdsql.gds.ISCConstants`, and similarly named constants in `org.firebirdsql.gds.TransactionParameterBuffer` (i.e. without `isc_tpb_` prefix and fully capitalized).
 Those older constants will be removed in Jaybird 6 in favour of `org.firebirdsql.jaybird.fb.constants.TpbItems`.
 
+If accessing the Jaybird extension API is not possible or cumbersome, it is also possible to execute the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fblangref50/fblangref50-transacs.html#fblangref50-transacs-settransac[`SET TRANSACTION` statement], *if* <<ref-allowtxstmts>> is enabled.
+
 ==== Isolation level
 
 Firebird supports three isolation levels: `read_committed`, `concurrency` and `consistency` which are represented by appropriate constants in the `TpbItems` class.
@@ -334,7 +336,7 @@ The `TpbItems.isc_tpb_read_consistency` uses the `READ COMMITTED READ CONSISTENC
 [WARNING]
 ====
 With default settings, Firebird 4.0 and higher will ignore `isc_tpb_rec_version` and `isc_tpb_no_rec_version`, and behave as if `isc_tpb_read_consistency` was specified.
-This is controlled through the https://firebirdsql.org/file/documentation/html/en/refdocs/fbconf/firebird-configuration-reference.html#fbconf-read-consistency[`ReadConsistency`^] setting in `firebird.conf` or -- per database -- in `databases.conf`.
+This is controlled through the https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-firebird-cfg.html#fbconf-read-consistency[`ReadConsistency`^] setting in `firebird.conf` or -- per database -- in `databases.conf`.
 ====
 
 [[transactions-read-only]]

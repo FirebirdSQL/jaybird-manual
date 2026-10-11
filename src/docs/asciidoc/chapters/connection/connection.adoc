@@ -24,7 +24,9 @@ JDBC protocol
 JDBC subprotocol, identifies driver to use, in this case Jaybird
 * `//localhost:3050/c:/database/example.fdb` 
 +
-This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird that is `//[<host>:[<port>]]/<path to database>`
+This is a driver-specific part, and identifies the database for the driver to connect, in the case of Jaybird, the primary URL format is `//[<host>:[<port>]]/<path to database>`.
++
+See also <<driver-types>> for more in-depth coverage of the syntax of Jaybird JDBC URLs.
 
 The first part -- `jdbc:firebird:` or `jdbc:firebirdsql:` -- is required by JDBC.
 It specifies the so-called protocol and subprotocol for the JDBC connection.
@@ -125,7 +127,7 @@ On Unix platforms the path must include the root, as the path is otherwise inter
 Having to include the root has the effect that a database in `/var/firebird/employee.fdb` needs to use a double `//` after the host name (and port) in the connection string: `jdbc:firebird://localhost//var/firebird/employee.fdb`.
 
 It is possible to specify a relative path, but as this depends on the server configuration, this may be confusing or easily lead to errors.
-We recommend to not use a relative path, and instead use an alias.
+We recommend to not use a relative path, and instead use an alias (see also https://firebirdsql.org/file/documentation/chunk/en/refdocs/fbconf/fbconf-databases.html[`databases.conf`] in the _Firebird Configuration Reference_.
 
 [[connection-drivermanager-props]]
 ==== Specifying extended properties
